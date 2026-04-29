@@ -1,4 +1,4 @@
-‘use client’;
+'use client';
 // src/components/Navbar.tsx
 import { useState, useEffect, useRef } from ‘react’;
 import Link from ‘next/link’;

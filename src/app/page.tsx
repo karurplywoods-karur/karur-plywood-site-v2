@@ -34,7 +34,7 @@ export default function HomePage() {
             </h1>
 
             <p className="s-desc">
-              Century, Greenply, Kitply & top brands. Trusted by contractors.
+              Century, Sharon, Unibind & top brands. Trusted by contractors.
             </p>
 
             <div style={{ display: "flex", gap: 14, marginTop: 26 }}>
@@ -51,7 +51,7 @@ export default function HomePage() {
           {/* RIGHT IMAGE */}
           <div style={{ position: "relative", height: 420 }}>
             <Image
-              src="/hero-plywood.jpg"
+              src="/hero-plywood.webp"
               alt="Plywood Sheets"
               fill
               style={{ objectFit: "cover", borderRadius: 12 }}
@@ -97,9 +97,9 @@ export default function HomePage() {
           }}>
 
             {[
-              { name: "Plywood", img: "/cat-plywood.jpg" },
-              { name: "Laminates", img: "/cat-laminate.jpg" },
-              { name: "Hardware", img: "/cat-hardware.jpg" }
+              { name: "Plywood", img: "/cat-plywood.webp" },
+              { name: "Laminates", img: "/cat-laminate.webp" },
+              { name: "Hardware", img: "/cat-hardware.webp" }
             ].map((item) => (
               <div key={item.name} className="pc-card">
 
@@ -143,7 +143,7 @@ export default function HomePage() {
 
                 <div style={{ position: "relative", height: 180 }}>
                   <Image
-                    src="/product.jpg"
+                    src="/product.webp"
                     alt="product"
                     fill
                     style={{ objectFit: "cover" }}

@@ -1,9 +1,9 @@
 'use client';
 // src/app/quick-order/page.tsx
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
-import { CartProvider, useCart } from '@/lib/CartContext';
-import { trackWAClick, generateTrackingId } from '@/lib/analytics';
+import { useCart } from '@/lib/CartContext';
 import type { Product } from '@/lib/types';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
@@ -83,27 +83,6 @@ function QuickOrderInner() {
 
   const clearSearch = () => { setSearchRaw(''); searchRef.current?.focus(); };
 
-  // ── WhatsApp order ────────────────────────────────────────────
-  const handleWhatsAppOrder = useCallback(() => {
-    if (items.length === 0) return;
-    const lines = items
-      .map(i => `• ${i.product.name} x${i.quantity}${i.product.price ? ` (₹${(i.product.price * i.quantity).toLocaleString('en-IN')})` : ''}`)
-      .join('\n');
-    const totalLine = total > 0 ? `\n\nTotal: ₹${total.toLocaleString('en-IN')}` : '';
-    const text = `Hi, I want to place a quick order:\n\n${lines}${totalLine}\n\nPlease confirm availability and delivery.`;
-
-    trackWAClick({ source: 'cart', quantity: items.reduce((s, i) => s + i.quantity, 0), total_value: total });
-    fetch('/api/enquiries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: 'Quick Order Cart', phone: 'N/A', message: text,
-        tracking_id: generateTrackingId(), source: 'website', wa_source: 'cart',
-        quantity: items.reduce((s, i) => s + i.quantity, 0), total_value: total,
-      }),
-    }).catch(() => {});
-    window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, '_blank');
-  }, [items, total]);
 
   const getCartItem = (p: Product) => items.find(i => i.product.id === p.id);
 
@@ -263,7 +242,7 @@ function QuickOrderInner() {
               <button onClick={() => window.location.reload()} style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>🔄 Refresh</button>
               <a href={`https://wa.me/${WA}?text=Hi%2C+I+want+to+place+a+quick+order.+Can+you+help%3F`} target="_blank" rel="noopener"
                 style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
-                💬 Order on WhatsApp
+                Proceed to Checkout
               </a>
             </div>
           </div>
@@ -279,7 +258,7 @@ function QuickOrderInner() {
               <a href="/products" style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none' }}>Browse All Products →</a>
               <a href={`https://wa.me/${WA}?text=Hi%2C+I+want+to+place+a+quick+order.+Can+you+send+me+a+price+list%3F`} target="_blank" rel="noopener"
                 style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
-                💬 Order on WhatsApp
+                Proceed to Checkout
               </a>
             </div>
           </div>
@@ -355,10 +334,10 @@ function QuickOrderInner() {
               style={{ padding:'10px 20px', borderRadius:6, background:'transparent', border:'1px solid rgba(37,211,102,0.3)', color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
               View Cart
             </button>
-            <button onClick={handleWhatsAppOrder}
-              style={{ padding:'10px 24px', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:8 }}>
-              💬 Order on WhatsApp
-            </button>
+            <Link href="/checkout"
+              style={{ padding:'10px 24px', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:8, textDecoration:'none' }}>
+              Proceed to Checkout
+            </Link>
           </div>
         </div>
       )}
@@ -402,16 +381,16 @@ function QuickOrderInner() {
                   </div>
                 )}
 
-                <button onClick={handleWhatsAppOrder}
-                  style={{ width:'100%', marginTop:16, padding:'14px 0', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, cursor:'pointer', letterSpacing:'0.06em', display:'flex', alignItems:'center', justifyContent:'center', gap:10 }}>
-                  💬 Order on WhatsApp
-                </button>
+                <Link href="/checkout" onClick={() => setShowCart(false)}
+                  style={{ width:'100%', marginTop:16, padding:'14px 0', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, cursor:'pointer', letterSpacing:'0.06em', display:'flex', alignItems:'center', justifyContent:'center', gap:10, textDecoration:'none' }}>
+                  Proceed to Checkout
+                </Link>
                 <button onClick={() => { clear(); setShowCart(false); }}
                   style={{ width:'100%', marginTop:10, padding:'11px 0', borderRadius:6, background:'transparent', border:'1px solid rgba(248,113,113,0.2)', color:'#F87171', fontSize:13, cursor:'pointer', fontFamily:"'Syne',sans-serif" }}>
                   🗑️ Clear Cart
                 </button>
                 <p style={{ fontSize:12, color:'#7A8EA8', textAlign:'center', marginTop:12 }}>
-                  WhatsApp will open with your complete order. Final price confirmed by our team.
+                  You can complete delivery and payment details on the checkout page.
                 </p>
               </>
             )}
@@ -435,9 +414,5 @@ function QuickOrderInner() {
 }
 
 export default function QuickOrderPage() {
-  return (
-    <CartProvider>
-      <QuickOrderInner />
-    </CartProvider>
-  );
+  return <QuickOrderInner />;
 }

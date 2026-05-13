@@ -9,7 +9,8 @@ import { useCart } from '@/lib/CartContext';
 interface Address {
   id: string; label: string; full_name: string; phone: string;
   line1: string; line2: string; city: string; state: string;
-  pincode: string; is_default: boolean;
+  pincode: string; google_map_link: string; latitude: number | null;
+  longitude: number | null; is_default: boolean;
 }
 
 const STEPS = ['Delivery', 'Payment', 'Review'];
@@ -33,11 +34,25 @@ export default function CheckoutPage() {
   const [addresses,  setAddresses]  = useState<Address[]>([]);
   const [selAddrId,  setSelAddrId]  = useState('');
   const [newAddr,    setNewAddr]    = useState(false);
-  const [addrForm,   setAddrForm]   = useState({ label: 'Home', full_name: '', phone: '', line1: '', line2: '', city: '', state: 'Tamil Nadu', pincode: '' });
+  const [addrForm,   setAddrForm]   = useState({
+    label: 'Home',
+    full_name: '',
+    phone: '',
+    line1: '',
+    line2: '',
+    city: '',
+    state: 'Tamil Nadu',
+    pincode: '',
+    google_map_link: '',
+    latitude: null as number | null,
+    longitude: null as number | null,
+  });
   const [payment,    setPayment]    = useState<'cod' | 'razorpay'>('cod');
   const [notes,      setNotes]      = useState('');
   const [loading,    setLoading]    = useState(false);
   const [error,      setError]      = useState('');
+  const [locating,   setLocating]   = useState(false);
+  const [locationMsg,setLocationMsg]= useState('');
   const [orderDone,  setOrderDone]  = useState<{ order_number: string; wa_url: string } | null>(null);
 
   useEffect(() => {
@@ -62,6 +77,39 @@ export default function CheckoutPage() {
   const setAddr = (k: string, v: string) => setAddrForm(f => ({ ...f, [k]: v }));
 
   const selectedAddress = addresses.find(a => a.id === selAddrId);
+
+  const handleUseCurrentLocation = useCallback(() => {
+    setError('');
+    setLocationMsg('');
+
+    if (!navigator.geolocation) {
+      setError('Location access is not supported on this device.');
+      return;
+    }
+
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const { latitude, longitude } = pos.coords;
+        const mapLink = `https://www.google.com/maps?q=${latitude.toFixed(6)},${longitude.toFixed(6)}`;
+        setAddrForm(f => ({
+          ...f,
+          google_map_link: mapLink,
+          latitude,
+          longitude,
+          city: f.city || 'Karur',
+          state: f.state || 'Tamil Nadu',
+        }));
+        setLocationMsg('Current location added as a map link. Please complete door number, street and pincode.');
+        setLocating(false);
+      },
+      () => {
+        setError('Unable to access current location. Please allow location permission or enter the address manually.');
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+    );
+  }, []);
 
   const saveNewAddress = async () => {
     const res = await fetch('/api/addresses', {
@@ -188,9 +236,9 @@ export default function CheckoutPage() {
               <div className="co-section">
                 <div className="co-section-title">Delivery Address</div>
 
-                {addresses.length > 0 && !newAddr && (
+                {!newAddr && (
                   <div className="addr-list">
-                    {addresses.map(a => (
+                    {addresses.length > 0 ? addresses.map(a => (
                       <div key={a.id}
                         onClick={() => setSelAddrId(a.id)}
                         className={`addr-card${selAddrId === a.id ? ' addr-card--selected' : ''}`}>
@@ -205,15 +253,30 @@ export default function CheckoutPage() {
                           <div className="addr-name">{a.full_name}</div>
                           <div className="addr-text">
                             {a.line1}{a.line2 ? `, ${a.line2}` : ''}<br />
+                            {a.google_map_link && (
+                              <>
+                                <a href={a.google_map_link} target="_blank" rel="noopener" className="review-map-link">View Map Location</a><br />
+                              </>
+                            )}
                             {a.city}, {a.state} — {a.pincode}
                           </div>
                           <div className="addr-phone">📞 {a.phone}</div>
                         </div>
                       </div>
-                    ))}
-                    <button onClick={() => setNewAddr(true)} className="addr-add-btn">
-                      + Add New Address
-                    </button>
+                    )) : (
+                      <div className="addr-empty-box">
+                        <div className="addr-empty-title">No saved delivery address</div>
+                        <p>Add a new address here, or manage saved addresses from your account.</p>
+                      </div>
+                    )}
+                    <div className="addr-actions-row">
+                      <button onClick={() => { setNewAddr(true); setError(''); }} className="addr-add-btn">
+                        + Add New Address
+                      </button>
+                      <Link href="/account/addresses" className="addr-manage-link">
+                        Manage Addresses
+                      </Link>
+                    </div>
                   </div>
                 )}
 
@@ -221,6 +284,21 @@ export default function CheckoutPage() {
                   <div className="co-form">
                     {addresses.length > 0 && (
                       <button onClick={() => setNewAddr(false)} className="co-back-link">← Use saved address</button>
+                    )}
+                    <div className="location-card">
+                      <div>
+                        <div className="location-title">Add current location</div>
+                        <p>We will save a Google Maps link with this address for delivery guidance.</p>
+                      </div>
+                      <button type="button" onClick={handleUseCurrentLocation} disabled={locating} className="location-btn">
+                        {locating ? 'Locating...' : 'Use Current Location'}
+                      </button>
+                    </div>
+                    {locationMsg && <div className="co-info">{locationMsg}</div>}
+                    {addrForm.google_map_link && (
+                      <a href={addrForm.google_map_link} target="_blank" rel="noopener" className="map-preview-link">
+                        Open captured location in Google Maps
+                      </a>
                     )}
                     <div className="co-form-row">
                       <div className="co-field">
@@ -311,6 +389,9 @@ export default function CheckoutPage() {
                       {selectedAddress.city}, {selectedAddress.state} — {selectedAddress.pincode}<br />
                       📞 {selectedAddress.phone}
                     </div>
+                    {selectedAddress.google_map_link && (
+                      <a href={selectedAddress.google_map_link} target="_blank" rel="noopener" className="review-map-link">View Map Location</a>
+                    )}
                     <button onClick={() => setStep(0)} className="review-edit-btn">Edit</button>
                   </div>
                 )}
@@ -440,8 +521,15 @@ function CheckoutStyles() {
     .co-inp:focus { border-color:#F97316; }
     .co-inp::placeholder { color:#7A8EA8; }
     .co-back-link { background:none; border:none; color:#F97316; font-size:12px; font-family:'Syne',sans-serif; cursor:pointer; margin-bottom:12px; padding:0; }
+    .co-info { background:rgba(37,211,102,0.08); border:1px solid rgba(37,211,102,0.2); border-radius:6px; padding:10px 14px; font-size:13px; color:#4ADE80; }
+    .map-preview-link, .review-map-link { display:inline-flex; align-items:center; width:max-content; color:#4ADE80; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
+    .map-preview-link:hover, .review-map-link:hover { color:#25D366; text-decoration:underline; }
 
     .addr-list { display:flex; flex-direction:column; gap:10px; }
+    .addr-empty-box { background:rgba(7,15,31,0.35); border:1px dashed rgba(249,115,22,0.25); border-radius:8px; padding:22px; text-align:center; }
+    .addr-empty-title { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#F8F9FB; margin-bottom:8px; }
+    .addr-empty-box p { font-size:13px; color:#7A8EA8; line-height:1.6; }
+    .addr-actions-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:stretch; }
     .addr-card { display:flex; gap:14px; align-items:flex-start; padding:16px; border:1px solid rgba(249,115,22,0.12); border-radius:8px; cursor:pointer; transition:border-color .2s; background:rgba(7,15,31,0.3); }
     .addr-card--selected { border-color:#F97316; background:rgba(249,115,22,0.05); }
     .addr-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(249,115,22,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
@@ -456,6 +544,14 @@ function CheckoutStyles() {
     .addr-phone { font-size:12px; color:#7A8EA8; }
     .addr-add-btn { padding:10px 0; background:transparent; border:1px dashed rgba(249,115,22,0.3); border-radius:6px; color:#F97316; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
     .addr-add-btn:hover { background:rgba(249,115,22,0.06); border-style:solid; }
+    .addr-manage-link { display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid rgba(249,115,22,0.2); border-radius:6px; color:#7A8EA8; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; white-space:nowrap; }
+    .addr-manage-link:hover { border-color:#F97316; color:#F97316; }
+
+    .location-card { display:flex; align-items:center; justify-content:space-between; gap:16px; background:rgba(37,211,102,0.06); border:1px solid rgba(37,211,102,0.16); border-radius:8px; padding:14px 16px; }
+    .location-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#4ADE80; margin-bottom:4px; }
+    .location-card p { font-size:12px; color:#7A8EA8; line-height:1.5; }
+    .location-btn { flex-shrink:0; padding:9px 14px; border:none; border-radius:6px; background:#25D366; color:white; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+    .location-btn:disabled { opacity:.65; cursor:not-allowed; }
 
     .payment-options { display:flex; flex-direction:column; gap:10px; }
     .payment-card { display:flex; gap:14px; align-items:center; padding:16px; border:1px solid rgba(249,115,22,0.12); border-radius:8px; cursor:pointer; transition:border-color .2s; background:rgba(7,15,31,0.3); }
@@ -501,6 +597,8 @@ function CheckoutStyles() {
       .co-layout { grid-template-columns:1fr !important; }
       .co-summary { position:static !important; order:-1; }
       .co-form-row { grid-template-columns:1fr !important; }
+      .addr-actions-row { grid-template-columns:1fr !important; }
+      .location-card { align-items:stretch; flex-direction:column; }
     }
     select option { background:#0d1f3a; }
   `}</style>;

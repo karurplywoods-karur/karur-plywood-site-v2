@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       .from('orders')
       .insert([{
         customer_id:      session.user.id,
+        address_id:       address.id || null,
         delivery_name:    address.full_name,
         delivery_phone:   address.phone,
         delivery_line1:   address.line1,
@@ -51,6 +52,9 @@ export async function POST(req: NextRequest) {
         delivery_city:    address.city,
         delivery_state:   address.state || 'Tamil Nadu',
         delivery_pincode: address.pincode,
+        delivery_google_map_link: address.google_map_link || '',
+        delivery_latitude:        address.latitude ?? null,
+        delivery_longitude:       address.longitude ?? null,
         subtotal,
         delivery_charge,
         total,
@@ -91,6 +95,7 @@ export async function POST(req: NextRequest) {
       address.city,
       address.state,
       address.pincode,
+      address.google_map_link,
     ].filter(Boolean).join(', ');
 
     sendOrderConfirmation({

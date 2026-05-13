@@ -1,6 +1,7 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next';
 import '../styles/globals.css';
+import { CartProvider } from '@/lib/CartContext';
 import Navbar from '@/components/Navbar';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
 import Footer from '@/components/Footer';
@@ -33,15 +34,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        {/* GA4 is in <head> so it fires on EVERY page including admin */}
         <GoogleAnalytics />
         <LocalBusinessSchema />
       </head>
       <body className="grain">
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppWidget />
+        <CartProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <WhatsAppWidget />
+        </CartProvider>
       </body>
     </html>
   );

@@ -10,6 +10,7 @@ interface Order {
   delivery_name: string; delivery_phone: string;
   delivery_city: string; delivery_pincode: string;
   delivery_line1: string; delivery_line2: string;
+  delivery_google_map_link?: string;
   delivery_state: string; tracking_number: string;
   admin_notes: string; notes: string; created_at: string;
   order_items: any[];
@@ -226,6 +227,11 @@ export default function AdminOrdersPage() {
                           <div style={{ fontSize:12, color:'#A8BCCC', lineHeight:1.8 }}>
                             <strong style={{ color:'#F8F9FB' }}>{order.delivery_name}</strong><br/>
                             {order.delivery_line1}{order.delivery_line2 ? `, ${order.delivery_line2}` : ''}<br/>
+                            {order.delivery_google_map_link && (
+                              <>
+                                <a href={order.delivery_google_map_link} target="_blank" rel="noopener" style={{ color:'#4ADE80', textDecoration:'none', fontWeight:700 }}>View Map Location</a><br/>
+                              </>
+                            )}
                             {order.delivery_city}, {order.delivery_state}<br/>
                             PIN: {order.delivery_pincode}<br/>
                             📞 {order.delivery_phone}

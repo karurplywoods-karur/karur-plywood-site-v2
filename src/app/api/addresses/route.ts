@@ -20,7 +20,20 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();
-  const { label, full_name, phone, line1, line2, city, state, pincode, is_default } = body;
+  const {
+    label,
+    full_name,
+    phone,
+    line1,
+    line2,
+    city,
+    state,
+    pincode,
+    google_map_link,
+    latitude,
+    longitude,
+    is_default,
+  } = body;
   if (!full_name || !phone || !line1 || !city || !pincode)
     return NextResponse.json({ error: 'Required fields missing.' }, { status: 400 });
 
@@ -28,7 +41,21 @@ export async function POST(req: NextRequest) {
     await supabaseAdmin.from('addresses').update({ is_default: false }).eq('customer_id', session.user.id);
 
   const { data, error } = await supabaseAdmin.from('addresses')
-    .insert([{ customer_id: session.user.id, label: label || 'Home', full_name, phone, line1, line2: line2 || '', city, state: state || 'Tamil Nadu', pincode, is_default: is_default ?? false }])
+    .insert([{
+      customer_id: session.user.id,
+      label: label || 'Home',
+      full_name,
+      phone,
+      line1,
+      line2: line2 || '',
+      city,
+      state: state || 'Tamil Nadu',
+      pincode,
+      google_map_link: google_map_link || '',
+      latitude: latitude ?? null,
+      longitude: longitude ?? null,
+      is_default: is_default ?? false,
+    }])
     .select().single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

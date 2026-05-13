@@ -8,9 +8,22 @@ import { createClient } from '@/lib/auth-client';
 interface Address {
   id: string; label: string; full_name: string; phone: string;
   line1: string; line2: string; city: string; state: string;
-  pincode: string; is_default: boolean;
+  pincode: string; google_map_link: string; latitude: number | null;
+  longitude: number | null; is_default: boolean;
 }
-const EMPTY = { label: 'Home', full_name: '', phone: '', line1: '', line2: '', city: '', state: 'Tamil Nadu', pincode: '' };
+const EMPTY = {
+  label: 'Home',
+  full_name: '',
+  phone: '',
+  line1: '',
+  line2: '',
+  city: '',
+  state: 'Tamil Nadu',
+  pincode: '',
+  google_map_link: '',
+  latitude: null as number | null,
+  longitude: null as number | null,
+};
 
 export default function AddressesPage() {
   const router = useRouter();
@@ -41,7 +54,19 @@ export default function AddressesPage() {
 
   const openNew = () => { setForm(EMPTY); setEditing(null); setShowForm(true); setError(''); };
   const openEdit = (a: Address) => {
-    setForm({ label: a.label, full_name: a.full_name, phone: a.phone, line1: a.line1, line2: a.line2, city: a.city, state: a.state, pincode: a.pincode });
+    setForm({
+      label: a.label,
+      full_name: a.full_name,
+      phone: a.phone,
+      line1: a.line1,
+      line2: a.line2,
+      city: a.city,
+      state: a.state,
+      pincode: a.pincode,
+      google_map_link: a.google_map_link || '',
+      latitude: a.latitude ?? null,
+      longitude: a.longitude ?? null,
+    });
     setEditing(a); setShowForm(true); setError('');
   };
 
@@ -134,6 +159,10 @@ export default function AddressesPage() {
                 <label style={lbl}>Area / Landmark</label>
                 <input style={inp} value={form.line2} onChange={e => set('line2', e.target.value)} placeholder="Near Bus Stand" />
               </div>
+              <div>
+                <label style={lbl}>Google Map Link</label>
+                <input style={inp} value={form.google_map_link} onChange={e => set('google_map_link', e.target.value)} placeholder="https://www.google.com/maps?q=..." />
+              </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
                 <div>
                   <label style={lbl}>City *</label>
@@ -186,6 +215,11 @@ export default function AddressesPage() {
                   <div style={{ fontWeight: 700, color: '#F8F9FB', fontSize: 14, marginBottom: 4 }}>{addr.full_name}</div>
                   <div style={{ fontSize: 13, color: '#A8BCCC', lineHeight: 1.7 }}>
                     {addr.line1}{addr.line2 ? `, ${addr.line2}` : ''}<br />
+                    {addr.google_map_link && (
+                      <>
+                        <a href={addr.google_map_link} target="_blank" rel="noopener" style={{ color: '#4ADE80', textDecoration: 'none', fontWeight: 700 }}>View Map Location</a><br />
+                      </>
+                    )}
                     {addr.city}, {addr.state} — {addr.pincode}<br />
                     📞 {addr.phone}
                   </div>

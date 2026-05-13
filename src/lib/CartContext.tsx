@@ -1,6 +1,6 @@
 'use client';
 // src/lib/CartContext.tsx
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import type { Product, CartItem } from './types';
 
 interface CartCtx {
@@ -15,9 +15,32 @@ interface CartCtx {
 }
 
 const CartContext = createContext<CartCtx | null>(null);
+const CART_STORAGE_KEY = 'karur-plywood-cart';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(CART_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setItems(parsed.filter(i => i?.product?.id && Number.isFinite(i?.quantity) && i.quantity > 0));
+        }
+      }
+    } catch {
+      window.localStorage.removeItem(CART_STORAGE_KEY);
+    } finally {
+      setReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  }, [items, ready]);
 
   const add = useCallback((p: Product) => {
     setItems(prev => {

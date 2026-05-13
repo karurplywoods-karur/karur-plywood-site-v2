@@ -5,6 +5,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+import { useCart } from '@/lib/CartContext';
 import type { Product, Category } from '@/lib/types';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
@@ -20,6 +21,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function ProductsPage() {
+  const { items, add, inc, dec, setQty } = useCart();
   const [products, setProducts]     = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading]       = useState(true);
@@ -72,6 +74,7 @@ export default function ProductsPage() {
   const isSearching  = searchQuery.length > 0;
   const isFiltering  = activeCategory !== 'all';
   const clearSearch  = () => { setSearchRaw(''); searchRef.current?.focus(); };
+  const getCartItem = (p: Product) => items.find(i => i.product.id === p.id);
 
   return (
     <>
@@ -266,7 +269,16 @@ export default function ProductsPage() {
         {!loading && filtered.length > 0 && (
           <div className="prod-grid">
             {filtered.map(product => (
-              <ProductCard key={product.id} product={product} mode="project" />
+              <ProductCard
+                key={product.id}
+                product={product}
+                mode="project"
+                cartItem={getCartItem(product)}
+                onAdd={add}
+                onInc={inc}
+                onDec={dec}
+                onSetQty={setQty}
+              />
             ))}
           </div>
         )}

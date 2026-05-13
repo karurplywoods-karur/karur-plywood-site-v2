@@ -154,6 +154,11 @@ export default function OrderDetailPage() {
               <div style={{ fontSize:13, color:'#A8BCCC', lineHeight:1.8 }}>
                 <strong style={{ color:'#F8F9FB' }}>{order.delivery_name}</strong><br />
                 {order.delivery_line1}{order.delivery_line2 ? `, ${order.delivery_line2}` : ''}<br />
+                {order.delivery_google_map_link && (
+                  <>
+                    <a href={order.delivery_google_map_link} target="_blank" rel="noopener" style={{ color:'#4ADE80', textDecoration:'none', fontWeight:700 }}>View Map Location</a><br />
+                  </>
+                )}
                 {order.delivery_city}, {order.delivery_state} — {order.delivery_pincode}<br />
                 📞 {order.delivery_phone}
               </div>

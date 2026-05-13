@@ -49,7 +49,7 @@ export default function CartDrawer({ open, onClose }: Props) {
             <div className="cart-empty">
               <div style={{ fontSize: 52, marginBottom: 16 }}>🛒</div>
               <div className="cart-empty-title">Your cart is empty</div>
-              <p className="cart-empty-sub">Browse products and add items to get started.</p>
+              <p className="cart-empty-sub">Browse shop or quick-order products and add items to get started.</p>
               <button className="cart-empty-btn" onClick={onClose}>Browse Products →</button>
             </div>
           ) : (

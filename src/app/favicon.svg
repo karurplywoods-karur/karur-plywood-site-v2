@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#0B2447"/>
+  <!-- Plywood layers (3 horizontal bars like real plywood cross-section) -->
+  <rect x="4" y="7"  width="24" height="5" rx="1" fill="#F97316" opacity="0.95"/>
+  <rect x="4" y="14" width="24" height="5" rx="1" fill="#F8F9FB" opacity="0.6"/>
+  <rect x="4" y="21" width="24" height="5" rx="1" fill="#F97316" opacity="0.75"/>
+  <!-- Right edge shadow (depth effect) -->
+  <rect x="25" y="7" width="3" height="19" rx="1" fill="rgba(0,0,0,0.35)"/>
+</svg>

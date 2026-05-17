@@ -66,7 +66,7 @@ create table if not exists public.orders (
 create table if not exists public.order_items (
   id            uuid primary key default gen_random_uuid(),
   order_id      uuid not null references public.orders(id) on delete cascade,
-  product_id    uuid references public.products(id) on delete set null,
+  product_id    bigint references public.products(id) on delete set null,
   product_name  text not null,
   product_image text default '',
   category_name text default '',

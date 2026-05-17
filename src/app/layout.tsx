@@ -28,6 +28,14 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image', title: 'Karur Plywood & Company' },
   alternates: { canonical: SITE_URL },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-icon.png',
+  },
+  manifest: '/manifest.webmanifest',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

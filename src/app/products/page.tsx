@@ -1,325 +1,362 @@
 'use client';
-// src/app/products/page.tsx
-// Converted to client component to support debounced search.
-// Server-side category filtering via URL params is preserved via router.
-import { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
+// src/app/products/page.tsx — UPDATED: No QuickView modal, cards link to /products/[id]
+import { useState, useEffect } from 'react';
+import { CartProvider } from '@/lib/CartContext';
 import ProductCard from '@/components/ProductCard';
-import { useCart } from '@/lib/CartContext';
 import type { Product, Category } from '@/lib/types';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
-// ── Debounce hook ─────────────────────────────────────────────
-function useDebounce<T>(value: T, delay: number): T {
-  const [debounced, setDebounced] = useState<T>(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debounced;
-}
+type SortKey = 'default' | 'price_asc' | 'price_desc' | 'name';
 
-export default function ProductsPage() {
-  const { items, add, inc, dec, setQty } = useCart();
-  const [products, setProducts]     = useState<Product[]>([]);
+function StoreInner() {
+  const [products,   setProducts]   = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading]       = useState(true);
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [loading,    setLoading]    = useState(true);
+  const [activeSlug, setActiveSlug] = useState('all');
+  const [sortBy,     setSortBy]     = useState<SortKey>('default');
+  const [search,     setSearch]     = useState('');
 
-  // ── Search ────────────────────────────────────────────────────
-  const [searchRaw, setSearchRaw]   = useState('');
-  const searchQuery  = useDebounce(searchRaw.trim(), 300);
-  const isDebouncing = searchRaw.trim() !== searchQuery;
-  const searchRef    = useRef<HTMLInputElement>(null);
-
-  // ── Fetch all project products once ───────────────────────────
+  // Fetch products + categories
   useEffect(() => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
-
-    setLoading(true);
-    fetch('/api/products?type=project', { signal: controller.signal })
-      .then(r => r.json())
-      .then(data => { clearTimeout(timer); setProducts(Array.isArray(data) ? data : []); setLoading(false); })
-      .catch(err => { clearTimeout(timer); if (err.name !== 'AbortError') console.error(err); setProducts([]); setLoading(false); });
-
-    return () => { clearTimeout(timer); controller.abort(); };
+    Promise.all([
+      fetch('/api/products?type=project').then(r => r.json()),
+      fetch('/api/categories').then(r => r.json()),
+    ]).then(([p, c]) => {
+      setProducts(Array.isArray(p) ? p : []);
+      setCategories(Array.isArray(c) ? c : []);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
 
-  // ── Fetch categories once ─────────────────────────────────────
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(r => r.json())
-      .then(data => setCategories(Array.isArray(data) ? data : []))
-      .catch(() => {});
-  }, []);
+  // Filter + Sort
+  const filtered = products
+    .filter(p => {
+      const matchCat = activeSlug === 'all' || p.categories?.slug === activeSlug;
+      const matchSearch = !search ||
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.description?.toLowerCase().includes(search.toLowerCase());
+      return matchCat && matchSearch;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'price_asc')  return (a.price ?? 0) - (b.price ?? 0);
+      if (sortBy === 'price_desc') return (b.price ?? 0) - (a.price ?? 0);
+      if (sortBy === 'name')       return a.name.localeCompare(b.name);
+      return (a.sort_order ?? 999) - (b.sort_order ?? 999);
+    });
 
-  // ── Filter pipeline ───────────────────────────────────────────
-  const catFiltered = activeCategory === 'all'
-    ? products
-    : products.filter(p => p.categories?.slug === activeCategory);
-
-  const filtered = searchQuery
-    ? catFiltered.filter(p => {
-        const q = searchQuery.toLowerCase();
-        return (
-          p.name.toLowerCase().includes(q) ||
-          (p.description?.toLowerCase().includes(q) ?? false) ||
-          (p.categories?.name?.toLowerCase().includes(q) ?? false)
-        );
-      })
-    : catFiltered;
-
-  const isSearching  = searchQuery.length > 0;
-  const isFiltering  = activeCategory !== 'all';
-  const clearSearch  = () => { setSearchRaw(''); searchRef.current?.focus(); };
-  const getCartItem = (p: Product) => items.find(i => i.product.id === p.id);
+  const catCounts = categories.reduce((acc, cat) => {
+    acc[cat.slug] = products.filter(p => p.categories?.slug === cat.slug).length;
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
     <>
-      {/* ── HERO ── */}
-      <section style={{ background:'linear-gradient(135deg,#1C140D,#161009)', borderBottom:'1px solid rgba(200,136,74,0.15)', padding:'64px 0', paddingTop:'calc(58px + 64px)' }}>
-        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 48px' }} className="prod-pad">
-          <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:20 }}>
-            <div>
-              <div style={{ display:'inline-flex', alignItems:'center', gap:8, fontSize:11, fontWeight:600, letterSpacing:'0.2em', textTransform:'uppercase', color:'#C8884A', marginBottom:12, fontFamily:"'Syne',sans-serif" }}>
-                <span style={{ width:20, height:1, background:'#C8884A', display:'inline-block' }}/>
-                Project Products
-              </div>
-              <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:10 }}>
-                PREMIUM <span style={{ color:'#F97316' }}>BUILDING MATERIALS</span>
-              </h1>
-              <p style={{ fontSize:14, color:'#7A8EA8', maxWidth:500, lineHeight:1.8, fontWeight:300 }}>
-                ISI Certified · All Major Brands · Wholesale &amp; Retail · Karur&apos;s Widest Selection
-              </p>
+      {/* Page Hero */}
+      <section className="store-hero">
+        <div className="store-hero-inner">
+          <div className="store-hero-eyebrow">Premium Building Materials</div>
+          <h1 className="store-hero-title">
+            SHOP ONLINE,<br/>
+            <span style={{ color: '#F97316' }}>DELIVERED TO YOU</span>
+          </h1>
+          <p className="store-hero-sub">
+            Browse {products.length > 0 ? products.length + '+' : ''} products — plywood, laminates, doors & hardware. Order online or via WhatsApp, we deliver across Tamil Nadu.
+          </p>
+        </div>
+
+        {/* Trust bar */}
+        <div className="store-trust-bar">
+          {[
+            { icon: '🚚', text: 'Delivery across Tamil Nadu' },
+            { icon: '✅', text: 'ISI Certified Products' },
+            { icon: '💬', text: 'Order via WhatsApp' },
+            { icon: '🏪', text: '25+ Years of Trust' },
+          ].map(t => (
+            <div key={t.text} className="trust-item">
+              <span>{t.icon}</span>
+              <span>{t.text}</span>
             </div>
-            <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-              <a href={`https://wa.me/${WA}?text=Hi%2C+I+need+a+price+list+for+your+products.`} target="_blank" rel="noopener"
-                style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'11px 22px', borderRadius:6, background:'#25D366', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none' }}>
-                💬 Get Price List
-              </a>
-              <Link href="/quick-order"
-                style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'11px 22px', borderRadius:6, background:'rgba(37,211,102,0.1)', color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:600, fontSize:13, letterSpacing:'0.06em', textDecoration:'none', border:'1px solid rgba(37,211,102,0.25)' }}>
-                ⚡ Quick Order
-              </Link>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* ── FILTER + SEARCH TOOLBAR ── */}
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'32px 48px 0' }} className="prod-pad">
-
-        {/* Search input */}
-        <div style={{ position:'relative', marginBottom:18 }}>
-          <span style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', pointerEvents:'none', display:'flex', alignItems:'center' }}>
-            {isDebouncing ? (
-              <svg width="17" height="17" viewBox="0 0 16 16" style={{ animation:'pd-spin 0.65s linear infinite' }} aria-hidden="true">
-                <circle cx="8" cy="8" r="6" fill="none" stroke="rgba(249,115,22,0.25)" strokeWidth="2"/>
-                <path d="M8 2 A6 6 0 0 1 14 8" fill="none" stroke="#F97316" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            ) : (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                stroke={searchQuery ? '#F97316' : '#7A8EA8'}
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-            )}
-          </span>
-
+      {/* Filters + Search */}
+      <section className="store-filters-section">
+        {/* Search */}
+        <div className="store-search-wrap">
+          <span className="store-search-icon">🔍</span>
           <input
-            ref={searchRef}
+            className="store-search"
             type="text"
-            value={searchRaw}
-            onChange={e => setSearchRaw(e.target.value)}
-            placeholder="Search products — e.g. Century, BWR, 18mm plywood, laminate..."
-            aria-label="Search products"
-            autoComplete="off"
-            spellCheck={false}
-            style={{
-              width: '100%',
-              background: 'rgba(255,255,255,0.04)',
-              border: `1.5px solid ${searchQuery ? 'rgba(249,115,22,0.45)' : 'rgba(200,136,74,0.2)'}`,
-              borderRadius: 8,
-              padding: '13px 42px 13px 44px',
-              fontSize: 14,
-              color: '#F8F9FB',
-              fontFamily: "'DM Sans', sans-serif",
-              outline: 'none',
-              transition: 'border-color 0.2s, box-shadow 0.2s',
-              boxSizing: 'border-box',
-              boxShadow: searchQuery ? '0 0 0 3px rgba(249,115,22,0.07)' : 'none',
-            } as React.CSSProperties}
+            placeholder="Search products…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
           />
-
-          {searchRaw && (
-            <button
-              onClick={clearSearch}
-              aria-label="Clear search"
-              style={{
-                position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.07)', border: 'none', borderRadius: 4,
-                width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#7A8EA8', cursor: 'pointer', fontSize: 12,
-                transition: 'background 0.15s, color 0.15s',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background='rgba(255,255,255,0.15)'; (e.currentTarget as HTMLButtonElement).style.color='#F8F9FB'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background='rgba(255,255,255,0.07)'; (e.currentTarget as HTMLButtonElement).style.color='#7A8EA8'; }}
-            >
-              ✕
-            </button>
+          {search && (
+            <button className="store-search-clear" onClick={() => setSearch('')} type="button">✕</button>
           )}
         </div>
 
-        {/* Category tabs + result count row */}
-        <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+        {/* Category tabs */}
+        <div className="store-tabs-row">
           <button
-            onClick={() => setActiveCategory('all')}
-            style={{
-              padding:'7px 16px', borderRadius:20, border:'1px solid', fontSize:12,
-              fontWeight:600, cursor:'pointer', fontFamily:"'Syne',sans-serif", transition:'all 0.18s',
-              borderColor: activeCategory==='all' ? '#F97316' : 'rgba(200,136,74,0.2)',
-              background:  activeCategory==='all' ? 'rgba(249,115,22,0.12)' : 'transparent',
-              color:       activeCategory==='all' ? '#F97316' : '#7A8EA8',
-            }}>
-            🏷️ All ({products.length})
+            className={`store-tab${activeSlug === 'all' ? ' store-tab--active' : ''}`}
+            onClick={() => setActiveSlug('all')}
+            type="button"
+          >
+            All ({products.length})
           </button>
-
           {categories.map(cat => (
             <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.slug)}
-              style={{
-                padding:'7px 16px', borderRadius:20, border:'1px solid', fontSize:12,
-                fontWeight:600, cursor:'pointer', fontFamily:"'Syne',sans-serif", transition:'all 0.18s',
-                borderColor: activeCategory===cat.slug ? '#F97316' : 'rgba(200,136,74,0.2)',
-                background:  activeCategory===cat.slug ? 'rgba(249,115,22,0.12)' : 'transparent',
-                color:       activeCategory===cat.slug ? '#F97316' : '#7A8EA8',
-              }}>
-              {cat.icon} {cat.name}
+              key={cat.slug}
+              className={`store-tab${activeSlug === cat.slug ? ' store-tab--active' : ''}`}
+              onClick={() => setActiveSlug(cat.slug)}
+              type="button"
+            >
+              {cat.icon} {cat.name} ({catCounts[cat.slug] || 0})
             </button>
           ))}
-
-          {/* Live result count */}
-          {(isSearching || isFiltering) && !isDebouncing && (
-            <span style={{ marginLeft:'auto', fontSize:12, color: filtered.length > 0 ? '#7A8EA8' : '#FCA5A5', fontFamily:"'Syne',sans-serif", fontWeight:600, flexShrink:0 }}>
-              {filtered.length === 0 ? 'No results' : `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`}
-            </span>
-          )}
         </div>
-      </div>
 
-      {/* ── PRODUCT GRID ── */}
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'32px 48px 64px' }} className="prod-pad">
+        {/* Sort */}
+        <div className="store-sort-row">
+          <span className="store-sort-label">Sort:</span>
+          {(['default', 'price_asc', 'price_desc', 'name'] as SortKey[]).map(k => (
+            <button
+              key={k}
+              className={`store-sort-btn${sortBy === k ? ' store-sort-btn--active' : ''}`}
+              onClick={() => setSortBy(k)}
+              type="button"
+            >
+              {{ default: 'Featured', price_asc: 'Price ↑', price_desc: 'Price ↓', name: 'A–Z' }[k]}
+            </button>
+          ))}
+        </div>
 
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="prod-grid">
-            {[1,2,3,4,5,6].map(i => (
-              <div key={i} style={{ background:'rgba(25,55,109,0.2)', border:'1px solid rgba(249,115,22,0.06)', borderRadius:12, height:300, animation:'pd-shimmer 1.5s ease-in-out infinite', opacity:0.5 }} />
+        {/* Results count */}
+        <div className="store-results-info">
+          {loading ? 'Loading…' : `${filtered.length} product${filtered.length !== 1 ? 's' : ''}${search ? ` matching "${search}"` : ''}`}
+        </div>
+      </section>
+
+      {/* Products Grid */}
+      <section className="store-grid-section">
+        {loading ? (
+          <div className="store-loading">
+            <div className="store-spinner" />
+            <span>Loading products…</span>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="store-empty">
+            <div style={{ fontSize: '3rem' }}>🔍</div>
+            <h3>No products found</h3>
+            <p>Try a different category or search term.</p>
+            <button
+              onClick={() => { setSearch(''); setActiveSlug('all'); }}
+              className="store-empty-reset"
+              type="button"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <div className="store-grid">
+            {filtered.map(p => (
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
         )}
+      </section>
 
-        {/* No results from search/filter */}
-        {!loading && products.length > 0 && filtered.length === 0 && (
-          <div style={{ textAlign:'center', padding:'60px 0' }}>
-            <div style={{ fontSize:44, marginBottom:14 }}>🔍</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>
-              NO RESULTS FOR &ldquo;{searchQuery || activeCategory}&rdquo;
-            </div>
-            <p style={{ color:'#7A8EA8', marginBottom:22, fontSize:14 }}>Try a different keyword or clear the filter.</p>
-            <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
-              {searchRaw && (
-                <button onClick={clearSearch}
-                  style={{ padding:'10px 22px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
-                  ✕ Clear Search
-                </button>
-              )}
-              {isFiltering && (
-                <button onClick={() => setActiveCategory('all')}
-                  style={{ padding:'10px 22px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
-                  Show All Categories
-                </button>
-              )}
-              <a href={`https://wa.me/${WA}?text=Hi%2C+I%27m+looking+for+${encodeURIComponent(searchQuery || activeCategory)}+—+do+you+have+it%3F`}
-                target="_blank" rel="noopener"
-                style={{ padding:'10px 22px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:6 }}>
-                💬 Ask on WhatsApp
-              </a>
-            </div>
+      {/* Bulk CTA Banner */}
+      <section className="store-bulk-banner">
+        <div className="store-bulk-inner">
+          <div className="store-bulk-text">
+            <h2 className="store-bulk-title">Need Bulk Quantities?</h2>
+            <p className="store-bulk-sub">
+              Contractors & interior designers get special pricing. Send us your project requirements.
+            </p>
           </div>
-        )}
-
-        {/* Empty DB state */}
-        {!loading && products.length === 0 && (
-          <div style={{ textAlign:'center', padding:'80px 0' }}>
-            <div style={{ fontSize:48, marginBottom:16 }}>📦</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>PRODUCTS COMING SOON</div>
-            <p style={{ color:'#7A8EA8', marginBottom:24 }}>Check back soon or ask us on WhatsApp.</p>
-            <a href={`https://wa.me/${WA}?text=Hi%2C+do+you+have+products+in+this+category%3F`} target="_blank" rel="noopener"
-              style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'12px 24px', borderRadius:6, background:'#25D366', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none' }}>
-              💬 Ask on WhatsApp
-            </a>
-          </div>
-        )}
-
-        {/* Products */}
-        {!loading && filtered.length > 0 && (
-          <div className="prod-grid">
-            {filtered.map(product => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                mode="project"
-                cartItem={getCartItem(product)}
-                onAdd={add}
-                onInc={inc}
-                onDec={dec}
-                onSetQty={setQty}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Bottom CTA */}
-        {!loading && filtered.length > 0 && (
-          <div style={{ marginTop:56, background:'linear-gradient(135deg,#0D2B17,#091810)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:16, padding:'36px 44px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:28, flexWrap:'wrap' }}>
-            <div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:6 }}>Need a Bulk Quote?</div>
-              <div style={{ fontSize:13, color:'rgba(255,255,255,0.5)' }}>Send your list and we&apos;ll give you the best wholesale rate.</div>
-            </div>
-            <a href={`https://wa.me/${WA}?text=Hi%2C+I+need+a+bulk+quote+for+plywood+and+materials.`} target="_blank" rel="noopener"
-              style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'12px 24px', borderRadius:6, background:'#25D366', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', flexShrink:0 }}>
-              💬 Get Bulk Quote on WhatsApp
-            </a>
-          </div>
-        )}
-      </div>
+          <a
+            href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi, I need a bulk/project quote for building materials.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="store-bulk-btn"
+          >
+            Get Project Quote
+          </a>
+        </div>
+      </section>
 
       <style>{`
-        @keyframes pd-shimmer { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
-        @keyframes pd-spin    { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        .store-hero {
+          padding: 4rem 1.5rem 2rem;
+          text-align: center;
+          background: radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.08) 0%, transparent 70%);
+        }
+        .store-hero-inner { max-width: 680px; margin: 0 auto 2rem; }
+        .store-hero-eyebrow {
+          font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+          letter-spacing: 0.2em; text-transform: uppercase;
+          color: var(--orange); margin-bottom: 0.75rem;
+        }
+        .store-hero-title {
+          font-family: 'Bebas Neue', cursive;
+          font-size: clamp(2.4rem, 6vw, 4rem);
+          color: var(--white); line-height: 1; margin: 0 0 1rem;
+          letter-spacing: 0.02em;
+        }
+        .store-hero-sub {
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.95rem; color: #7A8EA8; line-height: 1.6; margin: 0;
+        }
+        .store-trust-bar {
+          display: flex; align-items: center; justify-content: center;
+          flex-wrap: wrap; gap: 1.5rem;
+          padding: 1rem 1.5rem;
+          border-top: 1px solid rgba(58,78,106,0.3);
+          border-bottom: 1px solid rgba(58,78,106,0.3);
+          max-width: 900px; margin: 0 auto;
+        }
+        .trust-item {
+          display: flex; align-items: center; gap: 0.4rem;
+          font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #9DB5CC;
+        }
 
-        .prod-pad { padding-left: 48px; padding-right: 48px; }
+        /* Filters */
+        .store-filters-section { padding: 1.5rem 1.5rem 0; max-width: 1280px; margin: 0 auto; }
+        .store-search-wrap {
+          position: relative; max-width: 480px; margin-bottom: 1.25rem;
+        }
+        .store-search-icon {
+          position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+          font-size: 0.85rem; pointer-events: none;
+        }
+        .store-search {
+          width: 100%; padding: 0.65rem 2.5rem 0.65rem 2.5rem;
+          background: rgba(11,36,71,0.6);
+          border: 1px solid rgba(58,78,106,0.5);
+          border-radius: 6px;
+          color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+          outline: none; transition: border-color 0.2s;
+          box-sizing: border-box;
+        }
+        .store-search:focus { border-color: rgba(249,115,22,0.5); }
+        .store-search::placeholder { color: #5A7A9A; }
+        .store-search-clear {
+          position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+          background: none; border: none; color: #5A7A9A; cursor: pointer;
+          font-size: 0.75rem; padding: 4px;
+        }
 
-        /* ── PRODUCT GRID — fixed breakpoints ── */
-        .prod-grid {
+        .store-tabs-row {
+          display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;
+        }
+        .store-tab {
+          padding: 0.4rem 1rem; border-radius: 20px;
+          font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+          letter-spacing: 0.1em; text-transform: uppercase;
+          background: rgba(11,36,71,0.5);
+          border: 1px solid rgba(58,78,106,0.4);
+          color: #7A8EA8; cursor: pointer; transition: all 0.2s;
+        }
+        .store-tab:hover { color: var(--white); border-color: rgba(58,78,106,0.8); }
+        .store-tab--active {
+          background: var(--orange); border-color: var(--orange); color: white;
+        }
+
+        .store-sort-row {
+          display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+          margin-bottom: 0.75rem;
+        }
+        .store-sort-label {
+          font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 700;
+          letter-spacing: 0.12em; text-transform: uppercase; color: #5A7A9A;
+        }
+        .store-sort-btn {
+          padding: 0.3rem 0.75rem; border-radius: 4px;
+          font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+          background: transparent; border: 1px solid rgba(58,78,106,0.4);
+          color: #7A8EA8; cursor: pointer; transition: all 0.2s;
+        }
+        .store-sort-btn:hover { color: var(--white); }
+        .store-sort-btn--active { border-color: var(--orange); color: var(--orange); }
+
+        .store-results-info {
+          font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #5A7A9A;
+          margin-bottom: 1.5rem;
+        }
+
+        /* Grid */
+        .store-grid-section { padding: 0 1.5rem 3rem; max-width: 1280px; margin: 0 auto; }
+        .store-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.25rem;
         }
-        /* Tablet: 2 columns */
-        @media (max-width: 900px) {
-          .prod-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        @media (max-width: 480px) {
+          .store-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
         }
-        /* Mobile: 1 column */
-        @media (max-width: 540px) {
-          .prod-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
-          .prod-pad  { padding-left: 16px !important; padding-right: 16px !important; }
+
+        .store-loading, .store-empty {
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          gap: 1rem; padding: 4rem 1rem; color: #7A8EA8;
+          font-family: 'DM Sans', sans-serif; text-align: center;
         }
+        .store-empty h3 { font-family: 'Syne', sans-serif; color: var(--white); margin: 0; }
+        .store-empty-reset {
+          padding: 0.5rem 1.25rem; background: var(--orange);
+          border: none; border-radius: 4px; color: white;
+          font-family: 'Syne', sans-serif; font-size: 0.75rem;
+          font-weight: 700; letter-spacing: 0.1em; cursor: pointer;
+        }
+        .store-spinner {
+          width: 36px; height: 36px;
+          border: 3px solid rgba(249,115,22,0.2);
+          border-top-color: var(--orange); border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Bulk banner */
+        .store-bulk-banner {
+          background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(11,36,71,0.8));
+          border-top: 1px solid rgba(249,115,22,0.2);
+          border-bottom: 1px solid rgba(249,115,22,0.2);
+          padding: 2.5rem 1.5rem;
+        }
+        .store-bulk-inner {
+          max-width: 900px; margin: 0 auto;
+          display: flex; align-items: center; justify-content: space-between;
+          flex-wrap: wrap; gap: 1.5rem;
+        }
+        .store-bulk-title {
+          font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800;
+          color: var(--white); margin: 0 0 0.4rem; text-transform: uppercase;
+        }
+        .store-bulk-sub {
+          font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+          color: #7A8EA8; margin: 0;
+        }
+        .store-bulk-btn {
+          padding: 0.85rem 2rem; background: var(--orange);
+          color: white; text-decoration: none; border-radius: 4px;
+          font-family: 'Syne', sans-serif; font-size: 0.8rem;
+          font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+          white-space: nowrap; transition: background 0.2s;
+        }
+        .store-bulk-btn:hover { background: #EA6A0A; }
       `}</style>
     </>
+  );
+}
+
+export default function StorePage() {
+  return (
+    <CartProvider>
+      <StoreInner />
+    </CartProvider>
   );
 }

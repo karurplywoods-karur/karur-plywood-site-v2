@@ -15,9 +15,17 @@ interface Props {
   onInc?: (p: Product) => void;
   onDec?: (p: Product) => void;
   onSetQty?: (p: Product, qty: number) => void;
+  showDescription?: boolean;
 }
 
-export default function ProductCard({ product, cartItem: cartItemProp, onAdd, onInc, onDec }: Props) {
+export default function ProductCard({
+  product,
+  cartItem: cartItemProp,
+  onAdd,
+  onInc,
+  onDec,
+  showDescription = true,
+}: Props) {
   const { items, add, inc, dec } = useCart();
   const cartItem = cartItemProp || items.find(i => i.product.id === product.id);
   const qty = cartItem?.quantity || 0;
@@ -107,7 +115,9 @@ export default function ProductCard({ product, cartItem: cartItemProp, onAdd, on
           <Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
             <div className="pc-name">{product.name}</div>
           </Link>
-          <div className="pc-desc">{product.description}</div>
+          {showDescription && product.description && (
+            <div className="pc-desc">{product.description}</div>
+          )}
 
           {/* Price row — MRP slashed + Sale price */}
           {product.price ? (

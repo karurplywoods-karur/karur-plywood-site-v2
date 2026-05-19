@@ -113,7 +113,7 @@ export default async function ProductsPage({
         ) : (
           <div className="cp-grid">
             {products.map((product: any) => (
-              <ProductCard key={product.id} product={product} mode="project" />
+              <ProductCard key={product.id} product={product} mode="project" showDescription={false} />
             ))}
           </div>
         )}

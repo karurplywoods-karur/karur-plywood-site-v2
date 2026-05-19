@@ -11,22 +11,24 @@ export interface Category {
 export interface Product {
   id: string;
   name: string;
-  description?: string;
-  price?: number;
-  mrp?: number;           // ← ADD THIS
-  unit?: string;
-  image_url?: string;
-  in_stock?: boolean;
-  is_active?: boolean;
-  sort_order?: number;
-  category_id?: string;
-  specs?: Record<string, string | number>;   // ← ADD IF NOT PRESENT
-  categories?: {
-    id: string;
-    name: string;
-    slug: string;
-    icon?: string;
-  };
+  category_id: string | null;
+  description: string;
+  image_url: string;
+  type: 'project' | 'quick';
+  price: number | null;
+  mrp: number | null;          // ← NEW: crossed-out original price
+  unit: string;
+  in_stock: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  // joined
+  categories?: Category;
+}
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
 }
 
 // ── BADGE TYPES ─────────────────────────────────────────────

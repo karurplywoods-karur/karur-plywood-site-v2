@@ -1,821 +1,369 @@
-'use client';
 // src/app/products/[id]/page.tsx
-// Full product detail page: MRP (slashed) + sale price, gallery, add-to-cart, associated products
-
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+// KEY FIX: This page was blank — now shows full product detail + linked products
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCart } from '@/lib/CartContext';
-import { getProductBadge } from '@/lib/badges';
-import type { Product } from '@/lib/types';
+import { notFound } from 'next/navigation';
+import { supabase } from '@/lib/db';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
 
-interface Associated {
-  sameCategory: Product[];
-  otherProducts: Product[];
+// ── Fetch single product ────────────────────────────────────────
+async function getProduct(id: string) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, categories(id,name,slug,icon)')
+    .eq('id', id)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data;
 }
 
-// ── Mini Product Card (for associated section) ──────────────────────────────
-function MiniCard({ product }: { product: Product }) {
-  const { items, add, inc, dec } = useCart();
-  const cartItem = items.find(i => i.product.id === product.id);
-  const qty = cartItem?.quantity || 0;
+// ── Fetch related products (same category, exclude current) ────
+async function getRelated(categoryId: string | null, currentId: string) {
+  if (!categoryId) return [];
+  const { data } = await supabase
+    .from('products')
+    .select('*, categories(id,name,slug,icon)')
+    .eq('category_id', categoryId)
+    .eq('in_stock', true)
+    .neq('id', currentId)
+    .order('sort_order', { ascending: true })
+    .limit(4);
+  return data || [];
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const p = await getProduct(params.id);
+  if (!p) return { title: 'Product Not Found' };
+  return {
+    title: `${p.name} | Karur Plywood & Company`,
+    description: p.description || `Buy ${p.name} at best price in Karur. WhatsApp for instant quote.`,
+    openGraph: { images: p.image_url ? [p.image_url] : [] },
+  };
+}
+
+export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+  const product = await getProduct(params.id);
+  if (!product) notFound();
+
+  const related = await getRelated(product.category_id, product.id);
+
+  const waText = encodeURIComponent(
+    `Hi, I'm interested in *${product.name}*${product.price ? ` (₹${product.price.toLocaleString('en-IN')} ${product.unit || ''})` : ''}. Can you help me with availability and delivery?`
+  );
+
   const discount = product.mrp && product.price
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : null;
 
   return (
-    <Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
-      <div className="mini-card">
-        <div className="mini-img-wrap">
-          {product.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              fill
-              sizes="(max-width:768px) 50vw, 25vw"
-              style={{ objectFit: 'cover' }}
-            />
-          ) : (
-            <div className="mini-img-placeholder">
-              {product.categories?.icon || '📦'}
-            </div>
-          )}
-          {discount && discount > 0 && (
-            <div className="mini-discount-badge">{discount}% OFF</div>
-          )}
-        </div>
-        <div className="mini-body">
-          <div className="mini-cat">{product.categories?.name}</div>
-          <div className="mini-name">{product.name}</div>
-          <div className="mini-price-row">
-            {product.price ? (
+    <>
+      {/* Breadcrumb */}
+      <div style={{ background: '#070F1F', borderBottom: '1px solid rgba(249,115,22,0.1)', padding: '12px 0', marginTop: 58 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#7A8EA8' }}>
+            <Link href="/" style={{ color: '#7A8EA8', textDecoration: 'none' }}>Home</Link>
+            <span>›</span>
+            <Link href="/products" style={{ color: '#7A8EA8', textDecoration: 'none' }}>Products</Link>
+            {product.categories && (
               <>
-                <span className="mini-sale">₹{product.price.toLocaleString('en-IN')}</span>
-                {product.mrp && product.mrp > product.price && (
-                  <span className="mini-mrp">₹{product.mrp.toLocaleString('en-IN')}</span>
-                )}
-                {product.unit && <span className="mini-unit">/{product.unit}</span>}
+                <span>›</span>
+                <Link href={`/products?category=${product.categories.slug}`} style={{ color: '#7A8EA8', textDecoration: 'none' }}>
+                  {product.categories.icon} {product.categories.name}
+                </Link>
               </>
-            ) : (
-              <span className="mini-tbd">Price on request</span>
             )}
+            <span>›</span>
+            <span style={{ color: '#F97316' }}>{product.name}</span>
           </div>
-          {qty === 0 ? (
-            <button
-              className="mini-add-btn"
-              onClick={e => { e.preventDefault(); add(product); }}
-              type="button"
-            >
-              + Add
-            </button>
-          ) : (
-            <div className="mini-qty" onClick={e => e.preventDefault()}>
-              <button className="mini-qty-btn" onClick={() => dec(product)} type="button">−</button>
-              <span>{qty}</span>
-              <button className="mini-qty-btn" onClick={() => inc(product)} type="button">+</button>
-            </div>
-          )}
         </div>
       </div>
-    </Link>
-  );
-}
 
-// ── Main Product Detail Page ────────────────────────────────────────────────
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const router = useRouter();
-  const { items, add, inc, dec } = useCart();
+      {/* Main Product Section */}
+      <section style={{ background: '#070F1F', padding: '48px 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'start' }} className="pd-grid">
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [associated, setAssociated] = useState<Associated>({ sameCategory: [], otherProducts: [] });
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-  const [activeImg, setActiveImg] = useState<string | null>(null);
-  const [addedFlash, setAddedFlash] = useState(false);
+            {/* LEFT — Image */}
+            <div>
+              <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(249,115,22,0.18)', background: 'rgba(25,55,109,0.4)', aspectRatio: '4/3' }}>
+                {product.image_url ? (
+                  <Image
+                    src={product.image_url}
+                    alt={product.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width:768px) 100vw, 50vw"
+                    priority
+                  />
+                ) : (
+                  <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
+                    {product.categories?.icon || '📦'}
+                  </div>
+                )}
 
-  useEffect(() => {
-    fetch(`/api/products/${params.id}`)
-      .then(r => {
-        if (!r.ok) { setNotFound(true); return null; }
-        return r.json();
-      })
-      .then(data => {
-        if (!data) return;
-        setProduct(data.product);
-        setAssociated(data.associated);
-        setActiveImg(data.product.image_url || null);
-        setLoading(false);
-      })
-      .catch(() => { setNotFound(true); setLoading(false); });
-  }, [params.id]);
+                {/* Discount badge on image */}
+                {discount && discount > 0 && (
+                  <div style={{ position: 'absolute', top: 16, left: 16, background: '#25D366', color: 'white', borderRadius: 6, padding: '6px 14px', fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.2rem', letterSpacing: '.05em', boxShadow: '0 4px 16px rgba(37,211,102,0.4)' }}>
+                    {discount}% OFF
+                  </div>
+                )}
 
-  const cartItem = product ? items.find(i => i.product.id === product.id) : null;
-  const qty = cartItem?.quantity || 0;
-
-  const handleAdd = useCallback(() => {
-    if (!product) return;
-    add(product);
-    setAddedFlash(true);
-    setTimeout(() => setAddedFlash(false), 1400);
-  }, [product, add]);
-
-  const handleWA = useCallback(() => {
-    if (!product) return;
-    const msg = encodeURIComponent(
-      `Hi, I'm interested in *${product.name}*${product.price ? ` (₹${product.price.toLocaleString('en-IN')}${product.unit ? `/${product.unit}` : ''})` : ''}. Please share more details.`
-    );
-    window.open(`https://wa.me/${WA}?text=${msg}`, '_blank');
-  }, [product]);
-
-  // ── Loading ────────────────────────────────────────────────────────────────
-  if (loading) {
-    return (
-      <main style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="pdp-spinner" />
-      </main>
-    );
-  }
-
-  // ── Not Found ──────────────────────────────────────────────────────────────
-  if (notFound || !product) {
-    return (
-      <main style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-        <div style={{ fontSize: '3rem' }}>🪵</div>
-        <h2 style={{ fontFamily: 'Syne, sans-serif', color: 'var(--white)' }}>Product not found</h2>
-        <Link href="/products" style={{ color: 'var(--orange)', fontFamily: 'Syne, sans-serif' }}>← Back to Products</Link>
-      </main>
-    );
-  }
-
-  // ── Price calculations ─────────────────────────────────────────────────────
-  const badge = getProductBadge(product);
-  const hasMRP = product.mrp && product.price && product.mrp > product.price;
-  const discount = hasMRP
-    ? Math.round(((product.mrp! - product.price!) / product.mrp!) * 100)
-    : null;
-
-  const allAssociated = [...associated.sameCategory, ...associated.otherProducts];
-
-  return (
-    <>
-      {/* ── Breadcrumb ── */}
-      <nav className="pdp-breadcrumb">
-        <Link href="/" className="pdp-bc-link">Home</Link>
-        <span className="pdp-bc-sep">›</span>
-        <Link href="/products" className="pdp-bc-link">Products</Link>
-        {product.categories && (
-          <>
-            <span className="pdp-bc-sep">›</span>
-            <Link href={`/products?cat=${product.categories.slug}`} className="pdp-bc-link">
-              {product.categories.name}
-            </Link>
-          </>
-        )}
-        <span className="pdp-bc-sep">›</span>
-        <span className="pdp-bc-current">{product.name}</span>
-      </nav>
-
-      {/* ── Main Detail Layout ── */}
-      <main className="pdp-main">
-        <div className="pdp-container">
-
-          {/* LEFT — Image */}
-          <div className="pdp-gallery">
-            <div className="pdp-main-img-wrap">
-              {activeImg ? (
-                <Image
-                  src={activeImg}
-                  alt={product.name}
-                  fill
-                  priority
-                  sizes="(max-width:768px) 100vw, 50vw"
-                  style={{ objectFit: 'cover', borderRadius: '4px' }}
-                />
-              ) : (
-                <div className="pdp-img-placeholder">
-                  {product.categories?.icon || '📦'}
+                {/* Stock indicator */}
+                <div style={{ position: 'absolute', top: 16, right: 16, background: product.in_stock ? 'rgba(37,211,102,0.15)' : 'rgba(248,113,113,0.15)', border: `1px solid ${product.in_stock ? 'rgba(37,211,102,0.4)' : 'rgba(248,113,113,0.4)'}`, borderRadius: 4, padding: '4px 10px', fontSize: 11, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: product.in_stock ? '#4ADE80' : '#F87171', backdropFilter: 'blur(8px)' }}>
+                  {product.in_stock ? '✓ In Stock' : 'Out of Stock'}
                 </div>
-              )}
+              </div>
 
-              {/* Badges */}
-              {badge && (
-                <div
-                  className="pdp-trust-badge"
-                  style={{ background: badge.color, color: badge.textColor }}
-                >
-                  {badge.emoji} {badge.label}
+              {/* Category tag below image */}
+              {product.categories && (
+                <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+                  <Link href={`/products?category=${product.categories.slug}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, padding: '5px 14px', fontSize: 12, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#F97316', textDecoration: 'none' }}>
+                    {product.categories.icon} {product.categories.name}
+                  </Link>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(25,55,109,0.5)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 4, padding: '5px 14px', fontSize: 12, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#7A8EA8' }}>
+                    {product.type === 'quick' ? '⚡ Quick Order' : '🏠 Project Supply'}
+                  </span>
                 </div>
-              )}
-              {discount && discount > 0 && (
-                <div className="pdp-discount-badge">{discount}% OFF</div>
               )}
             </div>
-          </div>
 
-          {/* RIGHT — Info */}
-          <div className="pdp-info">
+            {/* RIGHT — Details */}
+            <div>
+              <h1 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 'clamp(2rem,3.5vw,3rem)', letterSpacing: '.04em', color: '#F8F9FB', lineHeight: 1, marginBottom: 16 }}>
+                {product.name}
+              </h1>
 
-            {/* Category pill */}
-            {product.categories && (
-              <div className="pdp-cat-pill">
-                {product.categories.icon} {product.categories.name}
-              </div>
-            )}
-
-            {/* Product name */}
-            <h1 className="pdp-title">{product.name}</h1>
-
-            {/* Price block */}
-            <div className="pdp-price-block">
-              {product.price ? (
-                <>
-                  <div className="pdp-price-row">
-                    <span className="pdp-sale-price">
+              {/* Price Block */}
+              <div style={{ background: 'rgba(25,55,109,0.4)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 10, padding: '20px 22px', marginBottom: 24 }}>
+                {product.mrp && product.mrp > (product.price || 0) && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                    <span style={{ fontSize: 15, color: '#7A8EA8', textDecoration: 'line-through' }}>
+                      MRP ₹{product.mrp.toLocaleString('en-IN')}
+                    </span>
+                    {discount && (
+                      <span style={{ fontSize: 12, fontFamily: "'Syne',sans-serif", fontWeight: 700, background: 'rgba(37,211,102,0.15)', color: '#4ADE80', border: '1px solid rgba(37,211,102,0.25)', borderRadius: 3, padding: '2px 8px', letterSpacing: '.06em' }}>
+                        SAVE {discount}%
+                      </span>
+                    )}
+                  </div>
+                )}
+                {product.price ? (
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                    <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '2.8rem', color: '#F97316', letterSpacing: '.03em', lineHeight: 1 }}>
                       ₹{product.price.toLocaleString('en-IN')}
                     </span>
                     {product.unit && (
-                      <span className="pdp-unit">/ {product.unit}</span>
+                      <span style={{ fontSize: 14, color: '#7A8EA8', fontFamily: "'Syne',sans-serif" }}>
+                        / {product.unit}
+                      </span>
                     )}
                   </div>
-                  {hasMRP && (
-                    <div className="pdp-mrp-row">
-                      <span className="pdp-mrp-label">MRP:</span>
-                      <span className="pdp-mrp-price">
-                        ₹{product.mrp!.toLocaleString('en-IN')}
-                      </span>
-                      {discount && discount > 0 && (
-                        <span className="pdp-save-tag">
-                          You save ₹{(product.mrp! - product.price!).toLocaleString('en-IN')} ({discount}%)
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  <div className="pdp-price-note">
-                    * Prices include GST. Bulk pricing available on request.
+                ) : (
+                  <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.6rem', color: '#F97316', letterSpacing: '.04em' }}>
+                    CONTACT FOR PRICE
                   </div>
-                </>
-              ) : (
-                <div className="pdp-price-enquiry">
-                  <span>💬</span>
-                  <span>Price on enquiry — tap WhatsApp to get a quote</span>
+                )}
+                {product.mrp && product.price && (
+                  <div style={{ marginTop: 8, fontSize: 12, color: '#4ADE80' }}>
+                    You save ₹{(product.mrp - product.price).toLocaleString('en-IN')} on this order
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              {product.description && (
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{ fontSize: 11, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 8 }}>
+                    About this product
+                  </div>
+                  <p style={{ fontSize: 15, color: '#A8BCCC', lineHeight: 1.85, fontWeight: 300 }}>
+                    {product.description}
+                  </p>
                 </div>
               )}
-            </div>
 
-            {/* Stock & delivery */}
-            <div className="pdp-meta-row">
-              {product.in_stock !== false ? (
-                <span className="pdp-in-stock">✓ In Stock</span>
-              ) : (
-                <span className="pdp-out-stock">✗ Out of Stock</span>
-              )}
-              <span className="pdp-delivery">
-                🚚 Delivery across Tamil Nadu
-              </span>
-            </div>
+              {/* Quick facts */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 28 }}>
+                {[
+                  { label: 'Category', value: product.categories?.name || 'General' },
+                  { label: 'Availability', value: product.in_stock ? 'In Stock' : 'Out of Stock' },
+                  { label: 'Order Type', value: product.type === 'quick' ? 'Quick Order' : 'Project Supply' },
+                  { label: 'Location', value: 'Karur, Tamil Nadu' },
+                ].map(f => (
+                  <div key={f.label} style={{ background: 'rgba(11,36,71,0.5)', border: '1px solid rgba(249,115,22,0.1)', borderRadius: 6, padding: '10px 14px' }}>
+                    <div style={{ fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 3 }}>{f.label}</div>
+                    <div style={{ fontSize: 13, color: '#F8F9FB', fontWeight: 500 }}>{f.value}</div>
+                  </div>
+                ))}
+              </div>
 
-            {/* Description */}
-            {product.description && (
-              <p className="pdp-desc">{product.description}</p>
-            )}
-
-            {/* Specs (if any custom fields) */}
-            {product.specs && Object.keys(product.specs).length > 0 && (
-              <div className="pdp-specs">
-                <div className="pdp-specs-title">Specifications</div>
-                <div className="pdp-specs-grid">
-                  {Object.entries(product.specs).map(([k, v]) => (
-                    <div key={k} className="pdp-spec-row">
-                      <span className="pdp-spec-key">{k}</span>
-                      <span className="pdp-spec-val">{String(v)}</span>
-                    </div>
-                  ))}
+              {/* CTA Buttons */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <a
+                  href={`https://wa.me/${WA}?text=${waText}`}
+                  target="_blank" rel="noopener"
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '16px 0', borderRadius: 8, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.85rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'all 0.2s' }}
+                  className="pd-wa-btn"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                  Enquire on WhatsApp
+                </a>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <a href={`tel:${process.env.NEXT_PUBLIC_PHONE_RAW || '919999999999'}`}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 0', borderRadius: 8, background: 'transparent', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
+                    📞 Call Now
+                  </a>
+                  <Link href="/products"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 0', borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
+                    ← All Products
+                  </Link>
                 </div>
               </div>
-            )}
 
-            {/* CTA Buttons */}
-            <div className="pdp-cta-group">
-              {/* Add to Cart / Qty Control */}
-              {product.in_stock !== false && (
-                qty === 0 ? (
-                  <button
-                    className={`pdp-add-btn${addedFlash ? ' pdp-add-btn--flash' : ''}`}
-                    onClick={handleAdd}
-                    type="button"
-                  >
-                    {addedFlash ? '✓ Added to Cart!' : '+ Add to Cart'}
-                  </button>
-                ) : (
-                  <div className="pdp-qty-ctrl">
-                    <button className="pdp-qty-btn" onClick={() => dec(product)} type="button" aria-label="Decrease">−</button>
-                    <span className="pdp-qty-num">{qty} in cart</span>
-                    <button className="pdp-qty-btn" onClick={() => inc(product)} type="button" aria-label="Increase">+</button>
-                  </div>
-                )
-              )}
-
-              {/* WhatsApp enquiry */}
-              <button className="pdp-wa-btn" onClick={handleWA} type="button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.845L.057 23.926a.5.5 0 0 0 .617.617l6.081-1.465A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.793 9.793 0 0 1-5.021-1.379l-.36-.214-3.73.899.915-3.638-.235-.374A9.794 9.794 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
-                </svg>
-                Enquire on WhatsApp
-              </button>
-            </div>
-
-            {/* Trust row */}
-            <div className="pdp-trust-row">
-              {[
-                { icon: '✅', text: 'ISI Certified' },
-                { icon: '🏪', text: '25+ Years Trust' },
-                { icon: '🔄', text: 'Easy Returns' },
-                { icon: '📦', text: 'Safe Packaging' },
-              ].map(t => (
-                <div key={t.text} className="pdp-trust-item">
-                  <span>{t.icon}</span>
-                  <span>{t.text}</span>
-                </div>
-              ))}
+              {/* Trust strip */}
+              <div style={{ marginTop: 24, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                {['✅ ISI Certified', '🚚 Karur Delivery', '💬 WhatsApp Support', '🏪 Showroom Available'].map(t => (
+                  <span key={t} style={{ fontSize: 11, color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{t}</span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </main>
+      </section>
 
-      {/* ── Associated Products ── */}
-      {allAssociated.length > 0 && (
-        <section className="pdp-assoc">
-          <div className="pdp-assoc-inner">
-            {/* Same category */}
-            {associated.sameCategory.length > 0 && (
-              <>
-                <div className="pdp-section-header">
-                  <h2 className="pdp-section-title">
-                    More in {product.categories?.name || 'This Category'}
-                  </h2>
-                  <Link
-                    href={`/products?cat=${product.categories?.slug}`}
-                    className="pdp-see-all"
-                  >
-                    See all →
-                  </Link>
-                </div>
-                <div className="mini-grid">
-                  {associated.sameCategory.map(p => (
-                    <MiniCard key={p.id} product={p} />
-                  ))}
-                </div>
-              </>
-            )}
+      {/* ── RELATED / LINKED PRODUCTS ── */}
+      {related.length > 0 && (
+        <section style={{ padding: '56px 0', background: 'rgba(11,36,71,0.3)', borderTop: '1px solid rgba(249,115,22,0.1)' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+            <div className="eyebrow">From the Same Category</div>
+            <h2 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 'clamp(1.8rem,3vw,2.6rem)', letterSpacing: '.04em', color: '#F8F9FB', marginBottom: 32 }}>
+              YOU MAY ALSO NEED
+            </h2>
 
-            {/* Other products */}
-            {associated.otherProducts.length > 0 && (
-              <>
-                <div className="pdp-section-header" style={{ marginTop: '3rem' }}>
-                  <h2 className="pdp-section-title">You Might Also Like</h2>
-                  <Link href="/products" className="pdp-see-all">Browse all →</Link>
-                </div>
-                <div className="mini-grid">
-                  {associated.otherProducts.map(p => (
-                    <MiniCard key={p.id} product={p} />
-                  ))}
-                </div>
-              </>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }} className="pd-related-grid">
+              {related.map((rp: any) => {
+                const rDiscount = rp.mrp && rp.price ? Math.round(((rp.mrp - rp.price) / rp.mrp) * 100) : null;
+                const rWaText = encodeURIComponent(`Hi, I'm interested in *${rp.name}*${rp.price ? ` (₹${rp.price.toLocaleString('en-IN')})` : ''}. Can you help me?`);
+                return (
+                  <div key={rp.id} className="pd-related-card">
+                    {/* Image */}
+                    <Link href={`/products/${rp.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+                      <div style={{ position: 'relative', height: 160, background: 'rgba(11,36,71,0.5)', overflow: 'hidden' }}>
+                        {rp.image_url ? (
+                          <Image src={rp.image_url} alt={rp.name} fill style={{ objectFit: 'cover', transition: 'transform 0.4s' }} className="pd-rel-img" sizes="25vw" />
+                        ) : (
+                          <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>
+                            {rp.categories?.icon || '📦'}
+                          </div>
+                        )}
+                        {rDiscount && rDiscount > 0 && (
+                          <div style={{ position: 'absolute', top: 8, left: 8, background: '#25D366', color: 'white', borderRadius: 3, padding: '2px 8px', fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
+                            {rDiscount}% OFF
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+
+                    {/* Body */}
+                    <div style={{ padding: '14px 16px 16px' }}>
+                      <Link href={`/products/${rp.id}`} style={{ textDecoration: 'none' }}>
+                        <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.88rem', color: '#F8F9FB', marginBottom: 6, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                          {rp.name}
+                        </div>
+                      </Link>
+                      {/* Price */}
+                      <div style={{ marginBottom: 10 }}>
+                        {rp.mrp && rp.mrp > (rp.price || 0) && (
+                          <div style={{ fontSize: 11, color: '#7A8EA8', textDecoration: 'line-through', marginBottom: 1 }}>
+                            ₹{rp.mrp.toLocaleString('en-IN')}
+                          </div>
+                        )}
+                        {rp.price ? (
+                          <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.4rem', color: '#F97316', letterSpacing: '.03em', lineHeight: 1 }}>
+                            ₹{rp.price.toLocaleString('en-IN')}
+                            {rp.unit && <span style={{ fontSize: 11, color: '#7A8EA8', fontFamily: "'DM Sans',sans-serif", fontWeight: 400, marginLeft: 4 }}>{rp.unit}</span>}
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: 12, color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>ASK FOR PRICE</div>
+                        )}
+                      </div>
+                      {/* WA CTA */}
+                      <a href={`https://wa.me/${WA}?text=${rWaText}`} target="_blank" rel="noopener"
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%', padding: '8px 0', borderRadius: 4, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.65rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
+                        💬 Enquire
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* View all in category */}
+            {product.categories && (
+              <div style={{ textAlign: 'center', marginTop: 36 }}>
+                <Link href={`/products?category=${product.categories.slug}`}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', borderRadius: 6, border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none', transition: 'all 0.2s' }}
+                  className="pd-viewall-btn">
+                  View All {product.categories.name} →
+                </Link>
+              </div>
             )}
           </div>
         </section>
       )}
 
-      {/* Back to Products */}
-      <div className="pdp-back-wrap">
-        <button className="pdp-back-btn" onClick={() => router.back()} type="button">
-          ← Back to Products
-        </button>
-      </div>
+      {/* Bottom CTA Banner */}
+      <section style={{ padding: '48px 0', background: 'linear-gradient(135deg,#0d1f3a,#19376D)', borderTop: '1px solid rgba(249,115,22,0.15)' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }} className="pd-pad">
+          <div>
+            <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.8rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 6 }}>
+              NEED BULK PRICING?
+            </div>
+            <p style={{ fontSize: 14, color: '#7A8EA8' }}>
+              Contractors and builders get special wholesale rates. WhatsApp your full requirement list.
+            </p>
+          </div>
+          <a href={`https://wa.me/${WA}?text=Hi%2C+I+need+bulk+pricing+for+${encodeURIComponent(product.name)}.+Can+you+help%3F`}
+            target="_blank" rel="noopener"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 8, background: '#F97316', color: '#0B2447', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.78rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none', flexShrink: 0 }}>
+            💬 Get Bulk Quote on WhatsApp
+          </a>
+        </div>
+      </section>
 
-      {/* ── Styles ── */}
       <style>{`
-        /* Breadcrumb */
-        .pdp-breadcrumb {
-          display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem;
-          padding: 1rem 1.5rem;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.78rem;
-          color: #7A8EA8;
-          max-width: 1280px; margin: 0 auto;
-        }
-        .pdp-bc-link {
-          color: #7A8EA8; text-decoration: none;
-          transition: color 0.2s;
-        }
-        .pdp-bc-link:hover { color: var(--orange); }
-        .pdp-bc-sep { color: #3A4E6A; }
-        .pdp-bc-current { color: var(--white); font-weight: 500; }
+        .pd-pad { padding: 0 48px; }
+        .pd-wa-btn:hover { background: #1fbc59 !important; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(37,211,102,0.45); }
+        .pd-viewall-btn:hover { background: rgba(249,115,22,0.08); }
 
-        /* Main layout */
-        .pdp-main {
-          padding: 0 1.5rem 2rem;
-          max-width: 1280px; margin: 0 auto;
-        }
-        .pdp-container {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 3rem;
-          align-items: start;
-        }
-        @media (max-width: 768px) {
-          .pdp-container { grid-template-columns: 1fr; gap: 1.5rem; }
-        }
-
-        /* Gallery */
-        .pdp-gallery { position: sticky; top: 80px; }
-        .pdp-main-img-wrap {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 1 / 1;
-          border-radius: 8px;
-          overflow: hidden;
-          background: #0D1B2E;
+        /* Related product cards */
+        .pd-related-card {
+          background: rgba(25,55,109,0.35);
           border: 1px solid rgba(249,115,22,0.15);
+          border-radius: 10px; overflow: hidden;
+          transition: transform .25s, border-color .25s, box-shadow .25s;
+          display: flex; flex-direction: column;
         }
-        .pdp-img-placeholder {
-          width: 100%; height: 100%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 5rem; color: #3A4E6A;
+        .pd-related-card:hover {
+          border-color: #F97316;
+          transform: translateY(-5px);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.4);
         }
-        .pdp-trust-badge {
-          position: absolute; top: 12px; left: 12px;
-          padding: 4px 10px; border-radius: 3px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.65rem; font-weight: 700;
-          letter-spacing: 0.1em; text-transform: uppercase;
-        }
-        .pdp-discount-badge {
-          position: absolute; top: 12px; right: 12px;
-          background: #F97316; color: white;
-          padding: 4px 10px; border-radius: 3px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.7rem; font-weight: 800;
-          letter-spacing: 0.05em;
-        }
+        .pd-related-card:hover .pd-rel-img { transform: scale(1.06); }
 
-        /* Info column */
-        .pdp-cat-pill {
-          display: inline-flex; align-items: center; gap: 0.4rem;
-          background: rgba(249,115,22,0.1);
-          border: 1px solid rgba(249,115,22,0.25);
-          color: var(--orange);
-          padding: 4px 12px; border-radius: 20px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.65rem; font-weight: 700;
-          letter-spacing: 0.12em; text-transform: uppercase;
-          margin-bottom: 0.75rem;
+        @media(max-width:1024px){
+          .pd-grid { grid-template-columns: 1fr !important; }
+          .pd-related-grid { grid-template-columns: repeat(2,1fr) !important; }
         }
-        .pdp-title {
-          font-family: 'Bebas Neue', cursive;
-          font-size: clamp(2rem, 4vw, 2.8rem);
-          color: var(--white);
-          line-height: 1.05;
-          margin: 0 0 1.25rem;
-          letter-spacing: 0.02em;
+        @media(max-width:640px){
+          .pd-pad { padding: 0 20px !important; }
+          .pd-related-grid { grid-template-columns: 1fr !important; }
         }
-
-        /* Price block */
-        .pdp-price-block {
-          background: rgba(11,36,71,0.6);
-          border: 1px solid rgba(249,115,22,0.2);
-          border-radius: 8px;
-          padding: 1.25rem 1.5rem;
-          margin-bottom: 1.25rem;
-        }
-        .pdp-price-row {
-          display: flex; align-items: baseline; gap: 0.5rem;
-          margin-bottom: 0.4rem;
-        }
-        .pdp-sale-price {
-          font-family: 'Bebas Neue', cursive;
-          font-size: 2.4rem;
-          color: #F97316;
-          letter-spacing: 0.02em;
-          line-height: 1;
-        }
-        .pdp-unit {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.85rem; color: #7A8EA8;
-        }
-        .pdp-mrp-row {
-          display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;
-          margin-bottom: 0.5rem;
-        }
-        .pdp-mrp-label {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.75rem; color: #5A7A9A;
-          text-transform: uppercase; letter-spacing: 0.08em;
-        }
-        .pdp-mrp-price {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.95rem;
-          color: #5A7A9A;
-          text-decoration: line-through;
-          text-decoration-color: #F97316;
-          text-decoration-thickness: 1.5px;
-        }
-        .pdp-save-tag {
-          background: rgba(34,197,94,0.12);
-          border: 1px solid rgba(34,197,94,0.3);
-          color: #4ADE80;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.65rem; font-weight: 700;
-          letter-spacing: 0.08em; text-transform: uppercase;
-          padding: 2px 8px; border-radius: 3px;
-        }
-        .pdp-price-note {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.7rem; color: #5A7A9A;
-          font-style: italic;
-        }
-        .pdp-price-enquiry {
-          display: flex; align-items: center; gap: 0.5rem;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.9rem; color: #F97316;
-        }
-
-        /* Meta row */
-        .pdp-meta-row {
-          display: flex; align-items: center; flex-wrap: wrap; gap: 1rem;
-          margin-bottom: 1.25rem;
-          font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
-        }
-        .pdp-in-stock { color: #4ADE80; font-weight: 600; }
-        .pdp-out-stock { color: #F87171; font-weight: 600; }
-        .pdp-delivery { color: #7A8EA8; }
-
-        /* Description */
-        .pdp-desc {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.9rem; line-height: 1.7;
-          color: #9DB5CC;
-          margin-bottom: 1.25rem;
-        }
-
-        /* Specs */
-        .pdp-specs {
-          background: rgba(11,36,71,0.4);
-          border: 1px solid rgba(58,78,106,0.4);
-          border-radius: 6px;
-          padding: 1rem 1.25rem;
-          margin-bottom: 1.25rem;
-        }
-        .pdp-specs-title {
-          font-family: 'Syne', sans-serif;
-          font-size: 0.7rem; font-weight: 700;
-          letter-spacing: 0.14em; text-transform: uppercase;
-          color: #7A8EA8; margin-bottom: 0.75rem;
-        }
-        .pdp-spec-row {
-          display: flex; justify-content: space-between;
-          padding: 0.4rem 0;
-          border-bottom: 1px solid rgba(58,78,106,0.3);
-          font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
-        }
-        .pdp-spec-row:last-child { border-bottom: none; }
-        .pdp-spec-key { color: #7A8EA8; }
-        .pdp-spec-val { color: var(--white); font-weight: 500; }
-
-        /* CTA buttons */
-        .pdp-cta-group {
-          display: flex; flex-direction: column; gap: 0.75rem;
-          margin-bottom: 1.5rem;
-        }
-        .pdp-add-btn {
-          width: 100%;
-          padding: 1rem;
-          background: var(--orange);
-          color: white; border: none; border-radius: 4px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.85rem; font-weight: 700;
-          letter-spacing: 0.12em; text-transform: uppercase;
-          cursor: pointer;
-          transition: background 0.2s, transform 0.15s;
-        }
-        .pdp-add-btn:hover { background: #EA6A0A; transform: translateY(-1px); }
-        .pdp-add-btn--flash { background: #25D366 !important; }
-
-        .pdp-qty-ctrl {
-          display: flex; align-items: center; justify-content: center; gap: 0;
-          border: 2px solid var(--orange); border-radius: 4px;
-          overflow: hidden;
-        }
-        .pdp-qty-btn {
-          padding: 0.9rem 1.5rem;
-          background: rgba(249,115,22,0.1);
-          color: var(--orange); border: none;
-          font-size: 1.2rem; cursor: pointer;
-          font-family: 'Syne', sans-serif; font-weight: 700;
-          transition: background 0.2s;
-        }
-        .pdp-qty-btn:hover { background: rgba(249,115,22,0.25); }
-        .pdp-qty-num {
-          flex: 1; text-align: center;
-          font-family: 'Syne', sans-serif; font-weight: 700;
-          font-size: 0.85rem; letter-spacing: 0.1em;
-          color: var(--white);
-        }
-
-        .pdp-wa-btn {
-          width: 100%;
-          padding: 0.85rem 1rem;
-          background: transparent;
-          border: 1.5px solid rgba(37,211,102,0.4);
-          color: #25D366; border-radius: 4px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.8rem; font-weight: 700;
-          letter-spacing: 0.1em; text-transform: uppercase;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-          transition: background 0.2s, border-color 0.2s;
-        }
-        .pdp-wa-btn:hover {
-          background: rgba(37,211,102,0.08);
-          border-color: rgba(37,211,102,0.7);
-        }
-
-        /* Trust row */
-        .pdp-trust-row {
-          display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem;
-        }
-        .pdp-trust-item {
-          display: flex; align-items: center; gap: 0.4rem;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.75rem; color: #7A8EA8;
-          background: rgba(11,36,71,0.4);
-          border: 1px solid rgba(58,78,106,0.3);
-          padding: 0.5rem 0.75rem; border-radius: 4px;
-        }
-
-        /* Associated section */
-        .pdp-assoc {
-          background: rgba(7,15,31,0.6);
-          border-top: 1px solid rgba(58,78,106,0.3);
-          padding: 3rem 1.5rem;
-          margin-top: 2rem;
-        }
-        .pdp-assoc-inner { max-width: 1280px; margin: 0 auto; }
-        .pdp-section-header {
-          display: flex; align-items: center; justify-content: space-between;
-          margin-bottom: 1.5rem;
-        }
-        .pdp-section-title {
-          font-family: 'Syne', sans-serif;
-          font-size: 1.2rem; font-weight: 700;
-          color: var(--white);
-          text-transform: uppercase; letter-spacing: 0.06em;
-          margin: 0;
-        }
-        .pdp-see-all {
-          font-family: 'Syne', sans-serif;
-          font-size: 0.75rem; font-weight: 700;
-          letter-spacing: 0.1em; text-transform: uppercase;
-          color: var(--orange); text-decoration: none;
-          transition: opacity 0.2s;
-        }
-        .pdp-see-all:hover { opacity: 0.75; }
-
-        /* Mini card grid */
-        .mini-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1rem;
-        }
-        @media (max-width: 1024px) { .mini-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 640px)  { .mini-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        /* Mini card */
-        .mini-card {
-          background: rgba(11,36,71,0.5);
-          border: 1px solid rgba(58,78,106,0.4);
-          border-radius: 6px; overflow: hidden;
-          transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-          cursor: pointer;
-        }
-        .mini-card:hover {
-          transform: translateY(-3px);
-          border-color: rgba(249,115,22,0.4);
-          box-shadow: 0 8px 24px rgba(249,115,22,0.1);
-        }
-        .mini-img-wrap {
-          position: relative; width: 100%; aspect-ratio: 4/3;
-          background: #0D1B2E;
-        }
-        .mini-img-placeholder {
-          width: 100%; height: 100%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 2rem; color: #3A4E6A;
-        }
-        .mini-discount-badge {
-          position: absolute; top: 6px; right: 6px;
-          background: #F97316; color: white;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.55rem; font-weight: 800;
-          letter-spacing: 0.05em;
-          padding: 2px 6px; border-radius: 2px;
-        }
-        .mini-body { padding: 0.75rem; }
-        .mini-cat {
-          font-family: 'Syne', sans-serif;
-          font-size: 0.55rem; font-weight: 700;
-          letter-spacing: 0.14em; text-transform: uppercase;
-          color: var(--orange); margin-bottom: 0.2rem;
-        }
-        .mini-name {
-          font-family: 'Syne', sans-serif;
-          font-size: 0.8rem; font-weight: 600;
-          color: var(--white); line-height: 1.3;
-          margin-bottom: 0.4rem;
-          display: -webkit-box; -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .mini-price-row {
-          display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.3rem;
-          margin-bottom: 0.6rem;
-        }
-        .mini-sale {
-          font-family: 'Bebas Neue', cursive;
-          font-size: 1.1rem; color: #F97316;
-        }
-        .mini-mrp {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.7rem; color: #5A7A9A;
-          text-decoration: line-through;
-          text-decoration-color: #F97316;
-        }
-        .mini-unit {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.65rem; color: #5A7A9A;
-        }
-        .mini-tbd {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.7rem; color: #5A7A9A; font-style: italic;
-        }
-        .mini-add-btn {
-          width: 100%; padding: 0.4rem;
-          background: var(--orange); color: white;
-          border: none; border-radius: 3px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.65rem; font-weight: 700;
-          letter-spacing: 0.1em; cursor: pointer;
-          transition: background 0.15s;
-        }
-        .mini-add-btn:hover { background: #EA6A0A; }
-        .mini-qty {
-          display: flex; align-items: center; justify-content: space-between;
-          border: 1.5px solid var(--orange); border-radius: 3px;
-          overflow: hidden;
-        }
-        .mini-qty-btn {
-          padding: 0.3rem 0.6rem;
-          background: rgba(249,115,22,0.1);
-          color: var(--orange); border: none;
-          font-size: 0.9rem; cursor: pointer;
-          transition: background 0.15s;
-        }
-        .mini-qty-btn:hover { background: rgba(249,115,22,0.25); }
-        .mini-qty span {
-          font-family: 'Syne', sans-serif; font-size: 0.7rem;
-          font-weight: 700; color: var(--white);
-        }
-
-        /* Back button */
-        .pdp-back-wrap {
-          display: flex; justify-content: center;
-          padding: 2rem 1.5rem 3rem;
-        }
-        .pdp-back-btn {
-          background: transparent;
-          border: 1px solid rgba(58,78,106,0.5);
-          color: #7A8EA8;
-          padding: 0.6rem 1.5rem; border-radius: 4px;
-          font-family: 'Syne', sans-serif;
-          font-size: 0.75rem; font-weight: 700;
-          letter-spacing: 0.1em; text-transform: uppercase;
-          cursor: pointer;
-          transition: color 0.2s, border-color 0.2s;
-        }
-        .pdp-back-btn:hover { color: var(--orange); border-color: var(--orange); }
-
-        /* Spinner */
-        .pdp-spinner {
-          width: 40px; height: 40px;
-          border: 3px solid rgba(249,115,22,0.2);
-          border-top-color: var(--orange);
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
     </>
   );

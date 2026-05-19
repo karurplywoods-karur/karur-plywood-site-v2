@@ -1,5 +1,5 @@
 'use client';
-// src/components/ProductCard.tsx — UPDATED: links to /products/[id], shows MRP + sale price
+// src/components/ProductCard.tsx — ecommerce product card with cart controls
 import { useCallback, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,11 +9,17 @@ import { useCart } from '@/lib/CartContext';
 
 interface Props {
   product: Product;
+  mode?: 'project' | 'quick';
+  cartItem?: CartItem;
+  onAdd?: (p: Product) => void;
+  onInc?: (p: Product) => void;
+  onDec?: (p: Product) => void;
+  onSetQty?: (p: Product, qty: number) => void;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, cartItem: cartItemProp, onAdd, onInc, onDec }: Props) {
   const { items, add, inc, dec } = useCart();
-  const cartItem = items.find(i => i.product.id === product.id);
+  const cartItem = cartItemProp || items.find(i => i.product.id === product.id);
   const qty = cartItem?.quantity || 0;
   const badge = getProductBadge(product);
   const categoryName = product.categories?.name;
@@ -27,27 +33,26 @@ export default function ProductCard({ product }: Props) {
 
   const handleAdd = useCallback((e: React.MouseEvent) => {
     e.preventDefault(); // Don't navigate when clicking Add
-    add(product);
+    (onAdd || add)(product);
     setAddedFlash(true);
     setTimeout(() => setAddedFlash(false), 1200);
-  }, [product, add]);
+  }, [product, add, onAdd]);
 
   const handleInc = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    inc(product);
-  }, [product, inc]);
+    (onInc || inc)(product);
+  }, [product, inc, onInc]);
 
   const handleDec = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    dec(product);
-  }, [product, dec]);
+    (onDec || dec)(product);
+  }, [product, dec, onDec]);
 
   return (
-    <Link href={`/products/${product.id}`} style={{ textDecoration: 'none', display: 'block' }}>
-      <div className="pc-card" style={{ position: 'relative' }}>
+    <div className="pc-card" style={{ position: 'relative' }}>
 
         {/* IMAGE */}
-        <div className="pc-image-wrap">
+        <Link href={`/products/${product.id}`} className="pc-image-wrap" style={{ display: 'block', textDecoration: 'none' }}>
           {product.image_url ? (
             <Image
               src={product.image_url}
@@ -94,12 +99,14 @@ export default function ProductCard({ product }: Props) {
           {qty > 0 && (
             <div className="pc-qty-indicator">{qty}</div>
           )}
-        </div>
+        </Link>
 
         {/* BODY */}
         <div className="pc-body">
           <div className="pc-cat">{categoryName}</div>
-          <div className="pc-name">{product.name}</div>
+          <Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
+            <div className="pc-name">{product.name}</div>
+          </Link>
           <div className="pc-desc">{product.description}</div>
 
           {/* Price row — MRP slashed + Sale price */}
@@ -124,13 +131,18 @@ export default function ProductCard({ product }: Props) {
 
           {/* CTA — Add to Cart or Qty Control */}
           {qty === 0 ? (
-            <button
-              onClick={handleAdd}
-              className={`pc-add-btn${addedFlash ? ' pc-add-btn--flash' : ''}`}
-              type="button"
-            >
-              {addedFlash ? '✓ Added!' : '+ Add to Cart'}
-            </button>
+            <div className="pc-actions-row">
+              <button
+                onClick={handleAdd}
+                className={`pc-add-btn${addedFlash ? ' pc-add-btn--flash' : ''}`}
+                type="button"
+              >
+                {addedFlash ? 'Added!' : 'Add to Cart'}
+              </button>
+              <Link href={`/products/${product.id}`} className="pc-detail-link">
+                Details
+              </Link>
+            </div>
           ) : (
             <div className="pc-qty-ctrl">
               <button
@@ -171,6 +183,27 @@ export default function ProductCard({ product }: Props) {
             background: #25D366 !important;
             transform: scale(1.02);
           }
+          .pc-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 0.52fr;
+            gap: 8px;
+            align-items: stretch;
+          }
+          .pc-detail-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(249,115,22,0.3);
+            border-radius: var(--r);
+            color: var(--orange);
+            font-family: var(--f-ui);
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+          }
+          .pc-detail-link:hover { background: rgba(249,115,22,0.08); }
           .pc-cat {
             font-family: 'Syne', sans-serif;
             font-size: 0.6rem; font-weight: 700;
@@ -213,7 +246,6 @@ export default function ProductCard({ product }: Props) {
             z-index: 2;
           }
         `}</style>
-      </div>
-    </Link>
+    </div>
   );
 }

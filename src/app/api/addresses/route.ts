@@ -4,23 +4,17 @@ import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
 
 async function ensureCustomerExists(userId: string, user: any) {
-  // Check if customer row already exists
-  const { data: existing } = await supabaseAdmin
+  const { error } = await supabaseAdmin
     .from('customers')
-    .select('id')
-    .eq('id', userId)
-    .single();
+    .upsert({
+      id: userId,
+      full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+      email: user.email || '',
+      avatar_url: user.user_metadata?.avatar_url || '',
+      phone: '',
+    }, { onConflict: 'id', ignoreDuplicates: true });
 
-  if (existing) return; // already exists — nothing to do
-
-  // Google OAuth users: trigger may not have fired yet — create manually
-  await supabaseAdmin.from('customers').insert([{
-    id:         userId,
-    full_name:  user.user_metadata?.full_name || user.user_metadata?.name || '',
-    email:      user.email || '',
-    avatar_url: user.user_metadata?.avatar_url || '',
-    phone:      '',
-  }]).onConflict('id').ignore();
+  if (error) throw error;
 }
 
 export async function GET() {

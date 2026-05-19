@@ -6,6 +6,20 @@ import { supabaseAdmin } from '@/lib/db';
 import { sendOrderConfirmation } from '@/lib/email';
 import { buildOwnerOrderMessage, getOwnerWhatsAppURL } from '@/lib/whatsapp';
 
+async function ensureCustomerExists(user: any, fallbackPhone = '') {
+  const { error } = await supabaseAdmin
+    .from('customers')
+    .upsert({
+      id: user.id,
+      full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+      email: user.email || '',
+      avatar_url: user.user_metadata?.avatar_url || '',
+      phone: fallbackPhone,
+    }, { onConflict: 'id', ignoreDuplicates: true });
+
+  if (error) throw error;
+}
+
 export async function POST(req: NextRequest) {
   try {
     // 1. Auth check
@@ -26,6 +40,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Get customer
+    await ensureCustomerExists(session.user, address.phone || '');
+
     const { data: customer } = await supabaseAdmin
       .from('customers')
       .select('*')

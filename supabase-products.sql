@@ -22,12 +22,24 @@ create table if not exists products (
   image_url text default '',
   type text not null default 'project' check (type in ('project','quick')),
   price numeric(10,2) default null,
+  mrp numeric(10,2) default null,
+  slug text,
   unit text default '',
   in_stock boolean default true,
   sort_order integer default 0,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+alter table products add column if not exists mrp numeric(10,2);
+alter table products add column if not exists slug text;
+create unique index if not exists products_slug_unique
+  on products (slug)
+  where slug is not null;
+
+comment on column products.mrp is 'Market/original price shown slashed. If null, no MRP is displayed.';
+comment on column products.price is 'Sale/current price.';
+comment on column products.slug is 'Optional URL-friendly identifier.';
 
 -- Auto-update updated_at
 create or replace function update_updated_at()

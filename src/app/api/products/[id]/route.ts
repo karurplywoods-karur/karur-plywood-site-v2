@@ -1,12 +1,8 @@
 // src/app/api/products/[id]/route.ts
 // Returns a single product + associated products (same category + others)
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { supabaseAdmin as supabase } from '@/lib/db';
+import { getAdminSession } from '@/lib/auth';
 
 export async function GET(
   _req: Request,
@@ -22,7 +18,6 @@ export async function GET(
       categories (id, name, slug, icon)
     `)
     .eq('id', id)
-    .eq('is_active', true)
     .single();
 
   if (error || !product) {
@@ -36,15 +31,15 @@ export async function GET(
     supabase
       .from('products')
       .select(`*, categories (id, name, slug, icon)`)
-      .eq('is_active', true)
-      .eq('categories.id', product.category_id)
+      .eq('in_stock', true)
+      .eq('category_id', product.category_id)
       .neq('id', id)
       .order('sort_order', { ascending: true })
       .limit(4),
     supabase
       .from('products')
       .select(`*, categories (id, name, slug, icon)`)
-      .eq('is_active', true)
+      .eq('in_stock', true)
       .neq('category_id', product.category_id)
       .neq('id', id)
       .order('sort_order', { ascending: true })
@@ -58,4 +53,52 @@ export async function GET(
       otherProducts: otherRes.data ?? [],
     },
   });
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const session = await getAdminSession();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const body = await req.json();
+  const payload = {
+    name: body.name,
+    category_id: body.category_id || null,
+    description: body.description || '',
+    image_url: body.image_url || '',
+    type: body.type,
+    price: body.price ?? null,
+    mrp: body.mrp ?? null,
+    unit: body.unit || '',
+    in_stock: body.in_stock ?? true,
+    sort_order: body.sort_order ?? 0,
+  };
+
+  const { data, error } = await supabase
+    .from('products')
+    .update(payload)
+    .eq('id', params.id)
+    .select('*, categories(id,name,slug,icon)')
+    .single();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json(data);
+}
+
+export async function DELETE(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  const session = await getAdminSession();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', params.id);
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ success: true });
 }

@@ -45,13 +45,24 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();
-  const { name, category_id, description, image_url, type, price, unit, in_stock } = body;
+  const { name, category_id, description, image_url, type, price, mrp, unit, in_stock, sort_order } = body;
 
   if (!name || !type) return NextResponse.json({ error: 'Name and type are required.' }, { status: 400 });
 
   const { data, error } = await supabaseAdmin
     .from('products')
-    .insert([{ name, category_id: category_id || null, description: description || '', image_url: image_url || '', type, price: price || null, unit: unit || '', in_stock: in_stock ?? true }])
+    .insert([{
+      name,
+      category_id: category_id || null,
+      description: description || '',
+      image_url: image_url || '',
+      type,
+      price: price ?? null,
+      mrp: mrp ?? null,
+      unit: unit || '',
+      in_stock: in_stock ?? true,
+      sort_order: sort_order ?? 0,
+    }])
     .select()
     .single();
 

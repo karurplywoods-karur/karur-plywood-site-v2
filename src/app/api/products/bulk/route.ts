@@ -10,6 +10,7 @@ interface BulkRow {
   image_url?: string;
   type: 'project' | 'quick';
   price?: number | null;
+  mrp?: number | null;
   unit?: string;
   in_stock?: boolean;
 }
@@ -17,9 +18,9 @@ interface BulkRow {
 // GET /api/products/bulk — returns CSV template
 export async function GET() {
   const template = [
-    'name,type,category_name,description,price,unit,image_url,in_stock',
-    'BWR Grade Plywood 18mm,project,Plywood,Boiling Water Resistant plywood for kitchens and bathrooms,2800,per sheet,https://example.com/image.jpg,true',
-    'Fevicol SH 1kg,quick,Adhesives,Premium synthetic resin adhesive,180,per kg,,true',
+    'name,type,category_name,description,price,mrp,unit,image_url,in_stock',
+    'BWR Grade Plywood 18mm,project,Plywood,Boiling Water Resistant plywood for kitchens and bathrooms,2800,3200,per sheet,https://example.com/image.jpg,true',
+    'Fevicol SH 1kg,quick,Adhesives,Premium synthetic resin adhesive,180,220,per kg,,true',
   ].join('\n');
 
   return new NextResponse(template, {
@@ -56,6 +57,7 @@ export async function POST(req: NextRequest) {
     const catIdx     = header.indexOf('category_name');
     const descIdx    = header.indexOf('description');
     const priceIdx   = header.indexOf('price');
+    const mrpIdx     = header.indexOf('mrp');
     const unitIdx    = header.indexOf('unit');
     const imgIdx     = header.indexOf('image_url');
     const stockIdx   = header.indexOf('in_stock');
@@ -88,6 +90,9 @@ export async function POST(req: NextRequest) {
       const price = priceIdx >= 0 && cols[priceIdx]?.trim()
         ? parseFloat(cols[priceIdx].trim())
         : null;
+      const mrp = mrpIdx >= 0 && cols[mrpIdx]?.trim()
+        ? parseFloat(cols[mrpIdx].trim())
+        : null;
 
       const in_stock = stockIdx >= 0
         ? cols[stockIdx]?.trim().toLowerCase() !== 'false'
@@ -99,6 +104,7 @@ export async function POST(req: NextRequest) {
         category_id: category_id || undefined,
         description: descIdx >= 0 ? cols[descIdx]?.trim() || '' : '',
         price: price && !isNaN(price) ? price : null,
+        mrp: mrp && !isNaN(mrp) ? mrp : null,
         unit: unitIdx >= 0 ? cols[unitIdx]?.trim() || '' : '',
         image_url: imgIdx >= 0 ? cols[imgIdx]?.trim() || '' : '',
         in_stock,

@@ -1,9 +1,9 @@
 // src/app/products/page.tsx
 // KEY FIX: Compact cards (no long description), MRP strikethrough, click → detail page
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { getProjectProducts, getCategories } from '@/lib/products';
+import ProductCard from '@/components/ProductCard';
 
 export const metadata: Metadata = {
   title: 'Products | Plywood, Doors, Laminates & Hardware in Karur',
@@ -11,109 +11,6 @@ export const metadata: Metadata = {
 };
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
-
-// ── Compact Product Card (server component version) ──────────
-function CompactProductCard({ product }: { product: any }) {
-  const discount =
-    product.mrp && product.price && product.mrp > product.price
-      ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
-      : null;
-
-  const waText = encodeURIComponent(
-    `Hi, I'm interested in *${product.name}*${product.price ? ` (₹${product.price.toLocaleString('en-IN')} ${product.unit || ''})` : ''}. Can you confirm availability?`
-  );
-
-  return (
-    <div className="cp-card">
-      {/* IMAGE — click goes to detail page */}
-      <Link href={`/products/${product.id}`} style={{ textDecoration: 'none', display: 'block' }}>
-        <div className="cp-img-wrap">
-          {product.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              fill
-              className="cp-img"
-              sizes="(max-width:768px) 50vw, 25vw"
-              style={{ objectFit: 'cover' }}
-            />
-          ) : (
-            <div className="cp-img-placeholder">
-              {product.categories?.icon || '📦'}
-            </div>
-          )}
-
-          {/* Category chip */}
-          {product.categories && (
-            <div className="cp-cat-badge">
-              {product.categories.icon} {product.categories.name}
-            </div>
-          )}
-
-          {/* Discount badge */}
-          {discount && discount > 0 && (
-            <div className="cp-discount-badge">
-              {discount}% OFF
-            </div>
-          )}
-
-          {/* Hover overlay */}
-          <div className="cp-hover-overlay">
-            <span className="cp-hover-text">View Details →</span>
-          </div>
-        </div>
-      </Link>
-
-      {/* BODY */}
-      <div className="cp-body">
-        {/* Name — link to detail */}
-        <Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
-          <div className="cp-name">{product.name}</div>
-        </Link>
-
-        {/* Price row — compact */}
-        <div className="cp-price-area">
-          {product.mrp && product.mrp > (product.price || 0) && (
-            <span className="cp-mrp">₹{product.mrp.toLocaleString('en-IN')}</span>
-          )}
-          {product.price ? (
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-              <span className="cp-price">₹{product.price.toLocaleString('en-IN')}</span>
-              {product.unit && <span className="cp-unit">/{product.unit}</span>}
-            </div>
-          ) : (
-            <span className="cp-no-price">Contact for Price</span>
-          )}
-        </div>
-
-        {/* Stock */}
-        <div className="cp-stock">
-          <span className={`cp-stock-dot ${product.in_stock ? 'cp-stock-dot--green' : 'cp-stock-dot--red'}`} />
-          <span className={`cp-stock-label ${product.in_stock ? 'cp-stock-label--green' : 'cp-stock-label--red'}`}>
-            {product.in_stock ? 'In Stock' : 'Out of Stock'}
-          </span>
-        </div>
-
-        {/* CTAs */}
-        <div className="cp-actions">
-          <Link href={`/products/${product.id}`} className="cp-detail-btn">
-            Details
-          </Link>
-          <a
-            href={`https://wa.me/${WA}?text=${waText}`}
-            target="_blank" rel="noopener"
-            className="cp-wa-btn"
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-            Enquire
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default async function ProductsPage({
   searchParams,
@@ -216,7 +113,7 @@ export default async function ProductsPage({
         ) : (
           <div className="cp-grid">
             {products.map((product: any) => (
-              <CompactProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} mode="project" />
             ))}
           </div>
         )}

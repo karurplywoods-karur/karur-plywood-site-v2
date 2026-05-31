@@ -4,6 +4,12 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
 
+function toNullableNumber(value: unknown) {
+  if (value === '' || value === null || value === undefined) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: { id: string } }
@@ -63,18 +69,22 @@ export async function PATCH(
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();
-  const payload = {
-    name: body.name,
-    category_id: body.category_id || null,
-    description: body.description || '',
-    image_url: body.image_url || '',
-    type: body.type,
-    price: body.price ?? null,
-    mrp: body.mrp ?? null,
-    unit: body.unit || '',
-    in_stock: body.in_stock ?? true,
-    sort_order: body.sort_order ?? 0,
-  };
+  const payload: Record<string, unknown> = {};
+
+  if ('name' in body) payload.name = body.name;
+  if ('category_id' in body) payload.category_id = body.category_id || null;
+  if ('description' in body) payload.description = body.description || '';
+  if ('image_url' in body) payload.image_url = body.image_url || '';
+  if ('type' in body) payload.type = body.type;
+  if ('price' in body) payload.price = toNullableNumber(body.price);
+  if ('mrp' in body) payload.mrp = toNullableNumber(body.mrp);
+  if ('unit' in body) payload.unit = body.unit || '';
+  if ('in_stock' in body) payload.in_stock = body.in_stock ?? true;
+  if ('sort_order' in body) payload.sort_order = toNullableNumber(body.sort_order) ?? 0;
+
+  if (Object.keys(payload).length === 0) {
+    return NextResponse.json({ error: 'No product fields supplied.' }, { status: 400 });
+  }
 
   const { data, error } = await supabase
     .from('products')
@@ -83,7 +93,14 @@ export async function PATCH(
     .select('*, categories(id,name,slug,icon)')
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    return NextResponse.json({
+      error: error.message,
+      hint: error.message.toLowerCase().includes('mrp')
+        ? 'The products.mrp column is missing or Supabase schema cache has not refreshed. Run supabase_migration_mrp.sql, then reload the admin page.'
+        : undefined,
+    }, { status: 500 });
+  }
   return NextResponse.json(data);
 }
 

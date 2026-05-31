@@ -5,9 +5,17 @@ import Link from 'next/link';
 import { getProjectProducts, getCategories } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 
+const SITE_URL = 'https://karurplywood.co.in';
+
 export const metadata: Metadata = {
   title: 'Products | Plywood, Doors, Laminates & Hardware in Karur',
   description: 'Buy premium plywood, doors, laminates and hardware at best prices in Karur. ISI certified. Wholesale & retail. WhatsApp for quick pricing.',
+  alternates: { canonical: `${SITE_URL}/products` },
+  openGraph: {
+    title: 'Products | Plywood, Doors, Laminates & Hardware in Karur',
+    description: 'Buy premium plywood, doors, laminates and hardware at best prices in Karur.',
+    url: `${SITE_URL}/products`,
+  },
 };
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';

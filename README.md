@@ -43,7 +43,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
 NEXT_PUBLIC_WA_NUMBER=91XXXXXXXXXX
 NEXT_PUBLIC_PHONE=+91 XXXXX XXXXX
-NEXT_PUBLIC_EMAIL=info@karurplywood.com
+NEXT_PUBLIC_EMAIL=info@karurplywood.co.in
 NEXT_PUBLIC_ADDRESS=Your Shop Address, Karur, Tamil Nadu
 
 NEXT_PUBLIC_GMAPS_EMBED_URL=
@@ -81,7 +81,7 @@ Admin: http://localhost:3000/admin
 
 ### STEP 5 — Connect GoDaddy Domain
 
-1. Vercel → Project Settings → Domains → Add Domain → karurplywood.com
+1. Vercel → Project Settings → Domains → Add Domain → karurplywood.co.in
 2. Vercel shows DNS records (A record + CNAME)
 3. GoDaddy → My Domains → DNS → Add those records
 4. Wait 10-30 minutes → done

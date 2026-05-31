@@ -25,7 +25,7 @@ export function buildOwnerOrderMessage(data: {
     `Payment: ${payment}\n\n` +
     `Items:\n${lines}\n\n` +
     `Total: Rs.${data.total.toLocaleString('en-IN')}\n\n` +
-    `Open admin to manage: https://karurplywood.com/admin/orders`
+    `Open admin to manage: https://karurplywood.co.in/admin/orders`
   );
 }
 

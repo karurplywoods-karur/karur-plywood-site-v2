@@ -4,7 +4,7 @@
 import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/db';
 
-const BASE = 'https://karurplywood.com';
+const BASE = 'https://karurplywood.co.in';
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   { url: BASE,                    lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },

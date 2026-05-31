@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase, supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
 
+function toNullableNumber(value: unknown) {
+  if (value === '' || value === null || value === undefined) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 // GET /api/products?type=project|quick&category=slug
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -57,15 +63,22 @@ export async function POST(req: NextRequest) {
       description: description || '',
       image_url: image_url || '',
       type,
-      price: price ?? null,
-      mrp: mrp ?? null,
+      price: toNullableNumber(price),
+      mrp: toNullableNumber(mrp),
       unit: unit || '',
       in_stock: in_stock ?? true,
-      sort_order: sort_order ?? 0,
+      sort_order: toNullableNumber(sort_order) ?? 0,
     }])
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    return NextResponse.json({
+      error: error.message,
+      hint: error.message.toLowerCase().includes('mrp')
+        ? 'The products.mrp column is missing or Supabase schema cache has not refreshed. Run supabase_migration_mrp.sql, then reload the admin page.'
+        : undefined,
+    }, { status: 500 });
+  }
   return NextResponse.json(data, { status: 201 });
 }

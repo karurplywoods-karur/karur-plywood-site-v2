@@ -5,6 +5,7 @@ import { CONTACT } from '@/lib/contact';
 import Link from 'next/link';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const SITE_URL = 'https://karurplywood.co.in';
 
 // All supported cities with SEO data
 const CITIES: Record<string, {
@@ -77,9 +78,10 @@ export async function generateMetadata({ params }: { params: { city: string } })
     openGraph: {
       title: `${city.tagline} | Karur Plywood`,
       description: city.description,
+      url: `${SITE_URL}/areas/${params.city}`,
     },
     alternates: {
-      canonical: `https://karurplywood.com/areas/${params.city}`,
+      canonical: `${SITE_URL}/areas/${params.city}`,
     },
   };
 }
@@ -218,7 +220,7 @@ export default function CityLandingPage({ params }: { params: { city: string } }
         '@type': 'LocalBusiness',
         name: 'Karur Plywood and Company',
         description: city.description,
-        url: `https://karurplywood.com/areas/${cityKey}`,
+        url: `${SITE_URL}/areas/${cityKey}`,
         areaServed: { '@type': 'City', name: city.name, containedIn: { '@type': 'State', name: 'Tamil Nadu' } },
         telephone: CONTACT.phoneRaw,
         address: { '@type': 'PostalAddress', addressLocality: 'Karur', addressRegion: 'Tamil Nadu', addressCountry: 'IN' },

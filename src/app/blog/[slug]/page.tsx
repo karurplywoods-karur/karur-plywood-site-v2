@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
 
+const SITE_URL = 'https://karurplywood.co.in';
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
 
 async function getPost(slug: string) {
@@ -34,7 +35,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${post.title} | Karur Plywood Blog`,
     description: post.excerpt,
-    openGraph: { title: post.title, description: post.excerpt, images: post.cover_image ? [post.cover_image] : [] },
+    alternates: { canonical: `${SITE_URL}/blog/${params.slug}` },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `${SITE_URL}/blog/${params.slug}`,
+      images: post.cover_image ? [post.cover_image] : [],
+    },
   };
 }
 

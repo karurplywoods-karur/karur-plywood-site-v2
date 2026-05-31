@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { LocalBusinessSchema } from '@/components/JsonLd';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
-const SITE_URL = 'https://karurplywood.com';
+const SITE_URL = 'https://karurplywood.co.in';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

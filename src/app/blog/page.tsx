@@ -4,9 +4,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/db';
 
+const SITE_URL = 'https://karurplywood.co.in';
+
 export const metadata: Metadata = {
   title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',
   description: "Expert buying guides, tips and product advice from Karur's most trusted plywood dealer.",
+  alternates: { canonical: `${SITE_URL}/blog` },
+  openGraph: {
+    title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',
+    description: "Expert buying guides, tips and product advice from Karur's most trusted plywood dealer.",
+    url: `${SITE_URL}/blog`,
+  },
 };
 
 const WA   = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';

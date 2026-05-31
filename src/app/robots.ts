@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://karurplywood.com/sitemap.xml',
-    host: 'https://karurplywood.com',
+    sitemap: 'https://karurplywood.co.in/sitemap.xml',
+    host: 'https://karurplywood.co.in',
   };
 }

@@ -100,10 +100,20 @@ export default function AdminDashboard() {
   const handleSave = async () => {
     if (!form.name.trim()) { showMsg('Product name is required.', false); return; }
     setSaving(true);
+    const parsedPrice = form.price === '' || form.price === null || form.price === undefined
+      ? null
+      : Number(form.price);
+    const parsedMrp = form.mrp === '' || form.mrp === null || form.mrp === undefined
+      ? null
+      : Number(form.mrp);
+
+    if (parsedPrice !== null && !Number.isFinite(parsedPrice)) { showMsg('Enter a valid sale price.', false); setSaving(false); return; }
+    if (parsedMrp !== null && !Number.isFinite(parsedMrp)) { showMsg('Enter a valid MRP.', false); setSaving(false); return; }
+
     const payload = {
       ...form,
-      price: form.price ? parseFloat(form.price) : null,
-      mrp:   form.mrp   ? parseFloat(form.mrp)   : null,   // ← NEW
+      price: parsedPrice,
+      mrp:   parsedMrp,
       category_id: form.category_id || null,
     };
     try {
@@ -116,11 +126,18 @@ export default function AdminDashboard() {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
+      const data = await res.json();
       if (!res.ok) {
-        const d = await res.json(); showMsg(d.error || 'Error saving product.', false);
+        showMsg(data.hint || data.error || 'Error saving product.', false);
       } else {
+        setProducts(prev => editProduct
+          ? prev.map(p => p.id === data.id ? data : p)
+          : [data, ...prev]
+        );
         showMsg(editProduct ? 'Product updated!' : 'Product added!');
-        setShowForm(false); fetchAll();
+        setShowForm(false);
+        setEditProduct(null);
+        setForm(EMPTY_PRODUCT);
       }
     } catch { showMsg('Network error.', false); }
     finally { setSaving(false); }

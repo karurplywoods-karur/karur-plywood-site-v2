@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
 import ProductAddToCart from '@/components/ProductAddToCart';
 
+const SITE_URL = 'https://karurplywood.co.in';
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
 
 // ── Fetch single product ────────────────────────────────────────
@@ -40,7 +41,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   return {
     title: `${p.name} | Karur Plywood & Company`,
     description: p.description || `Buy ${p.name} at best price in Karur. WhatsApp for instant quote.`,
-    openGraph: { images: p.image_url ? [p.image_url] : [] },
+    alternates: { canonical: `${SITE_URL}/products/${params.id}` },
+    openGraph: {
+      title: `${p.name} | Karur Plywood & Company`,
+      description: p.description || `Buy ${p.name} at best price in Karur.`,
+      url: `${SITE_URL}/products/${params.id}`,
+      images: p.image_url ? [p.image_url] : [],
+    },
   };
 }
 

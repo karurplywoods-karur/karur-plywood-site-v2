@@ -2,9 +2,17 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+const SITE_URL = 'https://karurplywood.co.in';
+
 export const metadata: Metadata = {
   title: 'Areas We Serve | Karur Plywood & Company',
   description: 'Karur Plywood delivers quality plywood, doors, laminates and hardware to Karur, Trichy, Namakkal, Erode, Salem and Dindigul.',
+  alternates: { canonical: `${SITE_URL}/areas` },
+  openGraph: {
+    title: 'Areas We Serve | Karur Plywood & Company',
+    description: 'Karur Plywood delivers quality plywood, doors, laminates and hardware across Tamil Nadu.',
+    url: `${SITE_URL}/areas`,
+  },
 };
 
 const CITIES = [

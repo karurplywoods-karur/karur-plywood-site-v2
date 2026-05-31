@@ -76,7 +76,7 @@ export default function LocationPage() {
                 <div style={{ fontSize:13,color:'#9A8070',lineHeight:2 }}>
                   Phone: <strong style={{ color:'#F0E8DC' }}>{CONTACT.phone}</strong><br/>
                   WhatsApp: <strong style={{ color:'#25D366' }}>{CONTACT.phone}</strong><br/>
-                  Email: info@karurplywood.com
+                  Email: info@karurplywood.co.in
                 </div>
               </div>
               <div style={{ background:'#1C140D',border:'1px solid rgba(200,136,74,0.15)',borderRadius:14,padding:24 }}>

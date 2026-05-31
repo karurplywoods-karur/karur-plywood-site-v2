@@ -3,7 +3,7 @@
 // Sign up at resend.com, add RESEND_API_KEY to .env
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY!;
-const FROM_EMAIL     = process.env.FROM_EMAIL || 'orders@karurplywood.com';
+const FROM_EMAIL     = process.env.FROM_EMAIL || 'orders@karurplywood.co.in';
 const STORE_NAME     = 'Karur Plywood & Company';
 
 interface OrderEmailData {

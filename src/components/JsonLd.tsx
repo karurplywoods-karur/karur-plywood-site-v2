@@ -1,7 +1,7 @@
 // src/components/JsonLd.tsx
 // JSON-LD structured data for Google local SEO
 
-const SITE_URL = 'https://karurplywood.com'; // Update with your actual domain
+const SITE_URL = 'https://karurplywood.co.in'; // Update with your actual domain
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
 
 export function LocalBusinessSchema() {
@@ -16,7 +16,7 @@ export function LocalBusinessSchema() {
     image: `${SITE_URL}/showroom.jpg`,
     description: "Karur's most trusted wholesale and retail plywood, doors, laminates and hardware store. 25+ years of experience serving Karur, Trichy, Namakkal and nearby districts.",
     telephone: '+919999999999', // Update with real number
-    email: 'info@karurplywood.com', // Update with real email
+    email: 'info@karurplywood.co.in', // Update with real email
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Main Road',

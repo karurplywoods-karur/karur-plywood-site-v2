@@ -2,10 +2,10 @@ import { CONTACT } from '@/lib/contact';
 // src/app/location/page.tsx
 import { Metadata } from 'next';
 export const metadata: Metadata = { title: 'Location | Find Karur Plywood & Company in Karur, Tamil Nadu', description: 'Visit Karur Plywood & Company. Get directions, address, working hours. Serving Karur, Trichy, Namakkal & Erode.' };
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = CONTACT.wa;
 const GMAPS = process.env.NEXT_PUBLIC_GMAPS_EMBED_URL || '';
 const AREAS = ['Karur','Trichy','Namakkal','Erode','Dindigul','Salem','Coimbatore'];
-const HOURS = [['Monday','9:00 AM – 7:00 PM'],['Tuesday','9:00 AM – 7:00 PM'],['Wednesday','9:00 AM – 7:00 PM'],['Thursday','9:00 AM – 7:00 PM'],['Friday','9:00 AM – 7:00 PM'],['Saturday','9:00 AM – 7:00 PM'],['Sunday','Closed']];
+const HOURS = [['Monday','9:30 AM - 7:30 PM'],['Tuesday','9:30 AM - 7:30 PM'],['Wednesday','9:30 AM - 7:30 PM'],['Thursday','9:30 AM - 7:30 PM'],['Friday','9:30 AM - 7:30 PM'],['Saturday','9:30 AM - 7:30 PM'],['Sunday','Closed']];
 
 export default function LocationPage() {
   return (

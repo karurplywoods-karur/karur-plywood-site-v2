@@ -26,7 +26,7 @@ const STATUS_CONFIG: Record<string, { color: string; bg: string; label: string; 
   delivered:  { color:'#10B981', bg:'rgba(16,185,129,0.12)', label:'Delivered',  icon:'📦' },
   cancelled:  { color:'#EF4444', bg:'rgba(239,68,68,0.12)',  label:'Cancelled',  icon:'❌' },
 };
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 export default function AdminOrdersPage() {
   const router = useRouter();

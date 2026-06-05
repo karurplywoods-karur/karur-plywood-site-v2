@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getProjectProducts, getCategories } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
+import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://karurplywood.co.in';
 
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = CONTACT.wa;
 
 export default async function ProductsPage({
   searchParams,

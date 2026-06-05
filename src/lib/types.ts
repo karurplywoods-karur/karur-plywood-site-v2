@@ -8,30 +8,119 @@ export interface Category {
   sort_order: number;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url: string;
+  description: string;
+}
+
+export interface ProductVariant {
+  id: string;
+  product_id: string | number;
+  sku: string;
+  slug: string | null;
+  thickness: string;
+  size: string;
+  grade: string;
+  finish: string;
+  color: string;
+  pack_size: string;
+  attributes: Record<string, unknown>;
+  price: number | null;
+  mrp: number | null;
+  stock_quantity: number;
+  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock' | 'made_to_order';
+  is_default: boolean;
+  sort_order: number;
+  seo_title: string;
+  seo_description: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   category_id: string | null;
+  brand_id?: string | null;
   description: string;
   image_url: string;
   type: 'project' | 'quick';
   price: number | null;
-  mrp: number | null;          // ← NEW: crossed-out original price
+  mrp: number | null;
   unit: string;
   in_stock: boolean;
+  series?: string;
+  grade?: string;
+  search_keywords?: string[];
+  application_tags?: string[];
+  comparison_attributes?: Record<string, unknown>;
+  seo_title?: string;
+  seo_description?: string;
   sort_order: number;
   created_at: string;
   updated_at: string;
-  // joined
   categories?: Category;
+  brands?: Brand | null;
+  product_variants?: ProductVariant[];
 }
 
 export interface CartItem {
   product: Product;
+  variant?: ProductVariant;
   quantity: number;
 }
 
-// ── BADGE TYPES ─────────────────────────────────────────────
+export interface ProductReview {
+  id: string;
+  product_id: string | number;
+  variant_id: string | null;
+  customer_id: string | null;
+  customer_name: string;
+  rating: number;
+  title: string;
+  body: string;
+  photo_urls: string[];
+  verified_purchase: boolean;
+  approved: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WishlistItem {
+  id: string;
+  customer_id?: string;
+  product_id: string | number;
+  variant_id?: string | null;
+  product?: Product;
+  variant?: ProductVariant | null;
+  created_at: string;
+}
+
+export interface DeliveryZone {
+  id: string;
+  city: string;
+  slug: string;
+  pincodes: string[];
+  is_available: boolean;
+  estimate: string;
+  min_order: number;
+  notes: string;
+  sort_order: number;
+}
+
+export interface ComparisonSet {
+  id: string;
+  slug: string;
+  title: string;
+  product_ids: Array<string | number>;
+  variant_ids: string[];
+  seo_title: string;
+  seo_description: string;
+  published: boolean;
+}
 
 export type BadgeType =
   | 'best_seller'
@@ -48,8 +137,6 @@ export interface ProductBadge {
   color: string;
   textColor: string;
 }
-
-// ── TRACKING TYPES ───────────────────────────────────────────
 
 export type WASource =
   | 'product_card'

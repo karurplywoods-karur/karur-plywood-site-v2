@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { trackWAClick, generateTrackingId } from '@/lib/analytics';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 const DEFAULT_TEXT = "Hi, I'm interested in your products. Can you help me?";
 
 export default function WhatsAppFloat() {

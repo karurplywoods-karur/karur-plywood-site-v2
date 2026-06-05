@@ -2,7 +2,7 @@
 // src/components/EnquiryForm.tsx
 import { useState } from 'react';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const PRODUCTS = [
   'Plywood (BWR / MR / Commercial)',

@@ -4,9 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
+import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://karurplywood.co.in';
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = CONTACT.wa;
 
 async function getPost(slug: string) {
   const { data } = await supabase

@@ -1,8 +1,10 @@
 // src/components/JsonLd.tsx
 // JSON-LD structured data for Google local SEO
 
+import { CONTACT } from '@/lib/contact';
+
 const SITE_URL = 'https://karurplywood.co.in'; // Update with your actual domain
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = CONTACT.wa;
 
 export function LocalBusinessSchema() {
   const schema = {
@@ -15,8 +17,8 @@ export function LocalBusinessSchema() {
     logo: `${SITE_URL}/logo.png`,
     image: `${SITE_URL}/showroom.jpg`,
     description: "Karur's most trusted wholesale and retail plywood, doors, laminates and hardware store. 25+ years of experience serving Karur, Trichy, Namakkal and nearby districts.",
-    telephone: '+919999999999', // Update with real number
-    email: 'info@karurplywood.co.in', // Update with real email
+    telephone: CONTACT.phone,
+    email: CONTACT.email,
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Main Road',
@@ -34,8 +36,8 @@ export function LocalBusinessSchema() {
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        opens: '09:00',
-        closes: '19:00',
+        opens: '09:30',
+        closes: '19:30',
       },
     ],
     priceRange: '₹₹',
@@ -60,7 +62,9 @@ export function LocalBusinessSchema() {
     },
     sameAs: [
       `https://wa.me/${WA}`,
-      'https://www.facebook.com/karurplywood', // Update with real URLs
+      CONTACT.social.facebook,
+      CONTACT.social.instagram,
+      CONTACT.social.youtube,
       'https://www.justdial.com',
     ],
     aggregateRating: {

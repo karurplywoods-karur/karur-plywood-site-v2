@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { CONTACT } from '@/lib/contact';
 import Link from 'next/link';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 const SITE_URL = 'https://karurplywood.co.in';
 
 // All supported cities with SEO data

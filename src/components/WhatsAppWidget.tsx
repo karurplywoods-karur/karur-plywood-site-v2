@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { trackWAClick, generateTrackingId } from '@/lib/analytics';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const QUICK_MESSAGES = [
   { label: '🪵 Plywood Pricing',   text: 'Hi, I need plywood for my project. Can you share pricing and available sizes?',   category: 'Plywood' },

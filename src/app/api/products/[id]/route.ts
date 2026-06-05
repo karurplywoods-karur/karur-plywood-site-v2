@@ -3,6 +3,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
+import { PRODUCT_SELECT } from '@/lib/products';
 
 function toNullableNumber(value: unknown) {
   if (value === '' || value === null || value === undefined) return null;
@@ -19,10 +20,7 @@ export async function GET(
   // Fetch the main product
   const { data: product, error } = await supabase
     .from('products')
-    .select(`
-      *,
-      categories (id, name, slug, icon)
-    `)
+    .select(PRODUCT_SELECT)
     .eq('id', id)
     .single();
 
@@ -36,7 +34,7 @@ export async function GET(
   const [sameCatRes, otherRes] = await Promise.all([
     supabase
       .from('products')
-      .select(`*, categories (id, name, slug, icon)`)
+      .select(PRODUCT_SELECT)
       .eq('in_stock', true)
       .eq('category_id', product.category_id)
       .neq('id', id)
@@ -44,7 +42,7 @@ export async function GET(
       .limit(4),
     supabase
       .from('products')
-      .select(`*, categories (id, name, slug, icon)`)
+      .select(PRODUCT_SELECT)
       .eq('in_stock', true)
       .neq('category_id', product.category_id)
       .neq('id', id)
@@ -90,7 +88,7 @@ export async function PATCH(
     .from('products')
     .update(payload)
     .eq('id', params.id)
-    .select('*, categories(id,name,slug,icon)')
+    .select(PRODUCT_SELECT)
     .single();
 
   if (error) {

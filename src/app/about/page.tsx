@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 export const metadata: Metadata = { title: 'About Us | Karur Plywood & Company — 25+ Years of Trust', description: "Learn about Karur Plywood & Company — Karur's leading plywood dealer with 25+ years of experience. Family-owned, customer-first." };
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 export default function AboutPage() {
   return (
     <>

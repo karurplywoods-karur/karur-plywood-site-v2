@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { CONTACT } from '@/lib/contact';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
+const WA = CONTACT.wa;
 
 export default function Footer() {
   return (
@@ -29,9 +29,9 @@ export default function Footer() {
           </p>
           {/* Social icons */}
           <div className="kp-footer-social">
-            <a href="https://facebook.com" target="_blank" rel="noopener" className="kp-social-icon" aria-label="Facebook">📘</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener" className="kp-social-icon" aria-label="Instagram">📸</a>
-            <a href="https://youtube.com" target="_blank" rel="noopener" className="kp-social-icon" aria-label="YouTube">▶️</a>
+            <a href={CONTACT.social.facebook} target="_blank" rel="noopener" className="kp-social-icon" aria-label="Facebook">📘</a>
+            <a href={CONTACT.social.instagram} target="_blank" rel="noopener" className="kp-social-icon" aria-label="Instagram">📸</a>
+            <a href={CONTACT.social.youtube} target="_blank" rel="noopener" className="kp-social-icon" aria-label="YouTube">▶️</a>
             <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="kp-social-icon kp-social-wa" aria-label="WhatsApp">💬</a>
           </div>
         </div>
@@ -93,8 +93,8 @@ export default function Footer() {
               📍 Covai Main Road, Reddipalayam<br />
               &nbsp;&nbsp;&nbsp;&nbsp;Karur, Tamil Nadu – 639 008
             </span>
-            <span className="kp-footer-info">⏰ Mon–Sat: 9:00 AM – 7:00 PM</span>
-            <span className="kp-footer-info" style={{ color:'#7A8EA8', opacity:0.6, fontSize:'0.7rem' }}>Sunday: Closed</span>
+            <span className="kp-footer-info">⏰ {CONTACT.hours}</span>
+            <span className="kp-footer-info" style={{ color:'#7A8EA8', opacity:0.6, fontSize:'0.7rem' }}>{CONTACT.sundayHours}</span>
           </div>
         </div>
       </div>

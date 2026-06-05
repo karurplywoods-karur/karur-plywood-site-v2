@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Browse completed residential and commercial design projects by our partner architect. Quality interiors using materials from Karur Plywood.',
 };
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 async function getData() {
   const [{ data: profile }, { data: projects }] = await Promise.all([

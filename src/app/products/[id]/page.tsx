@@ -5,16 +5,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
+import { PRODUCT_SELECT } from '@/lib/products';
 import ProductAddToCart from '@/components/ProductAddToCart';
+import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://karurplywood.co.in';
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = CONTACT.wa;
 
 // ── Fetch single product ────────────────────────────────────────
 async function getProduct(id: string) {
   const { data, error } = await supabase
     .from('products')
-    .select('*, categories(id,name,slug,icon)')
+    .select(PRODUCT_SELECT)
     .eq('id', id)
     .maybeSingle();
   if (error || !data) return null;
@@ -26,7 +28,7 @@ async function getRelated(categoryId: string | null, currentId: string) {
   if (!categoryId) return [];
   const { data } = await supabase
     .from('products')
-    .select('*, categories(id,name,slug,icon)')
+    .select(PRODUCT_SELECT)
     .eq('category_id', categoryId)
     .eq('in_stock', true)
     .neq('id', currentId)
@@ -208,7 +210,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <ProductAddToCart product={product} />
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                  <a href={`tel:${process.env.NEXT_PUBLIC_PHONE_RAW || '919999999999'}`}
+                  <a href={`tel:${CONTACT.phoneRaw}`}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 0', borderRadius: 8, background: 'transparent', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
                     📞 Call Now
                   </a>

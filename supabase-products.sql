@@ -45,11 +45,12 @@ comment on column products.slug is 'Optional URL-friendly identifier.';
 create or replace function update_updated_at()
 returns trigger as $$
 begin
-  new.updated_at = now();
+  new.updated_at := now();
   return new;
 end;
 $$ language plpgsql;
 
+drop trigger if exists products_updated_at on products;
 create trigger products_updated_at
   before update on products
   for each row execute function update_updated_at();

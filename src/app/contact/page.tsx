@@ -5,10 +5,16 @@ import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Karur Plywood & Company — Call or WhatsApp',
-  description: 'Contact Karur Plywood & Company. Call +91 91566 66538, WhatsApp, or visit our showroom at Covai Main Road, Reddipalayam, Karur. Get a free quote today.',
+  description: 'Contact Karur Plywood & Company. Call +91 91596 66538, WhatsApp, or visit our showroom at Covai Main Road, Reddipalayam, Karur. Get a free quote today.',
+  alternates: { canonical: `${CONTACT.siteUrl}/contact` },
+  openGraph: {
+    title: 'Contact Us | Karur Plywood & Company',
+    description: 'Call, WhatsApp, or visit Karur Plywood & Company in Karur.',
+    url: `${CONTACT.siteUrl}/contact`,
+  },
 };
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
+const WA = CONTACT.wa;
 
 const HOURS = [
   ['Monday', '9:30 AM – 7:30 PM'],

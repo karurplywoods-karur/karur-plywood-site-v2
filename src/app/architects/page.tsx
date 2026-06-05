@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Find verified architects and interior designers in Karur, Trichy and nearby areas. All architects use quality materials from Karur Plywood.',
 };
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 async function getArchitects() {
   const { data } = await supabase

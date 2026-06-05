@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CONTACT } from '@/lib/contact';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = CONTACT.wa;
 
 const TRUST_POINTS = [
   { icon: '🏆', label: '25+ Years Experience' },
@@ -22,7 +22,7 @@ const QUICK_TOPICS = [
 const CONTACT_DETAILS = [
   { icon: '📞', label: 'Phone', value: CONTACT.phone, href: `tel:${CONTACT.phoneRaw}` },
   { icon: '📍', label: 'Address', value: CONTACT.address, href: 'https://maps.google.com/?q=Karur+Plywood+Company+Karur+Tamil+Nadu' },
-  { icon: '⏰', label: 'Hours', value: 'Mon – Sat: 9:00 AM – 7:00 PM', href: null },
+  { icon: '⏰', label: 'Hours', value: CONTACT.hours, href: null },
   { icon: '📧', label: 'Email', value: CONTACT.email, href: `mailto:${CONTACT.email}` },
 ];
 
@@ -274,7 +274,7 @@ export default function ContactClient() {
                 <div className="store-tag">📍 Visit Our Store</div>
                 <div className="store-title">Come See Us in Karur</div>
                 <p className="store-desc">
-                  Our showroom is open Mon–Sat, 9 AM to 7 PM. Browse 500+ products across plywood, laminates, doors and hardware.
+                  Our showroom is open {CONTACT.hours}. Browse 500+ products across plywood, laminates, doors and hardware.
                 </p>
 
                 {/* Static map placeholder */}
@@ -300,7 +300,7 @@ export default function ContactClient() {
                 <div className="hours-title">⏰ Business Hours</div>
                 <div className="hours-list">
                   {[
-                    ['Mon – Sat', '9:00 AM – 7:00 PM', false],
+                    ['Mon – Sat', '9:30 AM – 7:30 PM', false],
                     ['Sunday', 'Closed', true],
                   ].map(([day, time, closed]) => (
                     <div key={day as string} className="hours-row">

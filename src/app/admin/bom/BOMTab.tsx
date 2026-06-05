@@ -18,7 +18,7 @@ interface BOMRequest {
   converted_at: string | null;
 }
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const STATUS_CONFIG = {
   pending:   { label: '⏳ Pending',   bg: 'rgba(249,115,22,0.12)',    color: '#F97316' },

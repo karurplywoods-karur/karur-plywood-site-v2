@@ -2,12 +2,19 @@
 import { supabase, supabaseAdmin } from './db';
 import type { Product, Category } from './types';
 
+export const PRODUCT_SELECT = `
+  *,
+  categories(id, name, slug, icon),
+  brands(id, name, slug, logo_url, description),
+  product_variants(*)
+`;
+
 // ── PUBLIC QUERIES ──────────────────────────────────────
 
 export async function getProjectProducts(categorySlug?: string): Promise<Product[]> {
   let query = supabase
     .from('products')
-    .select('*, categories(id, name, slug, icon)')
+    .select(PRODUCT_SELECT)
     .eq('type', 'project')
     .eq('in_stock', true)
     .order('sort_order', { ascending: true });
@@ -29,7 +36,7 @@ export async function getProjectProducts(categorySlug?: string): Promise<Product
 export async function getQuickProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from('products')
-    .select('*, categories(id, name, slug, icon)')
+    .select(PRODUCT_SELECT)
     .eq('type', 'quick')
     .eq('in_stock', true)
     .order('sort_order', { ascending: true });
@@ -53,7 +60,7 @@ export async function getCategories(): Promise<Category[]> {
 export async function adminGetAllProducts(): Promise<Product[]> {
   const { data, error } = await supabaseAdmin
     .from('products')
-    .select('*, categories(id, name, slug, icon)')
+    .select(PRODUCT_SELECT)
     .order('created_at', { ascending: false });
 
   if (error) { console.error(error); return []; }

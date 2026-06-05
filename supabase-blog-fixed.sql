@@ -31,7 +31,7 @@ returns trigger
 language plpgsql
 as $$
 begin
-  new.updated_at = now();
+  new.updated_at := now();
   if new.published = true and old.published = false then
     new.published_at = now();
   end if;

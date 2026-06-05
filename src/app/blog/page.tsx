@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/db';
+import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://karurplywood.co.in';
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-const WA   = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA   = CONTACT.wa;
 const PER  = 9;
 
 const CAT_CHIP: Record<string, { bg: string; color: string }> = {

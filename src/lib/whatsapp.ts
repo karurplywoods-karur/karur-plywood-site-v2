@@ -1,5 +1,5 @@
 // src/lib/whatsapp.ts — WhatsApp notification to store owner
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 export function buildOwnerOrderMessage(data: {
   orderNumber: string;

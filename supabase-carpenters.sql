@@ -37,7 +37,7 @@ grant all on public.carpenters to anon, authenticated, service_role;
 -- Auto-update updated_at
 create or replace function public.update_carpenters_updated_at()
 returns trigger language plpgsql as $$
-begin new.updated_at = now(); return new; end; $$;
+begin new.updated_at := now(); return new; end; $$;
 
 create trigger carpenters_updated_at
   before update on public.carpenters

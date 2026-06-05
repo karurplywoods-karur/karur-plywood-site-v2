@@ -112,7 +112,7 @@ for each row execute function public.generate_order_number();
 create or replace function public.update_updated_at()
 returns trigger as $$
 begin
-  new.updated_at = now();
+  new.updated_at := now();
   return new;
 end;
 $$ language plpgsql;

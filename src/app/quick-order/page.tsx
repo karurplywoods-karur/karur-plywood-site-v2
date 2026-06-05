@@ -42,9 +42,15 @@ function QuickOrderInner() {
 
     fetch('/api/products?type=quick', { signal: controller.signal })
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-      .then(data => {
+      .then(async data => {
         clearTimeout(timer);
-        setProducts(Array.isArray(data) ? data : []);
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+        } else {
+          const fallback = await fetch('/api/products');
+          const fallbackData = fallback.ok ? await fallback.json() : [];
+          setProducts(Array.isArray(fallbackData) ? fallbackData : []);
+        }
         setLoading(false);
       })
       .catch(err => {

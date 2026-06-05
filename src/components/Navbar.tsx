@@ -7,7 +7,7 @@ import { createClient } from '@/lib/auth-client';
 import { useCart } from '@/lib/CartContext';
 import CartDrawer from './CartDrawer';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919999999999';
+const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const PRIMARY = [
   { href: '/',         label: 'Home'    },

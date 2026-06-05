@@ -25,7 +25,7 @@ create table if not exists blog_posts (
 create or replace function update_blog_updated_at()
 returns trigger as $$
 begin
-  new.updated_at = now();
+  new.updated_at := now();
   if new.published = true and old.published = false then
     new.published_at = now();
   end if;

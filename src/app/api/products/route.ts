@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
+import { PRODUCT_SELECT } from '@/lib/products';
 
 function toNullableNumber(value: unknown) {
   if (value === '' || value === null || value === undefined) return null;
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const { data, error } = await supabaseAdmin
       .from('products')
-      .select('*, categories(id,name,slug,icon)')
+      .select(PRODUCT_SELECT)
       .order('created_at', { ascending: false });
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json(data);
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest) {
 
   let query = supabase
     .from('products')
-    .select('*, categories(id,name,slug,icon)')
+    .select(PRODUCT_SELECT)
     .eq('in_stock', true)
     .order('sort_order', { ascending: true });
 

@@ -3,10 +3,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/db';
 import { LocalBusinessSchema } from '@/components/JsonLd';
+import { CONTACT } from '@/lib/contact';
 
-const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
-const PHONE = process.env.NEXT_PUBLIC_PHONE || '+91 91566 66538';
-const PHONE_RAW = process.env.NEXT_PUBLIC_PHONE_RAW || '919156666538';
+const WA = CONTACT.wa;
+const PHONE = CONTACT.phone;
+const PHONE_RAW = CONTACT.phoneRaw;
 
 // Fetch featured project products (top 4 by sort_order)
 async function getFeaturedProducts() {
@@ -47,7 +48,7 @@ const FAQS = [
   { q: 'What brands of plywood do you stock?', a: 'We stock Century, Sharon, Unibind, Greenply and other top brands — all ISI-certified.' },
   { q: 'Do you offer wholesale pricing for contractors?', a: 'Yes! Contractors, builders and carpenters get special wholesale rates. WhatsApp us with your requirement for bulk pricing.' },
   { q: 'What areas do you deliver to?', a: 'We deliver across Karur, Trichy, Namakkal, Erode, Salem and Dindigul. Same-day dispatch for Karur orders above ₹5,000.' },
-  { q: 'Can I visit your showroom?', a: 'Absolutely. We\'re open Mon–Sat 9 AM to 7 PM at Covai Main Road, Reddipalayam, Karur – 639 008.' },
+  { q: 'Can I visit your showroom?', a: `Absolutely. We're open ${CONTACT.hours} and closed on Sunday at ${CONTACT.address}.` },
 ];
 
 export default async function HomePage() {
@@ -129,7 +130,7 @@ export default async function HomePage() {
             <div className="hero-contact-card">
               <div className="hero-contact-label">📞 Call Us Now</div>
               <a href={`tel:${PHONE_RAW}`} className="hero-contact-phone">{PHONE}</a>
-              <div className="hero-contact-hours">Mon – Sat · 9 AM – 7 PM</div>
+              <div className="hero-contact-hours">{CONTACT.hoursShort}</div>
             </div>
           </div>
         </div>

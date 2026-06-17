@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createBuildClient } from '@/lib/supabase/build';
 import { generateUniqueIntro, generateFAQ, generateMeta } from '@/lib/content-generators';
 import ProductGrid from '@/components/ProductGrid';
 import FAQSection from '@/components/FAQSection';
@@ -9,14 +9,18 @@ import Breadcrumb from '@/components/Breadcrumb';
 import LocalBusinessSchema from '@/components/LocalBusinessSchema';
 import ReviewSection from '@/components/ReviewSection';
 
+// ============================================
+// BUILD-SAFE: Use standard client for static params
+// ============================================
 export async function generateStaticParams() {
-  const supabase = createClient();
+  const supabase = createBuildClient();
+  
   const { data: pages } = await supabase
     .from('area_category_pages')
     .select(`
       is_published,
-      areas(slug),
-      categories(slug)
+      areas!inner(slug),
+      categories!inner(slug)
     `)
     .eq('is_published', true);
 
@@ -27,7 +31,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { area: string; category: string } }): Promise<Metadata> {
-  const supabase = createClient();
+  const supabase = createBuildClient();
+  
   const { data: pageData } = await supabase
     .from('area_category_pages')
     .select('*, areas(*), categories(*)')
@@ -36,7 +41,12 @@ export async function generateMetadata({ params }: { params: { area: string; cat
     .eq('is_published', true)
     .single();
 
-  if (!pageData) return { title: 'Not Found' };
+  if (!pageData) {
+    return {
+      title: 'Page Not Found | Karur Plywood',
+      description: 'The page you are looking for does not exist.',
+    };
+  }
 
   const meta = pageData.meta_title && pageData.meta_description
     ? { title: pageData.meta_title, description: pageData.meta_description }
@@ -59,7 +69,7 @@ export async function generateMetadata({ params }: { params: { area: string; cat
 }
 
 export default async function AreaCategoryPage({ params }: { params: { area: string; category: string } }) {
-  const supabase = createClient();
+  const supabase = createBuildClient();
 
   const { data: pageData } = await supabase
     .from('area_category_pages')
@@ -125,7 +135,7 @@ export default async function AreaCategoryPage({ params }: { params: { area: str
       {pageData.local_testimonial && (
         <section className="mb-10 bg-green-50 p-6 rounded-lg">
           <blockquote className="text-lg italic text-gray-800">
-            "{pageData.local_testimonial}"
+            &ldquo;{pageData.local_testimonial}&rdquo;
           </blockquote>
         </section>
       )}

@@ -9,6 +9,21 @@ import { useCart } from '@/lib/CartContext';
 
 interface Props { open: boolean; onClose: () => void; }
 
+function cartItemKey(item: any) {
+  return `${item.product.id}:${item.variant?.id || 'base'}`;
+}
+
+function cartItemPrice(item: any) {
+  return item.variant?.price ?? item.product.price ?? 0;
+}
+
+function cartItemVariantLabel(item: any) {
+  if (!item.variant) return '';
+  return [item.variant.thickness, item.variant.size, item.variant.grade, item.variant.finish, item.variant.color, item.variant.pack_size]
+    .filter(Boolean)
+    .join(' / ') || item.variant.sku || '';
+}
+
 export default function CartDrawer({ open, onClose }: Props) {
   const { items, inc, dec, setQty, clear, total, count } = useCart();
   const router = useRouter();
@@ -55,7 +70,7 @@ export default function CartDrawer({ open, onClose }: Props) {
           ) : (
             <div className="cart-items">
               {items.map(item => (
-                <div key={item.product.id} className="cart-item">
+                <div key={cartItemKey(item)} className="cart-item">
                   <div className="cart-item-img">
                     {item.product.image_url ? (
                       <Image src={item.product.image_url} alt={item.product.name} fill style={{ objectFit: 'cover' }} sizes="60px" />
@@ -70,27 +85,28 @@ export default function CartDrawer({ open, onClose }: Props) {
                     {item.product.categories && (
                       <div className="cart-item-cat">{item.product.categories.name}</div>
                     )}
-                    {item.product.price && (
+                    {cartItemVariantLabel(item) && <div className="cart-item-variant">{cartItemVariantLabel(item)}</div>}
+                    {cartItemPrice(item) > 0 && (
                       <div className="cart-item-price">
-                        ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}
+                        ₹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}
                         <span style={{ color: '#7A8EA8', fontSize: 11, fontWeight: 400 }}>
-                          {' '}(₹{item.product.price.toLocaleString('en-IN')} × {item.quantity})
+                          {' '}(₹{cartItemPrice(item).toLocaleString('en-IN')} × {item.quantity})
                         </span>
                       </div>
                     )}
                   </div>
                   <div className="cart-item-controls">
                     <div className="cart-qty-ctrl">
-                      <button onClick={() => dec(item.product)} className="cart-qty-btn">−</button>
+                      <button onClick={() => dec(item.product, item.variant)} className="cart-qty-btn">−</button>
                       <input
                         type="number" min="1"
                         value={item.quantity}
-                        onChange={e => { const v = parseInt(e.target.value); if (!isNaN(v) && v >= 1) setQty(item.product, v); }}
+                        onChange={e => { const v = parseInt(e.target.value); if (!isNaN(v) && v >= 1) setQty(item.product, v, item.variant); }}
                         className="cart-qty-input"
                       />
-                      <button onClick={() => inc(item.product)} className="cart-qty-btn">+</button>
+                      <button onClick={() => inc(item.product, item.variant)} className="cart-qty-btn">+</button>
                     </div>
-                    <button onClick={() => setQty(item.product, 0)} className="cart-remove-btn">🗑️</button>
+                    <button onClick={() => setQty(item.product, 0, item.variant)} className="cart-remove-btn">🗑️</button>
                   </div>
                 </div>
               ))}
@@ -138,6 +154,7 @@ export default function CartDrawer({ open, onClose }: Props) {
         .cart-item-info { flex:1; min-width:0; }
         .cart-item-name { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:700; color:#F8F9FB; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; }
         .cart-item-cat { font-size:10px; color:#F97316; margin-bottom:3px; }
+        .cart-item-variant { font-size:10px; color:#7A8EA8; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .cart-item-price { font-size:12px; font-weight:700; color:#F97316; }
         .cart-item-controls { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
         .cart-qty-ctrl { display:flex; align-items:center; border:1px solid rgba(249,115,22,0.2); border-radius:4px; overflow:hidden; }

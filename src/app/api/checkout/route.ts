@@ -88,6 +88,9 @@ export async function POST(req: NextRequest) {
     const orderItems = items.map((i: any) => ({
       order_id:      order.id,
       product_id:    i.product_id || null,
+      variant_id:    i.variant_id || null,
+      variant_sku:   i.variant_sku || '',
+      variant_label: i.variant_label || '',
       product_name:  i.product_name,
       product_image: i.product_image || '',
       category_name: i.category_name || '',

@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
 import { PRODUCT_SELECT } from '@/lib/products';
 import ProductAddToCart from '@/components/ProductAddToCart';
+import ProductPurchasePanel from '@/components/product/ProductPurchasePanel';
 import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://karurplywood.co.in';
@@ -142,7 +143,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                 {product.name}
               </h1>
 
-              {/* Price Block */}
+              {false && (
               <div style={{ background: 'rgba(25,55,109,0.4)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 10, padding: '20px 22px', marginBottom: 24 }}>
                 {product.mrp && product.mrp > (product.price || 0) && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -178,6 +179,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   </div>
                 )}
               </div>
+              )}
 
               {/* Description */}
               {product.description && (
@@ -206,7 +208,9 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                 ))}
               </div>
 
-              {/* CTA Buttons */}
+              <ProductPurchasePanel product={product} />
+
+              {false && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <ProductAddToCart product={product} />
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -220,6 +224,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   </Link>
                 </div>
               </div>
+              )}
 
               {/* Trust strip */}
               <div style={{ marginTop: 24, display: 'flex', gap: 14, flexWrap: 'wrap' }}>

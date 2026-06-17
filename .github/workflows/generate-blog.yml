@@ -1,0 +1,81 @@
+# .github/workflows/generate-blog.yml
+#
+# Runs the AI blog generator on a schedule.
+# Also allows manual trigger from GitHub UI.
+#
+# Free tier: GitHub gives 2,000 minutes/month on free accounts.
+# Each run takes ~2-3 minutes. That's 600+ free runs/month.
+
+name: 🤖 Generate Blog Draft
+
+on:
+  # ── Scheduled runs ─────────────────────────────────────────
+  schedule:
+    # 9:30 AM IST daily  (IST = UTC+5:30, so 4:00 AM UTC)
+    - cron: '0 4 * * *'
+
+  # ── Manual trigger from GitHub UI ──────────────────────────
+  # Go to: GitHub repo → Actions tab → "Generate Blog Draft" → Run workflow
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'Number of posts to generate (1-10)'
+        required: false
+        default: '1'
+        type: string
+      dry_run:
+        description: 'Dry run — validate setup only, no posts generated'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  generate:
+    name: Generate Blog Post(s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30     # Safety cap — single post takes 2-3 min max
+
+    steps:
+      # ── 1. Checkout your repo ─────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Node.js ─────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Install dependencies ───────────────────────────
+      - name: Install dependencies
+        run: |
+          npm ci
+          # Install ts-node for running TypeScript directly
+          npm install -g ts-node typescript
+
+      # ── 4. Run the generator ──────────────────────────────
+      - name: Generate blog post(s)
+        env:
+          NEXT_PUBLIC_SUPABASE_URL:  ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ANTHROPIC_API_KEY:         ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Determine args
+          COUNT="${{ github.event.inputs.count || '1' }}"
+          DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Running dry run..."
+            npx ts-node --project tsconfig.json scripts/generate-blog.ts --dry-run
+          else
+            echo "Generating $COUNT post(s)..."
+            npx ts-node --project tsconfig.json scripts/generate-blog.ts --count=$COUNT
+          fi
+
+      # ── 5. Log completion ─────────────────────────────────
+      - name: Log completion
+        if: always()
+        run: |
+          echo "Run completed at: $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Review drafts at: https://karurplywood.co.in/admin/seo"

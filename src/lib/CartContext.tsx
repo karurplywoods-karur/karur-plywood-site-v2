@@ -1,14 +1,14 @@
 'use client';
-// src/lib/CartContext.tsx
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import type { Product, CartItem } from './types';
+
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
+import type { CartItem, Product, ProductVariant } from './types';
 
 interface CartCtx {
   items: CartItem[];
-  add: (p: Product) => void;
-  inc: (p: Product) => void;
-  dec: (p: Product) => void;
-  setQty: (p: Product, qty: number) => void;
+  add: (product: Product, variant?: ProductVariant) => void;
+  inc: (product: Product, variant?: ProductVariant) => void;
+  dec: (product: Product, variant?: ProductVariant) => void;
+  setQty: (product: Product, qty: number, variant?: ProductVariant) => void;
   clear: () => void;
   total: number;
   count: number;
@@ -16,6 +16,14 @@ interface CartCtx {
 
 const CartContext = createContext<CartCtx | null>(null);
 const CART_STORAGE_KEY = 'karur-plywood-cart';
+
+function itemKey(product: Product, variant?: ProductVariant | null) {
+  return `${product.id}:${variant?.id || 'base'}`;
+}
+
+function itemPrice(item: CartItem) {
+  return item.variant?.price ?? item.product.price ?? 0;
+}
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -42,42 +50,47 @@ export function CartProvider({ children }: { children: ReactNode }) {
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
   }, [items, ready]);
 
-  const add = useCallback((p: Product) => {
+  const add = useCallback((product: Product, variant?: ProductVariant) => {
+    const key = itemKey(product, variant);
     setItems(prev => {
-      const exists = prev.find(i => i.product.id === p.id);
-      if (exists) return prev.map(i => i.product.id === p.id ? { ...i, quantity: i.quantity + 1 } : i);
-      return [...prev, { product: p, quantity: 1 }];
+      const exists = prev.find(i => itemKey(i.product, i.variant) === key);
+      if (exists) {
+        return prev.map(i => itemKey(i.product, i.variant) === key ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { product, variant, quantity: 1 }];
     });
   }, []);
 
-  const inc = useCallback((p: Product) => {
-    setItems(prev => prev.map(i => i.product.id === p.id ? { ...i, quantity: i.quantity + 1 } : i));
+  const inc = useCallback((product: Product, variant?: ProductVariant) => {
+    const key = itemKey(product, variant);
+    setItems(prev => prev.map(i => itemKey(i.product, i.variant) === key ? { ...i, quantity: i.quantity + 1 } : i));
   }, []);
 
-  const dec = useCallback((p: Product) => {
+  const dec = useCallback((product: Product, variant?: ProductVariant) => {
+    const key = itemKey(product, variant);
     setItems(prev => {
-      const item = prev.find(i => i.product.id === p.id);
+      const item = prev.find(i => itemKey(i.product, i.variant) === key);
       if (!item) return prev;
-      if (item.quantity === 1) return prev.filter(i => i.product.id !== p.id);
-      return prev.map(i => i.product.id === p.id ? { ...i, quantity: i.quantity - 1 } : i);
+      if (item.quantity === 1) return prev.filter(i => itemKey(i.product, i.variant) !== key);
+      return prev.map(i => itemKey(i.product, i.variant) === key ? { ...i, quantity: i.quantity - 1 } : i);
     });
   }, []);
 
-  // Directly set any quantity (for typed input — e.g. 200 screws)
-  const setQty = useCallback((p: Product, qty: number) => {
+  const setQty = useCallback((product: Product, qty: number, variant?: ProductVariant) => {
     const safe = Math.max(0, Math.floor(qty));
+    const key = itemKey(product, variant);
     setItems(prev => {
-      if (safe === 0) return prev.filter(i => i.product.id !== p.id);
-      const exists = prev.find(i => i.product.id === p.id);
-      if (exists) return prev.map(i => i.product.id === p.id ? { ...i, quantity: safe } : i);
-      return [...prev, { product: p, quantity: safe }];
+      if (safe === 0) return prev.filter(i => itemKey(i.product, i.variant) !== key);
+      const exists = prev.find(i => itemKey(i.product, i.variant) === key);
+      if (exists) return prev.map(i => itemKey(i.product, i.variant) === key ? { ...i, quantity: safe } : i);
+      return [...prev, { product, variant, quantity: safe }];
     });
   }, []);
 
   const clear = useCallback(() => setItems([]), []);
 
-  const total = items.reduce((sum, i) => sum + (i.product.price || 0) * i.quantity, 0);
-  const count = items.reduce((sum, i) => sum + i.quantity, 0);
+  const total = items.reduce((sum, item) => sum + itemPrice(item) * item.quantity, 0);
+  const count = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider value={{ items, add, inc, dec, setQty, clear, total, count }}>

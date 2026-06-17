@@ -70,6 +70,12 @@ create index if not exists idx_products_brand on public.products(brand_id);
 create index if not exists idx_products_keywords on public.products using gin(search_keywords);
 create index if not exists idx_products_name_trgm on public.products using gin(name gin_trgm_ops);
 
+-- ---------- Order item variant snapshot ----------
+alter table public.order_items add column if not exists variant_id uuid references public.product_variants(id) on delete set null;
+alter table public.order_items add column if not exists variant_sku text default '';
+alter table public.order_items add column if not exists variant_label text default '';
+create index if not exists idx_order_items_variant on public.order_items(variant_id);
+
 -- ---------- Wishlist ----------
 create table if not exists public.wishlist_items (
   id uuid primary key default gen_random_uuid(),

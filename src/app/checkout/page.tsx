@@ -24,6 +24,21 @@ const STATUS_LABEL: Record<string, { color: string; label: string }> = {
   cancelled:  { color: '#EF4444', label: 'Cancelled' },
 };
 
+function cartItemKey(item: any) {
+  return `${item.product.id}:${item.variant?.id || 'base'}`;
+}
+
+function cartItemPrice(item: any) {
+  return item.variant?.price ?? item.product.price ?? 0;
+}
+
+function cartItemVariantLabel(item: any) {
+  if (!item.variant) return '';
+  return [item.variant.thickness, item.variant.size, item.variant.grade, item.variant.finish, item.variant.color, item.variant.pack_size]
+    .filter(Boolean)
+    .join(' / ') || item.variant.sku || '';
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -149,11 +164,14 @@ export default function CheckoutPage() {
 
     const orderItems = items.map(i => ({
       product_id:    i.product.id,
+      variant_id:    i.variant?.id || null,
+      variant_sku:   i.variant?.sku || '',
+      variant_label: cartItemVariantLabel(i),
       product_name:  i.product.name,
       product_image: i.product.image_url || '',
       category_name: i.product.categories?.name || '',
       unit:          i.product.unit || '',
-      unit_price:    i.product.price || 0,
+      unit_price:    cartItemPrice(i),
       quantity:      i.quantity,
     }));
 
@@ -409,11 +427,14 @@ export default function CheckoutPage() {
                 <div className="review-block">
                   <div className="review-block-label">Items ({count})</div>
                   {items.map(i => (
-                    <div key={i.product.id} className="review-item">
-                      <span className="review-item-name">{i.product.name}</span>
+                    <div key={cartItemKey(i)} className="review-item">
+                      <span className="review-item-name">
+                        {i.product.name}
+                        {cartItemVariantLabel(i) && <small className="review-item-variant">{cartItemVariantLabel(i)}</small>}
+                      </span>
                       <span className="review-item-qty">× {i.quantity}</span>
                       <span className="review-item-price">
-                        {i.product.price ? `₹${(i.product.price * i.quantity).toLocaleString('en-IN')}` : '—'}
+                        {cartItemPrice(i) ? `₹${(cartItemPrice(i) * i.quantity).toLocaleString('en-IN')}` : '—'}
                       </span>
                     </div>
                   ))}
@@ -447,14 +468,15 @@ export default function CheckoutPage() {
             <div className="co-summary-title">Order Summary</div>
             <div className="co-summary-items">
               {items.map(i => (
-                <div key={i.product.id} className="co-summary-item">
+                <div key={cartItemKey(i)} className="co-summary-item">
                   <div className="co-summary-item-name">
                     {i.product.name}
+                    {cartItemVariantLabel(i) && <small className="co-summary-item-variant">{cartItemVariantLabel(i)}</small>}
                     <span className="co-summary-item-qty"> × {i.quantity}</span>
                   </div>
                   <div className="co-summary-item-price">
-                    {i.product.price
-                      ? `₹${(i.product.price * i.quantity).toLocaleString('en-IN')}`
+                    {cartItemPrice(i)
+                      ? `₹${(cartItemPrice(i) * i.quantity).toLocaleString('en-IN')}`
                       : '—'}
                   </div>
                 </div>
@@ -569,6 +591,7 @@ function CheckoutStyles() {
     .review-item { display:flex; align-items:center; padding:7px 0; border-bottom:1px solid rgba(249,115,22,0.06); font-size:13px; }
     .review-item:last-child { border-bottom:none; }
     .review-item-name { flex:1; color:#A8BCCC; }
+    .review-item-variant, .co-summary-item-variant { display:block; margin-top:2px; font-size:11px; color:#7A8EA8; font-family:'DM Sans',sans-serif; font-weight:500; }
     .review-item-qty { color:#7A8EA8; margin-right:12px; font-size:12px; }
     .review-item-price { color:#F97316; font-weight:700; font-family:'Syne',sans-serif; min-width:80px; text-align:right; }
 

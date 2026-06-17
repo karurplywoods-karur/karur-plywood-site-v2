@@ -3,20 +3,21 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/lib/CartContext';
-import type { Product } from '@/lib/types';
+import type { Product, ProductVariant } from '@/lib/types';
 
 interface Props {
   product: Product;
+  variant?: ProductVariant;
   layout?: 'stack' | 'compact';
 }
 
-export default function ProductAddToCart({ product, layout = 'stack' }: Props) {
+export default function ProductAddToCart({ product, variant, layout = 'stack' }: Props) {
   const { items, add, inc, dec } = useCart();
   const [flash, setFlash] = useState(false);
-  const qty = items.find(i => i.product.id === product.id)?.quantity || 0;
+  const qty = items.find(i => i.product.id === product.id && (i.variant?.id || '') === (variant?.id || ''))?.quantity || 0;
 
   const handleAdd = () => {
-    add(product);
+    add(product, variant);
     setFlash(true);
     window.setTimeout(() => setFlash(false), 1000);
   };
@@ -25,9 +26,9 @@ export default function ProductAddToCart({ product, layout = 'stack' }: Props) {
     return (
       <div className={`patc-wrap patc-wrap--${layout}`}>
         <div className="patc-qty">
-          <button type="button" onClick={() => dec(product)} aria-label="Decrease quantity">-</button>
+          <button type="button" onClick={() => dec(product, variant)} aria-label="Decrease quantity">-</button>
           <span>{qty}</span>
-          <button type="button" onClick={() => inc(product)} aria-label="Increase quantity">+</button>
+          <button type="button" onClick={() => inc(product, variant)} aria-label="Increase quantity">+</button>
         </div>
         {layout === 'stack' && (
           <Link href="/checkout" className="patc-checkout">

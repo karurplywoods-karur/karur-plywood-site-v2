@@ -92,6 +92,15 @@ function QuickOrderInner() {
 
   const getCartItem = (p: Product) => items.find(i => i.product.id === p.id);
 
+  const cartItemKey = (item: any) => `${item.product.id}:${item.variant?.id || 'base'}`;
+  const cartItemPrice = (item: any) => item.variant?.price ?? item.product.price ?? 0;
+  const cartItemVariantLabel = (item: any) => {
+    if (!item.variant) return '';
+    return [item.variant.thickness, item.variant.size, item.variant.grade, item.variant.finish, item.variant.color, item.variant.pack_size]
+      .filter(Boolean)
+      .join(' / ') || item.variant.sku || '';
+  };
+
   return (
     <>
       {/* ── HERO ── */}
@@ -363,19 +372,20 @@ function QuickOrderInner() {
             ) : (
               <>
                 {items.map(item => (
-                  <div key={item.product.id} style={{ display:'flex', alignItems:'center', gap:14, padding:'14px 0', borderBottom:'1px solid rgba(249,115,22,0.08)' }}>
+                  <div key={cartItemKey(item)} style={{ display:'flex', alignItems:'center', gap:14, padding:'14px 0', borderBottom:'1px solid rgba(249,115,22,0.08)' }}>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:14, fontWeight:600, color:'#F8F9FB', fontFamily:"'Syne',sans-serif" }}>{item.product.name}</div>
-                      {item.product.price && <div style={{ fontSize:12, color:'#7A8EA8' }}>₹{item.product.price.toLocaleString('en-IN')} × {item.quantity} = ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}</div>}
+                      {cartItemVariantLabel(item) && <div style={{ fontSize:11, color:'#7A8EA8', marginTop:3 }}>{cartItemVariantLabel(item)}</div>}
+                      {cartItemPrice(item) > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>₹{cartItemPrice(item).toLocaleString('en-IN')} × {item.quantity} = ₹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}</div>}
                     </div>
                     <div style={{ display:'flex', alignItems:'center', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, overflow:'hidden' }}>
-                      <button onClick={() => dec(item.product)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>−</button>
+                      <button onClick={() => dec(item.product, item.variant)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>−</button>
                       <input type="number" min="1" max="9999" value={item.quantity}
-                        onChange={e => { const v = parseInt(e.target.value); if (!isNaN(v) && v >= 1) setQty(item.product, v); }}
+                        onChange={e => { const v = parseInt(e.target.value); if (!isNaN(v) && v >= 1) setQty(item.product, v, item.variant); }}
                         onFocus={e => e.target.select()}
                         style={{ width:60, textAlign:'center', fontWeight:700, fontSize:14, color:'#F8F9FB', background:'transparent', border:'none', borderLeft:'1px solid rgba(249,115,22,0.2)', borderRight:'1px solid rgba(249,115,22,0.2)', padding:'0 4px', height:34, MozAppearance:'textfield', fontFamily:"'Syne',sans-serif" } as React.CSSProperties}
                       />
-                      <button onClick={() => inc(item.product)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>+</button>
+                      <button onClick={() => inc(item.product, item.variant)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>+</button>
                     </div>
                   </div>
                 ))}

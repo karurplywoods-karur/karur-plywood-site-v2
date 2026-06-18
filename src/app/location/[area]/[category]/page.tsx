@@ -9,20 +9,29 @@ import Breadcrumb from '@/components/Breadcrumb';
 import LocalBusinessSchema from '@/components/LocalBusinessSchema';
 import ReviewSection from '@/components/ReviewSection';
 
-// Force dynamic rendering — no static generation
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: { area: string; category: string } }): Promise<Metadata> {
-  // ... rest of your code stays exactly the same ...
   try {
     const supabase = createBuildClient();
 
+    // Step 1: Get area and category IDs by slug (reliable query)
+    const [{ data: areaRow }, { data: categoryRow }] = await Promise.all([
+      supabase.from('seo_areas').select('id, name, display_name, slug').eq('slug', params.area).single(),
+      supabase.from('seo_categories').select('id, name, display_name, slug').eq('slug', params.category).single(),
+    ]);
+
+    if (!areaRow || !categoryRow) {
+      return { title: 'Page Not Found | Karur Plywood', description: 'The page you are looking for does not exist.' };
+    }
+
+    // Step 2: Get the page using IDs
     const { data: pageData } = await supabase
       .from('seo_area_category_pages')
       .select('*, seo_areas(*), seo_categories(*)')
-      .eq('seo_areas.slug', params.area)
-      .eq('seo_categories.slug', params.category)
+      .eq('area_id', areaRow.id)
+      .eq('category_id', categoryRow.id)
       .eq('is_published', true)
       .single();
 
@@ -42,6 +51,7 @@ export async function generateMetadata({ params }: { params: { area: string; cat
       alternates: { canonical: `https://karurplywood.co.in/location/${params.area}/${params.category}` },
     };
   } catch (error) {
+    console.error('Metadata error:', error);
     return { title: 'Karur Plywood & Company', description: 'ISI certified plywood suppliers in Karur and surrounding areas.' };
   }
 }
@@ -50,15 +60,30 @@ export default async function AreaCategoryPage({ params }: { params: { area: str
   try {
     const supabase = createBuildClient();
 
+    // Step 1: Get area and category by slug (reliable query)
+    const [{ data: areaRow }, { data: categoryRow }] = await Promise.all([
+      supabase.from('seo_areas').select('*').eq('slug', params.area).single(),
+      supabase.from('seo_categories').select('*').eq('slug', params.category).single(),
+    ]);
+
+    if (!areaRow || !categoryRow) {
+      console.log('Area or category not found:', { area: params.area, category: params.category });
+      return notFound();
+    }
+
+    // Step 2: Get the page using IDs
     const { data: pageData } = await supabase
       .from('seo_area_category_pages')
       .select('*, seo_areas(*), seo_categories(*)')
-      .eq('seo_areas.slug', params.area)
-      .eq('seo_categories.slug', params.category)
+      .eq('area_id', areaRow.id)
+      .eq('category_id', categoryRow.id)
       .eq('is_published', true)
       .single();
 
-    if (!pageData) return notFound();
+    if (!pageData) {
+      console.log('Page not found for area/category:', { areaId: areaRow.id, categoryId: categoryRow.id, areaSlug: params.area, categorySlug: params.category });
+      return notFound();
+    }
 
     const { seo_areas: area, seo_categories: category } = pageData;
 

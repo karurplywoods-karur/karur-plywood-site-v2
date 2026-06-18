@@ -5,10 +5,7 @@ export default function FAQSection({ faqs }: { faqs: any[] }) {
     "mainEntity": faqs.map(faq => ({
       "@type": "Question",
       "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer
-      }
+      "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
     }))
   };
 
@@ -18,9 +15,7 @@ export default function FAQSection({ faqs }: { faqs: any[] }) {
       <div className="space-y-4">
         {faqs.map((faq, i) => (
           <details key={i} className="border rounded-lg p-4 bg-white">
-            <summary className="font-medium cursor-pointer text-gray-900">
-              {faq.question}
-            </summary>
+            <summary className="font-medium cursor-pointer text-gray-900">{faq.question}</summary>
             <p className="mt-3 text-gray-700 leading-relaxed">{faq.answer}</p>
           </details>
         ))}

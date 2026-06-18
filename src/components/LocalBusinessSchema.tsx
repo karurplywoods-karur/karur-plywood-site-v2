@@ -46,24 +46,16 @@ export default function LocalBusinessSchema({ area, category, reviews }: any) {
         "name": `${category.display_name} - ${area.name}`,
         "image": `https://karurplywood.co.in/products/${category.slug}.jpg`,
         "description": `Premium ${category.display_name} available in ${area.name}. ISI certified with warranty.`,
-        "brand": {
-          "@type": "Brand",
-          "name": "Karur Plywood"
-        },
+        "brand": { "@type": "Brand", "name": "Karur Plywood" },
         "offers": {
           "@type": "AggregateOffer",
           "priceCurrency": "INR",
           "availability": "https://schema.org/InStock",
-          "seller": {
-            "@type": "LocalBusiness",
-            "name": "Karur Plywood & Company"
-          }
+          "seller": { "@type": "LocalBusiness", "name": "Karur Plywood & Company" }
         }
       }
     ]
   };
 
-  return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-  );
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 }

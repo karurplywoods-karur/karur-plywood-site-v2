@@ -6,14 +6,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createBuildClient();
 
   const { data: pages } = await supabase
-    .from('area_category_pages')
-    .select('areas(slug), categories(slug), updated_at')
+    .from('seo_area_category_pages')
+    .select('seo_areas(slug), seo_categories(slug), updated_at')
     .eq('is_published', true);
 
   const dynamicPages = pages?.map((p: any) => ({
-    url: `${baseUrl}/${p.areas.slug}/${p.categories.slug}`,
+    url: `${baseUrl}/location/${p.seo_areas.slug}/${p.seo_categories.slug}`,
     lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
-    priority: p.areas.slug === 'karur' ? 0.9 : 0.7,
+    priority: p.seo_areas.slug === 'karur' ? 0.9 : 0.7,
     changeFrequency: 'weekly' as const,
   })) || [];
 

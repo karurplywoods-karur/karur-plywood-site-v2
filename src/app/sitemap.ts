@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next';
 import { createBuildClient } from '@/lib/supabase/build';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://karurplywood.co.in';
   const supabase = createBuildClient();
@@ -20,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: baseUrl, lastModified: new Date(), priority: 1.0, changeFrequency: 'daily' },
     { url: `${baseUrl}/products`, lastModified: new Date(), priority: 0.9, changeFrequency: 'weekly' },
+    { url: `${baseUrl}/location`, lastModified: new Date(), priority: 0.8, changeFrequency: 'weekly' },
     ...dynamicPages,
   ];
 }

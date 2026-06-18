@@ -9,17 +9,12 @@ import Breadcrumb from '@/components/Breadcrumb';
 import LocalBusinessSchema from '@/components/LocalBusinessSchema';
 import ReviewSection from '@/components/ReviewSection';
 
-// CRITICAL FIX: Force dynamic rendering - no static generation
+// Force dynamic rendering — no static generation
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// Optional: Still provide static params for ISR if needed later
-// But for now, force-dynamic ensures the page always works
-export async function generateStaticParams() {
-  return [];
-}
-
 export async function generateMetadata({ params }: { params: { area: string; category: string } }): Promise<Metadata> {
+  // ... rest of your code stays exactly the same ...
   try {
     const supabase = createBuildClient();
 

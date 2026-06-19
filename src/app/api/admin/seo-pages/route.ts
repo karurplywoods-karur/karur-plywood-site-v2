@@ -1,6 +1,6 @@
 // src/app/api/admin/seo-pages/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { createBuildClient } from '@/lib/supabase/build';
+import { supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
@@ -12,9 +12,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const status = searchParams.get('status');
 
-  const supabase = createBuildClient();
-
-  let query = supabase
+  // Use supabaseAdmin (service role) to bypass RLS
+  let query = supabaseAdmin
     .from('seo_pages')
     .select(`
       id, status, title, word_count, ai_generated_at, content_version, is_published,
@@ -22,7 +21,7 @@ export async function GET(req: NextRequest) {
       seo_areas(id, slug, display_name),
       seo_categories(id, slug, display_name)
     `)
-    .eq('page_type', 'location_category')
+    .eq('page_type', 'product_location')
     .order('id', { ascending: false });
 
   if (status) {

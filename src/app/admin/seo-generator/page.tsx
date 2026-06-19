@@ -1,7 +1,5 @@
-'use client';
 // src/app/admin/seo-generator/page.tsx
-// SEO Content Generator — matches existing admin dashboard theme
-// Uses unified seo_pages table
+'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -15,15 +13,24 @@ export default function SEOGeneratorPage() {
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0, current: '' });
-  const [results, setResults] = useState<{success: number; failed: number; errors: string[]}>({ success: 0, failed: 0, errors: [] });
+  const [results, setResults] = useState<{success: number; failed: number; errors: string[], total: number}>({ success: 0, failed: 0, errors: [], total: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/seo-data').then(r => r.json()).then(d => {
-      setAreas(d.areas || []);
-      setCategories(d.categories || []);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    fetch('/api/admin/seo-data')
+      .then(r => {
+        if (!r.ok) throw new Error('Failed to download base data');
+        return r.json();
+      })
+      .then(d => {
+        setAreas(d.areas || []);
+        setCategories(d.categories || []);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
   }, []);
 
   const toggleArea = (id: number) => {
@@ -41,11 +48,11 @@ export default function SEOGeneratorPage() {
     });
 
     if (combinations.length === 0) return alert('Select at least one area and one category');
-    if (combinations.length > 50) return alert('Max 50 combinations per batch (Groq rate limit)');
+    if (combinations.length > 50) return alert('Max 50 combinations per batch targeted to protect rate profiles');
 
     setGenerating(true);
     setProgress({ done: 0, total: combinations.length, current: '' });
-    setResults({ success: 0, failed: 0, errors: [] });
+    setResults({ success: 0, failed: 0, errors: [], total: combinations.length });
 
     let success = 0;
     let failed = 0;
@@ -55,7 +62,7 @@ export default function SEOGeneratorPage() {
       const { area_id, category_id } = combinations[i];
       const area = areas.find(a => a.id === area_id);
       const cat = categories.find(c => c.id === category_id);
-      const label = `${area?.display_name}/${cat?.display_name}`;
+      const label = `${area?.display_name || area_id}/${cat?.display_name || category_id}`;
 
       setProgress({ done: i, total: combinations.length, current: label });
 
@@ -66,14 +73,17 @@ export default function SEOGeneratorPage() {
           body: JSON.stringify({ area_id, category_id }),
         });
 
+        // FIXED: Explicitly capture HTTP error payloads instead of resolving silently
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
-          throw new Error(errData.error || `HTTP ${res.status}`);
+          const errData = await res.json().catch(() => ({ error: `Server returned status ${res.status}` }));
+          throw new Error(errData.error || `HTTP Code ${res.status}`);
         }
+        
         success++;
       } catch (err: any) {
         failed++;
-        errors.push(`${label}: ${err.message}`);
+        errors.push(`${label}: ${err.message || err}`);
+        console.error(`Error processing execution on ${label}:`, err);
       }
 
       if (i < combinations.length - 1) {
@@ -81,8 +91,8 @@ export default function SEOGeneratorPage() {
       }
     }
 
-    setProgress({ done: combinations.length, total: combinations.length, current: 'Done' });
-    setResults({ success, failed, errors });
+    setProgress({ done: combinations.length, total: combinations.length, current: 'Completed' });
+    setResults({ success, failed, errors, total: combinations.length });
     setGenerating(false);
   };
 
@@ -147,7 +157,7 @@ export default function SEOGeneratorPage() {
     <div style={{ minHeight: '100vh', background: '#0E0B08', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
-        <div style={{ color: '#9A8070', fontFamily: 'Outfit,sans-serif' }}>Loading...</div>
+        <div style={{ color: '#9A8070', fontFamily: 'Outfit,sans-serif' }}>Loading Configuration Core...</div>
       </div>
     </div>
   );
@@ -223,12 +233,6 @@ export default function SEOGeneratorPage() {
                 ~{Math.ceil(selectedAreas.length * selectedCategories.length * 3.5 / 60)} min
               </div>
             </div>
-            <div>
-              <div style={{ fontSize: 11, color: '#9A8070', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Cost</div>
-              <div style={{ fontSize: 24, fontWeight: 700, color: '#E0A86A', fontFamily: "'Cormorant Garamond',serif" }}>
-                ~₹{Math.ceil(selectedAreas.length * selectedCategories.length * 0.5)}
-              </div>
-            </div>
           </div>
         </div>
 
@@ -246,7 +250,7 @@ export default function SEOGeneratorPage() {
           </div>
         )}
 
-        {/* Results */}
+        {/* Results Overview Output */}
         {results.total > 0 && !generating && (
           <div style={{ marginTop: 24 }}>
             <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -262,7 +266,7 @@ export default function SEOGeneratorPage() {
 
             {results.errors.length > 0 && (
               <div style={{ background: 'rgba(248,113,113,0.05)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 10, padding: 16 }}>
-                <div style={{ fontWeight: 700, color: '#F87171', marginBottom: 8, fontSize: 14 }}>Errors:</div>
+                <div style={{ fontWeight: 700, color: '#F87171', marginBottom: 8, fontSize: 14 }}>Generation Failures Explained:</div>
                 <div style={{ fontSize: 12, color: '#F87171', lineHeight: 1.8 }}>
                   {results.errors.map((e, i) => (
                     <div key={i} style={{ marginBottom: 4 }}>• {e}</div>

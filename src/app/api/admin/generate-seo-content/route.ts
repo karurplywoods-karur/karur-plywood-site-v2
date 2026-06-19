@@ -27,13 +27,12 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getAdminSession();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized login required' }, { status: 401 });
     }
 
     const { area_id, category_id } = await req.json();
-
     if (!area_id || !category_id) {
-      return NextResponse.json({ error: 'area_id and category_id required' }, { status: 400 });
+      return NextResponse.json({ error: 'Both area_id and category_id are required fields' }, { status: 400 });
     }
 
     const supabase = createBuildClient();
@@ -44,14 +43,18 @@ export async function POST(req: NextRequest) {
     ]);
 
     if (areaErr || catErr) {
-      return NextResponse.json({ error: 'Database error fetching area/category' }, { status: 500 });
+      console.error('Database fetch error:', { areaErr, catErr });
+      return NextResponse.json({ error: `Database failed fetching metadata: ${areaErr?.message || catErr?.message}` }, { status: 500 });
     }
 
     if (!area || !category) {
-      return NextResponse.json({ error: 'Area or category not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Requested Area or Category item not found in records' }, { status: 404 });
     }
 
-    const areaContext = AREA_CONTEXTS[area.slug] || `${area.display_name} is ${area.distance_km}km from Karur.`;
+    // Safeguard Fallback context string for expanding districts (Namakkal, Erode, Trichy, etc.)
+    const areaContext = AREA_CONTEXTS[area.slug] || 
+      `${area.display_name} is an important commercial and residential locality situated in the extended service region of Karur Plywood & Company, located approximately ${area.distance_km}km away.`;
+    
     const nearby = area.nearby_subareas?.slice(0, 3).join(', ') || area.display_name;
 
     const prompt = `Write unique SEO content for "${category.display_name} in ${area.display_name}" for Karur Plywood & Company (25+ year old dealer in Karur, Tamil Nadu).
@@ -72,7 +75,7 @@ Return JSON:
 }`;
 
     if (!GROQ_API_KEY) {
-      return NextResponse.json({ error: 'GROQ_API_KEY not configured' }, { status: 500 });
+      return NextResponse.json({ error: 'Server configuration failure: GROQ_API_KEY missing' }, { status: 500 });
     }
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -91,12 +94,17 @@ Return JSON:
     });
 
     if (!groqRes.ok) {
-      const err = await groqRes.text();
-      throw new Error(`Groq failed: ${err}`);
+      const errText = await groqRes.text();
+      return NextResponse.json({ error: `Groq Gateway API error: ${errText}` }, { status: 502 });
     }
 
     const groqData = await groqRes.json();
-    const raw = JSON.parse(groqData.choices[0].message.content);
+    let raw;
+    try {
+      raw = JSON.parse(groqData.choices[0].message.content);
+    } catch (e) {
+      return NextResponse.json({ error: 'Failed parsing invalid JSON layout returned from AI model' }, { status: 500 });
+    }
 
     const wordCount = 
       (raw.intro || '').split(/\s+/).length +
@@ -107,7 +115,7 @@ Return JSON:
     const fullPath = `/location/${area.slug}/${category.slug}`;
 
     const content = {
-      page_type: 'location_category',
+      page_type: 'location_category', // Fits custom Enum upgrade
       slug,
       full_path: fullPath,
       title: raw.seo_title?.slice(0, 80),
@@ -132,16 +140,17 @@ Return JSON:
       is_published: false,
     };
 
-    // Upsert to seo_pages (unified table)
-    const { data: page, error } = await supabaseAdmin
+    const { data: page, error: upsertErr } = await supabaseAdmin
       .from('seo_pages')
       .upsert(content, { onConflict: 'full_path' })
       .select()
       .single();
 
-    if (error) throw error;
+    if (upsertErr) {
+      console.error('Supabase Upsert Failure Logs:', upsertErr);
+      return NextResponse.json({ error: `Database Upsert Exception: ${upsertErr.message} (Detail: ${upsertErr.details || 'None'})` }, { status: 500 });
+    }
 
-    // Log to seo_content_logs
     await supabaseAdmin.from('seo_content_logs').insert({
       seo_page_id: page.id,
       action: 'generated',
@@ -157,7 +166,7 @@ Return JSON:
     });
 
   } catch (err: any) {
-    console.error('Generation error:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('Unhandled runtime routing exception:', err);
+    return NextResponse.json({ error: `Server Crash: ${err.message || 'Unknown Exception'}` }, { status: 500 });
   }
 }

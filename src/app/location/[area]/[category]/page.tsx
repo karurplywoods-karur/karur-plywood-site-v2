@@ -1,153 +1,229 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createBuildClient } from '@/lib/supabase/build';
-import { generateUniqueIntro, generateFAQ, generateMeta, generateH1 } from '@/lib/content-generators';
-import ProductGrid from '@/components/ProductGrid';
-import FAQSection from '@/components/FAQSection';
-import NearbyAreas from '@/components/NearbyAreas';
 import Breadcrumb from '@/components/Breadcrumb';
+import FAQSection from '@/components/FAQSection';
 import LocalBusinessSchema from '@/components/LocalBusinessSchema';
-import ReviewSection from '@/components/ReviewSection';
+import { JsonLd } from '@/components/JsonLd';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function generateMetadata({ params }: { params: { area: string; category: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ area: string; category: string }> }): Promise<Metadata> {
+  const { area, category } = await params;
+  const supabase = createBuildClient();
+
   try {
-    const supabase = createBuildClient();
-
-    // Step 1: Get area and category IDs by slug (reliable query)
-    const [{ data: areaRow }, { data: categoryRow }] = await Promise.all([
-      supabase.from('seo_areas').select('id, name, display_name, slug').eq('slug', params.area).single(),
-      supabase.from('seo_categories').select('id, name, display_name, slug').eq('slug', params.category).single(),
-    ]);
-
-    if (!areaRow || !categoryRow) {
-      return { title: 'Page Not Found | Karur Plywood', description: 'The page you are looking for does not exist.' };
-    }
-
-    // Step 2: Get the page using IDs
+    // Query seo_pages (unified table) instead of seo_area_category_pages
     const { data: pageData } = await supabase
-      .from('seo_area_category_pages')
-      .select('*, seo_areas(*), seo_categories(*)')
-      .eq('area_id', areaRow.id)
-      .eq('category_id', categoryRow.id)
-      .eq('is_published', true)
+      .from('seo_pages')
+      .select('title, meta_description, status, is_published, page_type')
+      .eq('page_type', 'location_category')
+      .eq('full_path', `/location/${area}/${category}`)
       .single();
 
-    if (!pageData) {
-      return { title: 'Page Not Found | Karur Plywood', description: 'The page you are looking for does not exist.' };
+    if (!pageData || pageData.status === 'draft') {
+      return { 
+        title: 'Coming Soon | Karur Plywood', 
+        description: 'This page is being prepared with unique content. Check back soon.',
+        robots: { index: false, follow: false },
+      };
     }
 
-    const meta = pageData.meta_title && pageData.meta_description
-      ? { title: pageData.meta_title, description: pageData.meta_description }
-      : generateMeta(pageData.seo_areas, pageData.seo_categories);
-
     return {
-      title: meta.title,
-      description: meta.description,
-      keywords: `${pageData.seo_categories.name} ${pageData.seo_areas.name}, ${pageData.seo_categories.name} dealers ${pageData.seo_areas.name}, ISI certified ${pageData.seo_categories.name} ${pageData.seo_areas.name}, ${pageData.seo_categories.name} price ${pageData.seo_areas.name}`,
-      openGraph: { title: meta.title, description: meta.description, type: 'website', locale: 'en_IN' },
-      alternates: { canonical: `https://karurplywood.co.in/location/${params.area}/${params.category}` },
+      title: pageData.title || `${category} in ${area}`,
+      description: pageData.meta_description || `Buy ${category} in ${area}.`,
+      keywords: `${category} ${area}, ${category} dealer ${area}, ISI certified ${category} ${area}`,
+      openGraph: {
+        title: pageData.title,
+        description: pageData.meta_description,
+        type: 'website',
+        locale: 'en_IN',
+      },
+      alternates: { canonical: `https://karurplywood.co.in/location/${area}/${category}` },
+      robots: pageData.is_published 
+        ? { index: true, follow: true } 
+        : { index: false, follow: false },
     };
-  } catch (error) {
-    console.error('Metadata error:', error);
-    return { title: 'Karur Plywood & Company', description: 'ISI certified plywood suppliers in Karur and surrounding areas.' };
+  } catch {
+    return {
+      title: 'Karur Plywood & Company',
+      description: 'ISI certified plywood suppliers in Karur and surrounding areas.',
+    };
   }
 }
 
-export default async function AreaCategoryPage({ params }: { params: { area: string; category: string } }) {
+export default async function AreaCategoryPage({ params }: { params: Promise<{ area: string; category: string }> }) {
+  const { area, category } = await params;
+  const supabase = createBuildClient();
+
   try {
-    const supabase = createBuildClient();
-
-    // Step 1: Get area and category by slug (reliable query)
-    const [{ data: areaRow }, { data: categoryRow }] = await Promise.all([
-      supabase.from('seo_areas').select('*').eq('slug', params.area).single(),
-      supabase.from('seo_categories').select('*').eq('slug', params.category).single(),
-    ]);
-
-    if (!areaRow || !categoryRow) {
-      console.log('Area or category not found:', { area: params.area, category: params.category });
-      return notFound();
-    }
-
-    // Step 2: Get the page using IDs
+    // Fetch from seo_pages (unified table) with joined area/category data
     const { data: pageData } = await supabase
-      .from('seo_area_category_pages')
-      .select('*, seo_areas(*), seo_categories(*)')
-      .eq('area_id', areaRow.id)
-      .eq('category_id', categoryRow.id)
-      .eq('is_published', true)
+      .from('seo_pages')
+      .select(`
+        *,
+        seo_areas(*),
+        seo_categories(*)
+      `)
+      .eq('page_type', 'location_category')
+      .eq('full_path', `/location/${area}/${category}`)
       .single();
 
-    if (!pageData) {
-      console.log('Page not found for area/category:', { areaId: areaRow.id, categoryId: categoryRow.id, areaSlug: params.area, categorySlug: params.category });
-      return notFound();
+    // If no content exists OR status is draft → show draft page
+    if (!pageData || pageData.status === 'draft' || !pageData.intro) {
+      return (
+        <main className="max-w-6xl mx-auto px-4 py-16 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            {pageData?.seo_categories?.display_name || category} in {pageData?.seo_areas?.display_name || area}
+          </h1>
+          <p className="text-lg text-gray-600 mb-6">
+            This page is being prepared with unique, high-quality content.
+          </p>
+          <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm">
+            <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+            Content in {pageData?.status || 'draft'} — check back soon
+          </div>
+          <div className="mt-8">
+            <a href="https://wa.me/919159666538" 
+              className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+              Order on WhatsApp
+            </a>
+          </div>
+        </main>
+      );
     }
 
-    const { seo_areas: area, seo_categories: category } = pageData;
+    // If status is pending_review → show with banner
+    const isPending = pageData.status === 'pending_review';
 
-    const { data: reviews } = await supabase
-      .from('seo_reviews')
-      .select('*')
-      .eq('area_id', area.id)
-      .eq('category_id', category.id)
-      .limit(5);
-
-    const intro = pageData.unique_intro || generateUniqueIntro(area, category);
-    const faqs = pageData.faq_custom?.length ? pageData.faq_custom : generateFAQ(area, category);
-    const h1 = pageData.h1 || generateH1(area, category);
+    const areaData = pageData.seo_areas;
+    const categoryData = pageData.seo_categories;
+    const faqs = pageData.faq_content || [];
+    const links = pageData.internal_links || [];
 
     return (
       <main className="max-w-6xl mx-auto px-4 py-8">
+        {isPending && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6 text-sm">
+            ⚠️ This page content is under review. Some details may be updated.
+          </div>
+        )}
+
         <Breadcrumb items={[
-          { name: 'Home', href: '/' },
-          { name: 'Locations', href: '/location' },
-          { name: area.name, href: `/location/${area.slug}` },
-          { name: category.display_name, href: `/location/${area.slug}/${category.slug}` },
+          { name: 'Home', url: '/' },
+          { name: 'Locations', url: '/location' },
+          { name: areaData.display_name, url: `/location/${areaData.slug}` },
+          { name: categoryData.display_name, url: `/location/${areaData.slug}/${categoryData.slug}` },
         ]} />
 
-        <LocalBusinessSchema area={area} category={category} reviews={reviews} />
+        <JsonLd type="breadcrumb" items={[
+          { name: 'Home', url: '/' },
+          { name: 'Locations', url: '/location' },
+          { name: areaData.display_name, url: `/location/${areaData.slug}` },
+          { name: categoryData.display_name, url: `/location/${areaData.slug}/${categoryData.slug}` },
+        ]} />
 
+        <LocalBusinessSchema area={areaData} category={categoryData} />
+
+        {/* H1 */}
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">{h1}</h1>
-          <p className="text-lg text-gray-700 leading-relaxed">{intro}</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {pageData.h1}
+          </h1>
         </header>
 
+        {/* Intro */}
         <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">{category.display_name} Available in {area.name}</h2>
-          <ProductGrid area={area} />
+          <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+            {pageData.intro}
+          </div>
         </section>
 
-        <section className="mb-10 bg-blue-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-3">Delivery Information</h2>
-          <p className="text-gray-700">
-            We deliver {category.display_name} to {area.name}
-            {pageData.delivery_note || ` within ${area.delivery_time}`}.
-            Free delivery for orders above ₹5,000 within {area.name} city limits.
-            Surrounding areas: {area.nearby_subareas?.slice(0, 4).join(', ')}.
-          </p>
-        </section>
-
-        {pageData.local_testimonial && (
-          <section className="mb-10 bg-green-50 p-6 rounded-lg">
-            <blockquote className="text-lg italic text-gray-800">&ldquo;{pageData.local_testimonial}&rdquo;</blockquote>
+        {/* Product Explanation */}
+        {pageData.product_explanation && (
+          <section className="mb-10 bg-gray-50 rounded-xl p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              About {categoryData.display_name}
+            </h2>
+            <div className="prose max-w-none text-gray-700">
+              {pageData.product_explanation}
+            </div>
           </section>
         )}
 
-        <ReviewSection reviews={reviews} area={area} />
-        <FAQSection faqs={faqs} />
-        <NearbyAreas currentArea={area} currentCategory={category} />
+        {/* Localized Content */}
+        {pageData.localized_content && (
+          <section className="mb-10 bg-blue-50 rounded-xl p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              {categoryData.display_name} in {areaData.display_name}
+            </h2>
+            <div className="prose max-w-none text-gray-700">
+              {pageData.localized_content}
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
+              <span>📍</span>
+              <span>{areaData.distance_km}km from Karur · Delivery: {areaData.delivery_time}</span>
+            </div>
+          </section>
+        )}
 
-        <section className="mt-10 text-center bg-amber-50 p-8 rounded-lg">
-          <h2 className="text-2xl font-bold mb-3">Order {category.display_name} in {area.name}</h2>
-          <p className="text-gray-700 mb-4">Call or WhatsApp us for {area.delivery_time} delivery to {area.display_name}.</p>
-          <a href="https://wa.me/91XXXXXXXXXX" className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition">Order on WhatsApp</a>
+        {/* Internal Links */}
+        {links.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Related Pages</h2>
+            <div className="flex flex-wrap gap-3">
+              {links.map((link: any, i: number) => (
+                <a key={i} href={link.url} 
+                  className="bg-white border border-gray-200 text-blue-600 px-4 py-2 rounded-lg text-sm hover:bg-blue-50 transition">
+                  {link.text}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* FAQ */}
+        {faqs.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <FAQSection faqs={faqs} />
+            <JsonLd type="faq" faqs={faqs} />
+          </section>
+        )}
+
+        {/* CTA */}
+        <section className="text-center bg-amber-50 p-8 rounded-xl">
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            Order {categoryData.display_name} in {areaData.display_name}
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Call or WhatsApp us for {areaData.delivery_time} delivery.
+          </p>
+          <a href="https://wa.me/919159666538" 
+            className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+            Order on WhatsApp
+          </a>
         </section>
+
+        {/* Content metadata footer */}
+        <footer className="mt-10 pt-6 border-t text-xs text-gray-400 text-center">
+          {pageData.ai_generated_at && (
+            <span>AI-generated content · </span>
+          )}
+          {pageData.content_version && (
+            <span>Version {pageData.content_version} · </span>
+          )}
+          {pageData.word_count && (
+            <span>{pageData.word_count} words</span>
+          )}
+        </footer>
       </main>
     );
   } catch (error) {
-    console.error('Error loading page:', error);
+    console.error('Page error:', error);
     return notFound();
   }
 }

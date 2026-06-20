@@ -5,7 +5,7 @@ import { CartProvider } from '@/lib/CartContext';
 import Navbar from '@/components/Navbar';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
 import Footer from '@/components/Footer';
-import { LocalBusinessSchema } from '@/components/JsonLd';
+import LocalBusinessSchema from '@/components/LocalBusinessSchema';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const SITE_URL = 'https://karurplywood.co.in';
@@ -39,11 +39,25 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Provide fallback parameters for global pages (Home, About, Cart etc.)
+  const defaultArea = {
+    name: 'Karur',
+    pincode: '639001',
+    lat: 10.9601,
+    lng: 78.0785,
+    slug: 'karur'
+  };
+
+  const defaultCategory = {
+    display_name: 'Plywood & Hardware',
+    slug: 'plywood'
+  };
+
   return (
     <html lang="en">
       <head>
         <GoogleAnalytics />
-        <LocalBusinessSchema />
+        <LocalBusinessSchema area={defaultArea} category={defaultCategory} reviews={[]} />
       </head>
       <body className="grain">
         <CartProvider>

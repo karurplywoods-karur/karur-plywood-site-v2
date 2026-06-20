@@ -9,22 +9,54 @@ import { JsonLd } from '@/components/JsonLd';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+export async function generateMetadata({ params }: { params: Promise<{ area: string; category: string }> }): Promise<Metadata> {
+  const { area, category } = await params;
+  const supabase = createBuildClient();
+
+  try {
+    const { data: pageData } = await supabase
+      .from('seo_pages')
+      .select('title, meta_description, status, is_published')
+      .ilike('slug', `${category}-in-${area}`)
+      .maybeSingle();
+
+    if (!pageData || pageData.status === 'draft') {
+      return { 
+        title: 'Coming Soon | Karur Plywood', 
+        description: 'This page is being prepared with unique content. Check back soon.',
+        robots: { index: false, follow: false },
+      };
+    }
+
+    return {
+      title: pageData.title || `${category} in ${area}`,
+      description: pageData.meta_description || `Buy ${category} in ${area}.`,
+      alternates: { canonical: `https://karurplywood.co.in/location/${area}/${category}` },
+      robots: pageData.is_published ? { index: true, follow: true } : { index: false, follow: false },
+    };
+  } catch {
+    return {
+      title: 'Karur Plywood & Company',
+      description: 'ISI certified plywood suppliers in Karur and surrounding areas.',
+    };
+  }
+}
+
 export default async function AreaCategoryPage({ params }: { params: Promise<{ area: string; category: string }> }) {
   const { area, category } = await params;
   const supabase = createBuildClient();
 
   try {
-    // 1. Use maybeSingle() so zero results return null instead of a crash
+    // 1. Fetch page data purely based on the unique slug match (removes strict page_type requirement)
     const { data: pageData, error: pageError } = await supabase
       .from('seo_pages')
       .select('*')
-      .eq('page_type', 'location_category')
       .ilike('slug', `${category}-in-${area}`)
       .maybeSingle();
 
     if (pageError) console.error('Supabase query log:', pageError);
 
-    // Gracefully capture drafts or empty records
+    // Fallback if no matching entry or if it is a draft
     if (!pageData || pageData.status === 'draft' || !pageData.intro) {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
@@ -48,7 +80,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
       );
     }
 
-    // 2. Fetch standalone contexts safely
+    // 2. Fetch standalone auxiliary data contexts safely
     const { data: areaData } = await supabase.from('seo_areas').select('*').ilike('slug', area).maybeSingle();
     const { data: categoryData } = await supabase.from('seo_categories').select('*').ilike('slug', category).maybeSingle();
 
@@ -56,7 +88,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
     const faqs = pageData.faq_content || [];
     const links = pageData.internal_links || [];
 
-    // Clean text fallbacks if the auxiliary tables lack a matching row
+    // Safe human-readable clean texts if tables lack an exact lookup link
     const areaName = areaData?.display_name || area.replace(/-/g, ' ');
     const categoryName = categoryData?.display_name || category.replace(/-/g, ' ');
 

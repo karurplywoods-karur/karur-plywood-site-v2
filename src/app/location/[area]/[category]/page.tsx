@@ -14,12 +14,12 @@ export async function generateMetadata({ params }: { params: Promise<{ area: str
   const supabase = createBuildClient();
 
   try {
-    // Query seo_pages (unified table) instead of seo_area_category_pages
+    // Using ilike to make path lookups case-insensitive
     const { data: pageData } = await supabase
       .from('seo_pages')
       .select('title, meta_description, status, is_published, page_type')
       .eq('page_type', 'location_category')
-      .eq('full_path', `/location/${area}/${category}`)
+      .ilike('full_path', `/location/${area}/${category}`)
       .single();
 
     if (!pageData || pageData.status === 'draft') {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ area: str
         type: 'website',
         locale: 'en_IN',
       },
-      alternates: { canonical: `https://karurplywood.co.in/location/${area}/${category}` },
+      alternates: { canonical: `https://karurplywood.co.in/location/${area.toLowerCase()}/${category.toLowerCase()}` },
       robots: pageData.is_published 
         ? { index: true, follow: true } 
         : { index: false, follow: false },
@@ -58,7 +58,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
   const supabase = createBuildClient();
 
   try {
-    // Fetch from seo_pages (unified table) with joined area/category data
+    // Fetch with case-insensitive ilike filter on full_path
     const { data: pageData } = await supabase
       .from('seo_pages')
       .select(`
@@ -67,10 +67,10 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
         seo_categories(*)
       `)
       .eq('page_type', 'location_category')
-      .eq('full_path', `/location/${area}/${category}`)
+      .ilike('full_path', `/location/${area}/${category}`)
       .single();
 
-    // If no content exists OR status is draft → show draft page
+    // Safe fallbacks if content or relationships are missing
     if (!pageData || pageData.status === 'draft' || !pageData.intro) {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
@@ -94,9 +94,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
       );
     }
 
-    // If status is pending_review → show with banner
     const isPending = pageData.status === 'pending_review';
-
     const areaData = pageData.seo_areas;
     const categoryData = pageData.seo_categories;
     const faqs = pageData.faq_content || [];
@@ -126,21 +124,18 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
 
         <LocalBusinessSchema area={areaData} category={categoryData} />
 
-        {/* H1 */}
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             {pageData.h1}
           </h1>
         </header>
 
-        {/* Intro */}
         <section className="mb-10">
           <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
             {pageData.intro}
           </div>
         </section>
 
-        {/* Product Explanation */}
         {pageData.product_explanation && (
           <section className="mb-10 bg-gray-50 rounded-xl p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -152,7 +147,6 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
           </section>
         )}
 
-        {/* Localized Content */}
         {pageData.localized_content && (
           <section className="mb-10 bg-blue-50 rounded-xl p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -168,7 +162,6 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
           </section>
         )}
 
-        {/* Internal Links */}
         {links.length > 0 && (
           <section className="mb-10">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Related Pages</h2>
@@ -183,7 +176,6 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
           </section>
         )}
 
-        {/* FAQ */}
         {faqs.length > 0 && (
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -194,7 +186,6 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
           </section>
         )}
 
-        {/* CTA */}
         <section className="text-center bg-amber-50 p-8 rounded-xl">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
             Order {categoryData.display_name} in {areaData.display_name}
@@ -208,17 +199,10 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
           </a>
         </section>
 
-        {/* Content metadata footer */}
         <footer className="mt-10 pt-6 border-t text-xs text-gray-400 text-center">
-          {pageData.ai_generated_at && (
-            <span>AI-generated content · </span>
-          )}
-          {pageData.content_version && (
-            <span>Version {pageData.content_version} · </span>
-          )}
-          {pageData.word_count && (
-            <span>{pageData.word_count} words</span>
-          )}
+          {pageData.ai_generated_at && <span>AI-generated content · </span>}
+          {pageData.content_version && <span>Version {pageData.content_version} · </span>}
+          {pageData.word_count && <span>{pageData.word_count} words</span>}
         </footer>
       </main>
     );

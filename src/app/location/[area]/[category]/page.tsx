@@ -67,7 +67,7 @@ export default async function AreaCategoryPage(props: PageProps) {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4 capitalize">{formatSlugText(category)} in {formatSlugText(area)}</h1>
-          <<div className="bg-slate-800 p-6 rounded-xl max-w-xl mx-auto text-left font-mono text-xs space-y-2 text-slate-300">
+          <div className="bg-slate-800 p-6 rounded-xl max-w-xl mx-auto text-left font-mono text-xs space-y-2 text-slate-300">
             <p><span className="text-amber-400">Target Category Slug:</span> "{category}"</p>
             <p><span className="text-amber-400">Target Area Slug:</span> "{area}"</p>
             <p><span className="text-red-400">Looking for Rows where slug is:</span> "{category}-in-{area}" OR "{category}"</p>

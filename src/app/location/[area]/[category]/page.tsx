@@ -14,12 +14,12 @@ export async function generateMetadata({ params }: { params: Promise<{ area: str
   const supabase = createBuildClient();
 
   try {
-    // Using ilike to make path lookups case-insensitive
+    // Robust match: Search via slug name instead of hardcoded full path routes
     const { data: pageData } = await supabase
       .from('seo_pages')
       .select('title, meta_description, status, is_published, page_type')
       .eq('page_type', 'location_category')
-      .ilike('full_path', `/location/${area}/${category}`)
+      .ilike('slug', `${category}-in-${area}`)
       .single();
 
     if (!pageData || pageData.status === 'draft') {
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ area: str
         type: 'website',
         locale: 'en_IN',
       },
-      alternates: { canonical: `https://karurplywood.co.in/location/${area.toLowerCase()}/${category.toLowerCase()}` },
+      alternates: { canonical: `https://karurplywood.co.in/location/${area}/${category}` },
       robots: pageData.is_published 
         ? { index: true, follow: true } 
         : { index: false, follow: false },
@@ -58,7 +58,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
   const supabase = createBuildClient();
 
   try {
-    // Fetch with case-insensitive ilike filter on full_path
+    // Robust match: Join matching tables based on uniform parameter slugs
     const { data: pageData } = await supabase
       .from('seo_pages')
       .select(`
@@ -67,10 +67,9 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
         seo_categories(*)
       `)
       .eq('page_type', 'location_category')
-      .ilike('full_path', `/location/${area}/${category}`)
+      .ilike('slug', `${category}-in-${area}`)
       .single();
 
-    // Safe fallbacks if content or relationships are missing
     if (!pageData || pageData.status === 'draft' || !pageData.intro) {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
@@ -111,18 +110,18 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
         <Breadcrumb items={[
           { name: 'Home', url: '/' },
           { name: 'Locations', url: '/location' },
-          { name: areaData.display_name, url: `/location/${areaData.slug}` },
-          { name: categoryData.display_name, url: `/location/${areaData.slug}/${categoryData.slug}` },
+          { name: areaData?.display_name || area, url: `/location/${areaData?.slug || area}` },
+          { name: categoryData?.display_name || category, url: `/location/${areaData?.slug || area}/${categoryData?.slug || category}` },
         ]} />
 
         <JsonLd type="breadcrumb" items={[
           { name: 'Home', url: '/' },
           { name: 'Locations', url: '/location' },
-          { name: areaData.display_name, url: `/location/${areaData.slug}` },
-          { name: categoryData.display_name, url: `/location/${areaData.slug}/${categoryData.slug}` },
+          { name: areaData?.display_name || area, url: `/location/${areaData?.slug || area}` },
+          { name: categoryData?.display_name || category, url: `/location/${areaData?.slug || area}/${categoryData?.slug || category}` },
         ]} />
 
-        <LocalBusinessSchema area={areaData} category={categoryData} />
+        {areaData && categoryData && <LocalBusinessSchema area={areaData} category={categoryData} />}
 
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -139,7 +138,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
         {pageData.product_explanation && (
           <section className="mb-10 bg-gray-50 rounded-xl p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              About {categoryData.display_name}
+              About {categoryData?.display_name || category}
             </h2>
             <div className="prose max-w-none text-gray-700">
               {pageData.product_explanation}
@@ -150,15 +149,17 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
         {pageData.localized_content && (
           <section className="mb-10 bg-blue-50 rounded-xl p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {categoryData.display_name} in {areaData.display_name}
+              {categoryData?.display_name || category} in {areaData?.display_name || area}
             </h2>
             <div className="prose max-w-none text-gray-700">
               {pageData.localized_content}
             </div>
-            <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
-              <span>📍</span>
-              <span>{areaData.distance_km}km from Karur · Delivery: {areaData.delivery_time}</span>
-            </div>
+            {areaData && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
+                <span>📍</span>
+                <span>{areaData.distance_km}km from Karur · Delivery: {areaData.delivery_time}</span>
+              </div>
+            )}
           </section>
         )}
 
@@ -188,10 +189,10 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
 
         <section className="text-center bg-amber-50 p-8 rounded-xl">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
-            Order {categoryData.display_name} in {areaData.display_name}
+            Order {categoryData?.display_name || category} in {areaData?.display_name || area}
           </h2>
           <p className="text-gray-700 mb-4">
-            Call or WhatsApp us for {areaData.delivery_time} delivery.
+            Call or WhatsApp us for {areaData?.delivery_time || 'prompt'} delivery.
           </p>
           <a href="https://wa.me/919159666538" 
             className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition">

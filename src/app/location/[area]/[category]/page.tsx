@@ -63,6 +63,7 @@ export default async function AreaCategoryPage(props: PageProps) {
       .maybeSingle();
 
     if (pageError || !pageData || pageData.status === 'draft') {
+      console.error("Supabase Error Logged:", pageError);
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4 capitalize">{formatSlugText(category)} in {formatSlugText(area)}</h1>

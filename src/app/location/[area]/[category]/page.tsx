@@ -58,7 +58,7 @@ export default async function AreaCategoryPage(props: PageProps) {
 
     const { data: pageData, error: pageError } = await supabase
       .from('seo_pages')
-      .select('id, slug, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, is_published, brands_json, pricing_json, applications_json')
+      .select('id, slug, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, is_published')
       .or(`slug.ilike.${category}-in-${area},slug.ilike.${category}`)
       .maybeSingle();
 

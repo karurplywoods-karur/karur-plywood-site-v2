@@ -66,7 +66,14 @@ export default async function AreaCategoryPage(props: PageProps) {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4 capitalize">{formatSlugText(category)} in {formatSlugText(area)}</h1>
-          <p className="text-lg text-gray-600 mb-6">Content is currently processing.</p>
+          <<div className="bg-slate-800 p-6 rounded-xl max-w-xl mx-auto text-left font-mono text-xs space-y-2 text-slate-300">
+            <p><span className="text-amber-400">Target Category Slug:</span> "{category}"</p>
+            <p><span className="text-amber-400">Target Area Slug:</span> "{area}"</p>
+            <p><span className="text-red-400">Looking for Rows where slug is:</span> "{category}-in-{area}" OR "{category}"</p>
+            <p><span className="text-blue-400">Database Row Found?</span> {pageData ? "Yes, but it's a draft status" : "No, Row is NULL (Not Found)"}</p>
+            {pageError && <p><span className="text-red-500">Error Message:</span> {pageError.message}</p>}
+          </div>
+          <p className="text-sm text-gray-400 mt-6">Remove this debug block once the row matches.</p>	  
         </main>
       );
     }

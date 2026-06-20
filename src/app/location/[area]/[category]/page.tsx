@@ -88,7 +88,7 @@ export default async function AreaCategoryPage(props: PageProps) {
     const areaName = areaData?.display_name || formatSlugText(area);
     const categoryName = categoryData?.display_name || formatSlugText(category);
 
-    // 3. Safe Arrays Extraction
+    // 3. Safe Arrays Extraction with deep array type validation checks
     let faqs: any[] = [];
     try {
       if (pageData.faq_content) {
@@ -104,6 +104,9 @@ export default async function AreaCategoryPage(props: PageProps) {
       }
     } catch { links = []; }
     if (!Array.isArray(links)) links = [];
+
+    // Filter out empty arrays or objects lacking essential parameters to guarantee runtime stability
+    const validLinks = links.filter(link => link && typeof link === 'object' && link.url && link.text);
 
     // 4. Align items exactly to Breadcrumb expectations ({ name, href })
     const breadcrumbItems = [
@@ -144,7 +147,8 @@ export default async function AreaCategoryPage(props: PageProps) {
         {/* Validated visual and JSON-LD layout components */}
         <Breadcrumb items={breadcrumbItems} />
         <BreadcrumbSchema items={schemaBreadcrumbItems} />
-        <LocalBusinessSchema area={adaptedAreaObject} category={adaptedCategoryObject} />
+        {/* Added reviews array fallback parameter explicitly to resolve the structural component error */}
+        <LocalBusinessSchema area={adaptedAreaObject} category={adaptedCategoryObject} reviews={[]} />
 
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -178,18 +182,15 @@ export default async function AreaCategoryPage(props: PageProps) {
           </section>
         )}
 
-        {links.length > 0 && (
+        {validLinks.length > 0 && (
           <section className="mb-10">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Related Pages</h2>
             <div className="flex flex-wrap gap-3">
-              {links.map((link: any, i: number) => {
-                if (!link || !link.url) return null;
-                return (
-                  <a key={i} href={link.url} className="bg-white border border-gray-200 text-blue-600 px-4 py-2 rounded-lg text-sm hover:bg-blue-50 transition">
-                    {link.text || 'View Page'}
-                  </a>
-                );
-              })}
+              {validLinks.map((link: any, i: number) => (
+                <a key={i} href={link.url} className="bg-white border border-gray-200 text-blue-600 px-4 py-2 rounded-lg text-sm hover:bg-blue-50 transition">
+                  {link.text}
+                </a>
+              ))}
             </div>
           </section>
         )}

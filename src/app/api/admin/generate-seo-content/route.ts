@@ -115,14 +115,14 @@ Return JSON:
     const fullPath = `/location/${area.slug}/${category.slug}`;
 
     const content = {
-      page_type: 'location_category', // Fits custom Enum upgrade
+      page_type: 'location_category', // Fits custom Enum upgrade[cite: 7]
       slug,
       full_path: fullPath,
       title: raw.seo_title?.slice(0, 80),
       meta_title: raw.seo_title?.slice(0, 80),
       meta_description: raw.seo_description?.slice(0, 160),
       h1: raw.h1,
-      content: raw.intro,
+      // REMOVED: content column line to completely prevent Supabase structural cache collisions[cite: 7]
       status: 'pending_review',
       seo_title: raw.seo_title?.slice(0, 80),
       seo_description: raw.seo_description?.slice(0, 160),

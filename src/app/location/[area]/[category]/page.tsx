@@ -47,17 +47,17 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
   const supabase = createBuildClient();
 
   try {
-    // 1. Fetch page data purely based on the unique slug match (removes strict page_type requirement)
+    // 1. Explicitly select the target columns to clear data mapping discrepancies
     const { data: pageData, error: pageError } = await supabase
       .from('seo_pages')
-      .select('*')
+      .select('id, slug, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, internal_links, is_published')
       .ilike('slug', `${category}-in-${area}`)
       .maybeSingle();
 
     if (pageError) console.error('Supabase query log:', pageError);
 
-    // Fallback if no matching entry or if it is a draft
-    if (!pageData || pageData.status === 'draft' || !pageData.intro) {
+    // Fallback ONLY if the row is missing entirely or explicitly labeled as a draft
+    if (!pageData || pageData.status === 'draft') {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4 capitalize">
@@ -93,7 +93,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
     const categoryName = categoryData?.display_name || category.replace(/-/g, ' ');
 
     return (
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="max-w-6xl mx-auto px-4 py-8 bg-white text-gray-900">
         {isPending && (
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6 text-sm">
             ⚠️ This page content is under review. Some details may be updated.
@@ -124,7 +124,7 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
 
         <section className="mb-10">
           <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-            {pageData.intro}
+            {pageData.intro || `Welcome to Karur Plywood & Company. Discover premium quality ${categoryName} options built to last for residential and commercial spaces across ${areaName}.`}
           </div>
         </section>
 

@@ -9,63 +9,15 @@ import { JsonLd } from '@/components/JsonLd';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function generateMetadata({ params }: { params: Promise<{ area: string; category: string }> }): Promise<Metadata> {
-  const { area, category } = await params;
-  const supabase = createBuildClient();
-
-  try {
-    // Robust match: Search via slug name instead of hardcoded full path routes
-    const { data: pageData } = await supabase
-      .from('seo_pages')
-      .select('title, meta_description, status, is_published, page_type')
-      .eq('page_type', 'location_category')
-      .ilike('slug', `${category}-in-${area}`)
-      .single();
-
-    if (!pageData || pageData.status === 'draft') {
-      return { 
-        title: 'Coming Soon | Karur Plywood', 
-        description: 'This page is being prepared with unique content. Check back soon.',
-        robots: { index: false, follow: false },
-      };
-    }
-
-    return {
-      title: pageData.title || `${category} in ${area}`,
-      description: pageData.meta_description || `Buy ${category} in ${area}.`,
-      keywords: `${category} ${area}, ${category} dealer ${area}, ISI certified ${category} ${area}`,
-      openGraph: {
-        title: pageData.title,
-        description: pageData.meta_description,
-        type: 'website',
-        locale: 'en_IN',
-      },
-      alternates: { canonical: `https://karurplywood.co.in/location/${area}/${category}` },
-      robots: pageData.is_published 
-        ? { index: true, follow: true } 
-        : { index: false, follow: false },
-    };
-  } catch {
-    return {
-      title: 'Karur Plywood & Company',
-      description: 'ISI certified plywood suppliers in Karur and surrounding areas.',
-    };
-  }
-}
-
 export default async function AreaCategoryPage({ params }: { params: Promise<{ area: string; category: string }> }) {
   const { area, category } = await params;
   const supabase = createBuildClient();
 
   try {
-    // Robust match: Join matching tables based on uniform parameter slugs
+    // 1. Fetch the primary page data cleanly without enforcing database joins
     const { data: pageData } = await supabase
       .from('seo_pages')
-      .select(`
-        *,
-        seo_areas(*),
-        seo_categories(*)
-      `)
+      .select('*')
       .eq('page_type', 'location_category')
       .ilike('slug', `${category}-in-${area}`)
       .single();
@@ -73,8 +25,8 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
     if (!pageData || pageData.status === 'draft' || !pageData.intro) {
       return (
         <main className="max-w-6xl mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {pageData?.seo_categories?.display_name || category} in {pageData?.seo_areas?.display_name || area}
+          <h1 className="text-3xl font-bold text-gray-900 mb-4 capitalize">
+            {category.replace(/-/g, ' ')} in {area.replace(/-/g, ' ')}
           </h1>
           <p className="text-lg text-gray-600 mb-6">
             This page is being prepared with unique, high-quality content.
@@ -93,9 +45,21 @@ export default async function AreaCategoryPage({ params }: { params: Promise<{ a
       );
     }
 
+    // 2. Fetch associated area details safely in parallel
+    const { data: areaData } = await supabase
+      .from('seo_areas')
+      .select('*')
+      .ilike('slug', area)
+      .maybeSingle();
+
+    // 3. Fetch associated category details safely in parallel
+    const { data: categoryData } = await supabase
+      .from('seo_categories')
+      .select('*')
+      .ilike('slug', category)
+      .maybeSingle();
+
     const isPending = pageData.status === 'pending_review';
-    const areaData = pageData.seo_areas;
-    const categoryData = pageData.seo_categories;
     const faqs = pageData.faq_content || [];
     const links = pageData.internal_links || [];
 

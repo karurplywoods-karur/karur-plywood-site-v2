@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createBuildClient } from '@/lib/supabase/build';
 import { supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
+import { SEO_PAGE_TYPES, productLocationPath, productLocationSlug } from '@/lib/seo';
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
@@ -111,11 +112,11 @@ Return JSON:
       (raw.product_explanation || '').split(/\s+/).length +
       (raw.localized_content || '').split(/\s+/).length;
 
-    const slug = `${category.slug}-in-${area.slug}`;
-    const fullPath = `/location/${area.slug}/${category.slug}`;
+    const slug = productLocationSlug(category.slug, area.slug);
+    const fullPath = productLocationPath(area.slug, category.slug);
 
     const content = {
-      page_type: 'location_category', // Fits custom Enum upgrade[cite: 7]
+      page_type: SEO_PAGE_TYPES.PRODUCT_LOCATION,
       slug,
       full_path: fullPath,
       title: raw.seo_title?.slice(0, 80),

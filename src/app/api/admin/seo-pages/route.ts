@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
+import { SEO_PAGE_TYPES } from '@/lib/seo';
 
 export async function GET(req: NextRequest) {
   const session = await getAdminSession();
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
       seo_areas(id, slug, display_name),
       seo_categories(id, slug, display_name)
     `)
-    .eq('page_type', 'product_location')
+    .eq('page_type', SEO_PAGE_TYPES.PRODUCT_LOCATION)
     .order('id', { ascending: false });
 
   if (status) {

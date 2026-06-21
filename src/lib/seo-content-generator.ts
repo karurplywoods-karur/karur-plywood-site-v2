@@ -55,13 +55,13 @@ const AREA_CONTEXTS: Record<string, string> = {
 
 // Unique product angles for each category
 const CATEGORY_ANGLES: Record<string, string> = {
-  plywood: 'Plywood is the foundation of all furniture. In Tamil Nadu's humid climate, BWR grade is essential for kitchens and bathrooms. MR grade works for bedrooms and living rooms.',
+  plywood: "Plywood is the foundation of all furniture. In Tamil Nadu's humid climate, BWR grade is essential for kitchens and bathrooms. MR grade works for bedrooms and living rooms.",
   doors: 'Doors are the first impression of any home. WPC doors are gaining popularity for bathrooms due to 100% waterproofing. Membrane doors offer wood-like aesthetics at lower cost.',
   laminates: 'Laminates define the visual appeal of interiors. High-gloss laminates make small kitchens look spacious. Matte finishes hide fingerprints in high-traffic areas.',
   hardware: 'Hardware determines the functionality and longevity of furniture. Soft-close hinges prevent door slamming. Telescopic channels must support 30kg+ for kitchen drawers.',
   'hettich-hinges': 'Hettich is the gold standard for kitchen hardware. Their Sensys hinges have integrated soft-close technology. German engineering ensures 80,000+ cycle life.',
   'ebco-hinges': 'Ebco offers the best value-for-money hardware in India. Their telescopic channels are rated for 45kg load. Popular among budget-conscious contractors.',
-  'centuryply-plywood': 'CenturyPly is India's largest plywood brand. Club Prime comes with lifetime warranty. Sainik is the budget-friendly option for rental properties.',
+  'centuryply-plywood': "CenturyPly is India's largest plywood brand. Club Prime comes with lifetime warranty. Sainik is the budget-friendly option for rental properties.",
   'greenply-laminates': 'Greenply laminates offer 1000+ designs. Their anti-bacterial range is ideal for hospitals and clinics. High-gloss series is perfect for modern kitchens.',
 };
 

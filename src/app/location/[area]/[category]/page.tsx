@@ -5,6 +5,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import FAQSection from '@/components/FAQSection';
 import LocalBusinessSchema from '@/components/LocalBusinessSchema';
 import { BreadcrumbSchema, FAQSchema } from '@/components/JsonLd';
+import { SEO_PAGE_TYPES } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -58,26 +59,12 @@ export default async function AreaCategoryPage(props: PageProps) {
 
     const { data: pageData, error: pageError } = await supabase
       .from('seo_pages')
-      .select('id, slug, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, is_published')
-      .or(`slug.ilike.${category}-in-${area},slug.ilike.${category}`)
+      .select('id, slug, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, brands_json, pricing_json, applications_json, is_published')
+      .eq('page_type', SEO_PAGE_TYPES.PRODUCT_LOCATION)
+      .or(`slug.ilike.${category}-in-${area},full_path.ilike./location/${area}/${category}`)
       .maybeSingle();
 
-    if (pageError || !pageData || pageData.status === 'draft') {
-      console.error("Supabase Error Logged:", pageError);
-      return (
-        <main className="max-w-6xl mx-auto px-4 py-16 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4 capitalize">{formatSlugText(category)} in {formatSlugText(area)}</h1>
-          <div className="bg-slate-800 p-6 rounded-xl max-w-xl mx-auto text-left font-mono text-xs space-y-2 text-slate-300">
-            <p><span className="text-amber-400">Target Category Slug:</span> "{category}"</p>
-            <p><span className="text-amber-400">Target Area Slug:</span> "{area}"</p>
-            <p><span className="text-red-400">Looking for Rows where slug is:</span> "{category}-in-{area}" OR "{category}"</p>
-            <p><span className="text-blue-400">Database Row Found?</span> {pageData ? "Yes, but it's a draft status" : "No, Row is NULL (Not Found)"}</p>
-            {pageError && <p><span className="text-red-500">Error Message:</span> {pageError.message}</p>}
-          </div>
-          <p className="text-sm text-gray-400 mt-6">Remove this debug block once the row matches.</p>	  
-        </main>
-      );
-    }
+    if (pageError || !pageData || pageData.status !== 'published' || !pageData.is_published) return notFound();
 
     const { data: areaData } = await supabase.from('seo_areas').select('*').ilike('slug', area).maybeSingle();
     const { data: categoryData } = await supabase.from('seo_categories').select('*').ilike('slug', category).maybeSingle();

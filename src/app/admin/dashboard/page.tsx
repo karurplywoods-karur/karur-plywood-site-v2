@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ImageUploader';
 import BulkUpload from '@/components/BulkUpload';
+import VariantManager from '@/components/VariantManager';
 
 function ImageUploaderInline({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   return <ImageUploader value={value} onChange={onChange} folder="products" label="Product Image" hint="Upload a photo or paste an image URL" />;
@@ -517,8 +518,15 @@ export default function AdminDashboard() {
               <span style={{ fontSize: 14, fontWeight: 500, color: '#C8B8A0' }}>Product is in stock</span>
             </div>
 
+            {editProduct && (
+              <VariantManager
+                productId={editProduct.id}
+                onChange={fetchAll}
+              />
+            )}
+
             {/* Save */}
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ display: 'flex', gap: 12, marginTop: editProduct ? 20 : 0 }}>
               <button onClick={handleSave} disabled={saving} style={{ flex: 1, padding: '13px 0', borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
                 {saving ? '⏳ Saving...' : editProduct ? '✓ Update Product' : '+ Add Product'}
               </button>

@@ -1,8 +1,8 @@
 // src/app/api/admin/save-seo-content/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { createBuildClient } from '@/lib/supabase/build';
 import { supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
+import { SEO_PAGE_TYPES, productLocationPath, productLocationSlug } from '@/lib/seo';
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       const { data: existing } = await supabaseAdmin
         .from('seo_pages')
         .select('id')
-        .eq('page_type', 'location_category')
+        .eq('page_type', SEO_PAGE_TYPES.PRODUCT_LOCATION)
         .eq('area_id', area_id)
         .eq('category_id', category_id)
         .single();
@@ -33,17 +33,26 @@ export async function POST(req: NextRequest) {
       if (existing) {
         targetPageId = existing.id;
       } else {
+        const [{ data: area }, { data: category }] = await Promise.all([
+          supabaseAdmin.from('seo_areas').select('slug').eq('id', area_id).single(),
+          supabaseAdmin.from('seo_categories').select('slug').eq('id', category_id).single(),
+        ]);
+
+        if (!area?.slug || !category?.slug) {
+          return NextResponse.json({ error: 'Invalid area_id or category_id.' }, { status: 400 });
+        }
+
         // Create new page record in seo_pages
         const { data: newPage, error: createErr } = await supabaseAdmin
           .from('seo_pages')
           .insert({
-            page_type: 'location_category',
+            page_type: SEO_PAGE_TYPES.PRODUCT_LOCATION,
             area_id,
             category_id,
             status: 'draft',
             is_published: false,
-            slug: `category-${area_id}-${category_id}`,
-            full_path: `/location/area-${area_id}/category-${category_id}`,
+            slug: productLocationSlug(category.slug, area.slug),
+            full_path: productLocationPath(area.slug, category.slug),
           })
           .select('id')
           .single();
@@ -80,6 +89,9 @@ export async function POST(req: NextRequest) {
       if (content.localized_content !== undefined) updateData.localized_content = content.localized_content;
       if (content.faq_content !== undefined) updateData.faq_content = content.faq_content;
       if (content.internal_links !== undefined) updateData.internal_links = content.internal_links;
+      if (content.brands_json !== undefined) updateData.brands_json = content.brands_json;
+      if (content.pricing_json !== undefined) updateData.pricing_json = content.pricing_json;
+      if (content.applications_json !== undefined) updateData.applications_json = content.applications_json;
       if (content.word_count !== undefined) updateData.word_count = content.word_count;
       if (content.title !== undefined) updateData.title = content.title;
       if (content.meta_title !== undefined) updateData.meta_title = content.meta_title;

@@ -40,7 +40,7 @@ begin
 end $$;
 
 create table if not exists public.seo_areas (
-  id bigserial primary key,
+  id serial primary key,
   tenant_id uuid,
   slug text not null unique,
   name text not null,
@@ -64,14 +64,33 @@ create table if not exists public.seo_areas (
   updated_at timestamptz not null default now()
 );
 
+alter table public.seo_areas add column if not exists tenant_id uuid;
+alter table public.seo_areas add column if not exists district text default 'Karur';
+alter table public.seo_areas add column if not exists pincode text default '639001';
+alter table public.seo_areas add column if not exists latitude numeric(10,7);
+alter table public.seo_areas add column if not exists longitude numeric(10,7);
+alter table public.seo_areas add column if not exists lat numeric(10,8);
+alter table public.seo_areas add column if not exists lng numeric(11,8);
+alter table public.seo_areas add column if not exists distance_km numeric(8,2) default 0;
+alter table public.seo_areas add column if not exists delivery_time text default '1-2 days';
+alter table public.seo_areas add column if not exists priority integer not null default 100;
+alter table public.seo_areas add column if not exists famous_for text default '';
+alter table public.seo_areas add column if not exists local_landmark text default '';
+alter table public.seo_areas add column if not exists transport_hub text default '';
+alter table public.seo_areas add column if not exists nearby_subareas text[] default '{}';
+alter table public.seo_areas add column if not exists neighborhoods text[] default '{}';
+alter table public.seo_areas add column if not exists local_use_cases text[] default '{}';
+alter table public.seo_areas add column if not exists created_at timestamptz not null default now();
+alter table public.seo_areas add column if not exists updated_at timestamptz not null default now();
+
 create table if not exists public.seo_categories (
-  id bigserial primary key,
+  id serial primary key,
   tenant_id uuid,
   slug text not null unique,
   name text not null,
   display_name text not null,
   description text default '',
-  parent_id bigint references public.seo_categories(id),
+  parent_id integer references public.seo_categories(id),
   parent_category text default '',
   sort_order integer default 0,
   base_price numeric(12,2) default 0,
@@ -82,17 +101,29 @@ create table if not exists public.seo_categories (
   updated_at timestamptz not null default now()
 );
 
+alter table public.seo_categories add column if not exists tenant_id uuid;
+alter table public.seo_categories add column if not exists description text default '';
+alter table public.seo_categories add column if not exists parent_id integer;
+alter table public.seo_categories add column if not exists parent_category text default '';
+alter table public.seo_categories add column if not exists sort_order integer default 0;
+alter table public.seo_categories add column if not exists base_price numeric(12,2) default 0;
+alter table public.seo_categories add column if not exists price_unit text default 'per sheet';
+alter table public.seo_categories add column if not exists brands text[] default '{}';
+alter table public.seo_categories add column if not exists key_benefits text default '';
+alter table public.seo_categories add column if not exists created_at timestamptz not null default now();
+alter table public.seo_categories add column if not exists updated_at timestamptz not null default now();
+
 create table if not exists public.seo_pages (
-  id bigserial primary key,
+  id serial primary key,
   tenant_id uuid,
   page_type public.page_type not null,
   slug text not null,
   parent_slug text,
   full_path text not null,
-  area_id bigint references public.seo_areas(id) on delete set null,
-  category_id bigint references public.seo_categories(id) on delete set null,
-  brand_id bigint,
-  blog_id bigint,
+  area_id integer references public.seo_areas(id) on delete set null,
+  category_id integer references public.seo_categories(id) on delete set null,
+  brand_id integer,
+  blog_id integer,
   title text default '',
   meta_title text default '',
   meta_description text default '',
@@ -137,11 +168,115 @@ create table if not exists public.seo_pages (
   unique(page_type, area_id, category_id)
 );
 
+alter table public.seo_pages add column if not exists tenant_id uuid;
+alter table public.seo_pages add column if not exists page_type public.page_type;
+alter table public.seo_pages add column if not exists slug text;
+alter table public.seo_pages add column if not exists parent_slug text;
+alter table public.seo_pages add column if not exists full_path text;
+alter table public.seo_pages add column if not exists area_id integer;
+alter table public.seo_pages add column if not exists category_id integer;
+alter table public.seo_pages add column if not exists brand_id integer;
+alter table public.seo_pages add column if not exists blog_id integer;
+alter table public.seo_pages add column if not exists title text default '';
+alter table public.seo_pages add column if not exists meta_title text default '';
+alter table public.seo_pages add column if not exists meta_description text default '';
+alter table public.seo_pages add column if not exists seo_title text default '';
+alter table public.seo_pages add column if not exists seo_description text default '';
+alter table public.seo_pages add column if not exists h1 text default '';
+alter table public.seo_pages add column if not exists intro text default '';
+alter table public.seo_pages add column if not exists product_explanation text default '';
+alter table public.seo_pages add column if not exists localized_content text default '';
+alter table public.seo_pages add column if not exists content text default '';
+alter table public.seo_pages add column if not exists faq_content jsonb not null default '[]';
+alter table public.seo_pages add column if not exists internal_links jsonb not null default '[]';
+alter table public.seo_pages add column if not exists faq_schema jsonb;
+alter table public.seo_pages add column if not exists breadcrumb_schema jsonb;
+alter table public.seo_pages add column if not exists local_business_schema jsonb;
+alter table public.seo_pages add column if not exists organization_schema jsonb;
+alter table public.seo_pages add column if not exists product_schema jsonb;
+alter table public.seo_pages add column if not exists brands_json jsonb;
+alter table public.seo_pages add column if not exists pricing_json jsonb;
+alter table public.seo_pages add column if not exists applications_json jsonb;
+alter table public.seo_pages add column if not exists canonical_url text;
+alter table public.seo_pages add column if not exists og_title text;
+alter table public.seo_pages add column if not exists og_description text;
+alter table public.seo_pages add column if not exists og_image text;
+alter table public.seo_pages add column if not exists content_hash text;
+alter table public.seo_pages add column if not exists similarity_score numeric(5,4);
+alter table public.seo_pages add column if not exists word_count integer default 0;
+alter table public.seo_pages add column if not exists status text not null default 'draft';
+alter table public.seo_pages add column if not exists is_published boolean not null default false;
+alter table public.seo_pages add column if not exists is_indexed boolean not null default false;
+alter table public.seo_pages add column if not exists ai_generated_at timestamptz;
+alter table public.seo_pages add column if not exists ai_model text default '';
+alter table public.seo_pages add column if not exists content_version integer not null default 1;
+alter table public.seo_pages add column if not exists reviewed_by text default '';
+alter table public.seo_pages add column if not exists review_notes text default '';
+alter table public.seo_pages add column if not exists created_at timestamptz not null default now();
+alter table public.seo_pages add column if not exists updated_at timestamptz not null default now();
+alter table public.seo_pages add column if not exists published_at timestamptz;
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'seo_pages'
+      and column_name = 'page_type'
+      and udt_name <> 'page_type'
+  ) then
+    alter table public.seo_pages
+      alter column page_type type public.page_type
+      using (
+        case page_type::text
+          when 'location' then 'location'::public.page_type
+          when 'category' then 'category'::public.page_type
+          when 'brand' then 'brand'::public.page_type
+          when 'product_location' then 'product_location'::public.page_type
+          when 'location_category' then 'product_location'::public.page_type
+          when 'brand_location' then 'brand_location'::public.page_type
+          when 'blog' then 'blog'::public.page_type
+          else 'product_location'::public.page_type
+        end
+      );
+  end if;
+end $$;
+
+update public.seo_pages
+set page_type = 'product_location'::public.page_type
+where page_type is null;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'seo_pages_area_id_fkey'
+      and conrelid = 'public.seo_pages'::regclass
+  ) then
+    alter table public.seo_pages
+      add constraint seo_pages_area_id_fkey
+      foreign key (area_id) references public.seo_areas(id) on delete set null
+      not valid;
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'seo_pages_category_id_fkey'
+      and conrelid = 'public.seo_pages'::regclass
+  ) then
+    alter table public.seo_pages
+      add constraint seo_pages_category_id_fkey
+      foreign key (category_id) references public.seo_categories(id) on delete set null
+      not valid;
+  end if;
+end $$;
+
 create table if not exists public.seo_content_queue (
-  id bigserial primary key,
+  id serial primary key,
   tenant_id uuid,
-  area_id bigint references public.seo_areas(id) on delete cascade,
-  category_id bigint references public.seo_categories(id) on delete cascade,
+  area_id integer references public.seo_areas(id) on delete cascade,
+  category_id integer references public.seo_categories(id) on delete cascade,
   page_type public.page_type not null default 'product_location',
   status text not null default 'pending' check (status in ('pending', 'processing', 'completed', 'failed')),
   generated_content jsonb,
@@ -152,9 +287,9 @@ create table if not exists public.seo_content_queue (
 );
 
 create table if not exists public.seo_content_logs (
-  id bigserial primary key,
+  id serial primary key,
   tenant_id uuid,
-  seo_page_id bigint references public.seo_pages(id) on delete cascade,
+  seo_page_id integer references public.seo_pages(id) on delete cascade,
   action text not null,
   old_content jsonb,
   new_content jsonb,
@@ -163,6 +298,7 @@ create table if not exists public.seo_content_logs (
 );
 
 alter table public.seo_pages alter column page_type set default 'product_location'::public.page_type;
+alter table public.seo_pages alter column page_type set not null;
 
 -- Compatibility cleanup for accidental merged naming.
 update public.seo_pages
@@ -264,6 +400,10 @@ create index if not exists idx_seo_pages_area_category on public.seo_pages(area_
 create index if not exists idx_seo_pages_created on public.seo_pages(created_at desc);
 create index if not exists idx_seo_pages_faq on public.seo_pages using gin(faq_content);
 create index if not exists idx_seo_pages_links on public.seo_pages using gin(internal_links);
+create unique index if not exists seo_pages_full_path_unique on public.seo_pages(full_path);
+create unique index if not exists seo_pages_type_area_category_unique
+  on public.seo_pages(page_type, area_id, category_id)
+  where area_id is not null and category_id is not null;
 
 alter table public.seo_areas enable row level security;
 alter table public.seo_categories enable row level security;
@@ -298,7 +438,7 @@ create policy service_role_all_seo_logs on public.seo_content_logs for all using
 
 create or replace function public.get_product_location_page(area_slug text, category_slug text)
 returns table (
-  page_id bigint,
+  page_id integer,
   status text,
   seo_title text,
   seo_description text,

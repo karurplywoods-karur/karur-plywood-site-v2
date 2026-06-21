@@ -19,6 +19,19 @@ function formatSlugText(text: string): string {
   return text.split('-').join(' ');
 }
 
+const PRODUCT_LOCATION_PAGE_TYPES = new Set<string>([
+  SEO_PAGE_TYPES.PRODUCT_LOCATION,
+  'location_category',
+]);
+
+function isProductLocationPage(pageType?: string | null): boolean {
+  return !pageType || PRODUCT_LOCATION_PAGE_TYPES.has(pageType);
+}
+
+function pageLookupFilter(area: string, category: string): string {
+  return `slug.ilike.${category}-in-${area},full_path.ilike./location/${area}/${category}`;
+}
+
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
     const resolvedParams = await props.params;
@@ -28,11 +41,14 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const { area, category } = resolvedParams;
     const supabase = createBuildClient();
 
-    const { data: pageData } = await supabase
+    const { data: pages } = await supabase
       .from('seo_pages')
-      .select('title, meta_description, status, is_published')
-      .ilike('slug', `${category}-in-${area}`)
-      .maybeSingle();
+      .select('title, meta_description, status, is_published, page_type')
+      .or(pageLookupFilter(area, category))
+      .order('id', { ascending: false })
+      .limit(5);
+
+    const pageData = pages?.find((page) => isProductLocationPage(page.page_type));
 
     if (!pageData || pageData.status === 'draft') {
       return { title: 'Coming Soon | Karur Plywood', robots: { index: false, follow: false } };
@@ -57,12 +73,14 @@ export default async function AreaCategoryPage(props: PageProps) {
     const { area, category } = resolvedParams;
     const supabase = createBuildClient();
 
-    const { data: pageData, error: pageError } = await supabase
+    const { data: pages, error: pageError } = await supabase
       .from('seo_pages')
-      .select('id, slug, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, brands_json, pricing_json, applications_json, is_published')
-      .eq('page_type', SEO_PAGE_TYPES.PRODUCT_LOCATION)
-      .or(`slug.ilike.${category}-in-${area},full_path.ilike./location/${area}/${category}`)
-      .maybeSingle();
+      .select('id, slug, page_type, status, h1, title, meta_description, intro, product_explanation, localized_content, faq_content, is_published, full_path')
+      .or(pageLookupFilter(area, category))
+      .order('id', { ascending: false })
+      .limit(5);
+
+    const pageData = pages?.find((page) => isProductLocationPage(page.page_type));
 
     if (pageError || !pageData || pageData.status !== 'published' || !pageData.is_published) return notFound();
 
@@ -91,9 +109,14 @@ export default async function AreaCategoryPage(props: PageProps) {
 
     const rawFaqs = parseJsonField(pageData.faq_content);
     const faqs = Array.isArray(rawFaqs) && rawFaqs.length > 0 ? rawFaqs : defaultFaqs;
-    const brandsList = parseJsonField(pageData.brands_json) || ['CenturyPly Marine', 'Greenply Ecotec', 'Sainik Marine', 'Magnus Gold'];
-    const pricingData = parseJsonField(pageData.pricing_json) || { range: 'Rs. 85 - Rs. 290 per sq.ft.', details: 'Wholesale pricing depends heavily on core composition layer choice, calibrated thickness (6mm-19mm), and wholesale volume tiers.' };
-    const applicationsList = parseJsonField(pageData.applications_json) || [
+    const pageExtras = pageData as typeof pageData & {
+      brands_json?: unknown;
+      pricing_json?: unknown;
+      applications_json?: unknown;
+    };
+    const brandsList = parseJsonField(pageExtras.brands_json) || ['CenturyPly Marine', 'Greenply Ecotec', 'Sainik Marine', 'Magnus Gold'];
+    const pricingData = parseJsonField(pageExtras.pricing_json) || { range: 'Rs. 85 - Rs. 290 per sq.ft.', details: 'Wholesale pricing depends heavily on core composition layer choice, calibrated thickness (6mm-19mm), and wholesale volume tiers.' };
+    const applicationsList = parseJsonField(pageExtras.applications_json) || [
       'Moisture-immune modular kitchen cabinet framework bases',
       'Long-span wardrobe internals and premium architectural paneling',
       'Structural commercial partition layouts for retail setups',
@@ -106,7 +129,13 @@ export default async function AreaCategoryPage(props: PageProps) {
       { author: 'S. Prakash (Muthu Carpentry Works)', rating: 5, text: `Been purchasing wholesale boards from them for years. Direct job-site unloading saves us major labor logistical timelines.` }
     ];
 
-    const adaptedAreaObject = { name: areaName, pincode: areaData?.pincode || '639001', lat: areaData?.latitude || 10.9601, lng: areaData?.longitude || 78.0785, slug: area };
+    const adaptedAreaObject = {
+      name: areaName,
+      pincode: areaData?.pincode || '639001',
+      lat: areaData?.latitude ?? areaData?.lat ?? 10.9601,
+      lng: areaData?.longitude ?? areaData?.lng ?? 78.0785,
+      slug: area
+    };
     const adaptedCategoryObject = { display_name: categoryName, slug: category };
     const breadcrumbItems = [{ name: 'Home', href: '/' }, { name: 'Locations', href: '/location' }, { name: areaName, href: `/location/${area}` }, { name: categoryName, href: `/location/${area}/${category}` }];
 

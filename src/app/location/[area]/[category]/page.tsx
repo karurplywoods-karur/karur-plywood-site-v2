@@ -80,9 +80,7 @@ export default async function AreaCategoryPage(props: PageProps) {
       .order('id', { ascending: false })
       .limit(5);
 
-    const pageData = pages?.find((page) => isProductLocationPage(page.page_type));
-
-    if (pageError || !pageData || pageData.status !== 'published' || !pageData.is_published) return notFound();
+    const matchedPageData = pages?.find((page) => isProductLocationPage(page.page_type));
 
     const { data: areaData } = await supabase.from('seo_areas').select('*').ilike('slug', area).maybeSingle();
     const { data: categoryData } = await supabase.from('seo_categories').select('*').ilike('slug', category).maybeSingle();
@@ -91,6 +89,23 @@ export default async function AreaCategoryPage(props: PageProps) {
 
     const areaName = areaData?.display_name || formatSlugText(area);
     const categoryName = categoryData?.display_name || formatSlugText(category);
+    const pageData = !pageError && matchedPageData?.status === 'published' && matchedPageData?.is_published
+      ? matchedPageData
+      : {
+          id: 0,
+          slug: `${category}-in-${area}`,
+          page_type: SEO_PAGE_TYPES.PRODUCT_LOCATION,
+          status: 'published',
+          h1: `${categoryName} Wholesale Distribution in ${areaName}`,
+          title: `Wholesale ${categoryName} Dealer in ${areaName} | Karur Plywood`,
+          meta_description: `Looking for a trusted ${categoryName} dealer in ${areaName}? Get direct wholesale pricing, commercial grading, and fast job-site delivery.`,
+          intro: `Get factory-direct inventory pricing on premium calibrated ${categoryName} options in ${areaName}. Engineered specifically for local interior specialists, independent carpentry teams, and site contractors requiring long-term structural resilience.`,
+          product_explanation: '',
+          localized_content: `We dispatch verified wholesale configurations directly to construction zones and commercial interior sites throughout ${areaName}.`,
+          faq_content: [],
+          is_published: true,
+          full_path: `/location/${area}/${category}`,
+        };
     const rawNeighborhoods = areaData?.neighborhoods || ['Vengamedu', 'Thanthonimalai', 'Pasupathipalayam', 'Sengunthapuram', 'Chinna Andankovil'];
     const subLocalities = Array.isArray(rawNeighborhoods) ? rawNeighborhoods : [];
 
@@ -169,10 +184,10 @@ export default async function AreaCategoryPage(props: PageProps) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="relative h-48 bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
-              <img src="/images/plywood-stock-1.jpg" alt={`Premium stocked wholesale ${categoryName} sheets`} className="object-cover w-full h-full fallback-img" onError={(e)=>{e.currentTarget.src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=400&q=80"}} />
+              <img src="/images/plywood-stock-1.jpg" alt={`Premium stocked wholesale ${categoryName} sheets`} className="object-cover w-full h-full fallback-img" />
             </div>
             <div className="relative h-48 bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
-              <img src="/images/plywood-stock-2.jpg" alt="Calibrated core composition cross section view" className="object-cover w-full h-full fallback-img" onError={(e)=>{e.currentTarget.src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=400&q=80"}} />
+              <img src="/images/plywood-stock-2.jpg" alt="Calibrated core composition cross section view" className="object-cover w-full h-full fallback-img" />
             </div>
           </div>
         </section>
@@ -308,13 +323,13 @@ export default async function AreaCategoryPage(props: PageProps) {
                 Analyse Quote via WhatsApp
               </a>
             </div>
-            <form onSubmit={(e) => e.preventDefault()} className="bg-white p-5 rounded-xl border border-amber-200/60 space-y-3">
+            <div className="bg-white p-5 rounded-xl border border-amber-200/60 space-y-3">
               <span className="block font-bold text-xs text-gray-500 uppercase tracking-wider">⚡ Direct Estimates Registry</span>
-              <input type="text" placeholder="Your Name / Trade Profile" className="w-full text-xs p-2.5 border border-gray-200 rounded-lg focus:outline-amber-500" required />
-              <input type="tel" placeholder="Mobile / WhatsApp Number" className="w-full text-xs p-2.5 border border-gray-200 rounded-lg focus:outline-amber-500" required />
-              <textarea placeholder="Specify quantity requirements (e.g., 40 sheets of 19mm BWP)" rows={2} className="w-full text-xs p-2.5 border border-gray-200 rounded-lg focus:outline-amber-500" required></textarea>
-              <button type="submit" className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs py-2.5 rounded-lg transition">Submit Bulk Specs Request</button>
-            </form>
+              <input type="text" placeholder="Your Name / Trade Profile" className="w-full text-xs p-2.5 border border-gray-200 rounded-lg focus:outline-amber-500" />
+              <input type="tel" placeholder="Mobile / WhatsApp Number" className="w-full text-xs p-2.5 border border-gray-200 rounded-lg focus:outline-amber-500" />
+              <textarea placeholder="Specify quantity requirements (e.g., 40 sheets of 19mm BWP)" rows={2} className="w-full text-xs p-2.5 border border-gray-200 rounded-lg focus:outline-amber-500"></textarea>
+              <a href="https://wa.me/919159666538" className="block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs py-2.5 rounded-lg transition text-center">Submit Bulk Specs Request</a>
+            </div>
           </div>
         </section>
       </main>

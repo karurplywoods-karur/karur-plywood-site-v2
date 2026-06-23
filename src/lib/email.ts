@@ -10,7 +10,7 @@ interface OrderEmailData {
   customerName: string;
   customerEmail: string;
   orderNumber: string;
-  items: { product_name: string; quantity: number; unit_price: number; line_total: number }[];
+  items: { product_name: string; quantity: number; unit_price: number; line_total: number; variant_label?: string }[];
   subtotal: number;
   deliveryCharge: number;
   total: number;
@@ -22,7 +22,10 @@ interface OrderEmailData {
 function orderConfirmationHTML(data: OrderEmailData): string {
   const itemRows = data.items.map(item => `
     <tr>
-      <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;color:#333;font-size:14px">${item.product_name}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;color:#333;font-size:14px">
+        ${item.product_name}
+        ${item.variant_label ? `<div style="font-size:12px;color:#999;margin-top:2px">${item.variant_label}</div>` : ''}
+      </td>
       <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;text-align:center;color:#666;font-size:14px">${item.quantity}</td>
       <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;text-align:right;color:#333;font-size:14px">₹${item.line_total.toLocaleString('en-IN')}</td>
     </tr>

@@ -5,14 +5,17 @@ export function buildOwnerOrderMessage(data: {
   orderNumber: string;
   customerName: string;
   customerPhone: string;
-  items: { product_name: string; quantity: number; line_total: number }[];
+  items: { product_name: string; quantity: number; line_total: number; variant_label?: string }[];
   total: number;
   paymentMethod: string;
   deliveryCity: string;
   deliveryPincode: string;
 }) {
   const lines = data.items
-    .map(i => `  - ${i.product_name} x${i.quantity} = Rs.${i.line_total.toLocaleString('en-IN')}`)
+    .map(i => {
+      const v = i.variant_label ? ` (${i.variant_label})` : '';
+      return `  - ${i.product_name}${v} x${i.quantity} = Rs.${i.line_total.toLocaleString('en-IN')}`;
+    })
     .join('\n');
 
   const payment = data.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online (Razorpay)';

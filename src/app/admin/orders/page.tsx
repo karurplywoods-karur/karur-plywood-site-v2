@@ -261,7 +261,10 @@ export default function AdminOrdersPage() {
                         {(order.order_items || []).map((item: any) => (
                           <div key={item.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid rgba(249,115,22,0.06)', fontSize:13 }}>
                             <div>
-                              <div style={{ color:'#F8F9FB', fontWeight:600 }}>{item.product_name}</div>
+                              <div style={{ color:'#F8F9FB', fontWeight:600 }}>
+                                {item.product_name}
+                                {item.variant_label && <span style={{ color:'#F97316', fontWeight:500 }}> · {item.variant_label}</span>}
+                              </div>
                               <div style={{ color:'#7A8EA8', fontSize:11 }}>{item.category_name} · ₹{item.unit_price.toLocaleString('en-IN')}{item.unit ? `/${item.unit}` : ''}</div>
                             </div>
                             <div style={{ display:'flex', gap:20, alignItems:'center' }}>

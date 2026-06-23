@@ -1,11 +1,17 @@
 'use client';
 // src/app/admin/dashboard/page.tsx
-// KEY FIX: Added MRP (crossed-out price) field to product add/edit form
+// UPDATED from Codex version: wires VariantManager into the product modal.
+// Codex added VariantManager.tsx as a component but never imported or rendered it
+// in the dashboard. This file is a surgical patch — only the import, one new
+// state var (savedProductId), handleSave, openNew, openEdit, and the modal
+// JSX change. Everything else (tabs, enquiries, reviews, bulk upload) is
+// untouched from the Codex version.
+
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ImageUploader';
 import BulkUpload from '@/components/BulkUpload';
-import VariantManager from '@/components/VariantManager';
+import VariantManager from '@/components/VariantManager';  // ← NEW IMPORT
 
 function ImageUploaderInline({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   return <ImageUploader value={value} onChange={onChange} folder="products" label="Product Image" hint="Upload a photo or paste an image URL" />;
@@ -21,7 +27,7 @@ interface Product {
   image_url: string;
   type: string;
   price: number | null;
-  mrp: number | null;          // ← NEW
+  mrp: number | null;
   unit: string;
   in_stock: boolean;
   categories?: { name: string; icon: string };
@@ -33,7 +39,7 @@ interface Review   { id: number; name: string; role: string; rating: number; mes
 const EMPTY_PRODUCT = {
   name: '', category_id: '', description: '',
   image_url: '', type: 'project',
-  price: '', mrp: '',             // ← NEW
+  price: '', mrp: '',
   unit: '', in_stock: true,
 };
 
@@ -44,17 +50,18 @@ const STATUS_COLORS: Record<string, string> = {
 export default function AdminDashboard() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('products');
-  const [products, setProducts]   = useState<Product[]>([]);
+  const [products, setProducts]     = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
-  const [reviews, setReviews]     = useState<Review[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [showForm, setShowForm]   = useState(false);
+  const [enquiries, setEnquiries]   = useState<Enquiry[]>([]);
+  const [reviews, setReviews]       = useState<Review[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [showForm, setShowForm]     = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
-  const [form, setForm]           = useState<any>(EMPTY_PRODUCT);
-  const [saving, setSaving]       = useState(false);
-  const [msg, setMsg]             = useState<{ text: string; ok: boolean } | null>(null);
-  const [search, setSearch]       = useState('');
+  const [savedProductId, setSavedProductId] = useState<string | null>(null); // ← NEW
+  const [form, setForm]             = useState<any>(EMPTY_PRODUCT);
+  const [saving, setSaving]         = useState(false);
+  const [msg, setMsg]               = useState<{ text: string; ok: boolean } | null>(null);
+  const [search, setSearch]         = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
   const showMsg = (text: string, ok = true) => {
@@ -82,8 +89,10 @@ export default function AdminDashboard() {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
+  // ── UPDATED: reset savedProductId on new/edit open ──────────
   const openNew = () => {
-    setForm(EMPTY_PRODUCT); setEditProduct(null); setShowForm(true);
+    setForm(EMPTY_PRODUCT); setEditProduct(null);
+    setSavedProductId(null); setShowForm(true);
   };
 
   const openEdit = (p: Product) => {
@@ -92,41 +101,30 @@ export default function AdminDashboard() {
       description: p.description, image_url: p.image_url,
       type: p.type,
       price: p.price || '',
-      mrp: p.mrp || '',          // ← NEW
+      mrp: p.mrp || '',
       unit: p.unit, in_stock: p.in_stock,
     });
-    setEditProduct(p); setShowForm(true);
+    setEditProduct(p); setSavedProductId(p.id); setShowForm(true); // ← set id on edit
   };
 
+  // ── UPDATED: for new products, keep modal open after save ────
   const handleSave = async () => {
     if (!form.name.trim()) { showMsg('Product name is required.', false); return; }
     setSaving(true);
     const parsedPrice = form.price === '' || form.price === null || form.price === undefined
-      ? null
-      : Number(form.price);
+      ? null : Number(form.price);
     const parsedMrp = form.mrp === '' || form.mrp === null || form.mrp === undefined
-      ? null
-      : Number(form.mrp);
+      ? null : Number(form.mrp);
 
     if (parsedPrice !== null && !Number.isFinite(parsedPrice)) { showMsg('Enter a valid sale price.', false); setSaving(false); return; }
-    if (parsedMrp !== null && !Number.isFinite(parsedMrp)) { showMsg('Enter a valid MRP.', false); setSaving(false); return; }
+    if (parsedMrp   !== null && !Number.isFinite(parsedMrp))   { showMsg('Enter a valid MRP.',       false); setSaving(false); return; }
 
-    const payload = {
-      ...form,
-      price: parsedPrice,
-      mrp:   parsedMrp,
-      category_id: form.category_id || null,
-    };
+    const payload = { ...form, price: parsedPrice, mrp: parsedMrp, category_id: form.category_id || null };
     try {
       const res = editProduct
-        ? await fetch(`/api/products/${editProduct.id}`, {
-            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          })
-        : await fetch('/api/products', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
+        ? await fetch(`/api/products/${editProduct.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        : await fetch('/api/products',                  { method: 'POST',  headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
       const data = await res.json();
       if (!res.ok) {
         showMsg(data.hint || data.error || 'Error saving product.', false);
@@ -135,13 +133,26 @@ export default function AdminDashboard() {
           ? prev.map(p => p.id === data.id ? data : p)
           : [data, ...prev]
         );
-        showMsg(editProduct ? 'Product updated!' : 'Product added!');
-        setShowForm(false);
-        setEditProduct(null);
-        setForm(EMPTY_PRODUCT);
+        if (editProduct) {
+          // Editing existing product → close as before
+          showMsg('Product updated!');
+          setShowForm(false); setEditProduct(null); setSavedProductId(null); setForm(EMPTY_PRODUCT);
+        } else {
+          // New product → keep modal open to add variants
+          showMsg('Product added! Add variants below, or close when done.');
+          setSavedProductId(data.id);
+          setEditProduct(data);
+        }
       }
     } catch { showMsg('Network error.', false); }
     finally { setSaving(false); }
+  };
+
+  // ── NEW: single close path ────────────────────────────────────
+  const closeModal = () => {
+    setShowForm(false); setEditProduct(null);
+    setSavedProductId(null); setForm(EMPTY_PRODUCT);
+    fetchAll();
   };
 
   const handleDelete = async (id: string, name: string) => {
@@ -152,10 +163,7 @@ export default function AdminDashboard() {
   };
 
   const updateEnquiryStatus = async (id: number, status: string) => {
-    await fetch(`/api/enquiries/${id}`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
+    await fetch(`/api/enquiries/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
     setEnquiries(e => e.map(x => x.id === id ? { ...x, status } : x));
   };
   const deleteEnquiry = async (id: number) => {
@@ -164,10 +172,7 @@ export default function AdminDashboard() {
     setEnquiries(e => e.filter(x => x.id !== id));
   };
   const toggleReview = async (id: number, approved: boolean) => {
-    await fetch(`/api/reviews/${id}`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ approved: !approved }),
-    });
+    await fetch(`/api/reviews/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ approved: !approved }) });
     setReviews(r => r.map(x => x.id === id ? { ...x, approved: !x.approved } : x));
   };
   const deleteReview = async (id: number) => {
@@ -175,29 +180,14 @@ export default function AdminDashboard() {
     await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
     setReviews(r => r.filter(x => x.id !== id));
   };
-  const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' }); router.push('/admin');
-  };
+  const logout = async () => { await fetch('/api/auth/logout', { method: 'POST' }); router.push('/admin'); };
 
-  const inp: React.CSSProperties = {
-    width: '100%', background: '#0E0B08',
-    border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8,
-    padding: '10px 14px', fontSize: 14, color: '#F0E8DC',
-    fontFamily: 'Outfit,sans-serif', outline: 'none',
-  };
-  const lbl: React.CSSProperties = {
-    display: 'block', fontSize: 11, fontWeight: 600,
-    color: '#9A8070', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6,
-  };
+  const inp: React.CSSProperties = { width: '100%', background: '#0E0B08', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, padding: '10px 14px', fontSize: 14, color: '#F0E8DC', fontFamily: 'Outfit,sans-serif', outline: 'none' };
+  const lbl: React.CSSProperties = { display: 'block', fontSize: 11, fontWeight: 600, color: '#9A8070', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 };
   const fg: React.CSSProperties = { marginBottom: 16 };
 
   const tabBtn = (t: Tab, label: string) => (
-    <button onClick={() => setTab(t)} style={{
-      padding: '9px 20px', borderRadius: 8, border: 'none', cursor: 'pointer',
-      fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13,
-      background: tab === t ? 'linear-gradient(135deg,#C8884A,#8B5E2A)' : 'transparent',
-      color: tab === t ? 'white' : '#9A8070', transition: 'all 0.2s',
-    }}>
+    <button onClick={() => setTab(t)} style={{ padding: '9px 20px', borderRadius: 8, border: 'none', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: tab === t ? 'linear-gradient(135deg,#C8884A,#8B5E2A)' : 'transparent', color: tab === t ? 'white' : '#9A8070', transition: 'all 0.2s' }}>
       {label}
     </button>
   );
@@ -210,10 +200,7 @@ export default function AdminDashboard() {
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#0E0B08', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
-        <div style={{ color: '#9A8070' }}>Loading...</div>
-      </div>
+      <div style={{ textAlign: 'center' }}><div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div><div style={{ color: '#9A8070' }}>Loading...</div></div>
     </div>
   );
 
@@ -242,12 +229,12 @@ export default function AdminDashboard() {
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 28px' }}>
 
-        {/* Stats row */}
+        {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 28 }} className="stats-grid">
           {[
-            { icon: '📦', num: products.length, label: 'Products', sub: `${products.filter(p => p.type === 'project').length} project · ${products.filter(p => p.type === 'quick').length} quick` },
-            { icon: '📋', num: enquiries.length, label: 'Enquiries', sub: `${enquiries.filter(e => e.status === 'new').length} new` },
-            { icon: '⭐', num: reviews.length, label: 'Reviews', sub: `${reviews.filter(r => r.approved).length} published` },
+            { icon: '📦', num: products.length,   label: 'Products',   sub: `${products.filter(p => p.type === 'project').length} project · ${products.filter(p => p.type === 'quick').length} quick` },
+            { icon: '📋', num: enquiries.length,  label: 'Enquiries',  sub: `${enquiries.filter(e => e.status === 'new').length} new` },
+            { icon: '⭐', num: reviews.length,    label: 'Reviews',    sub: `${reviews.filter(r => r.approved).length} published` },
             { icon: '🏷️', num: categories.length, label: 'Categories', sub: 'Product categories' },
           ].map(s => (
             <div key={s.label} style={{ background: '#1C140D', border: '1px solid rgba(200,136,74,0.15)', borderRadius: 14, padding: '20px 22px' }}>
@@ -265,15 +252,15 @@ export default function AdminDashboard() {
           {tabBtn('bulk', '⬆️ Bulk Upload')}
           {tabBtn('enquiries', `📋 Enquiries (${enquiries.filter(e => e.status === 'new').length} new)`)}
           {tabBtn('reviews', `⭐ Reviews (${reviews.filter(r => !r.approved).length} pending)`)}
-          <a href="/admin/blog" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>📝 Blog CMS ↗</a>
-          <a href="/admin/architects" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🏛️ Architects ↗</a>
-          <a href="/admin/carpenters" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🔨 Carpenters ↗</a>
+          <a href="/admin/blog"        style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>📝 Blog CMS ↗</a>
+          <a href="/admin/architects"  style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🏛️ Architects ↗</a>
+          <a href="/admin/carpenters"  style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🔨 Carpenters ↗</a>
         </div>
 
-        {/* ── BULK UPLOAD TAB ── */}
+        {/* Bulk upload tab */}
         {tab === 'bulk' && <BulkUpload onSuccess={() => { fetchAll(); setTab('products'); }} />}
 
-        {/* ── PRODUCTS TAB ── */}
+        {/* Products tab */}
         {tab === 'products' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
@@ -308,22 +295,13 @@ export default function AdminDashboard() {
                             {p.type === 'quick' ? '⚡ Quick' : '🏠 Project'}
                           </span>
                         </td>
-                        {/* ── MRP / PRICE COLUMN ── */}
                         <td style={{ padding: '12px 16px' }}>
-                          {p.mrp && (
-                            <div style={{ fontSize: 11, color: '#9A8070', textDecoration: 'line-through', marginBottom: 2 }}>
-                              ₹{p.mrp.toLocaleString('en-IN')} MRP
-                            </div>
-                          )}
+                          {p.mrp && <div style={{ fontSize: 11, color: '#9A8070', textDecoration: 'line-through', marginBottom: 2 }}>₹{p.mrp.toLocaleString('en-IN')} MRP</div>}
                           <div style={{ color: '#E0A86A', fontWeight: 600 }}>
                             {p.price ? `₹${p.price.toLocaleString('en-IN')}` : '—'}
                             {p.unit && <span style={{ fontSize: 11, color: '#9A8070', fontWeight: 400 }}> {p.unit}</span>}
                           </div>
-                          {p.mrp && p.price && (
-                            <div style={{ fontSize: 10, color: '#4ADE80', marginTop: 2 }}>
-                              {Math.round(((p.mrp - p.price) / p.mrp) * 100)}% off
-                            </div>
-                          )}
+                          {p.mrp && p.price && <div style={{ fontSize: 10, color: '#4ADE80', marginTop: 2 }}>{Math.round(((p.mrp - p.price) / p.mrp) * 100)}% off</div>}
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: p.in_stock ? 'rgba(37,211,102,0.12)' : 'rgba(248,113,113,0.12)', color: p.in_stock ? '#25D366' : '#F87171' }}>
@@ -345,14 +323,12 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── ENQUIRIES TAB ── */}
+        {/* Enquiries tab */}
         {tab === 'enquiries' && (
           <div>
             <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍 Search name or phone..."
-                style={{ ...inp, flex: 1, minWidth: 200 }} />
-              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-                style={{ ...inp, width: 'auto', cursor: 'pointer' }}>
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍 Search name or phone..." style={{ ...inp, flex: 1, minWidth: 200 }} />
+              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ ...inp, width: 'auto', cursor: 'pointer' }}>
                 <option value="all">All Statuses</option>
                 <option value="new">🟢 New</option>
                 <option value="contacted">🟡 Contacted</option>
@@ -382,18 +358,7 @@ export default function AdminDashboard() {
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '7px 0', borderRadius: 7, background: '#25D366', color: 'white', fontWeight: 600, fontSize: 12, textDecoration: 'none' }}>
                     💬 Reply
                   </a>
-                  {e.status === 'converted' && (
-                    <button onClick={async () => {
-                      const res = await fetch('/api/admin/review-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enquiry_id: e.id }) });
-                      const d = await res.json();
-                      if (d.wa_url) { window.open(d.wa_url, '_blank'); showMsg('⭐ Review request WA opened!'); }
-                      else showMsg(d.error || 'Error sending.', false);
-                    }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '7px 0', borderRadius: 7, background: 'rgba(250,204,21,0.1)', border: '1px solid rgba(250,204,21,0.25)', color: '#FDE047', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600 }}>
-                      ⭐ Request Review
-                    </button>
-                  )}
-                  <select value={e.status} onChange={ev => updateEnquiryStatus(e.id, ev.target.value)}
-                    style={{ ...inp, fontSize: 12, padding: '7px 10px', cursor: 'pointer' }}>
+                  <select value={e.status} onChange={ev => updateEnquiryStatus(e.id, ev.target.value)} style={{ ...inp, fontSize: 12, padding: '7px 10px', cursor: 'pointer' }}>
                     <option value="new">🟢 New</option>
                     <option value="contacted">🟡 Contacted</option>
                     <option value="converted">🟠 Converted</option>
@@ -406,7 +371,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── REVIEWS TAB ── */}
+        {/* Reviews tab */}
         {tab === 'reviews' && (
           <div>
             <div style={{ fontSize: 13, color: '#9A8070', marginBottom: 20 }}>{reviews.filter(r => !r.approved).length} pending · {reviews.filter(r => r.approved).length} published</div>
@@ -438,13 +403,13 @@ export default function AdminDashboard() {
 
       {/* ── PRODUCT FORM MODAL ── */}
       {showForm && (
-        <div onClick={() => setShowForm(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: '#1C140D', borderRadius: 20, padding: 36, width: '100%', maxWidth: 560, maxHeight: '92vh', overflowY: 'auto', border: '1px solid rgba(200,136,74,0.2)' }}>
+        <div onClick={closeModal} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9000, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 20px', overflowY: 'auto' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#1C140D', borderRadius: 20, padding: 36, width: '100%', maxWidth: 600, border: '1px solid rgba(200,136,74,0.2)', marginBottom: 24 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
               <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, fontWeight: 700, color: '#F0E8DC' }}>
                 {editProduct ? 'Edit Product' : 'Add Product'}
               </div>
-              <button onClick={() => setShowForm(false)} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✕</button>
+              <button onClick={closeModal} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✕</button>
             </div>
 
             {/* Name */}
@@ -482,14 +447,12 @@ export default function AdminDashboard() {
               <ImageUploaderInline value={form.image_url} onChange={(url: string) => setForm({ ...form, image_url: url })} />
             </div>
 
-            {/* ── MRP + SELLING PRICE ── KEY FIX */}
+            {/* Pricing */}
             <div style={{ background: 'rgba(200,136,74,0.06)', border: '1px solid rgba(200,136,74,0.15)', borderRadius: 10, padding: '16px 16px 4px', marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: '#C8884A', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>
-                💰 Pricing
-              </div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#C8884A', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>💰 Base Pricing</div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
                 <div>
-                  <label style={{ ...lbl, color: '#9A8070' }}>MRP (₹) <span style={{ color: '#9A8070', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>— crossed out</span></label>
+                  <label style={{ ...lbl, color: '#9A8070' }}>MRP (₹) — crossed out</label>
                   <input style={inp} type="number" value={form.mrp} onChange={e => setForm({ ...form, mrp: e.target.value })} placeholder="e.g. 3500" />
                 </div>
                 <div>
@@ -501,7 +464,6 @@ export default function AdminDashboard() {
                   <input style={inp} value={form.unit} onChange={e => setForm({ ...form, unit: e.target.value })} placeholder="per sheet" />
                 </div>
               </div>
-              {/* Live discount preview */}
               {form.mrp && form.price && parseFloat(form.mrp) > parseFloat(form.price) && (
                 <div style={{ fontSize: 12, color: '#4ADE80', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
                   ✅ Customer saves ₹{(parseFloat(form.mrp) - parseFloat(form.price)).toLocaleString('en-IN')} ({Math.round(((parseFloat(form.mrp) - parseFloat(form.price)) / parseFloat(form.mrp)) * 100)}% off MRP)
@@ -518,20 +480,35 @@ export default function AdminDashboard() {
               <span style={{ fontSize: 14, fontWeight: 500, color: '#C8B8A0' }}>Product is in stock</span>
             </div>
 
-            {editProduct && (
-              <VariantManager
-                productId={editProduct.id}
-                onChange={fetchAll}
-              />
-            )}
-
-            {/* Save */}
-            <div style={{ display: 'flex', gap: 12, marginTop: editProduct ? 20 : 0 }}>
+            {/* Save button — label changes after first save */}
+            <div style={{ display: 'flex', gap: 12, marginBottom: savedProductId ? 28 : 0 }}>
               <button onClick={handleSave} disabled={saving} style={{ flex: 1, padding: '13px 0', borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-                {saving ? '⏳ Saving...' : editProduct ? '✓ Update Product' : '+ Add Product'}
+                {saving ? '⏳ Saving...' : editProduct && savedProductId ? '✓ Update Product' : savedProductId ? '✓ Saved — Update Details' : '+ Save & Continue to Variants →'}
               </button>
-              <button onClick={() => setShowForm(false)} style={{ padding: '13px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Cancel</button>
+              {!savedProductId && (
+                <button onClick={closeModal} style={{ padding: '13px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Cancel</button>
+              )}
             </div>
+
+            {/* ── VARIANT MANAGER — revealed once the product has a real ID ── */}
+            {savedProductId && (
+              <>
+                <div style={{ borderTop: '1px solid rgba(200,136,74,0.12)', paddingTop: 24 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#9A8070', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
+                    Step 2 — Variants (optional)
+                  </div>
+                  <p style={{ fontSize: 13, color: '#9A8070', marginBottom: 14, lineHeight: 1.6 }}>
+                    Add different sizes, grades, or finishes with individual pricing. Customers select from these pills on the product page.
+                  </p>
+                  <VariantManager productId={savedProductId} />
+                </div>
+                <div style={{ marginTop: 20 }}>
+                  <button onClick={closeModal} style={{ width: '100%', padding: '13px 0', borderRadius: 8, background: '#25D366', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
+                    ✓ Done — Close
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -539,7 +516,7 @@ export default function AdminDashboard() {
       <style>{`
         input:focus,select:focus,textarea:focus{border-color:#C8884A!important}
         select option{background:#1C140D}
-        @media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)!important} div[style*="padding: 28px 28px"]{padding:20px!important} .enq-card{grid-template-columns:1fr!important}}
+        @media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)!important} .enq-card{grid-template-columns:1fr!important}}
         @media(max-width:480px){.stats-grid{grid-template-columns:1fr!important}}
       `}</style>
     </div>

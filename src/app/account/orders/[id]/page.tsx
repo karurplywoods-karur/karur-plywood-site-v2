@@ -132,7 +132,10 @@ export default function OrderDetailPage() {
                       )}
                     </div>
                     <div style={{ flex:1 }}>
-                      <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'.85rem', color:'#F8F9FB', marginBottom:2 }}>{item.product_name}</div>
+                      <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'.85rem', color:'#F8F9FB', marginBottom:2 }}>
+                        {item.product_name}
+                        {item.variant_label && <span style={{ color:'#7A8EA8', fontWeight:500 }}> · {item.variant_label}</span>}
+                      </div>
                       {item.category_name && <div style={{ fontSize:11, color:'#F97316', marginBottom:2 }}>{item.category_name}</div>}
                       <div style={{ fontSize:12, color:'#7A8EA8' }}>
                         ₹{item.unit_price.toLocaleString('en-IN')}{item.unit ? ` / ${item.unit}` : ''} × {item.quantity}

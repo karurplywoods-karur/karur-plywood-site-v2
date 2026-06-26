@@ -2,10 +2,13 @@
 import { supabase, supabaseAdmin } from './db';
 import type { Product, Category } from './types';
 
+// PRODUCT_SELECT — columns fetched for every product query.
+// brands: logo_url excluded here — added back after PRODUCTS_SCHEMA_FIX.sql runs.
+// A missing column in any join causes the entire query to silently return [].
 export const PRODUCT_SELECT = `
   *,
   categories(id, name, slug, icon),
-  brands(id, name, slug, logo_url, description),
+  brands(id, name, slug),
   product_variants(*)
 `;
 

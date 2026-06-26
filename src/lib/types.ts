@@ -41,27 +41,34 @@ export interface ProductVariant {
 }
 
 export interface Product {
-  id: string;
+  // Core — exist in DB before our migration
+  id: string | number;          // DB uses integer (serial), not uuid
+  slug?: string;                // pSEO slug field present in DB
   name: string;
-  category_id: string | null;
-  brand_id?: string | null;
+  category_id: string | number | null;
+  brand_id?: string | number | null;
+  brand?: string | null;        // legacy text field in DB alongside brand_id FK
   description: string;
   image_url: string;
-  type: 'project' | 'quick';
   price: number | null;
-  mrp: number | null;
-  unit: string;
-  in_stock: boolean;
+  mrp: number | null;           // added by PRODUCTS_SCHEMA_FIX.sql
+  sort_order: number;
   series?: string;
   grade?: string;
+  thickness?: string;           // legacy column on products table
+  size?: string;                // legacy column on products table
   search_keywords?: string[];
   application_tags?: string[];
-  comparison_attributes?: Record<string, unknown>;
-  seo_title?: string;
-  seo_description?: string;
-  sort_order: number;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
+
+  // Added by PRODUCTS_SCHEMA_FIX.sql
+  type: 'project' | 'quick';
+  unit: string;
+  in_stock: boolean;
+  is_active?: boolean;          // original DB column — kept alongside in_stock
+
+  // Joined relations
   categories?: Category;
   brands?: Brand | null;
   product_variants?: ProductVariant[];

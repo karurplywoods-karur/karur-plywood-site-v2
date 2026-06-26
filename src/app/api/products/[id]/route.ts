@@ -77,7 +77,10 @@ export async function PATCH(
   if ('price' in body) payload.price = toNullableNumber(body.price);
   if ('mrp' in body) payload.mrp = toNullableNumber(body.mrp);
   if ('unit' in body) payload.unit = body.unit || '';
-  if ('in_stock' in body) payload.in_stock = body.in_stock ?? true;
+  if ('in_stock' in body) {
+    payload.in_stock = body.in_stock ?? true;
+    payload.is_active = body.in_stock ?? true;  // keep legacy column in sync
+  }
   if ('sort_order' in body) payload.sort_order = toNullableNumber(body.sort_order) ?? 0;
 
   if (Object.keys(payload).length === 0) {

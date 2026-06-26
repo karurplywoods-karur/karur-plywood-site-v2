@@ -69,7 +69,17 @@ export async function PATCH(
   const body = await req.json();
   const payload: Record<string, unknown> = {};
 
-  if ('name' in body) payload.name = body.name;
+  if ('name' in body) {
+    payload.name = body.name;
+    // Update slug when name changes — keeps slug in sync with name
+    const baseSlug = (body.name as string)
+      .toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .slice(0, 80);
+    payload.slug = `${baseSlug}-${Date.now().toString(36)}`;
+  }
   if ('category_id' in body) payload.category_id = body.category_id || null;
   if ('description' in body) payload.description = body.description || '';
   if ('image_url' in body) payload.image_url = body.image_url || '';

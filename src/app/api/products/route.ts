@@ -56,9 +56,22 @@ export async function POST(req: NextRequest) {
 
   if (!name || !type) return NextResponse.json({ error: 'Name and type are required.' }, { status: 400 });
 
+  // Auto-generate slug from name — required NOT NULL in DB
+  // e.g. "Century Marine Plywood 19mm" → "century-marine-plywood-19mm"
+  // Append a short timestamp suffix to guarantee uniqueness
+  const baseSlug = name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 80);
+  const slug = `${baseSlug}-${Date.now().toString(36)}`;
+
   const { data, error } = await supabaseAdmin
     .from('products')
     .insert([{
+      slug,
       name,
       category_id: category_id || null,
       description: description || '',
@@ -77,9 +90,11 @@ export async function POST(req: NextRequest) {
   if (error) {
     return NextResponse.json({
       error: error.message,
-      hint: error.message.toLowerCase().includes('mrp')
-        ? 'The products.mrp column is missing or Supabase schema cache has not refreshed. Run supabase_migration_mrp.sql, then reload the admin page.'
-        : undefined,
+      hint: error.message.includes('slug')
+        ? 'Slug generation failed. Try a different product name.'
+        : error.message.toLowerCase().includes('mrp')
+          ? 'The products.mrp column is missing. Run PRODUCTS_SCHEMA_FIX.sql and reload.'
+          : undefined,
     }, { status: 500 });
   }
   return NextResponse.json(data, { status: 201 });

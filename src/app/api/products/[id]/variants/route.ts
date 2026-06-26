@@ -40,7 +40,9 @@ export async function POST(req: NextRequest, { params }: Ctx) {
     .from('product_variants')
     .insert([{
       product_id:       params.id,
-      sku:              body.sku              || '',
+      // If no SKU entered, generate a unique one from product+timestamp
+      // After FIX_SKU_AND_PRODUCTS.sql runs, null is also safe
+      sku: body.sku?.trim() || `${params.id.slice(-6)}-${Date.now().toString(36)}`,
       slug:             body.slug             || null,
       thickness:        body.thickness        || '',
       size:             body.size             || '',

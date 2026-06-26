@@ -34,9 +34,16 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   const updates: Record<string, unknown> = {};
   for (const k of ALLOWED) {
     if (k in body) {
-      updates[k] = NUMERIC.includes(k)
-        ? (body[k] !== '' && body[k] != null ? Number(body[k]) : null)
-        : body[k];
+      if (NUMERIC.includes(k)) {
+        updates[k] = body[k] !== '' && body[k] != null ? Number(body[k]) : null;
+      } else if (k === 'sku') {
+        const trimmed = (body[k] as string)?.trim();
+        // After FIX_SKU_AND_PRODUCTS.sql: null is safe.
+        // Before: generate a unique sku so NOT NULL is satisfied.
+        updates[k] = trimmed || null;
+      } else {
+        updates[k] = body[k];
+      }
     }
   }
   updates.updated_at = new Date().toISOString();

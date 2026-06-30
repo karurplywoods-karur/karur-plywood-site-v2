@@ -47,6 +47,7 @@ export default function AdminDashboard() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [reviews, setReviews]     = useState<Review[]>([]);
+  const [orderCounts, setOrderCounts] = useState<{ total: number; pending: number }>({ total: 0, pending: 0 });
   const [loading, setLoading]     = useState(true);
   const [showForm, setShowForm]   = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -63,18 +64,24 @@ export default function AdminDashboard() {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [pRes, cRes, eRes, rRes] = await Promise.all([
+      const [pRes, cRes, eRes, rRes, oRes] = await Promise.all([
         fetch('/api/products?all=1'), fetch('/api/categories'),
         fetch('/api/enquiries'),      fetch('/api/reviews?all=1'),
+        fetch('/api/orders/admin'),
       ]);
       if (pRes.status === 401) { router.push('/admin'); return; }
-      const [p, c, e, r] = await Promise.all([
-        pRes.json(), cRes.json(), eRes.json(), rRes.json(),
+      const [p, c, e, r, o] = await Promise.all([
+        pRes.json(), cRes.json(), eRes.json(), rRes.json(), oRes.ok ? oRes.json() : [],
       ]);
       setProducts(Array.isArray(p) ? p : []);
       setCategories(Array.isArray(c) ? c : []);
       setEnquiries(Array.isArray(e) ? e : []);
       setReviews(Array.isArray(r) ? r : []);
+      const orders = Array.isArray(o) ? o : [];
+      setOrderCounts({
+        total: orders.length,
+        pending: orders.filter((ord: any) => ord.status === 'pending').length,
+      });
     } catch { router.push('/admin'); }
     finally { setLoading(false); }
   }, [router]);
@@ -242,7 +249,22 @@ export default function AdminDashboard() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 28px' }}>
 
         {/* Stats row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 28 }} className="stats-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginBottom: 28 }} className="stats-grid">
+          <a href="/admin/orders" style={{
+            background: orderCounts.pending > 0 ? 'rgba(249,115,22,0.12)' : '#1C140D',
+            border: orderCounts.pending > 0 ? '1px solid rgba(249,115,22,0.5)' : '1px solid rgba(200,136,74,0.15)',
+            borderRadius: 14, padding: '20px 22px', textDecoration: 'none', display: 'block', position: 'relative',
+          }}>
+            {orderCounts.pending > 0 && (
+              <div style={{ position: 'absolute', top: 14, right: 14, background: '#F97316', color: '#fff', fontSize: 11, fontWeight: 700, borderRadius: 999, padding: '2px 8px' }}>
+                {orderCounts.pending} new
+              </div>
+            )}
+            <div style={{ fontSize: 24, marginBottom: 8 }}>🧾</div>
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 36, fontWeight: 700, color: '#E0A86A', lineHeight: 1 }}>{orderCounts.total}</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#F0E8DC', marginTop: 4 }}>Orders</div>
+            <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>{orderCounts.pending} pending →</div>
+          </a>
           {[
             { icon: '📦', num: products.length, label: 'Products', sub: `${products.filter(p => p.type === 'project').length} project · ${products.filter(p => p.type === 'quick').length} quick` },
             { icon: '📋', num: enquiries.length, label: 'Enquiries', sub: `${enquiries.filter(e => e.status === 'new').length} new` },
@@ -264,6 +286,7 @@ export default function AdminDashboard() {
           {tabBtn('import', '📥 Import CSV')}
           {tabBtn('enquiries', `📋 Enquiries (${enquiries.filter(e => e.status === 'new').length} new)`)}
           {tabBtn('reviews', `⭐ Reviews (${reviews.filter(r => !r.approved).length} pending)`)}
+          <a href="/admin/orders" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: 13, background: orderCounts.pending > 0 ? 'rgba(249,115,22,0.15)' : 'transparent', color: orderCounts.pending > 0 ? '#F97316' : '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🧾 Orders{orderCounts.pending > 0 ? ` (${orderCounts.pending})` : ''} ↗</a>
           <a href="/admin/brands"     style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🏷️ Brands ↗</a>
           <a href="/admin/categories" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🗂️ Categories ↗</a>
           <a href="/admin/blog"       style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>📝 Blog CMS ↗</a>

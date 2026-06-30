@@ -173,6 +173,119 @@ export async function sendOrderConfirmation(data: OrderEmailData) {
   return { ok: res.ok };
 }
 
+interface OwnerAlertData {
+  orderNumber: string;
+  customerName: string;
+  customerPhone: string;
+  items: { product_name: string; quantity: number; unit_price: number; line_total: number; variant_label?: string }[];
+  total: number;
+  paymentMethod: string;
+  deliveryAddress: string;
+}
+
+function ownerAlertHTML(data: OwnerAlertData): string {
+  const itemRows = data.items.map(item => `
+    <tr>
+      <td style="padding:8px 0;border-bottom:1px solid #f0e8dc;color:#333;font-size:14px">
+        ${item.product_name}${item.variant_label ? ` <span style="color:#999;font-size:12px">(${item.variant_label})</span>` : ''}
+      </td>
+      <td style="padding:8px 0;border-bottom:1px solid #f0e8dc;text-align:center;color:#666;font-size:14px">${item.quantity}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #f0e8dc;text-align:right;color:#333;font-size:14px">₹${item.line_total.toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+
+  return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f5f0ea;font-family:'Helvetica Neue',Arial,sans-serif">
+  <div style="max-width:600px;margin:0 auto;padding:32px 16px">
+    <div style="background:#F97316;border-radius:8px 8px 0 0;padding:20px 32px;text-align:center">
+      <div style="font-size:20px;font-weight:900;letter-spacing:2px;color:#fff">🔔 NEW ORDER RECEIVED</div>
+    </div>
+    <div style="background:#fff;padding:32px">
+      <div style="background:#f5f0ea;border-radius:6px;padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between">
+        <div>
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px">Order Number</div>
+          <div style="font-size:18px;font-weight:700;color:#F97316">${data.orderNumber}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px">Payment</div>
+          <div style="font-size:14px;font-weight:600;color:#333">${data.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Customer</div>
+        <div style="font-size:15px;font-weight:600;color:#0B2447">${data.customerName}</div>
+        <div style="font-size:14px;color:#666">${data.customerPhone}</div>
+      </div>
+
+      <div style="font-size:13px;font-weight:700;color:#0B2447;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Items</div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="border-bottom:2px solid #f0e8dc">
+            <th style="text-align:left;padding-bottom:8px;font-size:11px;color:#999;text-transform:uppercase">Product</th>
+            <th style="text-align:center;padding-bottom:8px;font-size:11px;color:#999;text-transform:uppercase">Qty</th>
+            <th style="text-align:right;padding-bottom:8px;font-size:11px;color:#999;text-transform:uppercase">Total</th>
+          </tr>
+        </thead>
+        <tbody>${itemRows}</tbody>
+      </table>
+
+      <div style="margin-top:14px;padding-top:14px;border-top:2px solid #0B2447;display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#0B2447">
+        <span>Total</span><span>₹${data.total.toLocaleString('en-IN')}</span>
+      </div>
+
+      <div style="margin-top:20px;background:#f5f0ea;border-radius:6px;padding:14px 18px">
+        <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Delivery Address</div>
+        <div style="font-size:13px;color:#333;line-height:1.8">${data.deliveryAddress}</div>
+      </div>
+
+      <div style="margin-top:24px;text-align:center">
+        <a href="https://karurplywood.co.in/admin/orders" style="display:inline-block;background:#0B2447;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px">View in Admin Panel →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+/**
+ * Notifies the store owner by email the moment a new order is placed.
+ * Runs alongside (not instead of) the WhatsApp owner notification, so
+ * orders aren't missed if the WhatsApp tab doesn't get opened/seen.
+ * Set OWNER_EMAIL in env.
+ */
+export async function sendOwnerOrderAlert(data: OwnerAlertData) {
+  if (!RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not set — skipping owner alert email');
+    return { ok: false };
+  }
+
+  const ownerEmail = process.env.OWNER_EMAIL;
+  if (!ownerEmail) {
+    console.warn('OWNER_EMAIL not set — skipping owner alert email');
+    return { ok: false };
+  }
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: `${STORE_NAME} <${FROM_EMAIL}>`,
+      to: [ownerEmail],
+      subject: `🔔 New Order ${data.orderNumber} — ₹${data.total.toLocaleString('en-IN')}`,
+      html: ownerAlertHTML(data),
+    }),
+  });
+
+  return { ok: res.ok };
+}
+
 export async function sendStatusUpdate(data: {
   customerName: string;
   customerEmail: string;

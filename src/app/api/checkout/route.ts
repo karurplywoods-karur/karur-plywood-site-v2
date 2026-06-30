@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
-import { sendOrderConfirmation } from '@/lib/email';
+import { sendOrderConfirmation, sendOwnerOrderAlert } from '@/lib/email';
 import { buildOwnerOrderMessage, getOwnerWhatsAppURL } from '@/lib/whatsapp';
 
 async function ensureCustomerExists(user: any, fallbackPhone = '') {
@@ -126,6 +126,18 @@ export async function POST(req: NextRequest) {
       deliveryCharge:  delivery_charge,
       total,
       paymentMethod:   payment_method,
+      deliveryAddress,
+    }).catch(console.error);
+
+    // 7b. Notify the owner by email too — independent of WhatsApp, so the
+    // order isn't missed if the WhatsApp tab is closed/not seen in time.
+    sendOwnerOrderAlert({
+      orderNumber:    order.order_number,
+      customerName:   customer.full_name || customer.email,
+      customerPhone:  customer.phone || address.phone,
+      items:          orderItems,
+      total,
+      paymentMethod:  payment_method,
       deliveryAddress,
     }).catch(console.error);
 

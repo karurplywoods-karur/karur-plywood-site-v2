@@ -85,7 +85,17 @@ export default async function AreaCategoryPage(props: PageProps) {
     const { data: areaData } = await supabase.from('seo_areas').select('*').ilike('slug', area).maybeSingle();
     const { data: categoryData } = await supabase.from('seo_categories').select('*').ilike('slug', category).maybeSingle();
     const { data: horizontalCategories } = await supabase.from('seo_categories').select('display_name, slug').neq('slug', category).limit(5);
-    const { data: verticalAreas } = await supabase.from('seo_areas').select('display_name, slug').neq('slug', area).limit(5);
+
+    // Proximity-based: prefer areas in the same district, or within ±20km,
+    // so "Adjacent Regional Supply Points" actually means adjacent.
+    const distanceKm = areaData?.distance_km ?? 0;
+    const { data: verticalAreas } = await supabase
+      .from('seo_areas')
+      .select('display_name, slug, distance_km')
+      .neq('slug', area)
+      .or(`district.eq.${areaData?.district || 'Karur'},and(distance_km.gte.${distanceKm - 20},distance_km.lte.${distanceKm + 20})`)
+      .order('distance_km')
+      .limit(5);
 
     const areaName = areaData?.display_name || formatSlugText(area);
     const categoryName = categoryData?.display_name || formatSlugText(category);
@@ -304,7 +314,9 @@ export default async function AreaCategoryPage(props: PageProps) {
               <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Adjacent Regional Supply Points</h4>
               <div className="flex flex-wrap gap-2">
                 {verticalAreas?.map((a, i) => (
-                  <a key={i} href={`/location/${a.slug}/${category}`} className="bg-white border border-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium hover:border-gray-400 transition">{categoryName} in {a.display_name}</a>
+                  <a key={i} href={`/location/${a.slug}/${category}`} className="bg-white border border-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium hover:border-gray-400 transition">
+                    {categoryName} in {a.display_name}{typeof a.distance_km === 'number' ? ` (${a.distance_km}km)` : ''}
+                  </a>
                 ))}
               </div>
             </div>

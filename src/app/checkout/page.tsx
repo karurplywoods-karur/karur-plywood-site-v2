@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/auth-client';
 import { useCart } from '@/lib/CartContext';
+import { trackPurchase } from '@/lib/analytics';
 
 interface Address {
   id: string; label: string; full_name: string; phone: string;
@@ -187,6 +188,22 @@ export default function CheckoutPage() {
     clear();
     setOrderDone({ order_number: data.order_number, wa_url: data.wa_url });
     setLoading(false);
+
+    // Fire GA4 purchase event — imported into Google Ads as a conversion.
+    // Fires once per order right after creation succeeds, regardless of
+    // payment_method (COD orders are still real, confirmed orders).
+    trackPurchase({
+      order_number: data.order_number,
+      value: total,
+      payment_method: payment,
+      items: items.map((i) => ({
+        product_id: i.product.id,
+        product_name: i.product.name,
+        category: i.product.categories?.name,
+        price: cartItemPrice(i),
+        quantity: i.quantity,
+      })),
+    });
 
     // Open WhatsApp for owner notification
     if (data.wa_url) {

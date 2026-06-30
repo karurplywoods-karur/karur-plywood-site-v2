@@ -84,6 +84,42 @@ export function trackAddToCart(params: {
   });
 }
 
+/**
+ * Fire GA4 'purchase' event — the conversion event Google Ads imports for
+ * Smart Bidding optimization. Fires regardless of payment method (COD or
+ * Razorpay), since the order is confirmed either way once it's created.
+ * transaction_id MUST be unique per order to avoid GA4 de-duplicating
+ * distinct orders, and should never be re-fired for the same order_number
+ * (e.g. on page refresh).
+ */
+export function trackPurchase(params: {
+  order_number: string;
+  value: number;
+  payment_method: 'cod' | 'razorpay';
+  items: Array<{
+    product_id: string | number;
+    product_name: string;
+    category?: string;
+    price: number;
+    quantity: number;
+  }>;
+}) {
+  if (!GA_ID || typeof window === 'undefined' || !window.gtag) return;
+  window.gtag('event', 'purchase', {
+    transaction_id: params.order_number,
+    value: params.value,
+    currency: 'INR',
+    payment_method: params.payment_method,
+    items: params.items.map((i) => ({
+      item_id: i.product_id,
+      item_name: i.product_name,
+      item_category: i.category,
+      price: i.price,
+      quantity: i.quantity,
+    })),
+  });
+}
+
 // ── SUPABASE TRACKING HELPER ────────────────────────────────
 /** Generate a UUID v4 for tracking_id (browser-safe) */
 export function generateTrackingId(): string {

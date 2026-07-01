@@ -1,6 +1,8 @@
 // src/lib/contact.ts
 // Central business details. Keep phone, hours, and links in sync from here.
 export const CONTACT = {
+  businessName: 'Karur Plywood & Company',
+  gst: process.env.NEXT_PUBLIC_GST || '33ASSPV3245J1Z6', // Replace with real GST number
   phone: process.env.NEXT_PUBLIC_PHONE || '+91 91596 66538',
   phoneRaw: process.env.NEXT_PUBLIC_PHONE_RAW || '919159666538',
   wa: process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538',

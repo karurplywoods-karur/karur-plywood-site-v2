@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ImageUploader';
 import CatalogImport from '@/components/CatalogImport';
+import VariantManager from '@/components/VariantManager';
 
 function ImageUploaderInline({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   return <ImageUploader value={value} onChange={onChange} folder="products" label="Product Image" hint="Upload a photo or paste an image URL" />;
@@ -541,6 +542,22 @@ export default function AdminDashboard() {
               </div>
               <span style={{ fontSize: 14, fontWeight: 500, color: '#C8B8A0' }}>Product is in stock</span>
             </div>
+
+            {/* ── VARIANTS — only available after product is created ── */}
+            {editProduct ? (
+              <div style={{ marginBottom: 24 }}>
+                <VariantManager productId={String(editProduct.id)} onChange={fetchAll} />
+              </div>
+            ) : (
+              <div style={{
+                marginBottom: 24, padding: '12px 16px',
+                background: 'rgba(200,136,74,0.04)',
+                border: '1px dashed rgba(200,136,74,0.2)',
+                borderRadius: 10, fontSize: 12, color: '#9A8070', textAlign: 'center',
+              }}>
+                📐 <strong style={{ color: '#C8884A' }}>Variants</strong> (thickness, size, grade, price per variant) can be added after the product is saved. Save this product first, then click ✏️ Edit to manage variants.
+              </div>
+            )}
 
             {/* Save */}
             <div style={{ display: 'flex', gap: 12 }}>

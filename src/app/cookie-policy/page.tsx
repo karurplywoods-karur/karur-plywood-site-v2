@@ -3,7 +3,7 @@ import LegalPageLayout from '@/components/LegalPageLayout';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Cookie Policy | Karur Plywood & Company',
+  title: 'Cookie Policy',
   description: 'How Karur Plywood & Company uses cookies from Google Analytics, Google Ads, and other services — and how to manage your preferences.',
   alternates: { canonical: `${CONTACT.siteUrl}/cookie-policy` },
 };

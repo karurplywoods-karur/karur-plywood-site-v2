@@ -3,7 +3,7 @@ import LegalPageLayout from '@/components/LegalPageLayout';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Refund Policy | Karur Plywood & Company',
+  title: 'Refund Policy',
   description: 'Refund eligibility, timelines, damaged product claims, and bank/UPI refund details for orders placed with Karur Plywood & Company.',
   alternates: { canonical: `${CONTACT.siteUrl}/refund-policy` },
 };

@@ -3,7 +3,7 @@ import LegalPageLayout from '@/components/LegalPageLayout';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Payment Policy | Karur Plywood & Company',
+  title: 'Payment Policy',
   description: 'Accepted payment methods, GST invoicing, advance payment for custom orders, and payment verification at Karur Plywood & Company.',
   alternates: { canonical: `${CONTACT.siteUrl}/payment-policy` },
 };

@@ -3,7 +3,7 @@ import LegalPageLayout from '@/components/LegalPageLayout';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Cancellation Policy | Karur Plywood & Company',
+  title: 'Cancellation Policy',
   description: 'Order cancellation rules for standard, custom-cut, made-to-order, and bulk orders at Karur Plywood & Company.',
   alternates: { canonical: `${CONTACT.siteUrl}/cancellation-policy` },
 };

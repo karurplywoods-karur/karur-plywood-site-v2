@@ -3,7 +3,7 @@ import LegalPageLayout from '@/components/LegalPageLayout';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer | Karur Plywood & Company',
+  title: 'Disclaimer',
   description: 'Important disclaimers regarding product images, wood grain variation, laminate colours, pricing, stock availability, and product specifications at Karur Plywood & Company.',
   alternates: { canonical: `${CONTACT.siteUrl}/disclaimer` },
 };

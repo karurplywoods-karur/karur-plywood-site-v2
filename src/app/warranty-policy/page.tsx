@@ -3,7 +3,7 @@ import LegalPageLayout from '@/components/LegalPageLayout';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Warranty Policy | Karur Plywood & Company',
+  title: 'Warranty Policy',
   description: 'Manufacturer warranty information for CenturyPly, Greenlam, Hettich, Ebco, Hafele and other brands sold by Karur Plywood & Company.',
   alternates: { canonical: `${CONTACT.siteUrl}/warranty-policy` },
 };

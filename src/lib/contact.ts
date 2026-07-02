@@ -12,7 +12,7 @@ export const CONTACT = {
   hours: 'Mon - Sat: 9:30 AM - 7:30 PM',
   hoursShort: 'Mon - Sat · 9:30 AM - 7:30 PM',
   sundayHours: 'Sunday: Closed',
-  siteUrl: 'https://karurplywood.co.in',
+  siteUrl: 'https://www.karurplywood.co.in',
   googleReviewUrl: 'https://g.page/r/Cfm8SzhbcyobEBM/review',
   social: {
     facebook: 'https://www.facebook.com/karurplywood',

@@ -40,7 +40,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       robots: { index: true, follow: true },
     };
   } catch {
-    return { title: 'Karur Plywood & Company' };
+    return { title: ' ' };
   }
 }
 

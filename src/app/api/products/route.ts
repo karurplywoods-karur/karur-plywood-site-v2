@@ -13,9 +13,11 @@ function toNullableNumber(value: unknown) {
 // GET /api/products?type=project|quick&category=slug
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const type = searchParams.get('type');
+  const type     = searchParams.get('type');
   const category = searchParams.get('category');
-  const all = searchParams.get('all'); // admin only
+  const search   = searchParams.get('search');
+  const limit    = parseInt(searchParams.get('limit') || '100', 10);
+  const all      = searchParams.get('all'); // admin only
 
   if (all) {
     const session = await getAdminSession();
@@ -40,6 +42,10 @@ export async function GET(req: NextRequest) {
     const { data: cat } = await supabase.from('categories').select('id').eq('slug', category).single();
     if (cat) query = query.eq('category_id', cat.id);
   }
+
+  if (search) query = query.ilike('name', `%${search}%`);
+
+  query = (query as any).limit(limit);
 
   const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

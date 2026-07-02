@@ -250,7 +250,7 @@ export default function AdminDashboard() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 28px' }}>
 
         {/* Stats row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginBottom: 28 }} className="stats-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: 14, marginBottom: 28 }} className="stats-grid">
           <a href="/admin/orders" style={{
             background: orderCounts.pending > 0 ? 'rgba(249,115,22,0.12)' : '#1C140D',
             border: orderCounts.pending > 0 ? '1px solid rgba(249,115,22,0.5)' : '1px solid rgba(200,136,74,0.15)',
@@ -266,6 +266,29 @@ export default function AdminDashboard() {
             <div style={{ fontSize: 13, fontWeight: 600, color: '#F0E8DC', marginTop: 4 }}>Orders</div>
             <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>{orderCounts.pending} pending →</div>
           </a>
+
+          {/* Low stock alert card */}
+          {(() => {
+            const outOfStock = products.filter(p => !p.in_stock);
+            return (
+              <div style={{
+                background: outOfStock.length > 0 ? 'rgba(239,68,68,0.08)' : '#1C140D',
+                border: outOfStock.length > 0 ? '1px solid rgba(239,68,68,0.35)' : '1px solid rgba(200,136,74,0.15)',
+                borderRadius: 14, padding: '20px 22px', position: 'relative',
+              }}>
+                <div style={{ fontSize: 24, marginBottom: 8 }}>📦</div>
+                <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 36, fontWeight: 700, color: outOfStock.length > 0 ? '#F87171' : '#E0A86A', lineHeight: 1 }}>{outOfStock.length}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#F0E8DC', marginTop: 4 }}>Out of Stock</div>
+                {outOfStock.length > 0 ? (
+                  <div style={{ fontSize: 11, color: '#F87171', marginTop: 4, lineHeight: 1.5 }}>
+                    {outOfStock.slice(0, 2).map(p => p.name).join(', ')}{outOfStock.length > 2 ? ` +${outOfStock.length - 2} more` : ''}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>All products in stock ✓</div>
+                )}
+              </div>
+            );
+          })()}
           {[
             { icon: '📦', num: products.length, label: 'Products', sub: `${products.filter(p => p.type === 'project').length} project · ${products.filter(p => p.type === 'quick').length} quick` },
             { icon: '📋', num: enquiries.length, label: 'Enquiries', sub: `${enquiries.filter(e => e.status === 'new').length} new` },

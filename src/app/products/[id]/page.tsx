@@ -8,6 +8,7 @@ import { supabase } from '@/lib/db';
 import { PRODUCT_SELECT } from '@/lib/products';
 import ProductAddToCart from '@/components/ProductAddToCart';
 import ProductPurchasePanel from '@/components/product/ProductPurchasePanel';
+import ProductReviews from '@/components/ProductReviews';
 import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://karurplywood.co.in';
@@ -232,6 +233,14 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   <span key={t} style={{ fontSize: 11, color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{t}</span>
                 ))}
               </div>
+
+              {/* WhatsApp Share */}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`Check this out: ${product.name}${product.price ? ` at ₹${product.price.toLocaleString('en-IN')}` : ''} — ${CONTACT.siteUrl}/products/${product.id}`)}`}
+                target="_blank" rel="noopener"
+                style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 18px', borderRadius: 8, background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.25)', color: '#25D366', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.08em', textDecoration: 'none', textTransform: 'uppercase', transition: 'all 0.2s' }}>
+                💬 Share this Product on WhatsApp
+              </a>
             </div>
           </div>
         </div>
@@ -312,6 +321,9 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
           </div>
         </section>
       )}
+
+      {/* ── CUSTOMER REVIEWS ── */}
+      <ProductReviews productName={product.name} />
 
       {/* Bottom CTA Banner */}
       <section style={{ padding: '48px 0', background: 'linear-gradient(135deg,#0d1f3a,#19376D)', borderTop: '1px solid rgba(249,115,22,0.15)' }}>

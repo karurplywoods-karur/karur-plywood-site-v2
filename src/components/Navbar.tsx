@@ -176,6 +176,11 @@ export default function Navbar() {
             </button>
           </li>
 
+          {/* Search */}
+          <li style={{ position: 'relative' }}>
+            <NavSearch />
+          </li>
+
           {/* User account */}
           <li ref={userRef} style={{ position: 'relative' }}>
             {user ? (
@@ -309,7 +314,105 @@ export default function Navbar() {
           .cart-nav-btn--mobile { display:flex !important; }
         }
         @media(max-width:480px){ .logo-type .l1 { font-size:.95rem !important; } }
+        /* Search */
+        .kp-search-wrap { position:relative; }
+        .kp-search-input { width:160px; padding:7px 32px 7px 12px; border-radius:6px; border:1px solid rgba(249,115,22,0.2); background:rgba(255,255,255,0.04); color:#F8F9FB; font-size:13px; outline:none; transition:border-color .2s,width .2s; font-family:'Syne',sans-serif; }
+        .kp-search-input:focus { border-color:rgba(249,115,22,0.5); width:220px; background:rgba(11,36,71,0.6); }
+        .kp-search-input::placeholder { color:#5A6E80; }
+        .kp-search-icon { position:absolute; right:9px; top:50%; transform:translateY(-50%); color:#5A6E80; pointer-events:none; font-size:12px; }
+        .kp-search-results { position:absolute; top:calc(100% + 6px); right:0; width:300px; background:#0d1f3a; border:1px solid rgba(249,115,22,0.2); border-radius:10px; z-index:600; overflow:hidden; box-shadow:0 16px 40px rgba(0,0,0,0.5); }
+        .kp-search-item { display:flex; align-items:center; gap:10px; padding:10px 14px; text-decoration:none; transition:background .15s; border-bottom:1px solid rgba(249,115,22,0.06); }
+        .kp-search-item:last-child { border-bottom:none; }
+        .kp-search-item:hover { background:rgba(249,115,22,0.07); }
+        .kp-search-item-name { font-size:13px; color:#F8F9FB; font-weight:600; }
+        .kp-search-item-cat { font-size:11px; color:#7A8EA8; font-family:'Syne',sans-serif; }
+        .kp-search-item-price { font-size:12px; color:#F97316; font-weight:700; margin-left:auto; white-space:nowrap; }
+        .kp-search-empty { padding:14px 16px; font-size:13px; color:#5A6E80; text-align:center; }
       `}</style>
     </>
+  );
+}
+
+// ── NavSearch ────────────────────────────────────────────────────────────────
+function NavSearch() {
+  const [query, setQuery]     = useState('');
+  const [results, setResults] = useState<any[]>([]);
+  const [open, setOpen]       = useState(false);
+  const [loading, setLoading] = useState(false);
+  const ref                   = useRef<HTMLDivElement>(null);
+  const router                = useRouter();
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    if (query.trim().length < 2) { setResults([]); setOpen(false); return; }
+    const t = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/products?search=${encodeURIComponent(query.trim())}&limit=6`);
+        const data = await res.json();
+        setResults(Array.isArray(data) ? data.slice(0, 6) : []);
+        setOpen(true);
+      } catch { setResults([]); }
+      finally { setLoading(false); }
+    }, 280);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && query.trim()) {
+      router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+      setOpen(false); setQuery('');
+    }
+    if (e.key === 'Escape') { setOpen(false); setQuery(''); }
+  };
+
+  return (
+    <div className="kp-search-wrap" ref={ref}>
+      <input
+        className="kp-search-input"
+        type="search" placeholder="Search products…"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onFocus={() => results.length > 0 && setOpen(true)}
+        aria-label="Search products"
+      />
+      <span className="kp-search-icon">🔍</span>
+
+      {open && (
+        <div className="kp-search-results">
+          {loading ? (
+            <div className="kp-search-empty">Searching…</div>
+          ) : results.length === 0 ? (
+            <div className="kp-search-empty">No products found for &ldquo;{query}&rdquo;</div>
+          ) : (
+            results.map(p => (
+              <Link key={p.id} href={`/products/${p.id}`} className="kp-search-item"
+                onClick={() => { setOpen(false); setQuery(''); }}>
+                <div>
+                  <div className="kp-search-item-name">{p.name}</div>
+                  <div className="kp-search-item-cat">{p.categories?.name || p.category}</div>
+                </div>
+                {p.price && <span className="kp-search-item-price">₹{p.price.toLocaleString('en-IN')}</span>}
+              </Link>
+            ))
+          )}
+          {results.length > 0 && (
+            <Link href={`/products?search=${encodeURIComponent(query)}`}
+              className="kp-search-item" style={{ justifyContent: 'center', color: '#F97316', fontSize: 12, fontWeight: 700 }}
+              onClick={() => { setOpen(false); setQuery(''); }}>
+              See all results for &ldquo;{query}&rdquo; →
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

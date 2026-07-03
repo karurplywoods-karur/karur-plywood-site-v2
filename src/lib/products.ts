@@ -14,13 +14,15 @@ export const PRODUCT_SELECT = `
 
 // ── PUBLIC QUERIES ──────────────────────────────────────
 
-export async function getProjectProducts(categorySlug?: string): Promise<Product[]> {
+export async function getProjectProducts(categorySlug?: string, searchQuery?: string): Promise<Product[]> {
   let query = supabase
     .from('products')
     .select(PRODUCT_SELECT)
-    .eq('type', 'project')
     .eq('in_stock', true)
     .order('sort_order', { ascending: true });
+
+  // Only filter by type if no search — search should span all types
+  if (!searchQuery) query = query.eq('type', 'project');
 
   if (categorySlug) {
     const { data: cat } = await supabase
@@ -30,6 +32,8 @@ export async function getProjectProducts(categorySlug?: string): Promise<Product
       .single();
     if (cat) query = query.eq('category_id', cat.id);
   }
+
+  if (searchQuery) query = query.ilike('name', `%${searchQuery}%`);
 
   const { data, error } = await query;
   if (error) { console.error(error); return []; }

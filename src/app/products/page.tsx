@@ -6,7 +6,7 @@ import { getProjectProducts, getCategories } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import { CONTACT } from '@/lib/contact';
 
-const SITE_URL = 'https://karurplywood.co.in';
+const SITE_URL = 'https://www.karurplywood.co.in';
 
 export const metadata: Metadata = {
   title: 'Products | Plywood, Doors, Laminates & Hardware in Karur',
@@ -24,10 +24,11 @@ const WA = CONTACT.wa;
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: { category?: string; search?: string };
 }) {
+  const searchQuery = searchParams.search?.trim();
   const [products, categories] = await Promise.all([
-    getProjectProducts(searchParams.category),
+    getProjectProducts(searchParams.category, searchQuery),
     getCategories(),
   ]);
 
@@ -74,6 +75,18 @@ export default async function ProductsPage({
       </section>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }} className="prod-content-pad">
+
+        {/* ── SEARCH RESULT BANNER ── */}
+        {searchQuery && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(249,115,22,0.06)', border: '1px solid rgba(249,115,22,0.18)', borderRadius: 10, padding: '12px 18px', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
+            <span style={{ fontSize: 14, color: '#F0E8DC' }}>
+              🔍 Search results for <strong style={{ color: '#F97316' }}>&ldquo;{searchQuery}&rdquo;</strong> — {products.length} product{products.length !== 1 ? 's' : ''} found
+            </span>
+            <Link href="/products" style={{ fontSize: 12, color: '#7A8EA8', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.08em' }}>
+              ✕ Clear search
+            </Link>
+          </div>
+        )}
 
         {/* ── CATEGORY FILTER TABS ── */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 36 }}>

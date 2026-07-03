@@ -9,9 +9,10 @@ import { PRODUCT_SELECT } from '@/lib/products';
 import ProductAddToCart from '@/components/ProductAddToCart';
 import ProductPurchasePanel from '@/components/product/ProductPurchasePanel';
 import ProductReviews from '@/components/ProductReviews';
+import ProductImagePlaceholder from '@/components/ProductImagePlaceholder';
 import { CONTACT } from '@/lib/contact';
 
-const SITE_URL = 'https://karurplywood.co.in';
+const SITE_URL = 'https://www.karurplywood.co.in';
 const WA = CONTACT.wa;
 
 // ── Fetch single product ────────────────────────────────────────
@@ -106,8 +107,14 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                     priority
                   />
                 ) : (
-                  <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
-                    {product.categories?.icon || '📦'}
+                  <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute', inset: 0 }}>
+                    <ProductImagePlaceholder
+                      name={product.name}
+                      categoryName={product.categories?.name}
+                      categoryIcon={product.categories?.icon}
+                      brandName={product.brands?.name}
+                      size="detail"
+                    />
                   </div>
                 )}
 
@@ -266,8 +273,14 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                         {rp.image_url ? (
                           <Image src={rp.image_url} alt={rp.name} fill style={{ objectFit: 'cover', transition: 'transform 0.4s' }} className="pd-rel-img" sizes="25vw" />
                         ) : (
-                          <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>
-                            {rp.categories?.icon || '📦'}
+                          <div style={{ height: '100%', position: 'absolute', inset: 0 }}>
+                            <ProductImagePlaceholder
+                              name={rp.name}
+                              categoryName={rp.categories?.name}
+                              categoryIcon={rp.categories?.icon}
+                              brandName={rp.brands?.name}
+                              size="card"
+                            />
                           </div>
                         )}
                         {rDiscount && rDiscount > 0 && (

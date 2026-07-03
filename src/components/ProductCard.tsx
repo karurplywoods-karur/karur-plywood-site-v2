@@ -6,6 +6,7 @@ import Link from 'next/link';
 import type { Product, CartItem } from '@/lib/types';
 import { getProductBadge } from '@/lib/badges';
 import { useCart } from '@/lib/CartContext';
+import ProductImagePlaceholder from '@/components/ProductImagePlaceholder';
 
 interface Props {
   product: Product;
@@ -71,7 +72,13 @@ export default function ProductCard({
           />
         ) : (
           <div className="pc-image-placeholder">
-            {product.categories?.icon || '📦'}
+            <ProductImagePlaceholder
+              name={product.name}
+              categoryName={product.categories?.name}
+              categoryIcon={product.categories?.icon}
+              brandName={(product as any).brands?.name}
+              size="card"
+            />
           </div>
         )}
 

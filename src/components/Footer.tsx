@@ -37,7 +37,9 @@ const RESOURCE_LINKS = [
 
 const ACCOUNT_LINKS = [
   ['/auth/login', 'Login / Register'],
-  ['/orders', 'My Orders'],
+  ['/account/orders', 'My Orders'],
+  ['/account/profile', 'My Profile'],
+  ['/account/addresses', 'Saved Addresses'],
 ];
 
 const CITIES = ['Karur', 'Trichy', 'Namakkal', 'Erode', 'Salem', 'Dindigul'];

@@ -50,9 +50,6 @@ export default function AdminLogin() {
             style={{ width:'100%',background:loading?'#5c4a2e':'linear-gradient(135deg,#C8884A,#8B5E2A)',color:'white',border:'none',borderRadius:8,padding:'13px 0',fontWeight:700,fontSize:15,cursor:loading?'default':'pointer',fontFamily:'Outfit,sans-serif' }}>
             {loading ? '⏳ Signing in...' : '🔐 Sign In'}
           </button>
-          <div style={{ textAlign:'center',marginTop:20,fontSize:12,color:'#9A8070' }}>
-            Default password: <code style={{ color:'#C8884A',background:'rgba(200,136,74,0.1)',padding:'2px 6px',borderRadius:4 }}>karurplywood2025</code>
-          </div>
         </div>
         <div style={{ textAlign:'center',marginTop:20 }}>
           <a href="/" style={{ fontSize:13,color:'#9A8070',textDecoration:'none' }}>← Back to Website</a>

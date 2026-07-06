@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { address, items, payment_method, notes } = body;
+    const { address, items, payment_method, notes, coupon_code } = body;
 
     // 2. Validate
     if (!items?.length) return NextResponse.json({ error: 'Cart is empty.' }, { status: 400 });
@@ -53,7 +53,37 @@ export async function POST(req: NextRequest) {
     // 4. Calculate totals
     const subtotal = items.reduce((sum: number, i: any) => sum + (i.unit_price * i.quantity), 0);
     const delivery_charge = 0; // confirmed manually
-    const total = subtotal + delivery_charge;
+
+    // 4b. Apply coupon if provided
+    let discount_amount = 0;
+    let coupon_id: string | null = null;
+    let applied_coupon_code: string | null = null;
+
+    if (coupon_code) {
+      const { data: coupon } = await supabaseAdmin
+        .from('coupons')
+        .select('*')
+        .ilike('code', coupon_code.trim())
+        .eq('is_active', true)
+        .maybeSingle();
+
+      if (coupon && (!coupon.expires_at || new Date(coupon.expires_at) > new Date())
+          && (!coupon.usage_limit || coupon.used_count < coupon.usage_limit)
+          && subtotal >= (coupon.min_order_value || 0)) {
+        if (coupon.discount_type === 'percent') {
+          discount_amount = Math.round((subtotal * coupon.discount_value) / 100);
+          if (coupon.max_discount && discount_amount > coupon.max_discount) {
+            discount_amount = coupon.max_discount;
+          }
+        } else {
+          discount_amount = Math.min(coupon.discount_value, subtotal);
+        }
+        coupon_id = coupon.id;
+        applied_coupon_code = coupon.code;
+      }
+    }
+
+    const total = Math.max(0, subtotal + delivery_charge - discount_amount);
 
     // 5. Create order
     const { data: order, error: orderError } = await supabaseAdmin
@@ -73,7 +103,10 @@ export async function POST(req: NextRequest) {
         delivery_longitude:       address.longitude ?? null,
         subtotal,
         delivery_charge,
+        discount_amount,
         total,
+        coupon_id,
+        coupon_code: applied_coupon_code,
         payment_method,
         payment_status:   payment_method === 'cod' ? 'pending' : 'pending',
         status:           'pending',
@@ -83,6 +116,18 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (orderError) throw orderError;
+
+    // 5b. Record coupon usage + increment used_count
+    if (coupon_id && order?.id) {
+      await Promise.all([
+        supabaseAdmin.from('coupon_usages').insert([{
+          coupon_id,
+          customer_id: session.user.id,
+          order_id:    order.id,
+        }]),
+        supabaseAdmin.rpc('increment_coupon_usage', { coupon_uuid: coupon_id }),
+      ]).catch(console.error);
+    }
 
     // 6. Insert order items (snapshot prices)
     const orderItems = items.map((i: any) => ({

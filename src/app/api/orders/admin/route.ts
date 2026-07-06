@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminSession } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/db';
 import { sendStatusUpdate } from '@/lib/email';
+import { sendCustomerWhatsAppStatus } from '@/lib/whatsapp';
 
 export async function GET(req: NextRequest) {
   const session = await getAdminSession();
@@ -38,18 +39,33 @@ export async function PATCH(req: NextRequest) {
 
   const { data: order } = await supabaseAdmin
     .from('orders')
-    .select('order_number, customers(full_name, email)')
+    .select('order_number, total, payment_method, customers(full_name, email, phone)')
     .eq('id', id)
     .single();
 
   if (order?.customers) {
     const c = order.customers as any;
+
+    // Email notification
     sendStatusUpdate({
-      customerName: c.full_name || c.email,
+      customerName:  c.full_name || c.email,
       customerEmail: c.email,
-      orderNumber: order.order_number,
+      orderNumber:   order.order_number,
       status,
     }).catch(console.error);
+
+    // WhatsApp notification to customer
+    if (c.phone) {
+      sendCustomerWhatsAppStatus(status, {
+        orderNumber:    order.order_number,
+        customerName:   c.full_name || 'Customer',
+        customerPhone:  c.phone,
+        total:          order.total || 0,
+        paymentMethod:  order.payment_method || 'cod',
+        trackingNumber: tracking_number,
+        adminNotes:     admin_notes,
+      }).catch(console.error);
+    }
   }
 
   return NextResponse.json({ success: true });

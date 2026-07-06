@@ -70,6 +70,10 @@ export default function CheckoutPage() {
   const [locating,   setLocating]   = useState(false);
   const [locationMsg,setLocationMsg]= useState('');
   const [orderDone,  setOrderDone]  = useState<{ order_number: string; wa_url: string } | null>(null);
+  const [couponCode,    setCouponCode]    = useState('');
+  const [couponResult,  setCouponResult]  = useState<{ discount_amount: number; description: string; coupon_code: string } | null>(null);
+  const [couponError,   setCouponError]   = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -158,6 +162,24 @@ export default function CheckoutPage() {
     else await handlePlaceOrder();
   };
 
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponError(''); setCouponLoading(true);
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim(), cart_total: total }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setCouponError(data.error || 'Invalid coupon.'); return; }
+      setCouponResult({ discount_amount: data.discount_amount, description: data.description, coupon_code: data.coupon_code });
+    } catch { setCouponError('Could not apply coupon. Try again.'); }
+    finally { setCouponLoading(false); }
+  };
+
+  const removeCoupon = () => { setCouponResult(null); setCouponCode(''); setCouponError(''); };
+
   const handlePlaceOrder = async () => {
     setLoading(true); setError('');
     const addr = selectedAddress;
@@ -179,7 +201,7 @@ export default function CheckoutPage() {
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address: addr, items: orderItems, payment_method: payment, notes }),
+      body: JSON.stringify({ address: addr, items: orderItems, payment_method: payment, notes, coupon_code: couponResult?.coupon_code || null }),
     });
 
     const data = await res.json();
@@ -194,7 +216,7 @@ export default function CheckoutPage() {
     // payment_method (COD orders are still real, confirmed orders).
     trackPurchase({
       order_number: data.order_number,
-      value: total,
+      value: couponResult ? total - couponResult.discount_amount : total,
       payment_method: payment,
       items: items.map((i) => ({
         product_id: i.product.id,
@@ -504,13 +526,49 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span>₹{total.toLocaleString('en-IN')}</span>
               </div>
+
+              {/* Coupon / promo code */}
+              {!couponResult ? (
+                <div style={{ margin: '10px 0' }}>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <input
+                      value={couponCode}
+                      onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponError(''); }}
+                      onKeyDown={e => e.key === 'Enter' && applyCoupon()}
+                      placeholder="Promo code"
+                      style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#F0E8DC', fontFamily: 'Outfit,sans-serif', outline: 'none' }}
+                    />
+                    <button onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
+                      style={{ padding: '8px 16px', borderRadius: 8, background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                      {couponLoading ? '…' : 'Apply'}
+                    </button>
+                  </div>
+                  {couponError && <div style={{ fontSize: 11, color: '#F87171', marginTop: 5 }}>⚠️ {couponError}</div>}
+                </div>
+              ) : (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '8px 12px', margin: '8px 0' }}>
+                  <div>
+                    <div style={{ fontSize: 12, color: '#4ADE80', fontWeight: 700 }}>🎉 {couponResult.coupon_code} applied!</div>
+                    <div style={{ fontSize: 11, color: '#7A8EA8' }}>{couponResult.description}</div>
+                  </div>
+                  <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 16 }}>✕</button>
+                </div>
+              )}
+
+              {couponResult && (
+                <div className="co-summary-row" style={{ color: '#4ADE80' }}>
+                  <span>Discount ({couponResult.coupon_code})</span>
+                  <span>−₹{couponResult.discount_amount.toLocaleString('en-IN')}</span>
+                </div>
+              )}
+
               <div className="co-summary-row">
                 <span>Delivery</span>
                 <span style={{ color: '#4ADE80' }}>To be confirmed</span>
               </div>
               <div className="co-summary-total">
                 <span>Total</span>
-                <span>₹{total.toLocaleString('en-IN')}</span>
+                <span>₹{(couponResult ? total - couponResult.discount_amount : total).toLocaleString('en-IN')}</span>
               </div>
             </div>
             <div className="co-summary-note">

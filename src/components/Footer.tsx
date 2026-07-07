@@ -18,6 +18,7 @@ const CUSTOMER_LINKS = [
   ['/cancellation-policy', 'Cancellation Policy'],
   ['/warranty-policy', 'Warranty Policy'],
   ['/payment-policy', 'Payment Policy'],
+  ['/orders/track', 'Track Your Order'],
 ];
 
 const LEGAL_LINKS = [

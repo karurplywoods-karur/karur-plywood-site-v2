@@ -82,6 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/architects`,lastModified: new Date(), priority: 0.7, changeFrequency: 'weekly'  },
     { url: `${baseUrl}/areas`,     lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
     // Legal & policy pages
+    { url: `${baseUrl}/orders/track`,        lastModified: new Date(), priority: 0.5, changeFrequency: 'yearly' },
     { url: `${baseUrl}/privacy-policy`,      lastModified: new Date(), priority: 0.3, changeFrequency: 'yearly' },
     { url: `${baseUrl}/terms-and-conditions`,lastModified: new Date(), priority: 0.3, changeFrequency: 'yearly' },
     { url: `${baseUrl}/shipping-returns`,    lastModified: new Date(), priority: 0.3, changeFrequency: 'yearly' },

@@ -11,7 +11,7 @@ function ImageUploaderInline({ value, onChange }: { value: string; onChange: (ur
   return <ImageUploader value={value} onChange={onChange} folder="products" label="Product Image" hint="Upload a photo or paste an image URL" />;
 }
 
-type Tab = 'products' | 'import' | 'enquiries' | 'reviews';
+type Tab = 'products' | 'import' | 'enquiries' | 'reviews' | 'coupons';
 
 interface Product {
   id: string;
@@ -310,6 +310,7 @@ export default function AdminDashboard() {
           {tabBtn('import', '📥 Import CSV')}
           {tabBtn('enquiries', `📋 Enquiries (${enquiries.filter(e => e.status === 'new').length} new)`)}
           {tabBtn('reviews', `⭐ Reviews (${reviews.filter(r => !r.approved).length} pending)`)}
+          {tabBtn('coupons', '🎟️ Coupons')}
           <a href="/admin/orders" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: 13, background: orderCounts.pending > 0 ? 'rgba(249,115,22,0.15)' : 'transparent', color: orderCounts.pending > 0 ? '#F97316' : '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🧾 Orders{orderCounts.pending > 0 ? ` (${orderCounts.pending})` : ''} ↗</a>
           <a href="/admin/brands"     style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🏷️ Brands ↗</a>
           <a href="/admin/categories" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🗂️ Categories ↗</a>
@@ -482,6 +483,11 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+
+        {/* ── COUPONS TAB ── */}
+        {tab === 'coupons' && (
+          <CouponsPanel />
+        )}
       </div>
 
       {/* ── PRODUCT FORM MODAL ── */}
@@ -599,6 +605,129 @@ export default function AdminDashboard() {
         @media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)!important} div[style*="padding: 28px 28px"]{padding:20px!important} .enq-card{grid-template-columns:1fr!important}}
         @media(max-width:480px){.stats-grid{grid-template-columns:1fr!important}}
       `}</style>
+    </div>
+  );
+}
+
+// ── CouponsPanel ─────────────────────────────────────────────────────────────
+function CouponsPanel() {
+  const [coupons,  setCoupons]  = useState<any[]>([]);
+  const [loading,  setLoading]  = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [saving,   setSaving]   = useState(false);
+  const [form, setForm] = useState({
+    code: '', description: '', discount_type: 'percent',
+    discount_value: '', min_order_value: '', max_discount: '',
+    usage_limit: '', expires_at: '',
+  });
+
+  const fetchCoupons = async () => {
+    setLoading(true);
+    const res = await fetch('/api/admin/coupons');
+    if (res.ok) setCoupons(await res.json());
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchCoupons(); }, []);
+
+  const handleSave = async () => {
+    if (!form.code || !form.discount_value) return;
+    setSaving(true);
+    const res = await fetch('/api/admin/coupons', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code:            form.code.toUpperCase().trim(),
+        description:     form.description,
+        discount_type:   form.discount_type,
+        discount_value:  parseFloat(form.discount_value),
+        min_order_value: form.min_order_value ? parseFloat(form.min_order_value) : 0,
+        max_discount:    form.max_discount    ? parseFloat(form.max_discount)    : null,
+        usage_limit:     form.usage_limit     ? parseInt(form.usage_limit)       : null,
+        expires_at:      form.expires_at      ? new Date(form.expires_at).toISOString() : null,
+      }),
+    });
+    if (res.ok) { setShowForm(false); setForm({ code:'',description:'',discount_type:'percent',discount_value:'',min_order_value:'',max_discount:'',usage_limit:'',expires_at:'' }); fetchCoupons(); }
+    setSaving(false);
+  };
+
+  const toggleActive = async (id: string, active: boolean) => {
+    await fetch('/api/admin/coupons', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, is_active: !active }) });
+    fetchCoupons();
+  };
+
+  const s: React.CSSProperties = { background: '#0E0B08', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, padding: '9px 12px', fontSize: 13, color: '#F0E8DC', fontFamily: 'Outfit,sans-serif', width: '100%', outline: 'none', boxSizing: 'border-box' };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <div style={{ fontSize: 13, color: '#9A8070' }}>{coupons.filter(c => c.is_active).length} active · {coupons.length} total</div>
+        <button onClick={() => setShowForm(true)} style={{ padding: '9px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12 }}>+ New Coupon</button>
+      </div>
+
+      {loading ? <div style={{ textAlign: 'center', padding: 40, color: '#9A8070' }}>Loading…</div> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {coupons.length === 0 && <div style={{ textAlign: 'center', padding: 40, color: '#9A8070' }}>No coupons yet. Create your first one.</div>}
+          {coupons.map(c => (
+            <div key={c.id} style={{ background: '#1C140D', border: `1px solid ${c.is_active ? 'rgba(200,136,74,0.15)' : 'rgba(100,100,100,0.15)'}`, borderRadius: 14, padding: '16px 20px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: 16, alignItems: 'center', opacity: c.is_active ? 1 : 0.5 }}>
+              <div style={{ background: 'rgba(249,115,22,0.1)', border: '1px dashed rgba(249,115,22,0.3)', borderRadius: 8, padding: '8px 14px', fontFamily: 'monospace', fontWeight: 700, color: '#F97316', fontSize: 15, letterSpacing: 2 }}>{c.code}</div>
+              <div>
+                <div style={{ fontSize: 13, color: '#F0E8DC', fontWeight: 600 }}>{c.description || '—'}</div>
+                <div style={{ fontSize: 12, color: '#9A8070', marginTop: 3 }}>
+                  {c.discount_type === 'percent' ? `${c.discount_value}% off` : `₹${c.discount_value} off`}
+                  {c.min_order_value > 0 ? ` · Min ₹${c.min_order_value}` : ''}
+                  {c.max_discount ? ` · Cap ₹${c.max_discount}` : ''}
+                  {c.usage_limit ? ` · ${c.used_count}/${c.usage_limit} used` : ` · ${c.used_count} used`}
+                  {c.expires_at ? ` · Expires ${new Date(c.expires_at).toLocaleDateString('en-IN')}` : ''}
+                </div>
+              </div>
+              <button onClick={() => toggleActive(c.id, c.is_active)} style={{ padding: '7px 14px', borderRadius: 7, border: 'none', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: 12, fontWeight: 600, background: c.is_active ? 'rgba(248,113,113,0.1)' : 'rgba(37,211,102,0.1)', color: c.is_active ? '#F87171' : '#25D366' }}>
+                {c.is_active ? 'Disable' : 'Enable'}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* New coupon form */}
+      {showForm && (
+        <div onClick={() => setShowForm(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#1C140D', borderRadius: 16, padding: 28, width: '100%', maxWidth: 500, border: '1px solid rgba(200,136,74,0.2)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#F0E8DC', marginBottom: 20 }}>🎟️ New Coupon</div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Code *</label><input style={s} value={form.code} onChange={e => setForm({...form, code: e.target.value.toUpperCase()})} placeholder="WELCOME10" /></div>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Type *</label>
+                <select style={s} value={form.discount_type} onChange={e => setForm({...form, discount_type: e.target.value})}>
+                  <option value="percent">Percentage (%)</option>
+                  <option value="flat">Flat (₹)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 12 }}><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Description (internal label)</label><input style={s} value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="10% off first order" /></div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Value *</label><input style={s} type="number" value={form.discount_value} onChange={e => setForm({...form, discount_value: e.target.value})} placeholder={form.discount_type === 'percent' ? '10' : '200'} /></div>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Min Order (₹)</label><input style={s} type="number" value={form.min_order_value} onChange={e => setForm({...form, min_order_value: e.target.value})} placeholder="500" /></div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Max Discount (₹)</label><input style={s} type="number" value={form.max_discount} onChange={e => setForm({...form, max_discount: e.target.value})} placeholder="Optional" /></div>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Usage Limit</label><input style={s} type="number" value={form.usage_limit} onChange={e => setForm({...form, usage_limit: e.target.value})} placeholder="Unlimited" /></div>
+            </div>
+
+            <div style={{ marginBottom: 20 }}><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Expiry Date (optional)</label><input style={s} type="date" value={form.expires_at} onChange={e => setForm({...form, expires_at: e.target.value})} /></div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <button onClick={() => setShowForm(false)} style={{ padding: 12, borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Cancel</button>
+              <button onClick={handleSave} disabled={saving} style={{ padding: 12, borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', border: 'none', color: '#fff', cursor: saving ? 'default' : 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12 }}>
+                {saving ? 'Saving…' : '+ Create Coupon'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

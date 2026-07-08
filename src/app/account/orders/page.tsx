@@ -112,6 +112,14 @@ export default function OrdersPage() {
                       <div style={{ fontSize:11, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, marginTop:4 }}>
                         View Details →
                       </div>
+                      <a
+                        href={`/account/orders/${order.id}/invoice`}
+                        target="_blank"
+                        rel="noopener"
+                        onClick={e => e.stopPropagation()}
+                        style={{ fontSize:10, color:'#7A8EA8', fontFamily:"'Syne',sans-serif", fontWeight:600, textDecoration:'none', display:'inline-block', marginTop:4 }}>
+                        📄 Invoice
+                      </a>
                     </div>
                   </div>
                 </Link>

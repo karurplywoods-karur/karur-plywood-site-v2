@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/auth-client';
 import { useCart } from '@/lib/CartContext';
 import CartDrawer from './CartDrawer';
+import { useWishlist } from '@/lib/WishlistContext';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
@@ -44,6 +45,7 @@ export default function Navbar() {
   const router   = useRouter();
   const supabase = createClient();
   const { count } = useCart();
+  const { count: wishCount } = useWishlist();
 
   const [scrolled,   setScrolled]   = useState(false);
   const [menuOpen,   setMenuOpen]   = useState(false);
@@ -164,6 +166,14 @@ export default function Navbar() {
                 ))}
               </div>
             )}
+          </li>
+
+          {/* Wishlist */}
+          <li>
+            <Link href="/wishlist" className="cart-nav-btn" aria-label={`Wishlist (${wishCount} items)`} style={{ textDecoration: 'none', position: 'relative' }}>
+              🤍
+              {wishCount > 0 && <span className="cart-nav-badge">{wishCount}</span>}
+            </Link>
           </li>
 
           {/* Cart */}

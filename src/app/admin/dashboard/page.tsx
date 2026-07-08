@@ -19,6 +19,7 @@ interface Product {
   category_id: string | null;
   description: string;
   image_url: string;
+  image_urls: string[];
   type: string;
   price: number | null;
   mrp: number | null;          // ← NEW
@@ -32,7 +33,7 @@ interface Review   { id: number; name: string; role: string; rating: number; mes
 
 const EMPTY_PRODUCT = {
   name: '', category_id: '', description: '',
-  image_url: '', type: 'project',
+  image_url: '', type: 'project', image_urls: [],
   price: '', mrp: '',             // ← NEW
   unit: '', in_stock: true,
 };
@@ -96,7 +97,7 @@ export default function AdminDashboard() {
   const openEdit = (p: Product) => {
     setForm({
       name: p.name, category_id: p.category_id || '',
-      description: p.description, image_url: p.image_url,
+      description: p.description, image_url: p.image_url, image_urls: (p as any).image_urls || [],
       type: p.type,
       price: p.price || '',
       mrp: p.mrp || '',          // ← NEW
@@ -534,6 +535,26 @@ export default function AdminDashboard() {
             {/* Image */}
             <div style={fg}>
               <ImageUploaderInline value={form.image_url} onChange={(url: string) => setForm({ ...form, image_url: url })} />
+
+              {/* Additional images */}
+              <div style={{ marginTop: 16 }}>
+                <div style={{ fontSize: 11, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Additional Images (up to 4)</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {[0, 1, 2, 3].map(i => (
+                    <ImageUploader
+                      key={i}
+                      value={(form.image_urls || [])[i] || ''}
+                      onChange={(url: string) => {
+                        const arr = [...(form.image_urls || [])];
+                        arr[i] = url;
+                        setForm({ ...form, image_urls: arr.filter(Boolean) });
+                      }}
+                      folder="products"
+                      label={`Image ${i + 2}`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* ── MRP + SELLING PRICE ── KEY FIX */}

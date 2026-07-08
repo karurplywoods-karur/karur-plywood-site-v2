@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { CartProvider } from '@/lib/CartContext';
+import { WishlistProvider } from '@/lib/WishlistContext';
 import Navbar from '@/components/Navbar';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
 import Footer from '@/components/Footer';
@@ -60,12 +61,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LocalBusinessSchema area={defaultArea} category={defaultCategory} reviews={[]} />
       </head>
       <body className="grain">
+        <WishlistProvider>
         <CartProvider>
           <Navbar />
           <main>{children}</main>
           <Footer />
           <WhatsAppWidget />
         </CartProvider>
+        </WishlistProvider>
       </body>
     </html>
   );

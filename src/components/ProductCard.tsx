@@ -7,6 +7,7 @@ import type { Product, CartItem } from '@/lib/types';
 import { getProductBadge } from '@/lib/badges';
 import { useCart } from '@/lib/CartContext';
 import ProductImagePlaceholder from '@/components/ProductImagePlaceholder';
+import WishlistButton from '@/components/WishlistButton';
 
 interface Props {
   product: Product;
@@ -158,6 +159,7 @@ export default function ProductCard({
             >
               {addedFlash ? 'Added!' : 'Add to Cart'}
             </button>
+            <WishlistButton product={product} size="sm" />
             <Link href={`/products/${product.id}`} className="pc-detail-link">
               Details
             </Link>
@@ -231,7 +233,7 @@ export default function ProductCard({
         /* Actions — mt-auto pins to card bottom */
         .pc-actions-row {
           display: grid;
-          grid-template-columns: 1fr 0.52fr;
+          grid-template-columns: 1fr auto 0.52fr;
           gap: 8px;
           align-items: stretch;
           margin-top: auto;

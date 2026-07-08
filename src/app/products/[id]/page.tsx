@@ -10,6 +10,8 @@ import ProductAddToCart from '@/components/ProductAddToCart';
 import ProductPurchasePanel from '@/components/product/ProductPurchasePanel';
 import ProductReviews from '@/components/ProductReviews';
 import ProductImagePlaceholder from '@/components/ProductImagePlaceholder';
+import ProductImageGallery from '@/components/ProductImageGallery';
+import WishlistButton from '@/components/WishlistButton';
 import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://www.karurplywood.co.in';
@@ -217,6 +219,15 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
               </div>
 
               <ProductPurchasePanel product={product} />
+
+              {/* Save to Wishlist */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
+                <WishlistButton product={product} size="md" />
+                <span style={{ fontSize: 13, color: '#7A8EA8' }}>Save to Wishlist</span>
+                <Link href="/wishlist" style={{ fontSize: 12, color: '#F97316', textDecoration: 'none', marginLeft: 'auto', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
+                  View Wishlist →
+                </Link>
+              </div>
 
               {false && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

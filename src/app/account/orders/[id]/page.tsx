@@ -75,6 +75,24 @@ export default function OrderDetailPage() {
           </div>
         </div>
 
+        {/* Invoice download */}
+        <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+          <a
+            href={`/account/orders/${id}/invoice`}
+            target="_blank"
+            rel="noopener"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 8, background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.25)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}
+          >
+            📄 Download GST Invoice
+          </a>
+          <a
+            href={`/orders/track?ref=${order.order_number}&phone=`}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}
+          >
+            📦 Track Order
+          </a>
+        </div>
+
         {/* Status Timeline */}
         {!isCancelled && (
           <div style={{ background:'rgba(25,55,109,0.2)', border:'1px solid rgba(249,115,22,0.1)', borderRadius:10, padding:'20px 24px', marginBottom:20 }}>

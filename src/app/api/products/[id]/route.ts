@@ -83,6 +83,7 @@ export async function PATCH(
   if ('category_id' in body) payload.category_id = body.category_id || null;
   if ('description' in body) payload.description = body.description || '';
   if ('image_url' in body) payload.image_url = body.image_url || '';
+  if ('image_urls' in body) payload.image_urls = Array.isArray(body.image_urls) ? body.image_urls.filter(Boolean) : [];
   if ('type' in body) payload.type = body.type;
   if ('price' in body) payload.price = toNullableNumber(body.price);
   if ('mrp' in body) payload.mrp = toNullableNumber(body.mrp);

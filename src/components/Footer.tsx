@@ -37,9 +37,10 @@ const RESOURCE_LINKS = [
 ];
 
 const ACCOUNT_LINKS = [
-  ['/auth/login', 'Login / Register'],
-  ['/account/orders', 'My Orders'],
+  ['/auth/login',      'Login / Register'],
+  ['/account/orders',  'My Orders'],
   ['/account/profile', 'My Profile'],
+  ['/wishlist',        'My Wishlist'],
   ['/account/addresses', 'Saved Addresses'],
 ];
 

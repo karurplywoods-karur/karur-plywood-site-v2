@@ -243,7 +243,7 @@ function ownerAlertHTML(data: OwnerAlertData): string {
       </div>
 
       <div style="margin-top:24px;text-align:center">
-        <a href="https://karurplywood.co.in/admin/orders" style="display:inline-block;background:#0B2447;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px">View in Admin Panel →</a>
+        <a href="https://www.karurplywood.co.in/admin/orders" style="display:inline-block;background:#0B2447;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px">View in Admin Panel →</a>
       </div>
     </div>
   </div>

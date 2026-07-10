@@ -357,7 +357,7 @@ begin
   end if;
 
   if new.canonical_url is null or new.canonical_url = '' then
-    new.canonical_url := 'https://karurplywood.co.in' || new.full_path;
+    new.canonical_url := 'https://www.karurplywood.co.in' || new.full_path;
   end if;
 
   if new.status = 'published' and new.is_published = true and new.published_at is null then

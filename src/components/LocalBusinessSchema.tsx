@@ -29,11 +29,11 @@ export default function LocalBusinessSchema({ area, category, reviews = [] }: Lo
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': `https://karurplywood.co.in/#local-business-${area.slug}`,
+    '@id': `https://www.karurplywood.co.in/#local-business-${area.slug}`,
     'name': 'Karur Plywood & Company',
-    'image': 'https://karurplywood.co.in/logo.png',
+    'image': 'https://www.karurplywood.co.in/logo.png',
     'telephone': '+919159666538',
-    'url': 'https://karurplywood.co.in',
+    'url': 'https://www.karurplywood.co.in',
     'priceRange': '$$',
     'address': {
       '@type': 'PostalAddress',

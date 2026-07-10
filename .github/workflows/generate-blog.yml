@@ -78,4 +78,4 @@ jobs:
         if: always()
         run: |
           echo "Run completed at: $(date '+%Y-%m-%d %H:%M:%S UTC')"
-          echo "Review drafts at: https://karurplywood.co.in/admin/seo"
+          echo "Review drafts at: https://www.karurplywood.co.in/admin/seo"

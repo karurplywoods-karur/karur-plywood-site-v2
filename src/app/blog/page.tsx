@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { supabase } from '@/lib/db';
 import { CONTACT } from '@/lib/contact';
 
-const SITE_URL = 'https://karurplywood.co.in';
+const SITE_URL = 'https://www.karurplywood.co.in';
 
 export const metadata: Metadata = {
   title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',

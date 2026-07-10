@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Plywood & Hardware Delivery Locations Across Tamil Nadu | Karur Plywood',
     description: 'Karur Plywood & Company supplies wholesale plywood, laminates, doors, and hardware with direct job-site delivery across Karur and surrounding districts in Tamil Nadu. Find your area.',
-    alternates: { canonical: 'https://karurplywood.co.in/location' },
+    alternates: { canonical: 'https://www.karurplywood.co.in/location' },
     robots: { index: true, follow: true },
   };
 }

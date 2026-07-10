@@ -418,7 +418,7 @@ Centralize domain:
 Add:
 
 ```ts
-export const SITE_URL = 'https://karurplywood.co.in';
+export const SITE_URL = 'https://www.karurplywood.co.in';
 ```
 
 Use this for:

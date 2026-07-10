@@ -163,7 +163,7 @@ Return JSON:
       success: true, 
       page_id: page.id,
       word_count: wordCount,
-      preview_url: `https://karurplywood.co.in${fullPath}`,
+      preview_url: `https://www.karurplywood.co.in${fullPath}`,
     });
 
   } catch (err: any) {

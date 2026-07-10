@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-const SITE_URL = 'https://karurplywood.co.in';
+const SITE_URL = 'https://www.karurplywood.co.in';
 
 export const metadata: Metadata = {
   title: 'Areas We Serve | Karur Plywood & Company',

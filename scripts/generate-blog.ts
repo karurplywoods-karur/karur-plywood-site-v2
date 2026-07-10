@@ -455,7 +455,7 @@ async function main() {
   // Summary
   console.log('\n' + '─'.repeat(50));
   console.log(`📊 Summary: ${succeeded} succeeded · ${failed} failed`);
-  console.log('   Review drafts at: https://karurplywood.co.in/admin/seo');
+  console.log('   Review drafts at: https://www.karurplywood.co.in/admin/seo');
   console.log('─'.repeat(50));
 
   // Exit with error code if all failed (makes GitHub Actions mark the run red)

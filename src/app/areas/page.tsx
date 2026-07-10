@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-const SITE_URL = 'https://karurplywood.co.in';
+const SITE_URL = 'https://www.karurplywood.co.in';
 
 export const metadata: Metadata = {
   title: 'Areas We Serve | Karur Plywood & Company',
@@ -16,12 +16,12 @@ export const metadata: Metadata = {
 };
 
 const CITIES = [
-  { slug:'karur',    name:'Karur',    dist:'In city',  desc:'Walk-in showroom + same-day delivery',   emoji:'🏪' },
-  { slug:'trichy',   name:'Trichy',   dist:'~50 km',   desc:'Delivery within 24 hours, bulk orders',  emoji:'🏛️' },
-  { slug:'namakkal', name:'Namakkal', dist:'~45 km',   desc:'Wholesale supply for builders',          emoji:'🏗️' },
-  { slug:'erode',    name:'Erode',    dist:'~75 km',   desc:'Bulk contractor orders, 1-2 day delivery',emoji:'🔩' },
-  { slug:'salem',    name:'Salem',    dist:'~80 km',   desc:'Retail and wholesale, reliable delivery', emoji:'🪵' },
-  { slug:'dindigul', name:'Dindigul', dist:'~90 km',   desc:'On-demand delivery, WhatsApp ordering',   emoji:'🚚' },
+  { slug:'karur',    name:'Karur',    dist:'In city',  desc:'Walk-in showroom + same-day delivery',   emoji:'ðŸª' },
+  { slug:'trichy',   name:'Trichy',   dist:'~50 km',   desc:'Delivery within 24 hours, bulk orders',  emoji:'ðŸ›ï¸' },
+  { slug:'namakkal', name:'Namakkal', dist:'~45 km',   desc:'Wholesale supply for builders',          emoji:'ðŸ—ï¸' },
+  { slug:'erode',    name:'Erode',    dist:'~75 km',   desc:'Bulk contractor orders, 1-2 day delivery',emoji:'ðŸ”©' },
+  { slug:'salem',    name:'Salem',    dist:'~80 km',   desc:'Retail and wholesale, reliable delivery', emoji:'ðŸªµ' },
+  { slug:'dindigul', name:'Dindigul', dist:'~90 km',   desc:'On-demand delivery, WhatsApp ordering',   emoji:'ðŸšš' },
 ];
 
 export default function AreasPage() {
@@ -46,7 +46,7 @@ export default function AreasPage() {
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.04em', color:'#F8F9FB', marginBottom:4 }}>{c.name}</div>
                 <div style={{ fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.1em', marginBottom:8 }}>{c.dist} from Karur</div>
                 <div style={{ fontSize:13, color:'#7A8EA8', lineHeight:1.6 }}>{c.desc}</div>
-                <div style={{ marginTop:16, fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.08em' }}>View Details →</div>
+                <div style={{ marginTop:16, fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.08em' }}>View Details â†’</div>
               </Link>
             ))}
           </div>
@@ -64,3 +64,4 @@ export default function AreasPage() {
     </>
   );
 }
+

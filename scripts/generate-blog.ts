@@ -2,43 +2,43 @@
 /**
  * scripts/generate-blog.ts
  *
- * Standalone blog generation script — runs in GitHub Actions (or locally).
+ * Standalone blog generation script â€” runs in GitHub Actions (or locally).
  * No Vercel. No timeout. No Pro plan needed.
  *
  * Usage:
- *   npx ts-node scripts/generate-blog.ts           ← generates 1 post
- *   npx ts-node scripts/generate-blog.ts --count=5 ← generates up to 5 posts
- *   npx ts-node scripts/generate-blog.ts --dry-run ← validates setup only
+ *   npx ts-node scripts/generate-blog.ts           â† generates 1 post
+ *   npx ts-node scripts/generate-blog.ts --count=5 â† generates up to 5 posts
+ *   npx ts-node scripts/generate-blog.ts --dry-run â† validates setup only
  */
 
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 
-// ── Config from environment ──────────────────────────────────
+// â”€â”€ Config from environment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const SUPABASE_URL      = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_KEY      = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY!;
 
-// ── Parse CLI args ───────────────────────────────────────────
+// â”€â”€ Parse CLI args â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const args       = process.argv.slice(2);
 const countArg   = args.find(a => a.startsWith('--count='));
 const COUNT      = countArg ? Math.min(parseInt(countArg.split('=')[1]), 20) : 1;
 const DRY_RUN    = args.includes('--dry-run');
 
-// ── Validate env vars before doing anything ──────────────────
+// â”€â”€ Validate env vars before doing anything â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function validateEnv() {
   const missing: string[] = [];
   if (!SUPABASE_URL)      missing.push('NEXT_PUBLIC_SUPABASE_URL');
   if (!SUPABASE_KEY)      missing.push('SUPABASE_SERVICE_ROLE_KEY');
   if (!ANTHROPIC_API_KEY) missing.push('ANTHROPIC_API_KEY');
   if (missing.length > 0) {
-    console.error('❌ Missing environment variables:', missing.join(', '));
-    console.error('   Set them in GitHub → Settings → Secrets and variables → Actions');
+    console.error('âŒ Missing environment variables:', missing.join(', '));
+    console.error('   Set them in GitHub â†’ Settings â†’ Secrets and variables â†’ Actions');
     process.exit(1);
   }
 }
 
-// ── Clients ──────────────────────────────────────────────────
+// â”€â”€ Clients â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function getClients() {
   const db = createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -47,7 +47,7 @@ function getClients() {
   return { db, ai };
 }
 
-// ── Types ────────────────────────────────────────────────────
+// â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface SeoKeyword {
   id:      string;
   keyword: string;
@@ -77,7 +77,7 @@ interface LinkMapping {
   active:      boolean;
 }
 
-// ── Slug generator ───────────────────────────────────────────
+// â”€â”€ Slug generator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function makeSlug(text: string): string {
   return text
     .toLowerCase()
@@ -90,19 +90,19 @@ function makeSlug(text: string): string {
     .slice(0, 75);
 }
 
-// ── Word count ───────────────────────────────────────────────
+// â”€â”€ Word count â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function wordCount(html: string): number {
   return html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
 }
 
-// ── Prompt builder ───────────────────────────────────────────
+// â”€â”€ Prompt builder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildPrompt(keyword: string, links: LinkMapping[]): string {
-  // Sanitize keyword — prevent prompt injection
+  // Sanitize keyword â€” prevent prompt injection
   const safe = keyword.replace(/["\\<>\n\r]/g, '').trim().slice(0, 200);
 
   const linkBlock = links.length > 0
     ? `\n<internal_links>\nInsert these links ONCE each into body text only (not headings):\n${
-        links.map(l => `  "${l.phrase}" → ${l.url}`).join('\n')
+        links.map(l => `  "${l.phrase}" â†’ ${l.url}`).join('\n')
       }\n</internal_links>`
     : '';
 
@@ -110,9 +110,9 @@ function buildPrompt(keyword: string, links: LinkMapping[]): string {
 
 <task>Write a complete, well-researched SEO blog post targeting the keyword below.</task>
 <keyword>${safe}</keyword>
-<business>Karur Plywood & Company — plywood, laminates, doors, hardware dealer in Karur, Tamil Nadu, India</business>${linkBlock}
+<business>Karur Plywood & Company â€” plywood, laminates, doors, hardware dealer in Karur, Tamil Nadu, India</business>${linkBlock}
 
-Return ONLY a raw JSON object — no markdown fences, no preamble, no explanation.
+Return ONLY a raw JSON object â€” no markdown fences, no preamble, no explanation.
 
 JSON structure:
 {
@@ -134,14 +134,14 @@ JSON structure:
 }
 
 Content rules:
-- Write for Indian readers — mention Tamil Nadu, local context where relevant
+- Write for Indian readers â€” mention Tamil Nadu, local context where relevant
 - Include 4-6 H2 sections with H3 sub-sections
 - Add FAQ as <section class="faq"><h2>Frequently Asked Questions</h2>...</section> at end of content
-- Use INR prices where relevant (₹)
+- Use INR prices where relevant (â‚¹)
 - End with a WhatsApp CTA paragraph encouraging readers to contact on WhatsApp`;
 }
 
-// ── JSON extractor — robust to preamble/fences ───────────────
+// â”€â”€ JSON extractor â€” robust to preamble/fences â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function extractJson(raw: string): string {
   const start = raw.indexOf('{');
   const end   = raw.lastIndexOf('}');
@@ -151,12 +151,12 @@ function extractJson(raw: string): string {
   return raw.slice(start, end + 1);
 }
 
-// ── DOM-safe internal link injector ─────────────────────────
+// â”€â”€ DOM-safe internal link injector â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function injectLinks(html: string, mappings: LinkMapping[]): string {
   const active = mappings.filter(m => m.active);
   if (active.length === 0) return html;
 
-  // Split on HTML tags — only modify text nodes (even indices)
+  // Split on HTML tags â€” only modify text nodes (even indices)
   const parts = html.split(/(<[^>]+>)/);
   const injected = new Set<string>();
   let insideAnchor = false;
@@ -189,7 +189,7 @@ function injectLinks(html: string, mappings: LinkMapping[]): string {
   }).join('');
 }
 
-// ── Basic HTML sanitizer (no DOMPurify needed in Node) ───────
+// â”€â”€ Basic HTML sanitizer (no DOMPurify needed in Node) â”€â”€â”€â”€â”€â”€â”€
 function sanitizeHtml(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -200,7 +200,7 @@ function sanitizeHtml(html: string): string {
     .replace(/data:text\/html/gi, '');
 }
 
-// ── FAQ schema builder ────────────────────────────────────────
+// â”€â”€ FAQ schema builder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildFaqSchema(faqs: FaqItem[]) {
   return {
     '@context': 'https://schema.org',
@@ -213,7 +213,7 @@ function buildFaqSchema(faqs: FaqItem[]) {
   };
 }
 
-// ── Ensure slug is unique ─────────────────────────────────────
+// â”€â”€ Ensure slug is unique â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function uniqueSlug(db: ReturnType<typeof createClient>, base: string): Promise<string> {
   let slug    = base;
   let counter = 1;
@@ -229,7 +229,7 @@ async function uniqueSlug(db: ReturnType<typeof createClient>, base: string): Pr
   }
 }
 
-// ── Main generation function ──────────────────────────────────
+// â”€â”€ Main generation function â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function generateOne(
   db:       ReturnType<typeof createClient>,
   ai:       Anthropic,
@@ -243,7 +243,7 @@ async function generateOne(
   if (claimErr) return { success: false, error: `Claim failed: ${claimErr.message}` };
   if (!keyword)  return { success: false, error: 'No pending keywords found' };
 
-  console.log(`\n📝 Generating: "${keyword.keyword}" (priority ${keyword.priority})`);
+  console.log(`\nðŸ“ Generating: "${keyword.keyword}" (priority ${keyword.priority})`);
 
   // Log start
   await db.from('blog_generation_logs').insert({
@@ -255,9 +255,9 @@ async function generateOne(
   const startTime = Date.now();
 
   try {
-    // 2. Call Claude API — no timeout issue here (local/GH Actions process)
+    // 2. Call Claude API â€” no timeout issue here (local/GH Actions process)
     const prompt = buildPrompt(keyword.keyword, links);
-    console.log('   🤖 Calling Claude API…');
+    console.log('   ðŸ¤– Calling Claude APIâ€¦');
 
     const message = await ai.messages.create({
       model:      'claude-sonnet-4-6',
@@ -266,7 +266,7 @@ async function generateOne(
     });
 
     if (message.stop_reason === 'max_tokens') {
-      throw new Error('Response truncated — max_tokens reached. Try a shorter prompt.');
+      throw new Error('Response truncated â€” max_tokens reached. Try a shorter prompt.');
     }
 
     const rawText = message.content
@@ -327,7 +327,7 @@ async function generateOne(
     const durationMs = Date.now() - startTime;
     const readTime   = Math.ceil(wc / 200);
 
-    // 9. Insert blog post — matches YOUR existing blog_posts schema
+    // 9. Insert blog post â€” matches YOUR existing blog_posts schema
     const { data: post, error: insertErr } = await db
       .from('blog_posts')
       .insert({
@@ -372,8 +372,8 @@ async function generateOne(
     });
 
     const cost = ((tokensUsed / 1_000_000) * 18).toFixed(4); // ~$3 input + $15 output avg
-    console.log(`   ✅ Saved: /blog/${slug}`);
-    console.log(`   📊 ${wc} words · ${readTime} min read · ${tokensUsed} tokens · ~$${cost}`);
+    console.log(`   âœ… Saved: /blog/${slug}`);
+    console.log(`   ðŸ“Š ${wc} words Â· ${readTime} min read Â· ${tokensUsed} tokens Â· ~$${cost}`);
 
     return { success: true, keyword: keyword.keyword, slug };
 
@@ -395,22 +395,22 @@ async function generateOne(
       duration_ms:  Date.now() - startTime,
     });
 
-    console.error(`   ❌ Failed: ${errorMsg}`);
+    console.error(`   âŒ Failed: ${errorMsg}`);
     return { success: false, keyword: keyword.keyword, error: errorMsg };
   }
 }
 
-// ── Entry point ───────────────────────────────────────────────
+// â”€â”€ Entry point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function main() {
-  console.log('🪵 Karur Plywood — AI Blog Generator');
+  console.log('ðŸªµ Karur Plywood â€” AI Blog Generator');
   console.log(`   Mode: ${DRY_RUN ? 'DRY RUN' : `Generate ${COUNT} post(s)`}`);
   console.log(`   Time: ${new Date().toISOString()}\n`);
 
   validateEnv();
 
   if (DRY_RUN) {
-    console.log('✅ Environment variables OK');
-    console.log('✅ Dry run complete — no posts generated');
+    console.log('âœ… Environment variables OK');
+    console.log('âœ… Dry run complete â€” no posts generated');
     process.exit(0);
   }
 
@@ -426,7 +426,7 @@ async function main() {
     .eq('active', true);
 
   const linkMappings: LinkMapping[] = links ?? [];
-  console.log(`🔗 Loaded ${linkMappings.length} internal link mappings`);
+  console.log(`ðŸ”— Loaded ${linkMappings.length} internal link mappings`);
 
   // Generate posts sequentially
   let succeeded = 0;
@@ -434,8 +434,8 @@ async function main() {
 
   for (let i = 0; i < COUNT; i++) {
     if (i > 0) {
-      // 5s delay between posts — respect API rate limits
-      console.log('\n   ⏳ Waiting 5s before next post…');
+      // 5s delay between posts â€” respect API rate limits
+      console.log('\n   â³ Waiting 5s before next postâ€¦');
       await new Promise(r => setTimeout(r, 5000));
     }
 
@@ -446,23 +446,24 @@ async function main() {
       failed++;
       // If no keywords left, stop early
       if (result.error === 'No pending keywords found') {
-        console.log('\n📭 No more pending keywords. Stopping.');
+        console.log('\nðŸ“­ No more pending keywords. Stopping.');
         break;
       }
     }
   }
 
   // Summary
-  console.log('\n' + '─'.repeat(50));
-  console.log(`📊 Summary: ${succeeded} succeeded · ${failed} failed`);
-  console.log('   Review drafts at: https://karurplywood.co.in/admin/seo');
-  console.log('─'.repeat(50));
+  console.log('\n' + 'â”€'.repeat(50));
+  console.log(`ðŸ“Š Summary: ${succeeded} succeeded Â· ${failed} failed`);
+  console.log('   Review drafts at: https://www.karurplywood.co.in/admin/seo');
+  console.log('â”€'.repeat(50));
 
   // Exit with error code if all failed (makes GitHub Actions mark the run red)
   if (succeeded === 0 && failed > 0) process.exit(1);
 }
 
 main().catch(err => {
-  console.error('\n💥 Fatal error:', err.message);
+  console.error('\nðŸ’¥ Fatal error:', err.message);
   process.exit(1);
 });
+

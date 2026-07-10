@@ -34,7 +34,7 @@ export default function WishlistPage() {
         {/* Empty state */}
         {items.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <div style={{ fontSize: 56, marginBottom: 16 }}>🤍</div>
+            <div style={{ fontSize: 56, marginBottom: 16 }}>ðŸ¤</div>
             <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: '1.8rem', color: '#F8F9FB', margin: '0 0 10px' }}>
               Your wishlist is empty
             </h2>
@@ -100,12 +100,12 @@ export default function WishlistPage() {
                     {product.price ? (
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
                         <span style={{ fontSize: 18, fontWeight: 700, color: '#F97316', fontFamily: "'Cormorant Garamond',serif" }}>
-                          ₹{product.price.toLocaleString('en-IN')}
+                          â‚¹{product.price.toLocaleString('en-IN')}
                         </span>
                         {product.unit && <span style={{ fontSize: 12, color: '#7A8EA8' }}>/ {product.unit}</span>}
                         {hasMRP && (
                           <span style={{ fontSize: 13, color: '#5A6E80', textDecoration: 'line-through', textDecorationColor: '#F97316' }}>
-                            ₹{product.mrp!.toLocaleString('en-IN')}
+                            â‚¹{product.mrp!.toLocaleString('en-IN')}
                           </span>
                         )}
                       </div>
@@ -124,7 +124,7 @@ export default function WishlistPage() {
                         onClick={() => remove(product.id)}
                         title="Remove from wishlist"
                         style={{ width: 40, height: 40, borderRadius: 8, border: '1px solid rgba(248,113,113,0.25)', background: 'rgba(248,113,113,0.06)', color: '#F87171', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        🗑
+                        ðŸ—‘
                       </button>
                     </div>
                   </div>
@@ -138,7 +138,7 @@ export default function WishlistPage() {
         {items.length > 0 && (
           <div style={{ textAlign: 'center', marginTop: 48 }}>
             <Link href="/products" style={{ fontSize: 13, color: '#7A8EA8', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>
-              ← Continue Browsing Products
+              â† Continue Browsing Products
             </Link>
           </div>
         )}
@@ -146,3 +146,4 @@ export default function WishlistPage() {
     </main>
   );
 }
+

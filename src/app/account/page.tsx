@@ -1,5 +1,5 @@
 'use client';
-// src/app/account/page.tsx — Account dashboard
+// src/app/account/page.tsx â€” Account dashboard
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -46,7 +46,7 @@ export default function AccountPage() {
 
   if (loading) return (
     <div className="account-page">
-      <div style={{ textAlign: 'center', padding: '120px 0', color: '#7A8EA8' }}>⏳ Loading...</div>
+      <div style={{ textAlign: 'center', padding: '120px 0', color: '#7A8EA8' }}>â³ Loading...</div>
       <AccStyles />
     </div>
   );
@@ -62,13 +62,13 @@ export default function AccountPage() {
           <div className="account-avatar">
             {customer?.avatar_url
               ? <img src={customer.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-              : <span style={{ fontSize: 32 }}>👤</span>
+              : <span style={{ fontSize: 32 }}>ðŸ‘¤</span>
             }
           </div>
           <div className="account-header-info">
             <h1 className="account-name">{customer?.full_name || 'My Account'}</h1>
             <div className="account-email">{customer?.email}</div>
-            {customer?.phone && <div className="account-phone">📞 {customer.phone}</div>}
+            {customer?.phone && <div className="account-phone">ðŸ“ž {customer.phone}</div>}
             <div className="account-since">Member since {new Date(customer?.created_at || '').toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</div>
           </div>
           <button onClick={handleLogout} className="account-logout-btn">Sign Out</button>
@@ -77,16 +77,16 @@ export default function AccountPage() {
         {/* Quick links */}
         <div className="account-nav-grid">
           {[
-            { href: '/account/orders',    icon: '📦', label: 'My Orders',    sub: `${orders.length} total` },
-            { href: '/account/addresses', icon: '📍', label: 'Addresses',    sub: 'Manage delivery addresses' },
-            { href: '/account/profile',   icon: '✏️', label: 'Edit Profile', sub: 'Name, phone, password' },
-            { href: '/products',          icon: '🛒', label: 'Shop Now',     sub: 'Browse all products' },
+            { href: '/account/orders',    icon: 'ðŸ“¦', label: 'My Orders',    sub: `${orders.length} total` },
+            { href: '/account/addresses', icon: 'ðŸ“', label: 'Addresses',    sub: 'Manage delivery addresses' },
+            { href: '/account/profile',   icon: 'âœï¸', label: 'Edit Profile', sub: 'Name, phone, password' },
+            { href: '/products',          icon: 'ðŸ›’', label: 'Shop Now',     sub: 'Browse all products' },
           ].map(item => (
             <Link key={item.href} href={item.href} className="account-nav-card">
               <div className="account-nav-icon">{item.icon}</div>
               <div className="account-nav-label">{item.label}</div>
               <div className="account-nav-sub">{item.sub}</div>
-              <div className="account-nav-arrow">→</div>
+              <div className="account-nav-arrow">â†’</div>
             </Link>
           ))}
         </div>
@@ -95,14 +95,14 @@ export default function AccountPage() {
         <div className="account-section">
           <div className="account-section-header">
             <div className="account-section-title">Recent Orders</div>
-            <Link href="/account/orders" className="account-section-link">View all →</Link>
+            <Link href="/account/orders" className="account-section-link">View all â†’</Link>
           </div>
 
           {orders.length === 0 ? (
             <div className="account-empty">
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📦</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>ðŸ“¦</div>
               <div style={{ color: '#7A8EA8', fontSize: 14 }}>No orders yet. Start shopping!</div>
-              <Link href="/products" className="account-shop-btn">Browse Products →</Link>
+              <Link href="/products" className="account-shop-btn">Browse Products â†’</Link>
             </div>
           ) : (
             <div className="orders-list">
@@ -116,7 +116,7 @@ export default function AccountPage() {
                       <div className="order-items-preview">{order.order_items?.length || 0} item{(order.order_items?.length || 0) !== 1 ? 's' : ''}</div>
                     </div>
                     <div className="order-card-right">
-                      <div className="order-total">₹{order.total.toLocaleString('en-IN')}</div>
+                      <div className="order-total">â‚¹{order.total.toLocaleString('en-IN')}</div>
                       <div className="order-status-badge" style={{ background: s.bg, color: s.color }}>{s.label}</div>
                     </div>
                   </Link>
@@ -183,3 +183,4 @@ function AccStyles() {
     }
   `}</style>;
 }
+

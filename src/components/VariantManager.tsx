@@ -13,10 +13,10 @@ interface Props {
 }
 
 const STOCK_OPTIONS = [
-  { value: 'in_stock',      label: '✅ In Stock' },
-  { value: 'low_stock',     label: '🟡 Low Stock' },
-  { value: 'out_of_stock',  label: '❌ Out of Stock' },
-  { value: 'made_to_order', label: '🛠 Made to Order' },
+  { value: 'in_stock',      label: 'âœ… In Stock' },
+  { value: 'low_stock',     label: 'ðŸŸ¡ Low Stock' },
+  { value: 'out_of_stock',  label: 'âŒ Out of Stock' },
+  { value: 'made_to_order', label: 'ðŸ›  Made to Order' },
 ];
 
 const EMPTY_VARIANT = {
@@ -31,7 +31,7 @@ const EMPTY_VARIANT = {
 
 type FormState = typeof EMPTY_VARIANT;
 
-// ─── helpers ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const inp: React.CSSProperties = {
   background: '#0E0B08',
   border: '1px solid rgba(200,136,74,0.2)',
@@ -62,7 +62,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-// ─── component ────────────────────────────────────────────────────────────
+// â”€â”€â”€ component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function VariantManager({ productId, onChange }: Props) {
   const [variants, setVariants]       = useState<ProductVariant[]>([]);
   const [loading, setLoading]         = useState(true);
@@ -177,13 +177,13 @@ export default function VariantManager({ productId, onChange }: Props) {
   const f = (k: keyof FormState, v: unknown) =>
     setForm(prev => ({ ...prev, [k]: v }));
 
-  // ── discount preview ──────────────────────────────────────────
+  // â”€â”€ discount preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const discountPreview = (() => {
     const p = parseFloat(form.price);
     const m = parseFloat(form.mrp);
     if (!isNaN(p) && !isNaN(m) && m > p) {
       const pct = Math.round(((m - p) / m) * 100);
-      return `✅ ${pct}% off — saves ₹${(m - p).toLocaleString('en-IN')}`;
+      return `âœ… ${pct}% off â€” saves â‚¹${(m - p).toLocaleString('en-IN')}`;
     }
     return null;
   })();
@@ -200,7 +200,7 @@ export default function VariantManager({ productId, onChange }: Props) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#C8884A', textTransform: 'uppercase', letterSpacing: 1 }}>
-            📐 Product Variants
+            ðŸ“ Product Variants
           </div>
           <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>
             Different sizes, grades, or finishes with individual pricing
@@ -272,25 +272,25 @@ export default function VariantManager({ productId, onChange }: Props) {
                     background: i % 2 === 0 ? 'transparent' : 'rgba(200,136,74,0.02)',
                   }}>
                     <td style={{ padding: '8px 10px', color: '#F0E8DC', fontWeight: 600 }}>
-                      {v.thickness || '—'}
+                      {v.thickness || 'â€”'}
                     </td>
                     <td style={{ padding: '8px 10px', color: '#C8B8A0' }}>
-                      {v.size || '—'}
+                      {v.size || 'â€”'}
                     </td>
                     <td style={{ padding: '8px 10px', color: '#C8B8A0' }}>
-                      {v.grade || '—'}
+                      {v.grade || 'â€”'}
                     </td>
                     <td style={{ padding: '8px 10px', color: '#C8B8A0' }}>
-                      {[v.finish, v.color].filter(Boolean).join(' / ') || '—'}
+                      {[v.finish, v.color].filter(Boolean).join(' / ') || 'â€”'}
                     </td>
                     <td style={{ padding: '8px 10px' }}>
                       {v.mrp && (
                         <div style={{ fontSize: 10, color: '#9A8070', textDecoration: 'line-through' }}>
-                          ₹{v.mrp.toLocaleString('en-IN')}
+                          â‚¹{v.mrp.toLocaleString('en-IN')}
                         </div>
                       )}
                       <div style={{ color: '#E0A86A', fontWeight: 600 }}>
-                        {v.price ? `₹${v.price.toLocaleString('en-IN')}` : '—'}
+                        {v.price ? `â‚¹${v.price.toLocaleString('en-IN')}` : 'â€”'}
                       </div>
                       {discount && (
                         <div style={{ fontSize: 10, color: '#4ADE80' }}>{discount}% off</div>
@@ -316,7 +316,7 @@ export default function VariantManager({ productId, onChange }: Props) {
                     </td>
                     <td style={{ padding: '8px 10px', textAlign: 'center' }}>
                       {v.is_default ? (
-                        <span style={{ fontSize: 11, color: '#C8884A', fontWeight: 600 }}>★ Default</span>
+                        <span style={{ fontSize: 11, color: '#C8884A', fontWeight: 600 }}>â˜… Default</span>
                       ) : (
                         <button onClick={() => handleSetDefault(v.id)} style={{
                           fontSize: 10, padding: '3px 8px', borderRadius: 4,
@@ -337,14 +337,14 @@ export default function VariantManager({ productId, onChange }: Props) {
                           border: '1px solid rgba(200,136,74,0.2)',
                           color: '#E0A86A', fontSize: 11,
                           cursor: 'pointer', fontFamily: 'Outfit,sans-serif',
-                        }}>✏️</button>
+                        }}>âœï¸</button>
                         <button onClick={() => handleDelete(v.id)} style={{
                           padding: '4px 9px', borderRadius: 5,
                           background: 'rgba(248,113,113,0.08)',
                           border: '1px solid rgba(248,113,113,0.15)',
                           color: '#F87171', fontSize: 11,
                           cursor: 'pointer', fontFamily: 'Outfit,sans-serif',
-                        }}>🗑️</button>
+                        }}>ðŸ—‘ï¸</button>
                       </div>
                     </td>
                   </tr>
@@ -363,10 +363,10 @@ export default function VariantManager({ productId, onChange }: Props) {
           marginTop: variants.length > 0 ? 4 : 0,
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: '#C8884A', marginBottom: 14, textTransform: 'uppercase', letterSpacing: 1 }}>
-            {editId ? '✏️ Edit Variant' : '+ New Variant'}
+            {editId ? 'âœï¸ Edit Variant' : '+ New Variant'}
           </div>
 
-          {/* Row 1 — dimensions & grade */}
+          {/* Row 1 â€” dimensions & grade */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
             <Field label="Thickness">
               <input style={inp} value={form.thickness}
@@ -376,7 +376,7 @@ export default function VariantManager({ productId, onChange }: Props) {
             <Field label="Sheet Size">
               <input style={inp} value={form.size}
                 onChange={e => f('size', e.target.value)}
-                placeholder="e.g. 8×4 ft" />
+                placeholder="e.g. 8Ã—4 ft" />
             </Field>
             <Field label="Grade">
               <input style={inp} value={form.grade}
@@ -385,7 +385,7 @@ export default function VariantManager({ productId, onChange }: Props) {
             </Field>
           </div>
 
-          {/* Row 2 — finish, color, pack */}
+          {/* Row 2 â€” finish, color, pack */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 10 }}>
             <Field label="Finish">
               <input style={inp} value={form.finish}
@@ -404,22 +404,22 @@ export default function VariantManager({ productId, onChange }: Props) {
             </Field>
           </div>
 
-          {/* Row 3 — pricing */}
+          {/* Row 3 â€” pricing */}
           <div style={{
             background: 'rgba(200,136,74,0.06)',
             border: '1px solid rgba(200,136,74,0.12)',
             borderRadius: 8, padding: '12px 14px', marginBottom: 10,
           }}>
             <div style={{ fontSize: 10, fontWeight: 700, color: '#C8884A', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 }}>
-              💰 Variant Pricing
+              ðŸ’° Variant Pricing
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-              <Field label="MRP (₹) — crossed out">
+              <Field label="MRP (â‚¹) â€” crossed out">
                 <input style={inp} type="number" value={form.mrp}
                   onChange={e => f('mrp', e.target.value)}
                   placeholder="e.g. 3500" />
               </Field>
-              <Field label="Our Price (₹)">
+              <Field label="Our Price (â‚¹)">
                 <input style={{ ...inp, borderColor: 'rgba(200,136,74,0.35)' }} type="number" value={form.price}
                   onChange={e => f('price', e.target.value)}
                   placeholder="e.g. 2800" />
@@ -435,7 +435,7 @@ export default function VariantManager({ productId, onChange }: Props) {
             )}
           </div>
 
-          {/* Row 4 — stock */}
+          {/* Row 4 â€” stock */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
             <Field label="Stock Status">
               <select style={{ ...inp, cursor: 'pointer' }} value={form.stock_status}
@@ -463,7 +463,7 @@ export default function VariantManager({ productId, onChange }: Props) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   flexShrink: 0,
                 }}>
-                  {form.is_default && <span style={{ color: 'white', fontSize: 10, fontWeight: 700 }}>✓</span>}
+                  {form.is_default && <span style={{ color: 'white', fontSize: 10, fontWeight: 700 }}>âœ“</span>}
                 </div>
                 <span style={{ fontSize: 12, color: '#C8B8A0', fontWeight: 500 }}>Set as default</span>
               </div>
@@ -480,7 +480,7 @@ export default function VariantManager({ productId, onChange }: Props) {
               cursor: saving ? 'default' : 'pointer',
               fontFamily: 'Outfit,sans-serif',
             }}>
-              {saving ? '⏳ Saving...' : editId ? '✓ Update Variant' : '+ Save Variant'}
+              {saving ? 'â³ Saving...' : editId ? 'âœ“ Update Variant' : '+ Save Variant'}
             </button>
             <button onClick={() => { setShowForm(false); setEditId(null); setForm(EMPTY_VARIANT); }} style={{
               padding: '10px 16px', borderRadius: 7,
@@ -502,3 +502,4 @@ export default function VariantManager({ productId, onChange }: Props) {
     </div>
   );
 }
+

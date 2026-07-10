@@ -1,5 +1,5 @@
 // src/app/products/page.tsx
-// KEY FIX: Compact cards (no long description), MRP strikethrough, click → detail page
+// KEY FIX: Compact cards (no long description), MRP strikethrough, click â†’ detail page
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getProjectProducts, getCategories } from '@/lib/products';
@@ -36,7 +36,7 @@ export default async function ProductsPage({
 
   return (
     <>
-      {/* ── HERO ── */}
+      {/* â”€â”€ HERO â”€â”€ */}
       <section style={{
         background: 'linear-gradient(160deg,#0a1d3a,#070F1F)',
         borderBottom: '1px solid rgba(249,115,22,0.15)',
@@ -55,7 +55,7 @@ export default async function ProductsPage({
                 <span style={{ color: '#F97316' }}>MATERIALS</span>
               </h1>
               <p style={{ fontSize: 14, color: '#7A8EA8', maxWidth: 460 }}>
-                ISI Certified · All Major Brands · Wholesale &amp; Retail · Karur's Widest Selection
+                ISI Certified Â· All Major Brands Â· Wholesale &amp; Retail Â· Karur's Widest Selection
               </p>
             </div>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -63,11 +63,11 @@ export default async function ProductsPage({
                 href={`https://wa.me/${WA}?text=Hi%2C+I+need+a+price+list+for+your+products.`}
                 target="_blank" rel="noopener"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderRadius: 6, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: '.08em', textTransform: 'uppercase', textDecoration: 'none' }}>
-                💬 Get Price List
+                ðŸ’¬ Get Price List
               </a>
               <Link href="/quick-order"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderRadius: 6, background: 'rgba(37,211,102,0.1)', color: '#25D366', fontFamily: "'Syne',sans-serif", fontWeight: 600, fontSize: 13, letterSpacing: '.08em', textTransform: 'uppercase', textDecoration: 'none', border: '1px solid rgba(37,211,102,0.25)' }}>
-                ⚡ Quick Order
+                âš¡ Quick Order
               </Link>
             </div>
           </div>
@@ -76,23 +76,23 @@ export default async function ProductsPage({
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }} className="prod-content-pad">
 
-        {/* ── SEARCH RESULT BANNER ── */}
+        {/* â”€â”€ SEARCH RESULT BANNER â”€â”€ */}
         {searchQuery && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(249,115,22,0.06)', border: '1px solid rgba(249,115,22,0.18)', borderRadius: 10, padding: '12px 18px', marginBottom: 24, flexWrap: 'wrap', gap: 10 }}>
             <span style={{ fontSize: 14, color: '#F0E8DC' }}>
-              🔍 Search results for <strong style={{ color: '#F97316' }}>&ldquo;{searchQuery}&rdquo;</strong> — {products.length} product{products.length !== 1 ? 's' : ''} found
+              ðŸ” Search results for <strong style={{ color: '#F97316' }}>&ldquo;{searchQuery}&rdquo;</strong> â€” {products.length} product{products.length !== 1 ? 's' : ''} found
             </span>
             <Link href="/products" style={{ fontSize: 12, color: '#7A8EA8', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.08em' }}>
-              ✕ Clear search
+              âœ• Clear search
             </Link>
           </div>
         )}
 
-        {/* ── CATEGORY FILTER TABS ── */}
+        {/* â”€â”€ CATEGORY FILTER TABS â”€â”€ */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 36 }}>
           <Link href="/products"
             className={`prod-filter-tab${activeCategory === 'all' ? ' prod-filter-tab--active' : ''}`}>
-            🏷️ All {activeCategory === 'all' && `(${products.length})`}
+            ðŸ·ï¸ All {activeCategory === 'all' && `(${products.length})`}
           </Link>
           {categories.map(cat => (
             <Link
@@ -105,7 +105,7 @@ export default async function ProductsPage({
           ))}
         </div>
 
-        {/* ── RESULTS COUNT ── */}
+        {/* â”€â”€ RESULTS COUNT â”€â”€ */}
         {products.length > 0 && (
           <div style={{ fontSize: 13, color: '#7A8EA8', marginBottom: 24 }}>
             Showing <strong style={{ color: '#F8F9FB' }}>{products.length}</strong> product{products.length !== 1 ? 's' : ''}
@@ -115,10 +115,10 @@ export default async function ProductsPage({
           </div>
         )}
 
-        {/* ── PRODUCT GRID ── */}
+        {/* â”€â”€ PRODUCT GRID â”€â”€ */}
         {products.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>📦</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>ðŸ“¦</div>
             <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '2rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 8 }}>
               No Products Found
             </div>
@@ -129,7 +129,7 @@ export default async function ProductsPage({
               href={`https://wa.me/${WA}?text=Hi%2C+do+you+have+products+in+this+category%3F`}
               target="_blank" rel="noopener"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
-              💬 Ask on WhatsApp
+              ðŸ’¬ Ask on WhatsApp
             </a>
           </div>
         ) : (
@@ -140,7 +140,7 @@ export default async function ProductsPage({
           </div>
         )}
 
-        {/* ── BOTTOM CTA BANNER ── */}
+        {/* â”€â”€ BOTTOM CTA BANNER â”€â”€ */}
         {products.length > 0 && (
           <div style={{ marginTop: 64, background: 'linear-gradient(135deg,#0D2B17,#091810)', border: '1px solid rgba(37,211,102,0.2)', borderRadius: 12, padding: '36px 44px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 28, flexWrap: 'wrap' }}>
             <div>
@@ -155,21 +155,21 @@ export default async function ProductsPage({
               href={`https://wa.me/${WA}?text=Hi%2C+I+need+a+bulk+quote+for+plywood+and+materials.`}
               target="_blank" rel="noopener"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 28px', borderRadius: 8, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, textDecoration: 'none', flexShrink: 0 }}>
-              💬 Get Bulk Quote on WhatsApp
+              ðŸ’¬ Get Bulk Quote on WhatsApp
             </a>
           </div>
         )}
       </div>
 
       <style>{`
-        /* ── GRID ── */
+        /* â”€â”€ GRID â”€â”€ */
         .cp-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 18px;
         }
 
-        /* ── COMPACT CARD ── */
+        /* â”€â”€ COMPACT CARD â”€â”€ */
         .cp-card {
           background: rgba(25,55,109,0.35);
           border: 1px solid rgba(249,115,22,0.15);

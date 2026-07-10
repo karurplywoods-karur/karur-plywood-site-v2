@@ -1,5 +1,5 @@
 // src/app/api/orders/track/route.ts
-// Public endpoint — no auth required.
+// Public endpoint â€” no auth required.
 // Looks up order by order_number + last 4 digits of delivery phone.
 // Returns safe subset of order data (no customer PII beyond what they entered).
 
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Order not found. Please check the order number.' }, { status: 404 });
   }
 
-  // Verify phone — compare last 4 digits of delivery_phone stored on order
+  // Verify phone â€” compare last 4 digits of delivery_phone stored on order
   const { data: full } = await supabaseAdmin
     .from('orders')
     .select('delivery_phone')
@@ -56,3 +56,4 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(order);
 }
+

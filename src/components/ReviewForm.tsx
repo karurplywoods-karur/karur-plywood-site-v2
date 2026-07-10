@@ -46,7 +46,7 @@ export default function ReviewForm() {
 
   if (done) return (
     <div style={{ textAlign: 'center', padding: '32px 0' }}>
-      <div style={{ fontSize: 48, marginBottom: 12 }}>🙏</div>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>ðŸ™</div>
       <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC', marginBottom: 8 }}>
         Thank You!
       </div>
@@ -70,7 +70,7 @@ export default function ReviewForm() {
           {[1,2,3,4,5].map(n => (
             <button key={n} onClick={() => set('rating', n)}
               style={{ fontSize: 28, background: 'none', border: 'none', cursor: 'pointer', filter: n <= form.rating ? 'none' : 'grayscale(1) opacity(0.4)', transition: 'filter 0.15s' }}>
-              ⭐
+              â­
             </button>
           ))}
         </div>
@@ -98,10 +98,11 @@ export default function ReviewForm() {
 
       <button onClick={handleSubmit} disabled={loading}
         style={{ width: '100%', background: loading ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', borderRadius: 8, padding: '13px 0', fontWeight: 700, fontSize: 15, cursor: loading ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-        {loading ? '⏳ Submitting...' : '⭐ Submit Review'}
+        {loading ? 'â³ Submitting...' : 'â­ Submit Review'}
       </button>
 
       <style>{`input:focus,textarea:focus{ border-color:#C8884A !important; }`}</style>
     </div>
   );
 }
+

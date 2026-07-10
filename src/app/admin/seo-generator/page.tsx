@@ -156,7 +156,7 @@ export default function SEOGeneratorPage() {
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#0E0B08', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>â³</div>
         <div style={{ color: '#9A8070', fontFamily: 'Outfit,sans-serif' }}>Loading Configuration Core...</div>
       </div>
     </div>
@@ -255,11 +255,11 @@ export default function SEOGeneratorPage() {
           <div style={{ marginTop: 24 }}>
             <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
               <div style={{ background: 'rgba(37,211,102,0.1)', border: '1px solid rgba(37,211,102,0.2)', color: '#25D366', padding: '10px 18px', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
-                ✅ Success: {results.success}
+                âœ… Success: {results.success}
               </div>
               {results.failed > 0 && (
                 <div style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', color: '#F87171', padding: '10px 18px', borderRadius: 8, fontWeight: 600, fontSize: 14 }}>
-                  ❌ Failed: {results.failed}
+                  âŒ Failed: {results.failed}
                 </div>
               )}
             </div>
@@ -269,7 +269,7 @@ export default function SEOGeneratorPage() {
                 <div style={{ fontWeight: 700, color: '#F87171', marginBottom: 8, fontSize: 14 }}>Generation Failures Explained:</div>
                 <div style={{ fontSize: 12, color: '#F87171', lineHeight: 1.8 }}>
                   {results.errors.map((e, i) => (
-                    <div key={i} style={{ marginBottom: 4 }}>• {e}</div>
+                    <div key={i} style={{ marginBottom: 4 }}>â€¢ {e}</div>
                   ))}
                 </div>
               </div>

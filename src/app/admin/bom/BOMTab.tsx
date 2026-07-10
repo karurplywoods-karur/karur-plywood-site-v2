@@ -21,10 +21,10 @@ interface BOMRequest {
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const STATUS_CONFIG = {
-  pending:   { label: '⏳ Pending',   bg: 'rgba(249,115,22,0.12)',    color: '#F97316' },
-  quoted:    { label: '💬 Quoted',    bg: 'rgba(59,130,246,0.12)',    color: '#93C5FD' },
-  converted: { label: '✅ Converted', bg: 'rgba(37,211,102,0.12)',    color: '#4ADE80' },
-  rejected:  { label: '✗ Rejected',  bg: 'rgba(248,113,113,0.10)',   color: '#FCA5A5' },
+  pending:   { label: 'â³ Pending',   bg: 'rgba(249,115,22,0.12)',    color: '#F97316' },
+  quoted:    { label: 'ðŸ’¬ Quoted',    bg: 'rgba(59,130,246,0.12)',    color: '#93C5FD' },
+  converted: { label: 'âœ… Converted', bg: 'rgba(37,211,102,0.12)',    color: '#4ADE80' },
+  rejected:  { label: 'âœ— Rejected',  bg: 'rgba(248,113,113,0.10)',   color: '#FCA5A5' },
 };
 
 function formatPhone(raw: string): string {
@@ -40,7 +40,7 @@ function timeAgo(iso: string): string {
   return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 }
 
-// ── Detail modal ──────────────────────────────────────────────
+// â”€â”€ Detail modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function BOMModal({ bom, onClose, onStatusChange }: {
   bom: BOMRequest;
   onClose: () => void;
@@ -63,9 +63,9 @@ function BOMModal({ bom, onClose, onStatusChange }: {
   const sendQuoteOnWA = () => {
     const phone = formatPhone(bom.phone);
     const text = encodeURIComponent(
-      `Hi ${bom.name}! 😊\n\nThank you for sending us your material list.\n\nHere is your quote:\n\n` +
+      `Hi ${bom.name}! ðŸ˜Š\n\nThank you for sending us your material list.\n\nHere is your quote:\n\n` +
       `[Type your quote here]\n\n` +
-      `📦 Items will be delivered to: ${bom.location || 'your location'}\n\n` +
+      `ðŸ“¦ Items will be delivered to: ${bom.location || 'your location'}\n\n` +
       `_Karur Plywood & Company, Karur_`
     );
     window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
@@ -93,7 +93,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
             <span style={{ fontSize: 11, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: 20, background: cfg.bg, color: cfg.color }}>
               {cfg.label}
             </span>
-            <button onClick={onClose} style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '5px 11px', cursor: 'pointer', fontFamily: "'Syne', sans-serif", fontSize: 12 }}>✕</button>
+            <button onClick={onClose} style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '5px 11px', cursor: 'pointer', fontFamily: "'Syne', sans-serif", fontSize: 12 }}>âœ•</button>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
               rel="noopener"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 10, padding: '8px 0', borderRadius: 4, border: '1px solid rgba(249,115,22,0.2)', color: '#F97316', fontSize: 12, fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background .2s' }}
             >
-              🔍 Open Full Size ↗
+              ðŸ” Open Full Size â†—
             </a>
           </div>
 
@@ -127,9 +127,9 @@ function BOMModal({ bom, onClose, onStatusChange }: {
             </div>
 
             {[
-              { icon: '👤', label: 'Name',     value: bom.name },
-              { icon: '📞', label: 'Phone',    value: bom.phone },
-              { icon: '📍', label: 'Location', value: bom.location || '—' },
+              { icon: 'ðŸ‘¤', label: 'Name',     value: bom.name },
+              { icon: 'ðŸ“ž', label: 'Phone',    value: bom.phone },
+              { icon: 'ðŸ“', label: 'Location', value: bom.location || 'â€”' },
             ].map(row => (
               <div key={row.label} style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>{row.label}</div>
@@ -172,7 +172,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
             disabled={updating}
             style={{ width: '100%', padding: '14px 0', borderRadius: 4, background: '#25D366', border: 'none', color: 'white', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: '.06em', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background .2s' }}
           >
-            💬 Send Quote on WhatsApp
+            ðŸ’¬ Send Quote on WhatsApp
           </button>
 
           {/* Status update buttons */}
@@ -180,19 +180,19 @@ function BOMModal({ bom, onClose, onStatusChange }: {
             {bom.status !== 'quoted' && (
               <button onClick={() => updateStatus('quoted')} disabled={updating}
                 style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(59,130,246,0.1)', color: '#93C5FD', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                💬 Mark Quoted
+                ðŸ’¬ Mark Quoted
               </button>
             )}
             {bom.status !== 'converted' && (
               <button onClick={() => updateStatus('converted')} disabled={updating}
                 style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(37,211,102,0.3)', background: 'rgba(37,211,102,0.1)', color: '#4ADE80', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                ✅ Mark Converted
+                âœ… Mark Converted
               </button>
             )}
             {bom.status !== 'rejected' && (
               <button onClick={() => updateStatus('rejected')} disabled={updating}
                 style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(248,113,113,0.25)', background: 'rgba(248,113,113,0.06)', color: '#FCA5A5', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                ✗ Reject
+                âœ— Reject
               </button>
             )}
           </div>
@@ -202,7 +202,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
   );
 }
 
-// ── Main BOM tab ──────────────────────────────────────────────
+// â”€â”€ Main BOM tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function BOMTab() {
   const [boms,         setBoms]         = useState<BOMRequest[]>([]);
   const [loading,      setLoading]      = useState(true);
@@ -226,7 +226,7 @@ export default function BOMTab() {
 
   useEffect(() => { fetchBOMs(); }, [fetchBOMs]);
 
-  // ── Push notification polling ────────────────────────────
+  // â”€â”€ Push notification polling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const enableNotifications = async () => {
     if (!('Notification' in window)) {
       showMsg('Your browser does not support notifications.', false);
@@ -238,7 +238,7 @@ export default function BOMTab() {
       return;
     }
     setNotifEnabled(true);
-    showMsg('🔔 Notifications enabled! You\'ll be alerted for new BOMs.');
+    showMsg('ðŸ”” Notifications enabled! You\'ll be alerted for new BOMs.');
   };
 
   useEffect(() => {
@@ -251,8 +251,8 @@ export default function BOMTab() {
         if (!Array.isArray(data) || data.length === 0) return;
 
         data.forEach((bom: any) => {
-          const n = new Notification(`📋 New BOM from ${bom.name}`, {
-            body: `Phone: ${bom.phone} — Click to view`,
+          const n = new Notification(`ðŸ“‹ New BOM from ${bom.name}`, {
+            body: `Phone: ${bom.phone} â€” Click to view`,
             icon: '/favicon.ico',
             tag:  `bom-${bom.id}`,
           });
@@ -264,7 +264,7 @@ export default function BOMTab() {
 
         fetchBOMs(); // refresh list
       } catch {
-        // silent — polling runs in background
+        // silent â€” polling runs in background
       }
     };
 
@@ -275,7 +275,7 @@ export default function BOMTab() {
   const handleStatusChange = (id: number, status: string) => {
     setBoms(prev => prev.map(b => b.id === id ? { ...b, status: status as BOMRequest['status'] } : b));
     if (selected?.id === id) setSelected(prev => prev ? { ...prev, status: status as BOMRequest['status'] } : prev);
-    showMsg(status === 'converted' ? '✅ Marked as converted!' : status === 'quoted' ? '💬 Marked as quoted!' : 'Status updated.');
+    showMsg(status === 'converted' ? 'âœ… Marked as converted!' : status === 'quoted' ? 'ðŸ’¬ Marked as quoted!' : 'Status updated.');
   };
 
   const handleDelete = async (id: number) => {
@@ -335,26 +335,26 @@ export default function BOMTab() {
           {!notifEnabled ? (
             <button onClick={enableNotifications}
               style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid rgba(249,115,22,0.3)', background: 'rgba(249,115,22,0.08)', color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
-              🔔 Enable Notifications
+              ðŸ”” Enable Notifications
             </button>
           ) : (
             <div style={{ fontSize: 12, color: '#4ADE80', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.08em' }}>
-              🔔 Notifications ON
+              ðŸ”” Notifications ON
             </div>
           )}
           <button onClick={() => fetchBOMs()}
             style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid rgba(249,115,22,0.2)', background: 'transparent', color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
-            🔄 Refresh
+            ðŸ”„ Refresh
           </button>
         </div>
       </div>
 
       {/* BOM list */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#7A8EA8' }}>⏳ Loading...</div>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: '#7A8EA8' }}>â³ Loading...</div>
       ) : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📋</div>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>ðŸ“‹</div>
           <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.6rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 6 }}>
             {statusFilter === 'all' ? 'NO BOM REQUESTS YET' : `NO ${statusFilter.toUpperCase()} REQUESTS`}
           </div>
@@ -386,13 +386,13 @@ export default function BOMTab() {
                       {cfg.label}
                     </span>
                     {bom.status === 'pending' && (
-                      <span style={{ fontSize: 10, color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, animation: 'bomPulse 1.5s ease infinite' }}>● NEW</span>
+                      <span style={{ fontSize: 10, color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, animation: 'bomPulse 1.5s ease infinite' }}>â— NEW</span>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: '#7A8EA8' }}>
-                    <span>📞 {bom.phone}</span>
-                    {bom.location && <span>📍 {bom.location}</span>}
-                    <span>🕐 {timeAgo(bom.created_at)}</span>
+                    <span>ðŸ“ž {bom.phone}</span>
+                    {bom.location && <span>ðŸ“ {bom.location}</span>}
+                    <span>ðŸ• {timeAgo(bom.created_at)}</span>
                   </div>
                   {bom.notes && (
                     <div style={{ fontSize: 12, color: '#7A8EA8', marginTop: 4, fontStyle: 'italic', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 360 }}>
@@ -406,7 +406,7 @@ export default function BOMTab() {
                   <button
                     onClick={() => setSelected(bom)}
                     style={{ padding: '8px 0', borderRadius: 3, border: '1px solid rgba(249,115,22,0.3)', background: 'rgba(249,115,22,0.08)', color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                    👁 View Details
+                    ðŸ‘ View Details
                   </button>
                   <button
                     onClick={() => {
@@ -419,12 +419,12 @@ export default function BOMTab() {
                       }
                     }}
                     style={{ padding: '8px 0', borderRadius: 3, background: '#25D366', border: 'none', color: 'white', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                    💬 Send Quote
+                    ðŸ’¬ Send Quote
                   </button>
                   <button
                     onClick={() => handleDelete(bom.id)}
                     style={{ padding: '6px 0', borderRadius: 3, background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.15)', color: '#FCA5A5', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                    🗑️ Delete
+                    ðŸ—‘ï¸ Delete
                   </button>
                 </div>
               </div>
@@ -448,3 +448,4 @@ export default function BOMTab() {
     </div>
   );
 }
+

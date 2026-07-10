@@ -55,17 +55,17 @@ export default function CartDrawer({ open, onClose }: Props) {
             Your Cart
             {count > 0 && <span className="cart-count-badge">{count}</span>}
           </div>
-          <button className="cart-close-btn" onClick={onClose}>✕</button>
+          <button className="cart-close-btn" onClick={onClose}>âœ•</button>
         </div>
 
         {/* Body */}
         <div className="cart-body">
           {items.length === 0 ? (
             <div className="cart-empty">
-              <div style={{ fontSize: 52, marginBottom: 16 }}>🛒</div>
+              <div style={{ fontSize: 52, marginBottom: 16 }}>ðŸ›’</div>
               <div className="cart-empty-title">Your cart is empty</div>
               <p className="cart-empty-sub">Browse shop or quick-order products and add items to get started.</p>
-              <button className="cart-empty-btn" onClick={onClose}>Browse Products →</button>
+              <button className="cart-empty-btn" onClick={onClose}>Browse Products â†’</button>
             </div>
           ) : (
             <div className="cart-items">
@@ -76,7 +76,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                       <Image src={item.product.image_url} alt={item.product.name} fill style={{ objectFit: 'cover' }} sizes="60px" />
                     ) : (
                       <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-                        {item.product.categories?.icon || '📦'}
+                        {item.product.categories?.icon || 'ðŸ“¦'}
                       </div>
                     )}
                   </div>
@@ -88,16 +88,16 @@ export default function CartDrawer({ open, onClose }: Props) {
                     {cartItemVariantLabel(item) && <div className="cart-item-variant">{cartItemVariantLabel(item)}</div>}
                     {cartItemPrice(item) > 0 && (
                       <div className="cart-item-price">
-                        ₹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}
+                        â‚¹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}
                         <span style={{ color: '#7A8EA8', fontSize: 11, fontWeight: 400 }}>
-                          {' '}(₹{cartItemPrice(item).toLocaleString('en-IN')} × {item.quantity})
+                          {' '}(â‚¹{cartItemPrice(item).toLocaleString('en-IN')} Ã— {item.quantity})
                         </span>
                       </div>
                     )}
                   </div>
                   <div className="cart-item-controls">
                     <div className="cart-qty-ctrl">
-                      <button onClick={() => dec(item.product, item.variant)} className="cart-qty-btn">−</button>
+                      <button onClick={() => dec(item.product, item.variant)} className="cart-qty-btn">âˆ’</button>
                       <input
                         type="number" min="1"
                         value={item.quantity}
@@ -106,7 +106,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                       />
                       <button onClick={() => inc(item.product, item.variant)} className="cart-qty-btn">+</button>
                     </div>
-                    <button onClick={() => setQty(item.product, 0, item.variant)} className="cart-remove-btn">🗑️</button>
+                    <button onClick={() => setQty(item.product, 0, item.variant)} className="cart-remove-btn">ðŸ—‘ï¸</button>
                   </div>
                 </div>
               ))}
@@ -120,12 +120,12 @@ export default function CartDrawer({ open, onClose }: Props) {
             {total > 0 && (
               <div className="cart-subtotal">
                 <span>Subtotal ({count} item{count !== 1 ? 's' : ''})</span>
-                <span className="cart-subtotal-val">₹{total.toLocaleString('en-IN')}</span>
+                <span className="cart-subtotal-val">â‚¹{total.toLocaleString('en-IN')}</span>
               </div>
             )}
-            <div className="cart-footer-note">📦 Delivery charges confirmed by our team</div>
+            <div className="cart-footer-note">ðŸ“¦ Delivery charges confirmed by our team</div>
             <button onClick={handleCheckout} className="cart-checkout-btn">
-              Proceed to Checkout →
+              Proceed to Checkout â†’
             </button>
             <button onClick={clear} className="cart-clear-btn">Clear Cart</button>
           </div>
@@ -177,3 +177,4 @@ export default function CartDrawer({ open, onClose }: Props) {
     </>
   );
 }
+

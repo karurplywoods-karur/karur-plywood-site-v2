@@ -1,6 +1,6 @@
 'use client';
 // src/components/WishlistButton.tsx
-// Heart icon button — toggles product in/out of wishlist.
+// Heart icon button â€” toggles product in/out of wishlist.
 // Shows filled red heart when in wishlist, outline when not.
 
 import { useWishlist } from '@/lib/WishlistContext';
@@ -34,7 +34,8 @@ export default function WishlistButton({ product, size = 'md' }: Props) {
         flexShrink: 0,
       }}
     >
-      {saved ? '❤️' : '🤍'}
+      {saved ? 'â¤ï¸' : 'ðŸ¤'}
     </button>
   );
 }
+

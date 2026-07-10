@@ -4,12 +4,12 @@ import { SEO_PAGE_TYPES } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
-// Static city pages — kept in sync manually with src/app/areas/[city]/page.tsx,
+// Static city pages â€” kept in sync manually with src/app/areas/[city]/page.tsx,
 // since that page uses a hardcoded CITIES record rather than a DB table.
 const STATIC_CITY_SLUGS = ['karur', 'trichy', 'namakkal', 'erode', 'salem', 'dindigul'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://karurplywood.co.in';
+  const baseUrl = 'https://www.karurplywood.co.in';
   const supabase = createBuildClient();
 
   const [

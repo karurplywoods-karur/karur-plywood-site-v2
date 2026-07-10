@@ -1,5 +1,5 @@
 'use client';
-// src/components/ProductCard.tsx — ecommerce product card with cart controls
+// src/components/ProductCard.tsx â€” ecommerce product card with cart controls
 import { useCallback, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -60,7 +60,7 @@ export default function ProductCard({
   return (
     <div className="pc-card" style={{ position: 'relative' }}>
 
-      {/* IMAGE — clean, no category badge */}
+      {/* IMAGE â€” clean, no category badge */}
       <Link href={`/products/${product.id}`} className="pc-image-wrap" style={{ display: 'block', textDecoration: 'none' }}>
         {product.image_url ? (
           <Image
@@ -88,7 +88,7 @@ export default function ProductCard({
           <span className="pc-quickview-label">View Details</span>
         </div>
 
-        {/* Trust badge only (ISI, BWP, etc.) — kept top-left, small */}
+        {/* Trust badge only (ISI, BWP, etc.) â€” kept top-left, small */}
         {badge && (
           <div
             className="pc-badge-trust"
@@ -98,7 +98,7 @@ export default function ProductCard({
           </div>
         )}
 
-        {/* Discount badge — top right */}
+        {/* Discount badge â€” top right */}
         {discount && discount > 0 && (
           <div className="pc-discount-badge">{discount}% OFF</div>
         )}
@@ -109,15 +109,15 @@ export default function ProductCard({
         )}
       </Link>
 
-      {/* BODY — flex column so buttons always sit at bottom */}
+      {/* BODY â€” flex column so buttons always sit at bottom */}
       <div className="pc-body">
         {/* Category label + stock on same row */}
         <div className="pc-meta-row">
           <span className="pc-cat">{categoryName}</span>
           {product.in_stock !== false ? (
-            <span className="pc-stock-inline pc-stock-inline--in">● In Stock</span>
+            <span className="pc-stock-inline pc-stock-inline--in">â— In Stock</span>
           ) : (
-            <span className="pc-stock-inline pc-stock-inline--out">● Out of Stock</span>
+            <span className="pc-stock-inline pc-stock-inline--out">â— Out of Stock</span>
           )}
         </div>
 
@@ -133,13 +133,13 @@ export default function ProductCard({
         {product.price ? (
           <div className="pc-price-block">
             <div className="pc-price-row">
-              <span className="pc-price">₹{product.price.toLocaleString('en-IN')}</span>
+              <span className="pc-price">â‚¹{product.price.toLocaleString('en-IN')}</span>
               {product.unit && <span className="pc-unit">/ {product.unit}</span>}
             </div>
             {hasMRP && (
               <div className="pc-mrp-row">
                 <span className="pc-mrp-label">MRP</span>
-                <span className="pc-mrp">₹{product.mrp!.toLocaleString('en-IN')}</span>
+                <span className="pc-mrp">â‚¹{product.mrp!.toLocaleString('en-IN')}</span>
               </div>
             )}
           </div>
@@ -149,7 +149,7 @@ export default function ProductCard({
           </div>
         )}
 
-        {/* CTA — pinned to bottom via mt-auto on pc-actions-row */}
+        {/* CTA â€” pinned to bottom via mt-auto on pc-actions-row */}
         {qty === 0 ? (
           <div className="pc-actions-row">
             <button
@@ -166,7 +166,7 @@ export default function ProductCard({
           </div>
         ) : (
           <div className="pc-qty-ctrl">
-            <button onClick={handleDec} className="pc-qty-btn" type="button" aria-label="Decrease">−</button>
+            <button onClick={handleDec} className="pc-qty-btn" type="button" aria-label="Decrease">âˆ’</button>
             <span className="pc-qty-num">{qty}</span>
             <button onClick={handleInc} className="pc-qty-btn" type="button" aria-label="Increase">+</button>
           </div>
@@ -195,7 +195,7 @@ export default function ProductCard({
           transform: scale(1.02);
         }
 
-        /* Body — full height flex column so buttons pin to bottom */
+        /* Body â€” full height flex column so buttons pin to bottom */
         .pc-body {
           padding: 11px 14px 14px;
           display: flex;
@@ -220,7 +220,7 @@ export default function ProductCard({
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        /* Small subtle stock indicator — no dot, just text */
+        /* Small subtle stock indicator â€” no dot, just text */
         .pc-stock-inline {
           font-family: 'Syne', sans-serif;
           font-size: 0.55rem; font-weight: 700;
@@ -230,7 +230,7 @@ export default function ProductCard({
         .pc-stock-inline--in  { color: #4ADE80; }
         .pc-stock-inline--out { color: #F87171; }
 
-        /* Actions — mt-auto pins to card bottom */
+        /* Actions â€” mt-auto pins to card bottom */
         .pc-actions-row {
           display: grid;
           grid-template-columns: 1fr auto 0.52fr;

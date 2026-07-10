@@ -61,11 +61,11 @@ export default function ProductReviews({ productName }: { productName: string })
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
               <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: '2rem', fontWeight: 700, color: '#F8F9FB' }}>
-                {reviews.length > 0 ? avg.toFixed(1) : '—'}
+                {reviews.length > 0 ? avg.toFixed(1) : 'â€”'}
               </span>
               {reviews.length > 0 && (
                 <span style={{ color: '#F97316', fontSize: '1.1rem', letterSpacing: 2 }}>
-                  {'★'.repeat(Math.round(avg))}{'☆'.repeat(5 - Math.round(avg))}
+                  {'â˜…'.repeat(Math.round(avg))}{'â˜†'.repeat(5 - Math.round(avg))}
                 </span>
               )}
               <span style={{ fontSize: 13, color: '#5A6E80' }}>
@@ -77,7 +77,7 @@ export default function ProductReviews({ productName }: { productName: string })
             <button
               onClick={() => setShowForm(s => !s)}
               style={{ padding: '10px 22px', borderRadius: 8, background: showForm ? 'rgba(249,115,22,0.15)' : 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}>
-              {showForm ? '✕ Close' : '✏️ Write a Review'}
+              {showForm ? 'âœ• Close' : 'âœï¸ Write a Review'}
             </button>
           )}
         </div>
@@ -85,7 +85,7 @@ export default function ProductReviews({ productName }: { productName: string })
         {/* Success message */}
         {done && (
           <div style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.2)', borderRadius: 10, padding: '16px 20px', marginBottom: 28, color: '#25D366', fontSize: 14 }}>
-            ✅ Thank you for your review! It will appear once approved by our team.
+            âœ… Thank you for your review! It will appear once approved by our team.
           </div>
         )}
 
@@ -103,7 +103,7 @@ export default function ProductReviews({ productName }: { productName: string })
                 {[1,2,3,4,5].map(n => (
                   <button key={n} onClick={() => set('rating', n)}
                     style={{ fontSize: 24, background: 'none', border: 'none', cursor: 'pointer', color: n <= form.rating ? '#F97316' : '#2A3A55', padding: 0, transition: 'color 0.1s' }}>
-                    ★
+                    â˜…
                   </button>
                 ))}
               </div>
@@ -153,7 +153,7 @@ export default function ProductReviews({ productName }: { productName: string })
           <div style={{ color: '#5A6E80', fontSize: 14, textAlign: 'center', padding: '24px 0' }}>Loading reviews...</div>
         ) : reviews.length === 0 ? (
           <div style={{ color: '#5A6E80', fontSize: 14, textAlign: 'center', padding: '32px 0', border: '1px dashed rgba(249,115,22,0.1)', borderRadius: 12 }}>
-            No reviews yet — be the first to share your experience with this product.
+            No reviews yet â€” be the first to share your experience with this product.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -169,7 +169,7 @@ export default function ProductReviews({ productName }: { productName: string })
                       {r.role && <div style={{ fontSize: 11, color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{r.role}</div>}
                     </div>
                   </div>
-                  <span style={{ color: '#F97316', fontSize: 14, letterSpacing: 2 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                  <span style={{ color: '#F97316', fontSize: 14, letterSpacing: 2 }}>{'â˜…'.repeat(r.rating)}{'â˜†'.repeat(5 - r.rating)}</span>
                 </div>
                 <p style={{ fontSize: 14, color: '#C8B8A0', lineHeight: 1.7, margin: 0 }}>{r.message}</p>
               </div>
@@ -180,3 +180,4 @@ export default function ProductReviews({ productName }: { productName: string })
     </section>
   );
 }
+

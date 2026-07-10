@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 import LocalBusinessSchema from '@/components/LocalBusinessSchema';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
-const SITE_URL = 'https://karurplywood.co.in';
+const SITE_URL = 'https://www.karurplywood.co.in';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -20,7 +20,7 @@ export default function DisclaimerPage() {
         Product photographs on this website are for <strong>illustrative and reference purposes only</strong>. Actual products may differ from images due to:
       </p>
       <ul>
-        <li>Screen calibration differences — colors may appear slightly different on various monitors, phones, and tablets</li>
+        <li>Screen calibration differences â€” colors may appear slightly different on various monitors, phones, and tablets</li>
         <li>Photography lighting and angle variations</li>
         <li>Batch-to-batch variation in manufacturing</li>
         <li>The nature of photographing large sheets in a compressed image format</li>
@@ -43,8 +43,8 @@ export default function DisclaimerPage() {
         Laminate and surface finish products (HPL, acrylic, PVC edge banding, etc.) may show:
       </p>
       <ul>
-        <li>Color variation between different production batches — if you require color consistency across a project, specify this when ordering and we will supply from the same batch where possible</li>
-        <li>Gradual color change over time when exposed to UV light (sunlight) — this is a known characteristic of organic dyes used in laminates, not a manufacturing defect</li>
+        <li>Color variation between different production batches â€” if you require color consistency across a project, specify this when ordering and we will supply from the same batch where possible</li>
+        <li>Gradual color change over time when exposed to UV light (sunlight) â€” this is a known characteristic of organic dyes used in laminates, not a manufacturing defect</li>
         <li>Texture feel differences when viewed or touched at different angles (directionality in woodgrain and embossed textures)</li>
       </ul>
       <p>For large projects requiring color-matched quantities, always request a physical sample from us before ordering in bulk.</p>
@@ -95,9 +95,9 @@ export default function DisclaimerPage() {
       <h2>9. Contact Us</h2>
       <p>
         If you have questions about a specific product before ordering, we encourage you to contact us directly:<br />
-        📞 <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a>&nbsp;&nbsp;
-        💬 <a href={`https://wa.me/${CONTACT.wa}`} target="_blank" rel="noopener">WhatsApp</a>&nbsp;&nbsp;
-        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        ðŸ“ž <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a>&nbsp;&nbsp;
+        ðŸ’¬ <a href={`https://wa.me/${CONTACT.wa}`} target="_blank" rel="noopener">WhatsApp</a>&nbsp;&nbsp;
+        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
       </p>
     </LegalPageLayout>
   );

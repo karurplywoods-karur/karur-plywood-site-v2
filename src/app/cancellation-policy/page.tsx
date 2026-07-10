@@ -27,13 +27,13 @@ export default function CancellationPolicyPage() {
 
       <h2>2. Cancellation After Dispatch</h2>
       <p>
-        Once an order has been dispatched for delivery, it <strong>cannot be cancelled</strong>. If you no longer want the product, you may refuse delivery at the door — the product will be returned to us and we will assess a return/refund per our <a href="/shipping-returns">Shipping &amp; Returns Policy</a>.
+        Once an order has been dispatched for delivery, it <strong>cannot be cancelled</strong>. If you no longer want the product, you may refuse delivery at the door â€” the product will be returned to us and we will assess a return/refund per our <a href="/shipping-returns">Shipping &amp; Returns Policy</a>.
       </p>
       <p>Please note that delivery charges, if any, will be deducted from the refund in this case.</p>
 
       <h2>3. Custom-Cut Plywood</h2>
       <p>
-        Custom-cut orders — where sheets are cut to specific dimensions as requested — <strong>cannot be cancelled once cutting has commenced</strong>. We will always confirm your dimensions with you before beginning work. Once you confirm, the order is binding.
+        Custom-cut orders â€” where sheets are cut to specific dimensions as requested â€” <strong>cannot be cancelled once cutting has commenced</strong>. We will always confirm your dimensions with you before beginning work. Once you confirm, the order is binding.
       </p>
       <ul>
         <li>Cancellation requested before cutting begins: fully refunded</li>
@@ -45,11 +45,11 @@ export default function CancellationPolicyPage() {
       <ul>
         <li>Require a <strong>50% advance payment</strong> before production or procurement begins</li>
         <li>Can be cancelled for a <strong>full advance refund</strong> within 24 hours of placing the order, provided production has not begun</li>
-        <li>Cannot be cancelled once procurement or production has commenced — the advance is forfeited to cover material and sourcing costs</li>
+        <li>Cannot be cancelled once procurement or production has commenced â€” the advance is forfeited to cover material and sourcing costs</li>
       </ul>
 
       <h2>5. Bulk Orders</h2>
-      <p>Bulk orders (typically above ₹50,000 in value) may be subject to specific cancellation terms agreed upon at the time of ordering, which will be stated in your quotation or order confirmation. In general:</p>
+      <p>Bulk orders (typically above â‚¹50,000 in value) may be subject to specific cancellation terms agreed upon at the time of ordering, which will be stated in your quotation or order confirmation. In general:</p>
       <ul>
         <li>Cancellation more than 48 hours before scheduled delivery: no charge</li>
         <li>Cancellation within 48 hours of scheduled delivery: a restocking charge of up to 10% of the order value may apply</li>
@@ -72,10 +72,10 @@ export default function CancellationPolicyPage() {
       </p>
       <p>
         <strong>{CONTACT.businessName}</strong><br />
-        📍 {CONTACT.address}<br />
-        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        ðŸ“ {CONTACT.address}<br />
+        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
       </p>
-      <p>Related: <a href="/refund-policy">Refund Policy</a> · <a href="/shipping-returns">Shipping &amp; Returns</a></p>
+      <p>Related: <a href="/refund-policy">Refund Policy</a> Â· <a href="/shipping-returns">Shipping &amp; Returns</a></p>
     </LegalPageLayout>
   );
 }

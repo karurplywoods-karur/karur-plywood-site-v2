@@ -58,7 +58,7 @@ export default function RegisterPage() {
   if (done) return (
     <div className="auth-page">
       <div className="auth-card" style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 52, marginBottom: 16 }}>📧</div>
+        <div style={{ fontSize: 52, marginBottom: 16 }}>ðŸ“§</div>
         <h2 className="auth-title">Check your email</h2>
         <p className="auth-sub">We sent a confirmation link to <strong style={{ color: '#F97316' }}>{form.email}</strong>. Click it to activate your account.</p>
         <Link href="/auth/login" className="auth-btn-primary" style={{ display: 'block', marginTop: 20, textDecoration: 'none', textAlign: 'center', padding: '13px 0' }}>Back to Login</Link>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <div className="auth-logo-mark">🪵</div>
+          <div className="auth-logo-mark">ðŸªµ</div>
           <div className="auth-logo-text">KARUR PLYWOOD</div>
           <div className="auth-logo-sub">& Company</div>
         </div>
@@ -108,7 +108,7 @@ export default function RegisterPage() {
               value={form.confirm} onChange={e => set('confirm', e.target.value)} />
           </div>
           <button type="submit" disabled={loading} className="auth-btn-primary">
-            {loading ? '⏳ Creating account...' : 'Create Account'}
+            {loading ? 'â³ Creating account...' : 'Create Account'}
           </button>
         </form>
 
@@ -160,3 +160,4 @@ const authStyles = `
   .auth-switch { text-align:center; font-size:13px; color:#7A8EA8; }
   .auth-link { color:#F97316; text-decoration:none; font-weight:600; }
 `;
+

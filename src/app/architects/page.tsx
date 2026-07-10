@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 async function getData() {
-  // architect_profile table does not exist — use 'architects' table instead.
+  // architect_profile table does not exist â€” use 'architects' table instead.
   // architects table has: id, name, slug, photo_url, bio, verified, etc.
   // architect_projects table has: id, title, cover_image, description, etc.
   const [{ data: profile }, { data: projects }] = await Promise.all([
@@ -51,7 +51,7 @@ export default async function ArchitectPage() {
             <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:60, alignItems:'center' }} className="arch-hero-grid">
               <div>
                 <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:2, padding:'4px 16px', fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', marginBottom:20 }}>
-                  Partner Architect · Karur Plywood &amp; Company
+                  Partner Architect Â· Karur Plywood &amp; Company
                 </div>
                 <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:10 }}>
                   {arch.name.toUpperCase()}
@@ -71,8 +71,8 @@ export default async function ArchitectPage() {
                 )}
 
                 <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-                  <a href={consultWA} target="_blank" rel="noopener" className="btn-p">💬 Book a Consultation</a>
-                  {arch.phone && <a href={`tel:${arch.phone}`} className="btn-s">📞 {arch.phone}</a>}
+                  <a href={consultWA} target="_blank" rel="noopener" className="btn-p">ðŸ’¬ Book a Consultation</a>
+                  {arch.phone && <a href={`tel:${arch.phone}`} className="btn-s">ðŸ“ž {arch.phone}</a>}
                 </div>
               </div>
 
@@ -81,7 +81,7 @@ export default async function ArchitectPage() {
                 <div style={{ width:180, height:180, borderRadius:'50%', overflow:'hidden', border:'3px solid rgba(249,115,22,0.4)', background:'rgba(25,55,109,0.5)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                   {arch.photo_url
                     ? <img src={arch.photo_url} alt={arch.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
-                    : <span style={{ fontSize:64 }}>🏛️</span>
+                    : <span style={{ fontSize:64 }}>ðŸ›ï¸</span>
                   }
                 </div>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, width:200 }}>
@@ -109,9 +109,9 @@ export default async function ArchitectPage() {
       {arch?.awards?.length > 0 && (
         <div style={{ background:'rgba(249,115,22,0.04)', borderBottom:'1px solid rgba(249,115,22,0.1)', padding:'18px 0' }}>
           <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem', display:'flex', gap:32, alignItems:'center', flexWrap:'wrap' }} className="arch-pad">
-            <span style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', flexShrink:0 }}>🏆 Awards</span>
+            <span style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', flexShrink:0 }}>ðŸ† Awards</span>
             {arch.awards.map((a: string) => (
-              <span key={a} style={{ fontSize:13, color:'#A8BCCC' }}>· {a}</span>
+              <span key={a} style={{ fontSize:13, color:'#A8BCCC' }}>Â· {a}</span>
             ))}
           </div>
         </div>
@@ -125,12 +125,12 @@ export default async function ArchitectPage() {
 
           {projs.length === 0 ? (
             <div style={{ textAlign:'center', padding:'60px 0', color:'#7A8EA8' }}>
-              <div style={{ fontSize:48, marginBottom:12 }}>🏛️</div>
+              <div style={{ fontSize:48, marginBottom:12 }}>ðŸ›ï¸</div>
               <p>Projects will be added soon. Check back shortly.</p>
             </div>
           ) : (
             <>
-              {/* Featured projects — large cards */}
+              {/* Featured projects â€” large cards */}
               {featured.length > 0 && (
                 <div style={{ display:'flex', flexDirection:'column', gap:20, marginBottom:32 }}>
                   {featured.map((p: any) => (
@@ -138,18 +138,18 @@ export default async function ArchitectPage() {
                       <div className="arch-project-img">
                         {p.cover_image
                           ? <Image src={p.cover_image} alt={p.title} fill style={{ objectFit:'cover' }} sizes="(max-width:768px) 100vw, 50vw" />
-                          : <div style={{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:80, background:'rgba(25,55,109,0.5)' }}>🏛️</div>
+                          : <div style={{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:80, background:'rgba(25,55,109,0.5)' }}>ðŸ›ï¸</div>
                         }
                         <div className="arch-project-overlay" />
                       </div>
                       <div className="arch-project-info">
                         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12, flexWrap:'wrap' }}>
                           <span style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', background:`${TYPE_COLOR[p.project_type] || '#F97316'}20`, color:TYPE_COLOR[p.project_type] || '#F97316', padding:'3px 10px', borderRadius:2 }}>{p.project_type}</span>
-                          <span style={{ fontSize:11, color:'#7A8EA8' }}>⭐ Featured</span>
-                          {p.year && <span style={{ fontSize:11, color:'#7A8EA8' }}>📅 {p.year}</span>}
+                          <span style={{ fontSize:11, color:'#7A8EA8' }}>â­ Featured</span>
+                          {p.year && <span style={{ fontSize:11, color:'#7A8EA8' }}>ðŸ“… {p.year}</span>}
                         </div>
                         <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.6rem,2.5vw,2.2rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:1.05, marginBottom:10 }}>{p.title}</h3>
-                        <div style={{ fontSize:13, color:'#7A8EA8', marginBottom:12 }}>📍 {p.location}{p.area_sqft ? ` · ${p.area_sqft.toLocaleString()} sq.ft` : ''}{p.budget_range ? ` · ${p.budget_range}` : ''}</div>
+                        <div style={{ fontSize:13, color:'#7A8EA8', marginBottom:12 }}>ðŸ“ {p.location}{p.area_sqft ? ` Â· ${p.area_sqft.toLocaleString()} sq.ft` : ''}{p.budget_range ? ` Â· ${p.budget_range}` : ''}</div>
                         <p style={{ fontSize:14, color:'#7A8EA8', lineHeight:1.75, marginBottom:16, fontWeight:300 }}>{p.description}</p>
                         {p.tags?.length > 0 && (
                           <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:20 }}>
@@ -159,7 +159,7 @@ export default async function ArchitectPage() {
                           </div>
                         )}
                         <a href={consultWA} target="_blank" rel="noopener" className="btn-wa" style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
-                          💬 Enquire About This Project
+                          ðŸ’¬ Enquire About This Project
                         </a>
                       </div>
                     </div>
@@ -167,7 +167,7 @@ export default async function ArchitectPage() {
                 </div>
               )}
 
-              {/* Rest — 3 column grid */}
+              {/* Rest â€” 3 column grid */}
               {rest.length > 0 && (
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }} className="arch-grid">
                   {rest.map((p: any) => (
@@ -175,7 +175,7 @@ export default async function ArchitectPage() {
                       <div style={{ position:'relative', height:200, overflow:'hidden' }}>
                         {p.cover_image
                           ? <Image src={p.cover_image} alt={p.title} fill style={{ objectFit:'cover', transition:'transform 0.4s' }} className="arch-card-img" sizes="(max-width:768px) 100vw, 33vw" />
-                          : <div style={{ height:'100%', background:'rgba(25,55,109,0.5)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:56 }}>🏛️</div>
+                          : <div style={{ height:'100%', background:'rgba(25,55,109,0.5)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:56 }}>ðŸ›ï¸</div>
                         }
                       </div>
                       <div style={{ padding:'18px 20px 22px' }}>
@@ -184,10 +184,10 @@ export default async function ArchitectPage() {
                           {p.year && <span style={{ fontSize:11, color:'#7A8EA8' }}>{p.year}</span>}
                         </div>
                         <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'0.92rem', color:'#F8F9FB', marginBottom:6, lineHeight:1.3 }}>{p.title}</div>
-                        <div style={{ fontSize:12, color:'#7A8EA8', marginBottom:10 }}>📍 {p.location}</div>
+                        <div style={{ fontSize:12, color:'#7A8EA8', marginBottom:10 }}>ðŸ“ {p.location}</div>
                         <p style={{ fontSize:12, color:'#7A8EA8', lineHeight:1.65, marginBottom:12 }}>{p.description.slice(0,120)}...</p>
                         <a href={consultWA} target="_blank" rel="noopener" style={{ fontSize:12, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.08em', color:'#F97316', textDecoration:'none' }}>
-                          Enquire About This →
+                          Enquire About This â†’
                         </a>
                       </div>
                     </div>
@@ -208,7 +208,7 @@ export default async function ArchitectPage() {
               </p>
             </div>
             <a href={consultWA} target="_blank" rel="noopener" className="btn-p" style={{ flexShrink:0 }}>
-              💬 Book Free Consultation
+              ðŸ’¬ Book Free Consultation
             </a>
           </div>
         </div>

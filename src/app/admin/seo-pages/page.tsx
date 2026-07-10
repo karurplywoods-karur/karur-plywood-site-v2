@@ -1,6 +1,6 @@
 'use client';
 // src/app/admin/seo-pages/page.tsx
-// List and manage all SEO pages — uses unified seo_pages table
+// List and manage all SEO pages â€” uses unified seo_pages table
 
 import { useState, useEffect } from 'react';
 
@@ -65,7 +65,7 @@ export default function SEOPagesList() {
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#0E0B08', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>â³</div>
         <div style={{ color: '#9A8070', fontFamily: 'Outfit,sans-serif' }}>Loading...</div>
       </div>
     </div>
@@ -82,7 +82,7 @@ export default function SEOPagesList() {
               SEO Pages
             </div>
             <div style={{ fontSize: 14, color: '#9A8070' }}>
-              {pages.length} pages · {pages.filter(p => p.status === 'published').length} published
+              {pages.length} pages Â· {pages.filter(p => p.status === 'published').length} published
             </div>
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
@@ -101,10 +101,10 @@ export default function SEOPagesList() {
               }}
             >
               <option value="all">All Statuses</option>
-              <option value="draft">📝 Draft</option>
-              <option value="pending_review">⏳ Pending Review</option>
-              <option value="published">✅ Published</option>
-              <option value="rejected">❌ Rejected</option>
+              <option value="draft">ðŸ“ Draft</option>
+              <option value="pending_review">â³ Pending Review</option>
+              <option value="published">âœ… Published</option>
+              <option value="rejected">âŒ Rejected</option>
             </select>
             <a 
               href="/admin/seo-generator"
@@ -128,7 +128,7 @@ export default function SEOPagesList() {
         {/* Pages List */}
         {pages.length === 0 && (
           <div style={{ textAlign: 'center', padding: '60px 0', color: '#9A8070' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>📄</div>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>ðŸ“„</div>
             <div style={{ fontSize: 16, marginBottom: 8 }}>No SEO pages found</div>
             <div style={{ fontSize: 13 }}>Generate content to see pages here</div>
           </div>
@@ -144,10 +144,10 @@ export default function SEOPagesList() {
                     {page.title || `${page.seo_categories?.display_name} in ${page.seo_areas?.display_name}`}
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 12, color: '#9A8070', marginBottom: 8 }}>
-                    <span>📍 {page.seo_areas?.display_name}</span>
-                    <span>📦 {page.seo_categories?.display_name}</span>
-                    {page.word_count && <span>📝 {page.word_count} words</span>}
-                    {page.content_version && <span>🔢 v{page.content_version}</span>}
+                    <span>ðŸ“ {page.seo_areas?.display_name}</span>
+                    <span>ðŸ“¦ {page.seo_categories?.display_name}</span>
+                    {page.word_count && <span>ðŸ“ {page.word_count} words</span>}
+                    {page.content_version && <span>ðŸ”¢ v{page.content_version}</span>}
                   </div>
                   <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                     <span style={{ 
@@ -164,7 +164,7 @@ export default function SEOPagesList() {
                       {page.status}
                     </span>
                     {page.is_published && (
-                      <span style={{ fontSize: 11, color: '#25D366' }}>✓ Live</span>
+                      <span style={{ fontSize: 11, color: '#25D366' }}>âœ“ Live</span>
                     )}
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default function SEOPagesList() {
                       fontWeight: 600,
                     }}
                   >
-                    👁 Preview
+                    ðŸ‘ Preview
                   </a>
                   {page.status === 'pending_review' && (
                     <button 
@@ -213,7 +213,7 @@ export default function SEOPagesList() {
                         fontWeight: 600,
                       }}
                     >
-                      ✓ Publish
+                      âœ“ Publish
                     </button>
                   )}
                 </div>
@@ -225,3 +225,4 @@ export default function SEOPagesList() {
     </div>
   );
 }
+

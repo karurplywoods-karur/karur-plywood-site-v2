@@ -47,7 +47,7 @@ export default function ProductImageGallery({
         <Image
           key={validImages[active]}
           src={validImages[active]}
-          alt={`${productName} — image ${active + 1}`}
+          alt={`${productName} â€” image ${active + 1}`}
           fill
           style={{ objectFit: 'cover', transition: 'opacity 0.25s' }}
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -74,12 +74,12 @@ export default function ProductImageGallery({
               onClick={() => setActive(i => (i - 1 + validImages.length) % validImages.length)}
               style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               aria-label="Previous image"
-            >‹</button>
+            >â€¹</button>
             <button
               onClick={() => setActive(i => (i + 1) % validImages.length)}
               style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               aria-label="Next image"
-            >›</button>
+            >â€º</button>
           </>
         )}
       </div>
@@ -117,3 +117,4 @@ export default function ProductImageGallery({
     </div>
   );
 }
+

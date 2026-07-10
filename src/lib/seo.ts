@@ -16,3 +16,4 @@ export function productLocationSlug(categorySlug: string, areaSlug: string) {
 export function productLocationPath(areaSlug: string, categorySlug: string) {
   return `/location/${areaSlug}/${categorySlug}`;
 }
+

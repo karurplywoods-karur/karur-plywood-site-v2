@@ -1,10 +1,10 @@
-// src/app/contact/page.tsx — FIXED: clickable phone/email, real address
+// src/app/contact/page.tsx â€” FIXED: clickable phone/email, real address
 import { Metadata } from 'next';
 import EnquiryForm from '@/components/EnquiryForm';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Contact Us — Call or WhatsApp',
+  title: 'Contact Us â€” Call or WhatsApp',
   description: 'Contact Karur Plywood & Company. Call +91 91596 66538, WhatsApp, or visit our showroom at Covai Main Road, Reddipalayam, Karur. Get a free quote today.',
   alternates: { canonical: `${CONTACT.siteUrl}/contact` },
   openGraph: {
@@ -17,12 +17,12 @@ export const metadata: Metadata = {
 const WA = CONTACT.wa;
 
 const HOURS = [
-  ['Monday', '9:30 AM – 7:30 PM'],
-  ['Tuesday', '9:30 AM – 7:30 PM'],
-  ['Wednesday', '9:30 AM – 7:30 PM'],
-  ['Thursday', '9:30 AM – 7:30 PM'],
-  ['Friday', '9:30 AM – 7:30 PM'],
-  ['Saturday', '9:30 AM – 7:30 PM'],
+  ['Monday', '9:30 AM â€“ 7:30 PM'],
+  ['Tuesday', '9:30 AM â€“ 7:30 PM'],
+  ['Wednesday', '9:30 AM â€“ 7:30 PM'],
+  ['Thursday', '9:30 AM â€“ 7:30 PM'],
+  ['Friday', '9:30 AM â€“ 7:30 PM'],
+  ['Saturday', '9:30 AM â€“ 7:30 PM'],
   ['Sunday', 'Closed'],
 ];
 
@@ -56,16 +56,16 @@ export default function ContactPage() {
 
           {/* Left: contact details */}
           <div>
-            {/* WhatsApp — primary CTA */}
+            {/* WhatsApp â€” primary CTA */}
             <a
               href={`https://wa.me/${WA}?text=Hi%2C+I+need+help+with+a+product+enquiry.`}
               target="_blank" rel="noopener"
               style={{ display:'flex', alignItems:'center', gap:14, background:'linear-gradient(135deg,rgba(13,43,23,0.9),rgba(9,24,16,0.9))', border:'1px solid rgba(37,211,102,0.25)', borderRadius:12, padding:'18px 20px', marginBottom:16, textDecoration:'none', transition:'all 0.2s' }}
               className="wa-hover-card"
             >
-              <div style={{ width:50, height:50, background:'#25D366', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:24 }}>💬</div>
+              <div style={{ width:50, height:50, background:'#25D366', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:24 }}>ðŸ’¬</div>
               <div>
-                <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:'#F8F9FB', marginBottom:3 }}>WhatsApp — Fastest Response</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:'#F8F9FB', marginBottom:3 }}>WhatsApp â€” Fastest Response</div>
                 <div style={{ fontSize:13, color:'rgba(255,255,255,0.45)', lineHeight:1.6 }}>Send your requirements and get a reply within minutes</div>
               </div>
             </a>
@@ -75,13 +75,13 @@ export default function ContactPage() {
               target="_blank" rel="noopener"
               style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, width:'100%', padding:'13px 0', borderRadius:8, background:'#25D366', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:14, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', marginBottom:32, transition:'background 0.2s' }}
             >
-              💬 Open WhatsApp Chat
+              ðŸ’¬ Open WhatsApp Chat
             </a>
 
             <div style={{ display:'flex', flexDirection:'column', gap:22 }}>
-              {/* Phone — FIXED: real number + clickable */}
+              {/* Phone â€” FIXED: real number + clickable */}
               <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>📞</div>
+                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>ðŸ“ž</div>
                 <div>
                   <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:4 }}>Phone</div>
                   {/* FIXED: real number, clickable tel: link */}
@@ -92,28 +92,28 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Address — FIXED: real address */}
+              {/* Address â€” FIXED: real address */}
               <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>📍</div>
+                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>ðŸ“</div>
                 <div>
                   <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:4 }}>Address</div>
                   <div style={{ fontSize:15, color:'#F8F9FB', fontWeight:500, lineHeight:1.6 }}>
                     Covai Main Road, Reddipalayam<br />
-                    Karur, Tamil Nadu – 639 008
+                    Karur, Tamil Nadu â€“ 639 008
                   </div>
                   <a
                     href="https://maps.google.com/?q=Karur+Plywood+Company+Karur+Tamil+Nadu"
                     target="_blank" rel="noopener"
                     style={{ fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.06em', textDecoration:'none', display:'inline-block', marginTop:6 }}
                   >
-                    🗺️ Get Directions →
+                    ðŸ—ºï¸ Get Directions â†’
                   </a>
                 </div>
               </div>
 
-              {/* Email — FIXED: real email + clickable */}
+              {/* Email â€” FIXED: real email + clickable */}
               <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>✉️</div>
+                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>âœ‰ï¸</div>
                 <div>
                   <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:4 }}>Email</div>
                   {/* FIXED: real email, clickable mailto: link */}
@@ -126,7 +126,7 @@ export default function ContactPage() {
 
               {/* Hours */}
               <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>⏰</div>
+                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>â°</div>
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:10 }}>Business Hours</div>
                   <div style={{ background:'rgba(25,55,109,0.3)', border:'1px solid rgba(249,115,22,0.1)', borderRadius:8, overflow:'hidden' }}>
@@ -143,7 +143,7 @@ export default function ContactPage() {
                     ))}
                   </div>
                   <div style={{ fontSize:12, color:'#7A8EA8', marginTop:8 }}>
-                    💡 For urgent orders after hours, <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" style={{ color:'#25D366', textDecoration:'none' }}>WhatsApp us anytime</a>
+                    ðŸ’¡ For urgent orders after hours, <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" style={{ color:'#25D366', textDecoration:'none' }}>WhatsApp us anytime</a>
                   </div>
                 </div>
               </div>
@@ -176,14 +176,14 @@ export default function ContactPage() {
             ) : (
               <div style={{ height:'100%', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:16, background:'linear-gradient(135deg,#0d1f3a,#19376D)', position:'relative' }}>
                 <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(249,115,22,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.04) 1px,transparent 1px)', backgroundSize:'40px 40px' }}/>
-                <div style={{ fontSize:52, position:'relative' }}>📍</div>
+                <div style={{ fontSize:52, position:'relative' }}>ðŸ“</div>
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:'0.04em', color:'#F8F9FB', position:'relative', textAlign:'center' }}>Karur Plywood &amp; Company</div>
-                <div style={{ fontSize:14, color:'#7A8EA8', position:'relative', textAlign:'center' }}>Covai Main Road, Reddipalayam, Karur – 639 008</div>
+                <div style={{ fontSize:14, color:'#7A8EA8', position:'relative', textAlign:'center' }}>Covai Main Road, Reddipalayam, Karur â€“ 639 008</div>
                 <a
                   href="https://maps.google.com/?q=Karur+Plywood+Company+Covai+Main+Road+Reddipalayam+Karur"
                   target="_blank" rel="noopener"
                   style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'11px 22px', borderRadius:6, background:'#F97316', color:'#0B2447', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', position:'relative' }}>
-                  🗺️ Open Google Maps
+                  ðŸ—ºï¸ Open Google Maps
                 </a>
               </div>
             )}

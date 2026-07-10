@@ -1,4 +1,4 @@
-// src/app/manifest.ts — Web App Manifest for browser install prompt
+// src/app/manifest.ts â€” Web App Manifest for browser install prompt
 import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
@@ -30,3 +30,4 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
   };
 }
+

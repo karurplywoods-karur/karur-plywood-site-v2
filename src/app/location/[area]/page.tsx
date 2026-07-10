@@ -36,7 +36,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     return {
       title: `Plywood, Laminates & Hardware Dealer in ${areaName} | Karur Plywood`,
       description: `Wholesale plywood, laminates, doors, and hardware supply in ${areaName}. Direct job-site delivery within ${areaData.delivery_time || '1-2 days'}, GST invoicing, and trade pricing for contractors and carpenters.`,
-      alternates: { canonical: `https://karurplywood.co.in/location/${area}` },
+      alternates: { canonical: `https://www.karurplywood.co.in/location/${area}` },
       robots: { index: true, follow: true },
     };
   } catch {

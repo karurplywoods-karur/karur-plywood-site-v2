@@ -16,16 +16,16 @@ export default function ShippingReturnsPage() {
       <p>
         We deliver across Karur district and surrounding areas including Trichy, Namakkal, Erode, Salem, and Dindigul.
         Delivery availability and timelines for your specific location are shown on each area page.
-        For areas not listed, contact us directly — we deliver to many more locations on request.
+        For areas not listed, contact us directly â€” we deliver to many more locations on request.
       </p>
 
       <h2>Delivery Timelines</h2>
       <ul>
         <li><strong>Karur city &amp; suburbs:</strong> Same day or next day delivery for in-stock items ordered before 2 PM</li>
-        <li><strong>Within 30km of Karur:</strong> 1–2 business days</li>
-        <li><strong>Trichy, Namakkal, Erode, Salem, Dindigul:</strong> 1–3 business days depending on order size and location</li>
-        <li><strong>Bulk orders above 50 sheets:</strong> Timeline confirmed at order stage — typically 2–4 days for scheduling a delivery vehicle</li>
-        <li><strong>Made-to-order items:</strong> 5–10 business days — exact timeline confirmed at order placement</li>
+        <li><strong>Within 30km of Karur:</strong> 1â€“2 business days</li>
+        <li><strong>Trichy, Namakkal, Erode, Salem, Dindigul:</strong> 1â€“3 business days depending on order size and location</li>
+        <li><strong>Bulk orders above 50 sheets:</strong> Timeline confirmed at order stage â€” typically 2â€“4 days for scheduling a delivery vehicle</li>
+        <li><strong>Made-to-order items:</strong> 5â€“10 business days â€” exact timeline confirmed at order placement</li>
       </ul>
       <p>
         Delivery timelines are estimates and may vary due to weather, vehicle availability, or material stock. We will notify you proactively via WhatsApp if there is any delay.
@@ -33,8 +33,8 @@ export default function ShippingReturnsPage() {
 
       <h2>Delivery Charges</h2>
       <ul>
-        <li><strong>Orders above ₹5,000:</strong> Free delivery within Karur city and select nearby areas</li>
-        <li><strong>Orders below ₹5,000 or longer distances:</strong> Delivery charge calculated and confirmed before order is finalized</li>
+        <li><strong>Orders above â‚¹5,000:</strong> Free delivery within Karur city and select nearby areas</li>
+        <li><strong>Orders below â‚¹5,000 or longer distances:</strong> Delivery charge calculated and confirmed before order is finalized</li>
         <li><strong>Bulk / truck loads:</strong> Transport arranged and charged separately based on distance and load</li>
       </ul>
 
@@ -42,7 +42,7 @@ export default function ShippingReturnsPage() {
       <ul>
         <li>Our team will call or WhatsApp you to confirm the delivery date and time before dispatch</li>
         <li>Please ensure someone is available to receive and inspect the material at the delivery address</li>
-        <li>Check all items against your order at the time of delivery — report any discrepancy or visible damage before signing the delivery receipt</li>
+        <li>Check all items against your order at the time of delivery â€” report any discrepancy or visible damage before signing the delivery receipt</li>
         <li>For large material (full sheets, doors), ensure clear access to the delivery point</li>
       </ul>
 
@@ -76,8 +76,8 @@ export default function ShippingReturnsPage() {
         For approved returns, refunds are processed as follows:
       </p>
       <ul>
-        <li><strong>Online payments:</strong> Refunded to the original payment method within 5–7 business days of approval</li>
-        <li><strong>Cash on Delivery:</strong> Refunded via bank transfer or UPI within 3–5 business days — share your account details when raising the claim</li>
+        <li><strong>Online payments:</strong> Refunded to the original payment method within 5â€“7 business days of approval</li>
+        <li><strong>Cash on Delivery:</strong> Refunded via bank transfer or UPI within 3â€“5 business days â€” share your account details when raising the claim</li>
       </ul>
       <p>
         For full details on refund timelines, partial refunds, and COD refund procedures, see our <a href="/refund-policy">Refund Policy</a>.
@@ -88,13 +88,14 @@ export default function ShippingReturnsPage() {
       <p>
         <strong>{CONTACT.businessName}</strong><br />
         GST No: {CONTACT.gst}<br />
-        📍 {CONTACT.address}<br />
-        📞 <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
-        💬 <a href={`https://wa.me/${CONTACT.wa}`} target="_blank" rel="noopener">WhatsApp Us</a><br />
-        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
-        ⏰ {CONTACT.hours}
+        ðŸ“ {CONTACT.address}<br />
+        ðŸ“ž <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
+        ðŸ’¬ <a href={`https://wa.me/${CONTACT.wa}`} target="_blank" rel="noopener">WhatsApp Us</a><br />
+        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
+        â° {CONTACT.hours}
       </p>
-      <p>Related: <a href="/refund-policy">Refund Policy</a> · <a href="/cancellation-policy">Cancellation Policy</a> · <a href="/payment-policy">Payment Policy</a></p>
+      <p>Related: <a href="/refund-policy">Refund Policy</a> Â· <a href="/cancellation-policy">Cancellation Policy</a> Â· <a href="/payment-policy">Payment Policy</a></p>
     </LegalPageLayout>
   );
 }
+

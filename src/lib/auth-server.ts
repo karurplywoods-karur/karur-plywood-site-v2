@@ -38,3 +38,4 @@ export async function getCustomer() {
     .single();
   return data;
 }
+

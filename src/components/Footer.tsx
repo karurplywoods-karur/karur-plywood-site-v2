@@ -50,7 +50,7 @@ export default function Footer() {
   return (
     <footer className="kp-footer">
 
-      {/* ── Main grid ── */}
+      {/* â”€â”€ Main grid â”€â”€ */}
       <div className="kp-footer-main">
 
         {/* Brand column */}
@@ -71,29 +71,29 @@ export default function Footer() {
             Karur&apos;s trusted wholesale &amp; retail plywood, doors, laminates and hardware store. 25+ years of quality and service.
           </p>
           <div className="kp-footer-social">
-            <a href={CONTACT.social.facebook} target="_blank" rel="noopener" className="kp-social-icon" aria-label="Facebook">📘</a>
-            <a href={CONTACT.social.instagram} target="_blank" rel="noopener" className="kp-social-icon" aria-label="Instagram">📸</a>
-            <a href={CONTACT.social.youtube}   target="_blank" rel="noopener" className="kp-social-icon" aria-label="YouTube">▶️</a>
-            <a href={`https://wa.me/${WA}`}    target="_blank" rel="noopener" className="kp-social-icon kp-social-wa" aria-label="WhatsApp">💬</a>
+            <a href={CONTACT.social.facebook} target="_blank" rel="noopener" className="kp-social-icon" aria-label="Facebook">ðŸ“˜</a>
+            <a href={CONTACT.social.instagram} target="_blank" rel="noopener" className="kp-social-icon" aria-label="Instagram">ðŸ“¸</a>
+            <a href={CONTACT.social.youtube}   target="_blank" rel="noopener" className="kp-social-icon" aria-label="YouTube">â–¶ï¸</a>
+            <a href={`https://wa.me/${WA}`}    target="_blank" rel="noopener" className="kp-social-icon kp-social-wa" aria-label="WhatsApp">ðŸ’¬</a>
           </div>
 
           {/* Contact block */}
           <div className="kp-contact-block">
             <a href={`tel:${CONTACT.phoneRaw}`} className="kp-contact-row">
-              <span className="kp-contact-icon">📞</span>{CONTACT.phone}
+              <span className="kp-contact-icon">ðŸ“ž</span>{CONTACT.phone}
             </a>
             <a href={`https://wa.me/${WA}?text=Hi`} target="_blank" rel="noopener" className="kp-contact-row kp-wa-row">
-              <span className="kp-contact-icon">💬</span>WhatsApp Us
+              <span className="kp-contact-icon">ðŸ’¬</span>WhatsApp Us
             </a>
             <a href={`mailto:${CONTACT.email}`} className="kp-contact-row">
-              <span className="kp-contact-icon">✉️</span>{CONTACT.email}
+              <span className="kp-contact-icon">âœ‰ï¸</span>{CONTACT.email}
             </a>
             <span className="kp-contact-row kp-contact-text">
-              <span className="kp-contact-icon">📍</span>
+              <span className="kp-contact-icon">ðŸ“</span>
               <span>{CONTACT.address}</span>
             </span>
             <span className="kp-contact-row kp-contact-text">
-              <span className="kp-contact-icon">⏰</span>{CONTACT.hours}
+              <span className="kp-contact-icon">â°</span>{CONTACT.hours}
             </span>
             <span className="kp-contact-row kp-contact-text" style={{ opacity: 0.55, fontSize: '0.7rem' }}>
               <span className="kp-contact-icon" />Sunday: Closed
@@ -111,17 +111,17 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── GST strip ── */}
+      {/* â”€â”€ GST strip â”€â”€ */}
       <div className="kp-gst-strip">
         <span className="kp-gst-label">GST No:</span>
         <span className="kp-gst-value">{CONTACT.gst}</span>
-        <span className="kp-gst-sep">·</span>
+        <span className="kp-gst-sep">Â·</span>
         <span className="kp-gst-value">{CONTACT.businessName}</span>
-        <span className="kp-gst-sep">·</span>
+        <span className="kp-gst-sep">Â·</span>
         <span className="kp-gst-value">{CONTACT.address}</span>
       </div>
 
-      {/* ── Service areas strip ── */}
+      {/* â”€â”€ Service areas strip â”€â”€ */}
       <div className="kp-footer-areas">
         <div className="kp-footer-areas-inner">
           <span className="kp-footer-areas-label">Serving:</span>
@@ -131,10 +131,10 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── Bottom bar ── */}
+      {/* â”€â”€ Bottom bar â”€â”€ */}
       <div className="kp-footer-bottom">
         <span className="kp-footer-copy">
-          © 2025–2026 <span style={{ color: '#F97316' }}>Karur Plywood and Company</span>. All rights reserved.
+          Â© 2025â€“2026 <span style={{ color: '#F97316' }}>Karur Plywood and Company</span>. All rights reserved.
         </span>
         <div className="kp-footer-legal-row">
           {LEGAL_LINKS.map(([href, label]) => (
@@ -144,14 +144,14 @@ export default function Footer() {
       </div>
 
       <style>{`
-        /* ── Base ── */
+        /* â”€â”€ Base â”€â”€ */
         .kp-footer {
           border-top: 1px solid rgba(249,115,22,0.15);
           background: #070F1F;
           position: relative; z-index: 1;
         }
 
-        /* ── Main grid ── */
+        /* â”€â”€ Main grid â”€â”€ */
         .kp-footer-main {
           max-width: 1280px; margin: 0 auto;
           padding: 4rem 5rem 2.5rem;
@@ -160,7 +160,7 @@ export default function Footer() {
           gap: 4rem;
         }
 
-        /* ── Brand column ── */
+        /* â”€â”€ Brand column â”€â”€ */
         .kp-brand-col { display: flex; flex-direction: column; gap: 0; }
         .kp-footer-logo {
           display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.1rem;
@@ -198,7 +198,7 @@ export default function Footer() {
         .kp-wa-row:hover { color: #1aaa50 !important; }
         .kp-contact-icon { width: 14px; flex-shrink: 0; font-size: 12px; margin-top: 1px; }
 
-        /* ── Links grid ── */
+        /* â”€â”€ Links grid â”€â”€ */
         .kp-links-grid {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
@@ -218,7 +218,7 @@ export default function Footer() {
         }
         .kp-footer-link:hover { color: #F97316; }
 
-        /* ── GST strip ── */
+        /* â”€â”€ GST strip â”€â”€ */
         .kp-gst-strip {
           max-width: 1280px; margin: 0 auto;
           padding: 0.6rem 5rem;
@@ -233,7 +233,7 @@ export default function Footer() {
         .kp-gst-value { font-size: 0.7rem; color: #5A6E80; font-family: monospace; }
         .kp-gst-sep { color: rgba(249,115,22,0.3); font-size: 0.8rem; }
 
-        /* ── Areas strip ── */
+        /* â”€â”€ Areas strip â”€â”€ */
         .kp-footer-areas {
           border-top: 1px solid rgba(249,115,22,0.08);
           border-bottom: 1px solid rgba(249,115,22,0.08);
@@ -260,7 +260,7 @@ export default function Footer() {
         .kp-footer-area-link:first-of-type { border-left: none; }
         .kp-footer-area-link:hover { color: #F97316; }
 
-        /* ── Bottom bar ── */
+        /* â”€â”€ Bottom bar â”€â”€ */
         .kp-footer-bottom {
           border-top: 1px solid rgba(249,115,22,0.08);
           padding: 1.25rem 5rem;
@@ -277,7 +277,7 @@ export default function Footer() {
         }
         .kp-bottom-link:hover { color: #F97316; }
 
-        /* ── Responsive ── */
+        /* â”€â”€ Responsive â”€â”€ */
         @media(max-width:1200px){
           .kp-footer-main { padding: 2.5rem 2rem; gap: 2.5rem; grid-template-columns: 280px 1fr; }
           .kp-links-grid { grid-template-columns: repeat(3,1fr); }

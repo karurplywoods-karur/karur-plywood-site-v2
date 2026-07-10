@@ -1,8 +1,8 @@
 const introTemplates = [
   (area: any, category: any) =>
-    `${category.display_name} suppliers in ${area.display_name} — just ${area.distance_km}km from Karur. ` +
+    `${category.display_name} suppliers in ${area.display_name} â€” just ${area.distance_km}km from Karur. ` +
     `We deliver ${area.delivery_time} to ${area.name} for ${area.famous_for} businesses. ` +
-    `ISI-certified ${category.display_name} starting at ₹${category.base_price}. ` +
+    `ISI-certified ${category.display_name} starting at â‚¹${category.base_price}. ` +
     `Serving ${area.nearby_subareas?.slice(0, 2).join(" and ")} too.`,
 
   (area: any, category: any) =>
@@ -12,7 +12,7 @@ const introTemplates = [
     `${area.local_landmark} area covered. Call for ${area.name} pricing.`,
 
   (area: any, category: any) =>
-    `${area.display_name} ${category.display_name} — delivered from Karur. ` +
+    `${area.display_name} ${category.display_name} â€” delivered from Karur. ` +
     `${area.distance_km}km away, ${area.delivery_time} delivery. ` +
     `Used in ${area.famous_for}. Near ${area.transport_hub}. ` +
     `Brands: ${category.brands?.slice(0, 3).join(", ")}.`,
@@ -26,7 +26,7 @@ const introTemplates = [
     `${area.name}'s ${area.famous_for} industry relies on quality ${category.display_name}. ` +
     `We deliver from Karur to ${area.display_name} ${area.delivery_time}. ` +
     `Perfect for ${area.local_use_cases?.slice(0, 2).join(" and ")}. ` +
-    `Free delivery above ₹5,000 in ${area.name}.`,
+    `Free delivery above â‚¹5,000 in ${area.name}.`,
 ];
 
 export function generateUniqueIntro(area: any, category: any): string {
@@ -41,11 +41,11 @@ export function generateFAQ(area: any, category: any): any[] {
   return [
     {
       question: `Do you deliver ${category.display_name} to ${area.display_name}?`,
-      answer: `Yes, we deliver ${category.display_name} to ${area.name} ${area.delivery_time}. We also cover nearby areas including ${area.nearby_subareas?.slice(0, 3).join(", ")}. Delivery charges are minimal for ${area.distance_km}km distance from Karur. Free delivery for orders above ₹5,000.`
+      answer: `Yes, we deliver ${category.display_name} to ${area.name} ${area.delivery_time}. We also cover nearby areas including ${area.nearby_subareas?.slice(0, 3).join(", ")}. Delivery charges are minimal for ${area.distance_km}km distance from Karur. Free delivery for orders above â‚¹5,000.`
     },
     {
       question: `What is the ${category.display_name} price in ${area.name}?`,
-      answer: `${category.display_name} price in ${area.name} starts at ₹${category.base_price} ${priceUnit}. Being ${area.distance_km}km from Karur, transport cost is minimal. Bulk orders for ${area.famous_for} businesses get special rates.`
+      answer: `${category.display_name} price in ${area.name} starts at â‚¹${category.base_price} ${priceUnit}. Being ${area.distance_km}km from Karur, transport cost is minimal. Bulk orders for ${area.famous_for} businesses get special rates.`
     },
     {
       question: `Is ${category.display_name} suitable for ${area.famous_for}?`,
@@ -69,18 +69,19 @@ export function generateFAQ(area: any, category: any): any[] {
 export function generateMeta(area: any, category: any) {
   return {
     title: `${category.display_name} in ${area.display_name} | ${area.distance_km}km from Karur | ISI Certified`,
-    description: `${category.display_name} delivered to ${area.name} ${area.delivery_time}. ${area.distance_km}km from Karur. For ${area.famous_for}. Brands: ${category.brands?.slice(0, 3).join(", ")}. Free delivery above ₹5,000. Call now!`
+    description: `${category.display_name} delivered to ${area.name} ${area.delivery_time}. ${area.distance_km}km from Karur. For ${area.famous_for}. Brands: ${category.brands?.slice(0, 3).join(", ")}. Free delivery above â‚¹5,000. Call now!`
   };
 }
 
 export function generateH1(area: any, category: any): string {
   const templates = [
     `${category.display_name} Suppliers in ${area.display_name}`,
-    `Buy ${category.display_name} in ${area.name} — ISI Certified`,
-    `${area.display_name} ${category.display_name} — Best Price Guaranteed`,
+    `Buy ${category.display_name} in ${area.name} â€” ISI Certified`,
+    `${area.display_name} ${category.display_name} â€” Best Price Guaranteed`,
     `${category.display_name} Dealers in ${area.name} | Karur Plywood`,
     `ISI Certified ${category.display_name} in ${area.display_name}`,
   ];
   const seed = area.id + category.id;
   return templates[seed % templates.length];
 }
+

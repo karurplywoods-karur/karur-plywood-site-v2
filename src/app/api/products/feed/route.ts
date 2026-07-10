@@ -51,7 +51,7 @@ function buildProductEntry(p: any): string {
   const categoryName = p.categories?.name || '';
   const googleCategory = GOOGLE_CATEGORY_MAP[categoryName] || 'Hardware > Building Materials';
   const brand = p.brands?.name || STORE_NAME;
-  const gtin = ''; // Leave blank — we don't have GTINs for Indian plywood
+  const gtin = ''; // Leave blank â€” we don't have GTINs for Indian plywood
   const mpn = `KPC-${p.id}`; // Our internal product number
 
   // Build variants as separate items if they exist
@@ -62,7 +62,7 @@ function buildProductEntry(p: any): string {
   if (variants.length > 0) {
     // One entry per variant
     return variants.map((v: any) => {
-      const variantTitle = escapeXml(`${p.name} — ${v.label || v.thickness || v.finish || v.size || ''}`);
+      const variantTitle = escapeXml(`${p.name} â€” ${v.label || v.thickness || v.finish || v.size || ''}`);
       const variantPrice = v.price ? `${v.price}.00 ${CURRENCY}` : price;
       const variantId = `KPC-${p.id}-${v.id}`;
       return `
@@ -91,7 +91,7 @@ function buildProductEntry(p: any): string {
     }).join('\n    ');
   }
 
-  // No variants — single entry
+  // No variants â€” single entry
   return `
     <item>
       <g:id>${mpn}</g:id>
@@ -154,3 +154,4 @@ export async function GET() {
     return NextResponse.json({ error: 'Feed generation failed' }, { status: 500 });
   }
 }
+

@@ -1,6 +1,6 @@
 'use client';
 // src/components/BOMUploader.tsx
-// Customer uploads BOM image → saved to Supabase → admin handles quote from dashboard
+// Customer uploads BOM image â†’ saved to Supabase â†’ admin handles quote from dashboard
 import { useState, useRef, useCallback } from 'react';
 
 type Step = 'idle' | 'preview' | 'details' | 'submitting' | 'done' | 'error';
@@ -100,16 +100,16 @@ export default function BOMUploader() {
   return (
     <div className="bom-wrap">
 
-      {/* ── IDLE ── */}
+      {/* â”€â”€ IDLE â”€â”€ */}
       {step === 'idle' && (
         <div>
           <div className="bom-header">
-            <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>ðŸ“‹</div>
             <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', letterSpacing: '0.05em', color: '#F8F9FB', marginBottom: 6 }}>
               UPLOAD YOUR MATERIAL LIST
             </div>
             <p style={{ fontSize: 13, color: '#7A8EA8', lineHeight: 1.7, maxWidth: 400, margin: '0 auto' }}>
-              Snap a photo of your handwritten list or upload any BOM image. We&apos;ll review it and send your quote on WhatsApp within 10–30 minutes.
+              Snap a photo of your handwritten list or upload any BOM image. We&apos;ll review it and send your quote on WhatsApp within 10â€“30 minutes.
             </p>
           </div>
 
@@ -121,21 +121,21 @@ export default function BOMUploader() {
             onDrop={handleDrop}
             onClick={() => inputRef.current?.click()}
           >
-            <div style={{ fontSize: 40, marginBottom: 10 }}>📁</div>
+            <div style={{ fontSize: 40, marginBottom: 10 }}>ðŸ“</div>
             <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: '#A8BCCC', marginBottom: 4 }}>
               Drag &amp; drop your material list here
             </div>
-            <div style={{ fontSize: 12, color: '#7A8EA8' }}>JPG, PNG, WebP · Max 10 MB</div>
+            <div style={{ fontSize: 12, color: '#7A8EA8' }}>JPG, PNG, WebP Â· Max 10 MB</div>
           </div>
 
           {errMsg && <div style={{ color: '#FCA5A5', fontSize: 13, textAlign: 'center', marginBottom: 12 }}>{errMsg}</div>}
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button className="bom-pick-btn" onClick={() => inputRef.current?.click()}>
-              🖼️ Choose from Gallery
+              ðŸ–¼ï¸ Choose from Gallery
             </button>
             <button className="bom-pick-btn bom-pick-btn--orange" onClick={() => cameraRef.current?.click()}>
-              📷 Take Photo Now
+              ðŸ“· Take Photo Now
             </button>
           </div>
 
@@ -143,15 +143,15 @@ export default function BOMUploader() {
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={e => handleFile(e.target.files?.[0] || null)} />
 
           <div style={{ marginTop: 24, padding: '14px 16px', background: 'rgba(249,115,22,0.06)', border: '1px solid rgba(249,115,22,0.15)', borderRadius: 6, fontSize: 12, color: '#7A8EA8', lineHeight: 1.7, textAlign: 'center' }}>
-            💡 <strong style={{ color: '#F8F9FB' }}>How it works:</strong> Upload photo → Enter your details → We call/WhatsApp you with a quote in minutes.
+            ðŸ’¡ <strong style={{ color: '#F8F9FB' }}>How it works:</strong> Upload photo â†’ Enter your details â†’ We call/WhatsApp you with a quote in minutes.
           </div>
         </div>
       )}
 
-      {/* ── PREVIEW ── */}
+      {/* â”€â”€ PREVIEW â”€â”€ */}
       {step === 'preview' && imageURL && (
         <div>
-          <div className="bom-step-label">Step 1 of 2 — Check your image</div>
+          <div className="bom-step-label">Step 1 of 2 â€” Check your image</div>
           <div style={{ borderRadius: 8, overflow: 'hidden', marginBottom: 16, border: '1px solid rgba(249,115,22,0.2)', position: 'relative', maxHeight: 340 }}>
             <img src={imageURL} alt="BOM preview" style={{ width: '100%', maxHeight: 340, objectFit: 'contain', display: 'block', background: '#0d1f3a' }} />
           </div>
@@ -159,16 +159,16 @@ export default function BOMUploader() {
             Make sure your material list is clearly visible and readable. If blurry, take a new photo.
           </p>
           <div style={{ display: 'flex', gap: 10 }}>
-            <button className="bom-action-btn bom-action-btn--outline" onClick={reset}>↩ Change Image</button>
-            <button className="bom-action-btn bom-action-btn--primary" onClick={() => setStep('details')}>Looks Good →</button>
+            <button className="bom-action-btn bom-action-btn--outline" onClick={reset}>â†© Change Image</button>
+            <button className="bom-action-btn bom-action-btn--primary" onClick={() => setStep('details')}>Looks Good â†’</button>
           </div>
         </div>
       )}
 
-      {/* ── DETAILS ── */}
+      {/* â”€â”€ DETAILS â”€â”€ */}
       {step === 'details' && (
         <div>
-          <div className="bom-step-label">Step 2 of 2 — Your contact details</div>
+          <div className="bom-step-label">Step 2 of 2 â€” Your contact details</div>
 
           {/* Image thumb */}
           {imageURL && (
@@ -176,9 +176,9 @@ export default function BOMUploader() {
               <img src={imageURL} alt="thumb" style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 4, border: '1px solid rgba(249,115,22,0.2)', flexShrink: 0 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#F8F9FB', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{imageFile?.name}</div>
-                <div style={{ fontSize: 11, color: '#4ADE80' }}>✅ Image ready to upload</div>
+                <div style={{ fontSize: 11, color: '#4ADE80' }}>âœ… Image ready to upload</div>
               </div>
-              <button onClick={reset} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 18, flexShrink: 0 }}>✕</button>
+              <button onClick={reset} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 18, flexShrink: 0 }}>âœ•</button>
             </div>
           )}
 
@@ -205,37 +205,37 @@ export default function BOMUploader() {
               rows={2}
               value={details.notes}
               onChange={e => set('notes', e.target.value)}
-              placeholder="e.g. Need delivery by next week, Budget ₹50,000, need ISI certified..."
+              placeholder="e.g. Need delivery by next week, Budget â‚¹50,000, need ISI certified..."
             />
           </div>
 
           {errMsg && (
             <div style={{ color: '#FCA5A5', fontSize: 13, marginBottom: 14, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 6, padding: '10px 14px' }}>
-              ⚠️ {errMsg}
+              âš ï¸ {errMsg}
             </div>
           )}
 
           <div style={{ background: 'rgba(37,211,102,0.06)', border: '1px solid rgba(37,211,102,0.15)', borderRadius: 6, padding: '12px 14px', marginBottom: 20, fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-            🔒 Your details are stored securely. We&apos;ll only use them to contact you with your quote.
+            ðŸ”’ Your details are stored securely. We&apos;ll only use them to contact you with your quote.
           </div>
 
           <div style={{ display: 'flex', gap: 10 }}>
-            <button className="bom-action-btn bom-action-btn--outline" onClick={() => setStep('preview')}>← Back</button>
+            <button className="bom-action-btn bom-action-btn--outline" onClick={() => setStep('preview')}>â† Back</button>
             <button
               className="bom-action-btn bom-action-btn--submit"
               onClick={handleSubmit}
               disabled={!details.name.trim() || !details.phone.trim()}
             >
-              📨 Submit for Quote
+              ðŸ“¨ Submit for Quote
             </button>
           </div>
         </div>
       )}
 
-      {/* ── SUBMITTING ── */}
+      {/* â”€â”€ SUBMITTING â”€â”€ */}
       {step === 'submitting' && (
         <div style={{ textAlign: 'center', padding: '48px 20px' }}>
-          <div style={{ fontSize: 48, marginBottom: 16, animation: 'bomSpin 1s linear infinite', display: 'inline-block' }}>⏳</div>
+          <div style={{ fontSize: 48, marginBottom: 16, animation: 'bomSpin 1s linear infinite', display: 'inline-block' }}>â³</div>
           <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: '#F8F9FB', marginBottom: 6 }}>
             Uploading your material list...
           </div>
@@ -243,10 +243,10 @@ export default function BOMUploader() {
         </div>
       )}
 
-      {/* ── DONE ── */}
+      {/* â”€â”€ DONE â”€â”€ */}
       {step === 'done' && (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-          <div style={{ fontSize: 64, marginBottom: 20 }}>✅</div>
+          <div style={{ fontSize: 64, marginBottom: 20 }}>âœ…</div>
           <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2rem', letterSpacing: '0.05em', color: '#F8F9FB', marginBottom: 10 }}>
             REQUEST RECEIVED!
           </div>
@@ -254,14 +254,14 @@ export default function BOMUploader() {
             We&apos;ve received your material list.
           </p>
           <p style={{ color: '#4ADE80', fontSize: 14, fontWeight: 600, marginBottom: 24 }}>
-            📲 Our team will send your quote on WhatsApp within 10–30 minutes.
+            ðŸ“² Our team will send your quote on WhatsApp within 10â€“30 minutes.
           </p>
           <div style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.18)', borderRadius: 8, padding: '16px 20px', marginBottom: 28, fontSize: 13, color: '#7A8EA8', lineHeight: 1.7 }}>
             <strong style={{ color: '#F8F9FB' }}>What happens next?</strong><br/>
-            Our team reviews your list → Checks current stock and pricing → Sends you a complete quote on WhatsApp with product details and delivery timeline.
+            Our team reviews your list â†’ Checks current stock and pricing â†’ Sends you a complete quote on WhatsApp with product details and delivery timeline.
           </div>
           <button className="bom-action-btn bom-action-btn--outline" onClick={reset} style={{ margin: '0 auto' }}>
-            📋 Submit Another List
+            ðŸ“‹ Submit Another List
           </button>
         </div>
       )}
@@ -330,3 +330,4 @@ export default function BOMUploader() {
     </div>
   );
 }
+

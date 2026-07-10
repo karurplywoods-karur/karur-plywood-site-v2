@@ -6,24 +6,24 @@ import { CONTACT } from '@/lib/contact';
 const WA = CONTACT.wa;
 
 const TRUST_POINTS = [
-  { icon: '🏆', label: '25+ Years Experience' },
-  { icon: '👥', label: '1,000+ Customers Served' },
-  { icon: '⚡', label: 'Same Day Response' },
+  { icon: 'ðŸ†', label: '25+ Years Experience' },
+  { icon: 'ðŸ‘¥', label: '1,000+ Customers Served' },
+  { icon: 'âš¡', label: 'Same Day Response' },
 ];
 
 const QUICK_TOPICS = [
-  { emoji: '🪵', label: 'Plywood Price' },
-  { emoji: '🎨', label: 'Laminates' },
-  { emoji: '🚪', label: 'Doors' },
-  { emoji: '🔩', label: 'Hardware' },
-  { emoji: '📦', label: 'Bulk Order' },
+  { emoji: 'ðŸªµ', label: 'Plywood Price' },
+  { emoji: 'ðŸŽ¨', label: 'Laminates' },
+  { emoji: 'ðŸšª', label: 'Doors' },
+  { emoji: 'ðŸ”©', label: 'Hardware' },
+  { emoji: 'ðŸ“¦', label: 'Bulk Order' },
 ];
 
 const CONTACT_DETAILS = [
-  { icon: '📞', label: 'Phone', value: CONTACT.phone, href: `tel:${CONTACT.phoneRaw}` },
-  { icon: '📍', label: 'Address', value: CONTACT.address, href: 'https://maps.google.com/?q=Karur+Plywood+Company+Karur+Tamil+Nadu' },
-  { icon: '⏰', label: 'Hours', value: CONTACT.hours, href: null },
-  { icon: '📧', label: 'Email', value: CONTACT.email, href: `mailto:${CONTACT.email}` },
+  { icon: 'ðŸ“ž', label: 'Phone', value: CONTACT.phone, href: `tel:${CONTACT.phoneRaw}` },
+  { icon: 'ðŸ“', label: 'Address', value: CONTACT.address, href: 'https://maps.google.com/?q=Karur+Plywood+Company+Karur+Tamil+Nadu' },
+  { icon: 'â°', label: 'Hours', value: CONTACT.hours, href: null },
+  { icon: 'ðŸ“§', label: 'Email', value: CONTACT.email, href: `mailto:${CONTACT.email}` },
 ];
 
 export default function ContactClient() {
@@ -72,7 +72,7 @@ export default function ContactClient() {
 
   return (
     <>
-      {/* ── HERO ── */}
+      {/* â”€â”€ HERO â”€â”€ */}
       <section className="contact-hero">
         <div className="contact-container">
           <div className="contact-hero-inner">
@@ -82,7 +82,7 @@ export default function ContactClient() {
               <span style={{ color: 'var(--orange)' }}>Instantly in Karur</span>
             </h1>
             <p className="contact-sub">
-              Chat on WhatsApp for the fastest response — or send your requirement below and we'll get back to you.
+              Chat on WhatsApp for the fastest response â€” or send your requirement below and we'll get back to you.
             </p>
 
             {/* Trust bar */}
@@ -98,15 +98,15 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* ── MAIN LAYOUT ── */}
+      {/* â”€â”€ MAIN LAYOUT â”€â”€ */}
       <section className="contact-body">
         <div className="contact-container">
           <div className="contact-grid">
 
-            {/* LEFT — WhatsApp + Form */}
+            {/* LEFT â€” WhatsApp + Form */}
             <div className="contact-left">
 
-              {/* ── WA PRIMARY BLOCK ── */}
+              {/* â”€â”€ WA PRIMARY BLOCK â”€â”€ */}
               <div className="wa-block">
                 <div className="wa-block-top">
                   <div className="wa-icon-wrap">
@@ -115,7 +115,7 @@ export default function ContactClient() {
                     </svg>
                   </div>
                   <div>
-                    <div className="wa-title">⚡ Fastest Response on WhatsApp</div>
+                    <div className="wa-title">âš¡ Fastest Response on WhatsApp</div>
                     <div className="wa-desc">Get price, stock availability and product suggestions instantly.</div>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ export default function ContactClient() {
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                   </svg>
-                  Chat on WhatsApp{activeTopic ? ` — ${activeTopic}` : ''}
+                  Chat on WhatsApp{activeTopic ? ` â€” ${activeTopic}` : ''}
                 </a>
 
                 <div className="wa-reply-note">
@@ -165,10 +165,10 @@ export default function ContactClient() {
                 <span className="or-line" />
               </div>
 
-              {/* ── QUOTE FORM ── */}
+              {/* â”€â”€ QUOTE FORM â”€â”€ */}
               {done ? (
                 <div className="form-success">
-                  <div className="form-success-icon">✅</div>
+                  <div className="form-success-icon">âœ…</div>
                   <div className="form-success-title">Enquiry Received!</div>
                   <p className="form-success-desc">
                     WhatsApp has opened with your message pre-filled. We'll reply within minutes.
@@ -229,7 +229,7 @@ export default function ContactClient() {
                     onClick={handleSubmit}
                     disabled={loading}
                   >
-                    {loading ? '⏳ Sending...' : '💬 Send via WhatsApp'}
+                    {loading ? 'â³ Sending...' : 'ðŸ’¬ Send via WhatsApp'}
                   </button>
 
                   <p className="form-footnote">
@@ -239,7 +239,7 @@ export default function ContactClient() {
               )}
             </div>
 
-            {/* RIGHT — Contact details + Map */}
+            {/* RIGHT â€” Contact details + Map */}
             <div className="contact-right">
 
               {/* Contact Details */}
@@ -265,13 +265,13 @@ export default function ContactClient() {
 
                 {/* Call CTA */}
                 <a href={`tel:${CONTACT.phoneRaw}`} className="call-btn">
-                  📞 Call Now
+                  ðŸ“ž Call Now
                 </a>
               </div>
 
               {/* Visit Our Store */}
               <div className="store-card">
-                <div className="store-tag">📍 Visit Our Store</div>
+                <div className="store-tag">ðŸ“ Visit Our Store</div>
                 <div className="store-title">Come See Us in Karur</div>
                 <p className="store-desc">
                   Our showroom is open {CONTACT.hours}. Browse 500+ products across plywood, laminates, doors and hardware.
@@ -280,7 +280,7 @@ export default function ContactClient() {
                 {/* Static map placeholder */}
                 <div className="map-placeholder">
                   <div className="map-grid" aria-hidden="true" />
-                  <div className="map-pin">📍</div>
+                  <div className="map-pin">ðŸ“</div>
                   <div className="map-label">Karur Plywood &amp; Company</div>
                   <div className="map-sublabel">{CONTACT.address}</div>
                 </div>
@@ -291,16 +291,16 @@ export default function ContactClient() {
                   rel="noopener"
                   className="maps-btn"
                 >
-                  🗺️ Open in Google Maps
+                  ðŸ—ºï¸ Open in Google Maps
                 </a>
               </div>
 
               {/* Working hours quick glance */}
               <div className="hours-card">
-                <div className="hours-title">⏰ Business Hours</div>
+                <div className="hours-title">â° Business Hours</div>
                 <div className="hours-list">
                   {[
-                    ['Mon – Sat', '9:30 AM – 7:30 PM', false],
+                    ['Mon â€“ Sat', '9:30 AM â€“ 7:30 PM', false],
                     ['Sunday', 'Closed', true],
                   ].map(([day, time, closed]) => (
                     <div key={day as string} className="hours-row">
@@ -315,7 +315,7 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* ── BOTTOM STRIP CTA ── */}
+      {/* â”€â”€ BOTTOM STRIP CTA â”€â”€ */}
       <section className="bottom-cta">
         <div className="contact-container">
           <div className="bottom-cta-inner">
@@ -329,21 +329,21 @@ export default function ContactClient() {
               rel="noopener"
               className="wa-cta-btn bottom-cta-btn"
             >
-              💬 Ask Our Experts
+              ðŸ’¬ Ask Our Experts
             </a>
           </div>
         </div>
       </section>
 
       <style>{`
-        /* ── LAYOUT ── */
+        /* â”€â”€ LAYOUT â”€â”€ */
         .contact-container {
           max-width: 1140px;
           margin: 0 auto;
           padding: 0 5rem;
         }
 
-        /* ── HERO ── */
+        /* â”€â”€ HERO â”€â”€ */
         .contact-hero {
           background: linear-gradient(160deg, #0a1627 0%, var(--navy-deep) 100%);
           border-bottom: 1px solid var(--border);
@@ -390,7 +390,7 @@ export default function ContactClient() {
           color: var(--text-soft);
         }
 
-        /* ── BODY ── */
+        /* â”€â”€ BODY â”€â”€ */
         .contact-body {
           padding: 64px 0 80px;
           background: var(--navy-deep);
@@ -412,7 +412,7 @@ export default function ContactClient() {
           gap: 16px;
         }
 
-        /* ── WHATSAPP BLOCK ── */
+        /* â”€â”€ WHATSAPP BLOCK â”€â”€ */
         .wa-block {
           background: linear-gradient(135deg, rgba(37,211,102,0.08) 0%, rgba(11,36,71,0.6) 100%);
           border: 1px solid rgba(37,211,102,0.25);
@@ -555,7 +555,7 @@ export default function ContactClient() {
           white-space: nowrap;
         }
 
-        /* ── QUOTE FORM ── */
+        /* â”€â”€ QUOTE FORM â”€â”€ */
         .quote-form {
           background: var(--surface);
           border: 1px solid var(--border);
@@ -690,7 +690,7 @@ export default function ContactClient() {
           color: var(--orange);
         }
 
-        /* ── RIGHT COLUMN ── */
+        /* â”€â”€ RIGHT COLUMN â”€â”€ */
         .details-card,
         .store-card,
         .hours-card {
@@ -879,7 +879,7 @@ export default function ContactClient() {
         .hours-time { color: var(--text-soft); font-weight: 500; }
         .hours-closed { color: var(--text-muted); opacity: 0.5; }
 
-        /* ── BOTTOM CTA ── */
+        /* â”€â”€ BOTTOM CTA â”€â”€ */
         .bottom-cta {
           background: linear-gradient(135deg, #0a1d0f, #050f08);
           border-top: 1px solid rgba(37,211,102,0.15);
@@ -910,7 +910,7 @@ export default function ContactClient() {
           flex-shrink: 0;
         }
 
-        /* ── RESPONSIVE ── */
+        /* â”€â”€ RESPONSIVE â”€â”€ */
         @media (max-width: 1024px) {
           .contact-grid {
             grid-template-columns: 1fr;
@@ -937,3 +937,4 @@ export default function ContactClient() {
     </>
   );
 }
+

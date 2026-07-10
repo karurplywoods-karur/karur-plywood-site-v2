@@ -37,7 +37,7 @@ export default function LoginPage() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <div className="auth-logo-mark">🪵</div>
+          <div className="auth-logo-mark">ðŸªµ</div>
           <div className="auth-logo-text">KARUR PLYWOOD</div>
           <div className="auth-logo-sub">& Company</div>
         </div>
@@ -65,13 +65,13 @@ export default function LoginPage() {
             <input
               type="password" required
               value={password} onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               className="auth-inp"
             />
           </div>
 
           <button type="submit" disabled={loading} className="auth-btn-primary">
-            {loading ? '⏳ Signing in...' : 'Sign In'}
+            {loading ? 'â³ Signing in...' : 'Sign In'}
           </button>
         </form>
 
@@ -168,3 +168,4 @@ function AuthStyles() {
     `}</style>
   );
 }
+

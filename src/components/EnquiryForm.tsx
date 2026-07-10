@@ -60,7 +60,7 @@ export default function EnquiryForm({ compact }: Props) {
 
   if (done) return (
     <div style={{ textAlign: 'center', padding: compact ? '24px 0' : '40px 0' }}>
-      <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>âœ…</div>
       <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC', marginBottom: 8 }}>
         Enquiry Received!
       </div>
@@ -85,7 +85,7 @@ export default function EnquiryForm({ compact }: Props) {
       {/* WA quick button */}
       <a href={`https://wa.me/${WA}?text=Hi%2C+I+need+help+with+a+product+enquiry.`} target="_blank" rel="noopener"
         style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'linear-gradient(135deg,#0D2B17,#091810)', border: '1px solid rgba(37,211,102,0.2)', borderRadius: 12, padding: '14px 18px', marginBottom: 20, textDecoration: 'none' }}>
-        <span style={{ fontSize: 28 }}>💬</span>
+        <span style={{ fontSize: 28 }}>ðŸ’¬</span>
         <div>
           <div style={{ fontWeight: 700, fontSize: 14, color: '#F0E8DC' }}>Fastest: Chat on WhatsApp</div>
           <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>Get a reply in minutes</div>
@@ -134,7 +134,7 @@ export default function EnquiryForm({ compact }: Props) {
 
       <button onClick={handleSubmit} disabled={loading}
         style={{ width: '100%', background: loading ? '#1a5c2e' : '#25D366', color: 'white', border: 'none', borderRadius: 8, padding: '13px 0', fontWeight: 700, fontSize: 15, cursor: loading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'Outfit,sans-serif' }}>
-        {loading ? '⏳ Sending...' : '💬 Send via WhatsApp'}
+        {loading ? 'â³ Sending...' : 'ðŸ’¬ Send via WhatsApp'}
       </button>
       <p style={{ fontSize: 12, color: '#9A8070', textAlign: 'center', marginTop: 8 }}>
         Saves your enquiry &amp; opens WhatsApp automatically.
@@ -144,3 +144,4 @@ export default function EnquiryForm({ compact }: Props) {
     </div>
   );
 }
+

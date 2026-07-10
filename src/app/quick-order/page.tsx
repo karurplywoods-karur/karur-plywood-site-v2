@@ -8,7 +8,7 @@ import type { Product } from '@/lib/types';
 
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
-// ── Debounce hook ─────────────────────────────────────────────
+// â”€â”€ Debounce hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState<T>(value);
   useEffect(() => {
@@ -26,13 +26,13 @@ function QuickOrderInner() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [showCart, setShowCart]         = useState(false);
 
-  // ── Search ────────────────────────────────────────────────────
+  // â”€â”€ Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [searchRaw, setSearchRaw] = useState('');
   const searchQuery  = useDebounce(searchRaw.trim(), 300);   // 300 ms debounce
   const isDebouncing = searchRaw.trim() !== searchQuery;     // true while settling
   const searchRef    = useRef<HTMLInputElement>(null);
 
-  // ── Fetch products once on mount ──────────────────────────────
+  // â”€â”€ Fetch products once on mount â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 8000);
@@ -63,13 +63,13 @@ function QuickOrderInner() {
     return () => { clearTimeout(timer); controller.abort(); };
   }, []);
 
-  // ── Filter pipeline ───────────────────────────────────────────
+  // â”€â”€ Filter pipeline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // 1. Category
   const catFiltered = activeFilter === 'all'
     ? products
     : products.filter(p => p.categories?.name === activeFilter);
 
-  // 2. Debounced search — name, description, category
+  // 2. Debounced search â€” name, description, category
   const filtered = searchQuery
     ? catFiltered.filter(p => {
         const q = searchQuery.toLowerCase();
@@ -103,13 +103,13 @@ function QuickOrderInner() {
 
   return (
     <>
-      {/* ── HERO ── */}
+      {/* â”€â”€ HERO â”€â”€ */}
       <section style={{ background:'linear-gradient(135deg,#0D1C10,#091410)', borderBottom:'1px solid rgba(37,211,102,0.15)', padding:'80px 0', paddingTop:'calc(58px + 80px)' }}>
         <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 48px' }}>
           <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:20 }}>
             <div>
               <div style={{ display:'inline-flex', alignItems:'center', gap:10, background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:20, padding:'5px 14px', fontSize:12, color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:16 }}>
-                ⚡ Quick Order — Fast Moving Items
+                âš¡ Quick Order â€” Fast Moving Items
               </div>
               <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'0.75rem' }}>
                 ADD TO CART,<br />
@@ -124,10 +124,10 @@ function QuickOrderInner() {
               <div style={{ background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.25)', borderRadius:14, padding:'20px 24px', minWidth:200 }}>
                 <div style={{ fontSize:11, color:'#7A8EA8', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>Cart Summary</div>
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:32, letterSpacing:'0.04em', color:'#25D366', lineHeight:1 }}>{count} items</div>
-                {total > 0 && <div style={{ fontSize:14, color:'#7A8EA8', marginTop:4 }}>≈ ₹{total.toLocaleString('en-IN')}</div>}
+                {total > 0 && <div style={{ fontSize:14, color:'#7A8EA8', marginTop:4 }}>â‰ˆ â‚¹{total.toLocaleString('en-IN')}</div>}
                 <button onClick={() => setShowCart(true)}
                   style={{ marginTop:14, width:'100%', padding:'10px 0', borderRadius:6, background:'#25D366', color:'white', border:'none', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', cursor:'pointer' }}>
-                  View Cart →
+                  View Cart â†’
                 </button>
               </div>
             )}
@@ -135,10 +135,10 @@ function QuickOrderInner() {
         </div>
       </section>
 
-      {/* ── MAIN ── */}
+      {/* â”€â”€ MAIN â”€â”€ */}
       <div style={{ maxWidth:1200, margin:'0 auto', padding:'48px 48px', paddingBottom: count > 0 ? '120px' : '48px' }} className="page-pad">
 
-        {/* ── SEARCH + FILTER BAR (only when products loaded) ── */}
+        {/* â”€â”€ SEARCH + FILTER BAR (only when products loaded) â”€â”€ */}
         {!loading && !fetchError && products.length > 0 && (
           <div style={{ marginBottom:32 }}>
 
@@ -166,7 +166,7 @@ function QuickOrderInner() {
                 type="text"
                 value={searchRaw}
                 onChange={e => setSearchRaw(e.target.value)}
-                placeholder="Search — e.g. Fevicol, laminate, hinge, screw..."
+                placeholder="Search â€” e.g. Fevicol, laminate, hinge, screw..."
                 aria-label="Search quick order products"
                 autoComplete="off"
                 spellCheck={false}
@@ -186,7 +186,7 @@ function QuickOrderInner() {
                 } as React.CSSProperties}
               />
 
-              {/* Clear ✕ button */}
+              {/* Clear âœ• button */}
               {searchRaw && (
                 <button
                   onClick={clearSearch}
@@ -201,7 +201,7 @@ function QuickOrderInner() {
                   onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background='rgba(255,255,255,0.15)'; (e.currentTarget as HTMLButtonElement).style.color='#F8F9FB'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background='rgba(255,255,255,0.07)'; (e.currentTarget as HTMLButtonElement).style.color='#7A8EA8'; }}
                 >
-                  ✕
+                  âœ•
                 </button>
               )}
             </div>
@@ -228,7 +228,7 @@ function QuickOrderInner() {
                 </button>
               ))}
 
-              {/* Live count badge — only when filtering/searching + debounce settled */}
+              {/* Live count badge â€” only when filtering/searching + debounce settled */}
               {(isSearching || activeFilter !== 'all') && !isDebouncing && (
                 <span style={{ marginLeft:'auto', fontSize:12, color: filtered.length > 0 ? '#7A8EA8' : '#FCA5A5', fontFamily:"'Syne',sans-serif", fontWeight:600, flexShrink:0 }}>
                   {filtered.length === 0 ? 'No results' : `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`}
@@ -238,7 +238,7 @@ function QuickOrderInner() {
           </div>
         )}
 
-        {/* ── LOADING SKELETON ── */}
+        {/* â”€â”€ LOADING SKELETON â”€â”€ */}
         {loading && (
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }} className="quick-grid">
             {[1,2,3,4,5,6,7,8].map(i => (
@@ -247,14 +247,14 @@ function QuickOrderInner() {
           </div>
         )}
 
-        {/* ── ERROR STATE ── */}
+        {/* â”€â”€ ERROR STATE â”€â”€ */}
         {!loading && fetchError && (
           <div style={{ textAlign:'center', padding:'80px 0' }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>⚠️</div>
+            <div style={{ fontSize:48, marginBottom:12 }}>âš ï¸</div>
             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>UNABLE TO LOAD PRODUCTS</div>
             <p style={{ color:'#7A8EA8', marginBottom:24 }}>Connection problem. Refresh or order via WhatsApp.</p>
             <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-              <button onClick={() => window.location.reload()} style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>🔄 Refresh</button>
+              <button onClick={() => window.location.reload()} style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>ðŸ”„ Refresh</button>
               <a href={`https://wa.me/${WA}?text=Hi%2C+I+want+to+place+a+quick+order.+Can+you+help%3F`} target="_blank" rel="noopener"
                 style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
                 Proceed to Checkout
@@ -263,14 +263,14 @@ function QuickOrderInner() {
           </div>
         )}
 
-        {/* ── EMPTY — NO PRODUCTS IN DB ── */}
+        {/* â”€â”€ EMPTY â€” NO PRODUCTS IN DB â”€â”€ */}
         {!loading && !fetchError && products.length === 0 && (
           <div style={{ textAlign:'center', padding:'80px 0' }}>
-            <div style={{ fontSize:48, marginBottom:16 }}>📦</div>
+            <div style={{ fontSize:48, marginBottom:16 }}>ðŸ“¦</div>
             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>PRODUCTS COMING SOON</div>
             <p style={{ color:'#7A8EA8', marginBottom:24 }}>Browse the full catalogue or order on WhatsApp.</p>
             <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-              <a href="/products" style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none' }}>Browse All Products →</a>
+              <a href="/products" style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none' }}>Browse All Products â†’</a>
               <a href={`https://wa.me/${WA}?text=Hi%2C+I+want+to+place+a+quick+order.+Can+you+send+me+a+price+list%3F`} target="_blank" rel="noopener"
                 style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
                 Proceed to Checkout
@@ -279,10 +279,10 @@ function QuickOrderInner() {
           </div>
         )}
 
-        {/* ── NO SEARCH RESULTS ── */}
+        {/* â”€â”€ NO SEARCH RESULTS â”€â”€ */}
         {!loading && !fetchError && products.length > 0 && filtered.length === 0 && (
           <div style={{ textAlign:'center', padding:'60px 0' }}>
-            <div style={{ fontSize:44, marginBottom:14 }}>🔍</div>
+            <div style={{ fontSize:44, marginBottom:14 }}>ðŸ”</div>
             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>
               NO RESULTS FOR &ldquo;{searchQuery || activeFilter}&rdquo;
             </div>
@@ -293,7 +293,7 @@ function QuickOrderInner() {
               {searchRaw && (
                 <button onClick={clearSearch}
                   style={{ padding:'10px 22px', background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:6, color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
-                  ✕ Clear Search
+                  âœ• Clear Search
                 </button>
               )}
               {activeFilter !== 'all' && (
@@ -302,16 +302,16 @@ function QuickOrderInner() {
                   Show All Categories
                 </button>
               )}
-              <a href={`https://wa.me/${WA}?text=Hi%2C+I%27m+looking+for+${encodeURIComponent(searchQuery || activeFilter)}+—+do+you+have+it+in+stock%3F`}
+              <a href={`https://wa.me/${WA}?text=Hi%2C+I%27m+looking+for+${encodeURIComponent(searchQuery || activeFilter)}+â€”+do+you+have+it+in+stock%3F`}
                 target="_blank" rel="noopener"
                 style={{ padding:'10px 22px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:6 }}>
-                💬 Ask on WhatsApp
+                ðŸ’¬ Ask on WhatsApp
               </a>
             </div>
           </div>
         )}
 
-        {/* ── PRODUCTS GRID ── */}
+        {/* â”€â”€ PRODUCTS GRID â”€â”€ */}
         {!loading && !fetchError && filtered.length > 0 && (
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }} className="quick-grid">
             {filtered.map(p => (
@@ -322,26 +322,26 @@ function QuickOrderInner() {
           </div>
         )}
 
-        {/* ── DELIVERY NOTE ── */}
+        {/* â”€â”€ DELIVERY NOTE â”€â”€ */}
         {!loading && !fetchError && products.length > 0 && (
           <div style={{ marginTop:36, padding:'14px 20px', background:'rgba(37,211,102,0.06)', border:'1px solid rgba(37,211,102,0.15)', borderRadius:8, display:'flex', alignItems:'center', gap:12 }}>
-            <span style={{ fontSize:20, flexShrink:0 }}>🚚</span>
+            <span style={{ fontSize:20, flexShrink:0 }}>ðŸšš</span>
             <div>
               <span style={{ fontSize:13, fontWeight:600, color:'#4ADE80', fontFamily:"'Syne',sans-serif" }}>Free delivery within Karur</span>
-              <span style={{ fontSize:13, color:'#7A8EA8' }}> on orders above ₹5,000 · Same-day dispatch available</span>
+              <span style={{ fontSize:13, color:'#7A8EA8' }}> on orders above â‚¹5,000 Â· Same-day dispatch available</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── STICKY CART BAR ── */}
+      {/* â”€â”€ STICKY CART BAR â”€â”€ */}
       {count > 0 && (
         <div style={{ position:'fixed', bottom:0, left:0, right:0, background:'rgba(13,28,16,0.97)', backdropFilter:'blur(12px)', borderTop:'1px solid rgba(37,211,102,0.25)', padding:'14px 24px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, zIndex:500, flexWrap:'wrap' }}>
           <div style={{ display:'flex', alignItems:'center', gap:14 }}>
             <div style={{ width:38, height:38, background:'#25D366', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Bebas Neue',sans-serif", fontSize:18, color:'white' }}>{count}</div>
             <div>
               <div style={{ fontSize:13, fontWeight:600, color:'#F8F9FB', fontFamily:"'Syne',sans-serif" }}>{count} item{count>1?'s':''} in cart</div>
-              {total > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>Est. ₹{total.toLocaleString('en-IN')}</div>}
+              {total > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>Est. â‚¹{total.toLocaleString('en-IN')}</div>}
             </div>
           </div>
           <div style={{ display:'flex', gap:10 }}>
@@ -357,14 +357,14 @@ function QuickOrderInner() {
         </div>
       )}
 
-      {/* ── CART MODAL ── */}
+      {/* â”€â”€ CART MODAL â”€â”€ */}
       {showCart && (
         <div onClick={() => setShowCart(false)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', zIndex:9000, display:'flex', alignItems:'flex-end', justifyContent:'center' }}>
           <div onClick={e => e.stopPropagation()}
             style={{ width:'100%', maxWidth:520, background:'#0d1f3a', borderRadius:'20px 20px 0 0', padding:'28px 24px', maxHeight:'80vh', overflow:'auto', border:'1px solid rgba(37,211,102,0.2)', borderBottom:'none' }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:26, letterSpacing:'0.04em', color:'#F8F9FB' }}>YOUR CART ({count})</div>
-              <button onClick={() => setShowCart(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#7A8EA8', padding:'6px 12px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕ Close</button>
+              <button onClick={() => setShowCart(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#7A8EA8', padding:'6px 12px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>âœ• Close</button>
             </div>
 
             {items.length === 0 ? (
@@ -376,10 +376,10 @@ function QuickOrderInner() {
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:14, fontWeight:600, color:'#F8F9FB', fontFamily:"'Syne',sans-serif" }}>{item.product.name}</div>
                       {cartItemVariantLabel(item) && <div style={{ fontSize:11, color:'#7A8EA8', marginTop:3 }}>{cartItemVariantLabel(item)}</div>}
-                      {cartItemPrice(item) > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>₹{cartItemPrice(item).toLocaleString('en-IN')} × {item.quantity} = ₹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}</div>}
+                      {cartItemPrice(item) > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>â‚¹{cartItemPrice(item).toLocaleString('en-IN')} Ã— {item.quantity} = â‚¹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}</div>}
                     </div>
                     <div style={{ display:'flex', alignItems:'center', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, overflow:'hidden' }}>
-                      <button onClick={() => dec(item.product, item.variant)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>−</button>
+                      <button onClick={() => dec(item.product, item.variant)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>âˆ’</button>
                       <input type="number" min="1" max="9999" value={item.quantity}
                         onChange={e => { const v = parseInt(e.target.value); if (!isNaN(v) && v >= 1) setQty(item.product, v, item.variant); }}
                         onFocus={e => e.target.select()}
@@ -393,7 +393,7 @@ function QuickOrderInner() {
                 {total > 0 && (
                   <div style={{ display:'flex', justifyContent:'space-between', padding:'16px 0', borderTop:'1px solid rgba(249,115,22,0.12)', marginTop:8 }}>
                     <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:'#F8F9FB' }}>Estimated Total</div>
-                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:24, letterSpacing:'0.04em', color:'#25D366' }}>₹{total.toLocaleString('en-IN')}</div>
+                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:24, letterSpacing:'0.04em', color:'#25D366' }}>â‚¹{total.toLocaleString('en-IN')}</div>
                   </div>
                 )}
 
@@ -403,7 +403,7 @@ function QuickOrderInner() {
                 </Link>
                 <button onClick={() => { clear(); setShowCart(false); }}
                   style={{ width:'100%', marginTop:10, padding:'11px 0', borderRadius:6, background:'transparent', border:'1px solid rgba(248,113,113,0.2)', color:'#F87171', fontSize:13, cursor:'pointer', fontFamily:"'Syne',sans-serif" }}>
-                  🗑️ Clear Cart
+                  ðŸ—‘ï¸ Clear Cart
                 </button>
                 <p style={{ fontSize:12, color:'#7A8EA8', textAlign:'center', marginTop:12 }}>
                   You can complete delivery and payment details on the checkout page.
@@ -432,3 +432,4 @@ function QuickOrderInner() {
 export default function QuickOrderPage() {
   return <QuickOrderInner />;
 }
+

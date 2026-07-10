@@ -36,17 +36,17 @@ export default function RefundPolicyPage() {
       <h2>2. Inspection Process</h2>
       <p>To initiate a refund claim:</p>
       <ul>
-        <li>Report the issue <strong>within 48 hours of delivery</strong> — claims after this window may not be accepted</li>
+        <li>Report the issue <strong>within 48 hours of delivery</strong> â€” claims after this window may not be accepted</li>
         <li>Contact us via <a href={`https://wa.me/${CONTACT.wa}`} target="_blank" rel="noopener">WhatsApp</a> or call <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a></li>
         <li>Share <strong>clear photos or a short video</strong> of the damaged/incorrect product, along with your order number</li>
-        <li>Do not use, cut, or modify the product while the claim is under review — doing so will void the claim</li>
-        <li>Our team will review your claim within <strong>1–2 business days</strong> and confirm approval or request additional information</li>
+        <li>Do not use, cut, or modify the product while the claim is under review â€” doing so will void the claim</li>
+        <li>Our team will review your claim within <strong>1â€“2 business days</strong> and confirm approval or request additional information</li>
         <li>For large or high-value claims, a physical inspection may be arranged</li>
       </ul>
 
       <h2>3. Damaged Products</h2>
       <p>
-        If your order arrives visibly damaged, please <strong>note the damage on the delivery receipt</strong> before signing, then contact us immediately with photos. Do not accept a delivery that is severely damaged — you are within your rights to refuse delivery and have us arrange a replacement.
+        If your order arrives visibly damaged, please <strong>note the damage on the delivery receipt</strong> before signing, then contact us immediately with photos. Do not accept a delivery that is severely damaged â€” you are within your rights to refuse delivery and have us arrange a replacement.
       </p>
 
       <h2>4. Non-Returnable / Non-Refundable Items</h2>
@@ -60,8 +60,8 @@ export default function RefundPolicyPage() {
 
       <h2>5. Refund Timelines</h2>
       <ul>
-        <li><strong>Online payment (Razorpay / UPI / Card / Net Banking):</strong> Refund initiated within 2 business days of approval; credited to the original payment method within 5–7 business days depending on your bank</li>
-        <li><strong>Cash on Delivery (COD):</strong> Refund via bank transfer (NEFT/IMPS) within 3–5 business days of approval; you will need to share your bank account details or UPI ID</li>
+        <li><strong>Online payment (Razorpay / UPI / Card / Net Banking):</strong> Refund initiated within 2 business days of approval; credited to the original payment method within 5â€“7 business days depending on your bank</li>
+        <li><strong>Cash on Delivery (COD):</strong> Refund via bank transfer (NEFT/IMPS) within 3â€“5 business days of approval; you will need to share your bank account details or UPI ID</li>
         <li><strong>Partial refunds</strong> (e.g. one item in a multi-item order): processed in the same timeline as above, for the approved amount only</li>
       </ul>
 
@@ -69,10 +69,10 @@ export default function RefundPolicyPage() {
       <p>For COD refunds, please share the following when you contact us:</p>
       <ul>
         <li>Account holder name</li>
-        <li>Bank name, account number, and IFSC code — OR — UPI ID</li>
+        <li>Bank name, account number, and IFSC code â€” OR â€” UPI ID</li>
         <li>Mobile number linked to the account</li>
       </ul>
-      <p>We do not collect this information proactively over phone or WhatsApp. Never share your OTP, CVV, or full card number with anyone claiming to be from our team — we will never ask for these.</p>
+      <p>We do not collect this information proactively over phone or WhatsApp. Never share your OTP, CVV, or full card number with anyone claiming to be from our team â€” we will never ask for these.</p>
 
       <h2>7. GST Invoice &amp; Refund</h2>
       <p>
@@ -83,12 +83,12 @@ export default function RefundPolicyPage() {
       <p>
         <strong>{CONTACT.businessName}</strong><br />
         GST No: {CONTACT.gst}<br />
-        📍 {CONTACT.address}<br />
-        📞 <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
-        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
-        ⏰ {CONTACT.hours}
+        ðŸ“ {CONTACT.address}<br />
+        ðŸ“ž <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
+        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
+        â° {CONTACT.hours}
       </p>
-      <p>Related: <a href="/cancellation-policy">Cancellation Policy</a> · <a href="/shipping-returns">Shipping &amp; Returns</a> · <a href="/payment-policy">Payment Policy</a></p>
+      <p>Related: <a href="/cancellation-policy">Cancellation Policy</a> Â· <a href="/shipping-returns">Shipping &amp; Returns</a> Â· <a href="/payment-policy">Payment Policy</a></p>
     </LegalPageLayout>
   );
 }

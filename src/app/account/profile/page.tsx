@@ -34,8 +34,8 @@ export default function ProfilePage() {
     });
     setSaving(false);
     setMsg(res.ok
-      ? { text: '✅ Profile updated successfully.', ok: true }
-      : { text: '❌ Failed to update. Please try again.', ok: false });
+      ? { text: 'âœ… Profile updated successfully.', ok: true }
+      : { text: 'âŒ Failed to update. Please try again.', ok: false });
     setTimeout(() => setMsg(null), 3000);
   };
 
@@ -45,13 +45,13 @@ export default function ProfilePage() {
     await supabase.auth.resetPasswordForEmail(session.user.email, {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     });
-    setMsg({ text: '📧 Password reset email sent. Check your inbox.', ok: true });
+    setMsg({ text: 'ðŸ“§ Password reset email sent. Check your inbox.', ok: true });
     setTimeout(() => setMsg(null), 4000);
   };
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#070F1F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7A8EA8' }}>
-      ⏳ Loading...
+      â³ Loading...
     </div>
   );
 
@@ -60,8 +60,8 @@ export default function ProfilePage() {
       <div style={{ maxWidth: 600, margin: '0 auto', padding: '32px 48px' }} className="profile-pad">
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, fontSize: 12, color: '#7A8EA8', fontFamily: "'Syne',sans-serif" }}>
-          <Link href="/account" style={{ color: '#7A8EA8', textDecoration: 'none' }}>← My Account</Link>
-          <span>›</span>
+          <Link href="/account" style={{ color: '#7A8EA8', textDecoration: 'none' }}>â† My Account</Link>
+          <span>â€º</span>
           <span style={{ color: '#F8F9FB', fontWeight: 700 }}>Edit Profile</span>
         </div>
 
@@ -108,7 +108,7 @@ export default function ProfilePage() {
 
           <button type="submit" disabled={saving}
             style={{ padding: '13px 0', background: '#F97316', color: '#0B2447', border: 'none', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.82rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.6 : 1 }}>
-            {saving ? '⏳ Saving...' : '✓ Save Changes'}
+            {saving ? 'â³ Saving...' : 'âœ“ Save Changes'}
           </button>
         </form>
 
@@ -137,3 +137,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

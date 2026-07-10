@@ -12,6 +12,8 @@ import ProductReviews from '@/components/ProductReviews';
 import ProductImagePlaceholder from '@/components/ProductImagePlaceholder';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import WishlistButton from '@/components/WishlistButton';
+import RecentlyViewed from '@/components/RecentlyViewed';
+import RecordProductView from '@/components/RecordProductView';
 import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://www.karurplywood.co.in';
@@ -68,8 +70,54 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : null;
 
+  // Product structured data for Google rich results + Shopping
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description || product.name,
+    image: product.image_url ? [product.image_url] : [],
+    sku: `KPC-${product.id}`,
+    mpn: `KPC-${product.id}`,
+    brand: { '@type': 'Brand', name: (product as any).brands?.name || 'Karur Plywood & Company' },
+    category: product.categories?.name || 'Building Materials',
+    url: `${SITE_URL}/products/${product.id}`,
+    offers: {
+      '@type': 'Offer',
+      url: `${SITE_URL}/products/${product.id}`,
+      priceCurrency: 'INR',
+      price: product.price || 0,
+      ...(product.mrp && product.mrp > (product.price || 0) ? {
+        priceSpecification: { '@type': 'PriceSpecification', price: product.mrp, priceCurrency: 'INR' },
+      } : {}),
+      availability: product.in_stock
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Karur Plywood & Company',
+        url: SITE_URL,
+      },
+      itemCondition: 'https://schema.org/NewCondition',
+      areaServed: 'Tamil Nadu, India',
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 2,
+        returnMethod: 'https://schema.org/ReturnInStore',
+      },
+    },
+  };
+
   return (
     <>
+      {/* Product JSON-LD for Google rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+
       {/* Breadcrumb */}
       <div style={{ background: '#070F1F', borderBottom: '1px solid rgba(249,115,22,0.1)', padding: '12px 0', marginTop: 58 }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
@@ -220,15 +268,6 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
 
               <ProductPurchasePanel product={product} />
 
-              {/* Save to Wishlist */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
-                <WishlistButton product={product} size="md" />
-                <span style={{ fontSize: 13, color: '#7A8EA8' }}>Save to Wishlist</span>
-                <Link href="/wishlist" style={{ fontSize: 12, color: '#F97316', textDecoration: 'none', marginLeft: 'auto', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
-                  View Wishlist →
-                </Link>
-              </div>
-
               {false && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <ProductAddToCart product={product} />
@@ -348,6 +387,12 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
 
       {/* ── CUSTOMER REVIEWS ── */}
       <ProductReviews productName={product.name} />
+
+      {/* ── RECENTLY VIEWED ── */}
+      <RecentlyViewed excludeId={product.id} />
+
+      {/* Record this product view in recently-viewed (client-side localStorage) */}
+      <RecordProductView product={product} />
 
       {/* Bottom CTA Banner */}
       <section style={{ padding: '48px 0', background: 'linear-gradient(135deg,#0d1f3a,#19376D)', borderTop: '1px solid rgba(249,115,22,0.15)' }}>

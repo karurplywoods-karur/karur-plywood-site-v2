@@ -1,6 +1,6 @@
 'use client';
 // src/components/CatalogImport.tsx
-// Replaces BulkUpload.tsx — three-tab CSV importer with preview,
+// Replaces BulkUpload.tsx â€” three-tab CSV importer with preview,
 // validation, progress tracking, and rollback support.
 
 import { useState, useRef, useCallback } from 'react';
@@ -26,15 +26,15 @@ interface PreviewResult {
 }
 
 const TABS: { type: BatchType; label: string; desc: string }[] = [
-  { type: 'products', label: '📦 Products',  desc: 'name, type, category, brand, price, mrp' },
-  { type: 'variants', label: '📐 Variants',  desc: 'product_slug, thickness, size, grade, price' },
-  { type: 'images',   label: '🖼 Images',    desc: 'product_slug, image_url, sort_order' },
+  { type: 'products', label: 'ðŸ“¦ Products',  desc: 'name, type, category, brand, price, mrp' },
+  { type: 'variants', label: 'ðŸ“ Variants',  desc: 'product_slug, thickness, size, grade, price' },
+  { type: 'images',   label: 'ðŸ–¼ Images',    desc: 'product_slug, image_url, sort_order' },
 ];
 
 const STATUS_STYLE: Record<RowStatus, { bg: string; color: string; label: string }> = {
-  valid:     { bg: 'rgba(37,211,102,0.1)',  color: '#25D366', label: '✅ Valid'     },
-  duplicate: { bg: 'rgba(232,184,32,0.1)',  color: '#E8B820', label: '⚠️ Duplicate' },
-  error:     { bg: 'rgba(248,113,113,0.1)', color: '#F87171', label: '❌ Error'     },
+  valid:     { bg: 'rgba(37,211,102,0.1)',  color: '#25D366', label: 'âœ… Valid'     },
+  duplicate: { bg: 'rgba(232,184,32,0.1)',  color: '#E8B820', label: 'âš ï¸ Duplicate' },
+  error:     { bg: 'rgba(248,113,113,0.1)', color: '#F87171', label: 'âŒ Error'     },
 };
 
 export default function CatalogImport({ onSuccess }: { onSuccess?: () => void }) {
@@ -123,7 +123,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
     window.open(`/api/import/templates?type=${activeTab}`, '_blank');
   };
 
-  // ── Styles ──────────────────────────────────────────────────
+  // â”€â”€ Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const s = {
     wrap:    { fontFamily: 'Outfit, sans-serif', color: '#F0E8DC' },
     tabBar:  { display: 'flex', gap: 4, marginBottom: 24, background: '#1C140D', border: '1px solid rgba(200,136,74,0.15)', borderRadius: 12, padding: 5, width: 'fit-content' },
@@ -159,7 +159,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
           </div>
         </div>
         <button onClick={downloadTemplate} style={{ ...s.btn('rgba(200,136,74,0.15)'), color: '#E0A86A', border: '1px solid rgba(200,136,74,0.3)' }}>
-          ⬇️ Download Template
+          â¬‡ï¸ Download Template
         </button>
       </div>
 
@@ -173,14 +173,14 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
             onDrop={handleDrop}
             onClick={() => fileRef.current?.click()}
           >
-            <div style={{ fontSize: 36, marginBottom: 10 }}>📄</div>
+            <div style={{ fontSize: 36, marginBottom: 10 }}>ðŸ“„</div>
             <div style={{ fontWeight: 600, color: '#C8B8A0', marginBottom: 4 }}>
               {file ? file.name : 'Drop your CSV here or click to browse'}
             </div>
-            <div style={{ fontSize: 12, color: '#9A8070' }}>CSV files only · Max 1000 rows</div>
+            <div style={{ fontSize: 12, color: '#9A8070' }}>CSV files only Â· Max 1000 rows</div>
             {file && (
               <div style={{ marginTop: 10, fontSize: 12, color: '#25D366' }}>
-                ✅ {file.name} ({(file.size / 1024).toFixed(1)} KB) — ready to preview
+                âœ… {file.name} ({(file.size / 1024).toFixed(1)} KB) â€” ready to preview
               </div>
             )}
             <input ref={fileRef} type="file" accept=".csv" style={{ display: 'none' }}
@@ -196,7 +196,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
           {file && (
             <div style={{ marginTop: 16, display: 'flex', gap: 10 }}>
               <button onClick={handlePreview} disabled={previewing} style={s.btn(previewing ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)')}>
-                {previewing ? '⏳ Validating...' : '🔍 Preview & Validate'}
+                {previewing ? 'â³ Validating...' : 'ðŸ” Preview & Validate'}
               </button>
               <button onClick={reset} style={{ ...s.btn('transparent'), border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070' }}>
                 Clear
@@ -212,9 +212,9 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
           {/* Summary bar */}
           <div style={{ display: 'flex', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
             <div style={{ fontSize: 13, color: '#9A8070' }}>Total: <strong style={{ color: '#F0E8DC' }}>{preview.total}</strong></div>
-            <div style={{ fontSize: 13, color: '#25D366' }}>✅ Valid: <strong>{preview.valid}</strong></div>
-            {preview.duplicates > 0 && <div style={{ fontSize: 13, color: '#E8B820' }}>⚠️ Duplicates: <strong>{preview.duplicates}</strong></div>}
-            {preview.errors > 0 && <div style={{ fontSize: 13, color: '#F87171' }}>❌ Errors: <strong>{preview.errors}</strong></div>}
+            <div style={{ fontSize: 13, color: '#25D366' }}>âœ… Valid: <strong>{preview.valid}</strong></div>
+            {preview.duplicates > 0 && <div style={{ fontSize: 13, color: '#E8B820' }}>âš ï¸ Duplicates: <strong>{preview.duplicates}</strong></div>}
+            {preview.errors > 0 && <div style={{ fontSize: 13, color: '#F87171' }}>âŒ Errors: <strong>{preview.errors}</strong></div>}
           </div>
 
           {/* Table */}
@@ -240,16 +240,16 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
                           {st.label}
                         </span>
                         {r.errors.length > 0 && (
-                          <div style={{ fontSize: 10, color: '#F87171', marginTop: 2 }}>{r.errors.join(' · ')}</div>
+                          <div style={{ fontSize: 10, color: '#F87171', marginTop: 2 }}>{r.errors.join(' Â· ')}</div>
                         )}
                       </td>
                       {Object.values(r.preview).slice(0, 5).map((v, vi) => (
                         <td key={vi} style={{ padding: '7px 12px', color: '#C8B8A0', maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {String(v ?? '—')}
+                          {String(v ?? 'â€”')}
                         </td>
                       ))}
                       <td style={{ padding: '7px 12px', color: '#E8B820', fontSize: 11 }}>
-                        {r.warnings.join(' · ') || '—'}
+                        {r.warnings.join(' Â· ') || 'â€”'}
                       </td>
                     </tr>
                   );
@@ -280,15 +280,15 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
               disabled={importing || preview.valid === 0}
               style={s.btn(importing || preview.valid === 0 ? '#5c4a2e' : '#25D366')}
             >
-              {importing ? '⏳ Importing...' : `⬆️ Import ${preview.valid} Valid Row${preview.valid !== 1 ? 's' : ''}`}
+              {importing ? 'â³ Importing...' : `â¬†ï¸ Import ${preview.valid} Valid Row${preview.valid !== 1 ? 's' : ''}`}
             </button>
             <button onClick={reset} style={{ ...s.btn('transparent'), border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070' }}>
-              ← Back
+              â† Back
             </button>
           </div>
           {preview.errors > 0 && (
             <div style={{ marginTop: 10, fontSize: 12, color: '#9A8070' }}>
-              ℹ️ {preview.errors} error row{preview.errors !== 1 ? 's' : ''} will be skipped automatically.
+              â„¹ï¸ {preview.errors} error row{preview.errors !== 1 ? 's' : ''} will be skipped automatically.
             </div>
           )}
         </div>
@@ -298,14 +298,14 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
       {importResult && (
         <div style={s.card}>
           <div style={{ fontSize: 24, marginBottom: 10 }}>
-            {importResult.inserted > 0 ? '🎉' : '⚠️'}
+            {importResult.inserted > 0 ? 'ðŸŽ‰' : 'âš ï¸'}
           </div>
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC', marginBottom: 6 }}>
             Import Complete
           </div>
           <div style={{ display: 'flex', gap: 20, marginBottom: 20, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: 14, color: '#25D366' }}>✅ Inserted: <strong>{importResult.inserted}</strong></div>
-            {importResult.skipped > 0 && <div style={{ fontSize: 14, color: '#E8B820' }}>⚠️ Skipped: <strong>{importResult.skipped}</strong></div>}
+            <div style={{ fontSize: 14, color: '#25D366' }}>âœ… Inserted: <strong>{importResult.inserted}</strong></div>
+            {importResult.skipped > 0 && <div style={{ fontSize: 14, color: '#E8B820' }}>âš ï¸ Skipped: <strong>{importResult.skipped}</strong></div>}
           </div>
 
           {importResult.errors?.length > 0 && (
@@ -324,7 +324,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
               Import More
             </button>
             <button onClick={handleRollback} style={{ ...s.btn('rgba(248,113,113,0.1)'), color: '#F87171', border: '1px solid rgba(248,113,113,0.2)' }}>
-              ↩ Rollback This Import
+              â†© Rollback This Import
             </button>
           </div>
         </div>
@@ -332,3 +332,4 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
     </div>
   );
 }
+

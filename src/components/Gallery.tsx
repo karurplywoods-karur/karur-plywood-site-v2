@@ -8,8 +8,8 @@ interface Props { items: GalleryItem[]; }
 
 const CATS = ['all', 'plywood', 'doors', 'laminates', 'hardware', 'showroom'];
 const CAT_LABELS: Record<string, string> = {
-  all: '🏷️ All', plywood: '🪵 Plywood', doors: '🚪 Doors',
-  laminates: '🎨 Laminates', hardware: '🔩 Hardware', showroom: '🏪 Showroom',
+  all: 'ðŸ·ï¸ All', plywood: 'ðŸªµ Plywood', doors: 'ðŸšª Doors',
+  laminates: 'ðŸŽ¨ Laminates', hardware: 'ðŸ”© Hardware', showroom: 'ðŸª Showroom',
 };
 
 export default function Gallery({ items }: Props) {
@@ -33,7 +33,7 @@ export default function Gallery({ items }: Props) {
         ))}
       </div>
 
-      {/* Grid — CSS hover only, no JS mouse events */}
+      {/* Grid â€” CSS hover only, no JS mouse events */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 16 }}>
         {filtered.map(item => (
           <div
@@ -56,7 +56,7 @@ export default function Gallery({ items }: Props) {
                 />
               ) : (
                 <div className="gal-placeholder">
-                  {item.category === 'plywood' ? '🪵' : item.category === 'doors' ? '🚪' : item.category === 'laminates' ? '🎨' : '📦'}
+                  {item.category === 'plywood' ? 'ðŸªµ' : item.category === 'doors' ? 'ðŸšª' : item.category === 'laminates' ? 'ðŸŽ¨' : 'ðŸ“¦'}
                 </div>
               )}
             </div>
@@ -101,7 +101,7 @@ export default function Gallery({ items }: Props) {
                   <div style={{ fontWeight: 600, color: '#F8F9FB' }}>{lightbox.title}</div>
                   <div style={{ fontSize: 12, color: '#7A8EA8', textTransform: 'capitalize' }}>{lightbox.category}</div>
                 </div>
-                <button className="gal-close-btn" onClick={() => setLightbox(null)}>✕ Close</button>
+                <button className="gal-close-btn" onClick={() => setLightbox(null)}>âœ• Close</button>
               </div>
             )}
           </div>
@@ -164,3 +164,4 @@ export default function Gallery({ items }: Props) {
     </>
   );
 }
+

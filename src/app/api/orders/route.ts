@@ -1,4 +1,4 @@
-// src/app/api/orders/route.ts — customer order history
+// src/app/api/orders/route.ts â€” customer order history
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
@@ -17,3 +17,4 @@ export async function GET() {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data ?? []);
 }
+

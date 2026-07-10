@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(data);
 }
 
-// POST /api/products — admin only
+// POST /api/products â€” admin only
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -62,8 +62,8 @@ export async function POST(req: NextRequest) {
 
   if (!name || !type) return NextResponse.json({ error: 'Name and type are required.' }, { status: 400 });
 
-  // Auto-generate slug from name — required NOT NULL in DB
-  // e.g. "Century Marine Plywood 19mm" → "century-marine-plywood-19mm"
+  // Auto-generate slug from name â€” required NOT NULL in DB
+  // e.g. "Century Marine Plywood 19mm" â†’ "century-marine-plywood-19mm"
   // Append a short timestamp suffix to guarantee uniqueness
   const baseSlug = name
     .toLowerCase()

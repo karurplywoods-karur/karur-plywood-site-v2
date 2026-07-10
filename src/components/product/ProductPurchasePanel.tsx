@@ -217,3 +217,4 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
     </div>
   );
 }
+

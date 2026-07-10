@@ -1,5 +1,5 @@
 'use client';
-// src/components/Navbar.tsx — with auth state + cart
+// src/components/Navbar.tsx â€” with auth state + cart
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -130,7 +130,7 @@ export default function Navbar() {
           </svg>
           <div className="logo-type">
             <span className="l1" style={{ fontSize:'1.1rem' }}>KARUR PLYWOOD</span>
-            <span className="l2" style={{ fontSize:'.42rem' }}>&amp; Company · Online Store</span>
+            <span className="l2" style={{ fontSize:'.42rem' }}>&amp; Company Â· Online Store</span>
           </div>
         </Link>
 
@@ -171,7 +171,7 @@ export default function Navbar() {
           {/* Wishlist */}
           <li>
             <Link href="/wishlist" className="cart-nav-btn" aria-label={`Wishlist (${wishCount} items)`} style={{ textDecoration: 'none', position: 'relative' }}>
-              🤍
+              ðŸ¤
               {wishCount > 0 && <span className="cart-nav-badge">{wishCount}</span>}
             </Link>
           </li>
@@ -205,13 +205,13 @@ export default function Navbar() {
                       <div className="user-dropdown-email">{user.email}</div>
                     </div>
                     <Link href="/account" className="user-dropdown-item" onClick={() => setUserOpen(false)}>
-                      👤 My Account
+                      ðŸ‘¤ My Account
                     </Link>
                     <Link href="/account/orders" className="user-dropdown-item" onClick={() => setUserOpen(false)}>
-                      📦 My Orders
+                      ðŸ“¦ My Orders
                     </Link>
                     <Link href="/account/addresses" className="user-dropdown-item" onClick={() => setUserOpen(false)}>
-                      📍 Addresses
+                      ðŸ“ Addresses
                     </Link>
                     <div className="user-dropdown-divider" />
                     <button onClick={handleLogout} className="user-dropdown-item user-dropdown-signout">
@@ -254,8 +254,8 @@ export default function Navbar() {
           ))}
           {user ? (
             <>
-              <Link href="/account" className="kp-mobile-link" onClick={() => setMenuOpen(false)}>👤 My Account</Link>
-              <Link href="/account/orders" className="kp-mobile-link" onClick={() => setMenuOpen(false)}>📦 My Orders</Link>
+              <Link href="/account" className="kp-mobile-link" onClick={() => setMenuOpen(false)}>ðŸ‘¤ My Account</Link>
+              <Link href="/account/orders" className="kp-mobile-link" onClick={() => setMenuOpen(false)}>ðŸ“¦ My Orders</Link>
               <button onClick={() => { handleLogout(); setMenuOpen(false); }}
                 className="kp-mobile-link" style={{ textAlign:'left', background:'none', border:'none', cursor:'pointer', color:'#F87171', width:'100%', fontFamily:"'Syne',sans-serif", fontSize:'.82rem', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase', padding:'.8rem .5rem', borderBottom:'1px solid rgba(249,115,22,0.07)' }}>
                 Sign Out
@@ -343,7 +343,7 @@ export default function Navbar() {
   );
 }
 
-// ── NavSearch ────────────────────────────────────────────────────────────────
+// â”€â”€ NavSearch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function NavSearch() {
   const [query, setQuery]     = useState('');
   const [results, setResults] = useState<any[]>([]);
@@ -387,19 +387,19 @@ function NavSearch() {
     <div className="kp-search-wrap" ref={ref}>
       <input
         className="kp-search-input"
-        type="search" placeholder="Search products…"
+        type="search" placeholder="Search productsâ€¦"
         value={query}
         onChange={e => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         onFocus={() => results.length > 0 && setOpen(true)}
         aria-label="Search products"
       />
-      <span className="kp-search-icon">🔍</span>
+      <span className="kp-search-icon">ðŸ”</span>
 
       {open && (
         <div className="kp-search-results">
           {loading ? (
-            <div className="kp-search-empty">Searching…</div>
+            <div className="kp-search-empty">Searchingâ€¦</div>
           ) : results.length === 0 ? (
             <div className="kp-search-empty">No products found for &ldquo;{query}&rdquo;</div>
           ) : (
@@ -410,7 +410,7 @@ function NavSearch() {
                   <div className="kp-search-item-name">{p.name}</div>
                   <div className="kp-search-item-cat">{p.categories?.name || p.category}</div>
                 </div>
-                {p.price && <span className="kp-search-item-price">₹{p.price.toLocaleString('en-IN')}</span>}
+                {p.price && <span className="kp-search-item-price">â‚¹{p.price.toLocaleString('en-IN')}</span>}
               </Link>
             ))
           )}
@@ -418,7 +418,7 @@ function NavSearch() {
             <Link href={`/products?search=${encodeURIComponent(query)}`}
               className="kp-search-item" style={{ justifyContent: 'center', color: '#F97316', fontSize: 12, fontWeight: 700 }}
               onClick={() => { setOpen(false); setQuery(''); }}>
-              See all results for &ldquo;{query}&rdquo; →
+              See all results for &ldquo;{query}&rdquo; â†’
             </Link>
           )}
         </div>

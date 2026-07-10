@@ -1,9 +1,9 @@
-// src/lib/products.ts — Supabase product queries
+// src/lib/products.ts â€” Supabase product queries
 import { supabase, supabaseAdmin } from './db';
 import type { Product, Category } from './types';
 
-// PRODUCT_SELECT — columns fetched for every product query.
-// brands: logo_url excluded here — added back after PRODUCTS_SCHEMA_FIX.sql runs.
+// PRODUCT_SELECT â€” columns fetched for every product query.
+// brands: logo_url excluded here â€” added back after PRODUCTS_SCHEMA_FIX.sql runs.
 // A missing column in any join causes the entire query to silently return [].
 export const PRODUCT_SELECT = `
   *,
@@ -12,7 +12,7 @@ export const PRODUCT_SELECT = `
   product_variants(*)
 `;
 
-// ── PUBLIC QUERIES ──────────────────────────────────────
+// â”€â”€ PUBLIC QUERIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function getProjectProducts(categorySlug?: string, searchQuery?: string): Promise<Product[]> {
   let query = supabase
@@ -21,7 +21,7 @@ export async function getProjectProducts(categorySlug?: string, searchQuery?: st
     .eq('in_stock', true)
     .order('sort_order', { ascending: true });
 
-  // Only filter by type if no search — search should span all types
+  // Only filter by type if no search â€” search should span all types
   if (!searchQuery) query = query.eq('type', 'project');
 
   if (categorySlug) {
@@ -62,7 +62,7 @@ export async function getCategories(): Promise<Category[]> {
   return (data as Category[]) || [];
 }
 
-// ── ADMIN QUERIES (service role) ────────────────────────
+// â”€â”€ ADMIN QUERIES (service role) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export async function adminGetAllProducts(): Promise<Product[]> {
   const { data, error } = await supabaseAdmin

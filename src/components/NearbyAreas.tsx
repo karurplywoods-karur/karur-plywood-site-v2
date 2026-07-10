@@ -25,3 +25,4 @@ export default async function NearbyAreas({ currentArea, currentCategory }: any)
     </section>
   );
 }
+

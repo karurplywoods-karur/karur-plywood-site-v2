@@ -15,7 +15,7 @@ interface BulkRow {
   in_stock?: boolean;
 }
 
-// GET /api/products/bulk — returns CSV template
+// GET /api/products/bulk â€” returns CSV template
 export async function GET() {
   const template = [
     'name,type,category_name,description,price,mrp,unit,image_url,in_stock',
@@ -32,7 +32,7 @@ export async function GET() {
   });
 }
 
-// POST /api/products/bulk — upload CSV
+// POST /api/products/bulk â€” upload CSV
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     if (nameIdx === -1) return NextResponse.json({ error: 'CSV must have a "name" column.' }, { status: 400 });
     if (typeIdx === -1) return NextResponse.json({ error: 'CSV must have a "type" column (project or quick).' }, { status: 400 });
 
-    // Fetch all categories for name→id mapping
+    // Fetch all categories for nameâ†’id mapping
     const { data: categories } = await supabaseAdmin.from('categories').select('id, name');
     const catMap: Record<string, string> = {};
     (categories || []).forEach((c: any) => { catMap[c.name.toLowerCase()] = c.id; });
@@ -166,3 +166,4 @@ function parseCSVLine(line: string): string[] {
   cols.push(current.trim());
   return cols;
 }
+

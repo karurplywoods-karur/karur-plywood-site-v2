@@ -1,4 +1,4 @@
-// src/app/auth/callback/route.ts â€” OAuth callback handler
+// src/app/auth/callback/route.ts — OAuth callback handler
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/auth-server';
 
@@ -14,4 +14,3 @@ export async function GET(req: NextRequest) {
   }
   return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`);
 }
-

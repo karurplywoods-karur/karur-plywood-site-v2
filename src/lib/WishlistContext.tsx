@@ -1,6 +1,6 @@
 'use client';
 // src/lib/WishlistContext.tsx
-// Wishlist stored in localStorage â€” no login required.
+// Wishlist stored in localStorage — no login required.
 // Follows the same pattern as CartContext.
 
 import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
@@ -77,4 +77,3 @@ export function useWishlist() {
   if (!ctx) throw new Error('useWishlist must be used inside WishlistProvider');
   return ctx;
 }
-

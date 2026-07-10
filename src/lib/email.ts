@@ -1,4 +1,4 @@
-// src/lib/email.ts â€” Resend email sender
+// src/lib/email.ts — Resend email sender
 // Install: npm install resend
 // Sign up at resend.com, add RESEND_API_KEY to .env
 
@@ -27,7 +27,7 @@ function orderConfirmationHTML(data: OrderEmailData): string {
         ${item.variant_label ? `<div style="font-size:12px;color:#999;margin-top:2px">${item.variant_label}</div>` : ''}
       </td>
       <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;text-align:center;color:#666;font-size:14px">${item.quantity}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;text-align:right;color:#333;font-size:14px">â‚¹${item.line_total.toLocaleString('en-IN')}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #f0e8dc;text-align:right;color:#333;font-size:14px">₹${item.line_total.toLocaleString('en-IN')}</td>
     </tr>
   `).join('');
 
@@ -41,12 +41,12 @@ function orderConfirmationHTML(data: OrderEmailData): string {
     <!-- Header -->
     <div style="background:#0B2447;border-radius:8px 8px 0 0;padding:28px 32px;text-align:center">
       <div style="font-size:28px;font-weight:900;letter-spacing:4px;color:#fff;margin-bottom:4px">KARUR PLYWOOD</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#F97316;text-transform:uppercase">&amp; Company Â· Karur, Tamil Nadu</div>
+      <div style="font-size:11px;letter-spacing:3px;color:#F97316;text-transform:uppercase">&amp; Company · Karur, Tamil Nadu</div>
     </div>
 
     <!-- Body -->
     <div style="background:#fff;padding:32px">
-      <div style="font-size:22px;font-weight:700;color:#0B2447;margin-bottom:6px">Order Confirmed! ðŸŽ‰</div>
+      <div style="font-size:22px;font-weight:700;color:#0B2447;margin-bottom:6px">Order Confirmed! 🎉</div>
       <div style="font-size:14px;color:#666;margin-bottom:24px">Hi ${data.customerName}, your order has been placed successfully.</div>
 
       <div style="background:#f5f0ea;border-radius:6px;padding:14px 18px;margin-bottom:24px;display:flex;justify-content:space-between">
@@ -76,13 +76,13 @@ function orderConfirmationHTML(data: OrderEmailData): string {
       <!-- Totals -->
       <div style="margin-top:16px;padding-top:16px;border-top:2px solid #0B2447">
         <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px">
-          <span>Subtotal</span><span>â‚¹${data.subtotal.toLocaleString('en-IN')}</span>
+          <span>Subtotal</span><span>₹${data.subtotal.toLocaleString('en-IN')}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:12px">
-          <span>Delivery</span><span>${data.deliveryCharge === 0 ? 'To be confirmed' : 'â‚¹' + data.deliveryCharge.toLocaleString('en-IN')}</span>
+          <span>Delivery</span><span>${data.deliveryCharge === 0 ? 'To be confirmed' : '₹' + data.deliveryCharge.toLocaleString('en-IN')}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#0B2447">
-          <span>Total</span><span>â‚¹${data.total.toLocaleString('en-IN')}</span>
+          <span>Total</span><span>₹${data.total.toLocaleString('en-IN')}</span>
         </div>
       </div>
 
@@ -105,7 +105,7 @@ function orderConfirmationHTML(data: OrderEmailData): string {
     <div style="background:#0B2447;border-radius:0 0 8px 8px;padding:20px 32px;text-align:center">
       <div style="font-size:12px;color:#7A8EA8;line-height:1.8">
         Questions? WhatsApp us or call us.<br>
-        Karur Plywood &amp; Company Â· Main Road, Karur Â· Tamil Nadu 639001
+        Karur Plywood &amp; Company · Main Road, Karur · Tamil Nadu 639001
       </div>
     </div>
 
@@ -148,7 +148,7 @@ function statusUpdateHTML(data: { customerName: string; orderNumber: string; sta
 
 export async function sendOrderConfirmation(data: OrderEmailData) {
   if (!RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY not set â€” skipping email');
+    console.warn('RESEND_API_KEY not set — skipping email');
     return { ok: false };
   }
 
@@ -165,7 +165,7 @@ export async function sendOrderConfirmation(data: OrderEmailData) {
     body: JSON.stringify({
       from: `${STORE_NAME} <${FROM_EMAIL}>`,
       to: [data.customerEmail],
-      subject: `Order Confirmed â€” ${data.orderNumber} | Karur Plywood`,
+      subject: `Order Confirmed — ${data.orderNumber} | Karur Plywood`,
       html: orderConfirmationHTML(data),
     }),
   });
@@ -190,7 +190,7 @@ function ownerAlertHTML(data: OwnerAlertData): string {
         ${item.product_name}${item.variant_label ? ` <span style="color:#999;font-size:12px">(${item.variant_label})</span>` : ''}
       </td>
       <td style="padding:8px 0;border-bottom:1px solid #f0e8dc;text-align:center;color:#666;font-size:14px">${item.quantity}</td>
-      <td style="padding:8px 0;border-bottom:1px solid #f0e8dc;text-align:right;color:#333;font-size:14px">â‚¹${item.line_total.toLocaleString('en-IN')}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #f0e8dc;text-align:right;color:#333;font-size:14px">₹${item.line_total.toLocaleString('en-IN')}</td>
     </tr>
   `).join('');
 
@@ -201,7 +201,7 @@ function ownerAlertHTML(data: OwnerAlertData): string {
 <body style="margin:0;padding:0;background:#f5f0ea;font-family:'Helvetica Neue',Arial,sans-serif">
   <div style="max-width:600px;margin:0 auto;padding:32px 16px">
     <div style="background:#F97316;border-radius:8px 8px 0 0;padding:20px 32px;text-align:center">
-      <div style="font-size:20px;font-weight:900;letter-spacing:2px;color:#fff">ðŸ”” NEW ORDER RECEIVED</div>
+      <div style="font-size:20px;font-weight:900;letter-spacing:2px;color:#fff">🔔 NEW ORDER RECEIVED</div>
     </div>
     <div style="background:#fff;padding:32px">
       <div style="background:#f5f0ea;border-radius:6px;padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between">
@@ -234,7 +234,7 @@ function ownerAlertHTML(data: OwnerAlertData): string {
       </table>
 
       <div style="margin-top:14px;padding-top:14px;border-top:2px solid #0B2447;display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#0B2447">
-        <span>Total</span><span>â‚¹${data.total.toLocaleString('en-IN')}</span>
+        <span>Total</span><span>₹${data.total.toLocaleString('en-IN')}</span>
       </div>
 
       <div style="margin-top:20px;background:#f5f0ea;border-radius:6px;padding:14px 18px">
@@ -243,7 +243,7 @@ function ownerAlertHTML(data: OwnerAlertData): string {
       </div>
 
       <div style="margin-top:24px;text-align:center">
-        <a href="https://www.karurplywood.co.in/admin/orders" style="display:inline-block;background:#0B2447;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px">View in Admin Panel â†’</a>
+        <a href="https://karurplywood.co.in/admin/orders" style="display:inline-block;background:#0B2447;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px">View in Admin Panel →</a>
       </div>
     </div>
   </div>
@@ -259,13 +259,13 @@ function ownerAlertHTML(data: OwnerAlertData): string {
  */
 export async function sendOwnerOrderAlert(data: OwnerAlertData) {
   if (!RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY not set â€” skipping owner alert email');
+    console.warn('RESEND_API_KEY not set — skipping owner alert email');
     return { ok: false };
   }
 
   const ownerEmail = process.env.OWNER_EMAIL;
   if (!ownerEmail) {
-    console.warn('OWNER_EMAIL not set â€” skipping owner alert email');
+    console.warn('OWNER_EMAIL not set — skipping owner alert email');
     return { ok: false };
   }
 
@@ -278,7 +278,7 @@ export async function sendOwnerOrderAlert(data: OwnerAlertData) {
     body: JSON.stringify({
       from: `${STORE_NAME} <${FROM_EMAIL}>`,
       to: [ownerEmail],
-      subject: `ðŸ”” New Order ${data.orderNumber} â€” â‚¹${data.total.toLocaleString('en-IN')}`,
+      subject: `🔔 New Order ${data.orderNumber} — ₹${data.total.toLocaleString('en-IN')}`,
       html: ownerAlertHTML(data),
     }),
   });
@@ -311,7 +311,7 @@ export async function sendStatusUpdate(data: {
     body: JSON.stringify({
       from: `${STORE_NAME} <${FROM_EMAIL}>`,
       to: [data.customerEmail],
-      subject: `Order ${data.status.charAt(0).toUpperCase() + data.status.slice(1)} â€” ${data.orderNumber}`,
+      subject: `Order ${data.status.charAt(0).toUpperCase() + data.status.slice(1)} — ${data.orderNumber}`,
       html: statusUpdateHTML({
         customerName: data.customerName,
         orderNumber: data.orderNumber,

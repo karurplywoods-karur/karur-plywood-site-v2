@@ -1,5 +1,5 @@
 'use client';
-// src/app/carpenters/page.tsx â€” FIXED: infinite loading, timeout, error state
+// src/app/carpenters/page.tsx — FIXED: infinite loading, timeout, error state
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
       {[1,2,3,4,5].map(n => (
-        <span key={n} style={{ fontSize: 13, color: n <= Math.round(rating) ? '#F97316' : 'rgba(249,115,22,0.2)' }}>â˜…</span>
+        <span key={n} style={{ fontSize: 13, color: n <= Math.round(rating) ? '#F97316' : 'rgba(249,115,22,0.2)' }}>★</span>
       ))}
       <span style={{ fontSize: 12, color: '#7A8EA8', marginLeft: 4 }}>{rating.toFixed(1)}</span>
     </div>
@@ -33,16 +33,16 @@ function CarpenterCard({ c }: { c: Carpenter }) {
       <div className="carp-avatar">
         {c.photo_url
           ? <img src={c.photo_url} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <span style={{ fontSize: 28 }}>ðŸ”¨</span>
+          : <span style={{ fontSize: 28 }}>🔨</span>
         }
       </div>
       <div className="carp-body">
         <div className="carp-header">
           <div>
             <div className="carp-name">{c.name}</div>
-            <div className="carp-area">ðŸ“ {c.area} Â· {c.experience}+ yrs experience</div>
+            <div className="carp-area">📍 {c.area} · {c.experience}+ yrs experience</div>
           </div>
-          <div className="carp-verified-badge">âœ“ Verified</div>
+          <div className="carp-verified-badge">✓ Verified</div>
         </div>
 
         <StarRating rating={c.rating} />
@@ -58,14 +58,14 @@ function CarpenterCard({ c }: { c: Carpenter }) {
         )}
 
         <div className="carp-actions">
-          <Link href={`/carpenters/${c.id}`} className="carp-profile-btn">View Profile â†’</Link>
+          <Link href={`/carpenters/${c.id}`} className="carp-profile-btn">View Profile →</Link>
           <a href={`https://wa.me/${waNum}?text=${waText}`} target="_blank" rel="noopener" className="carp-wa-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
             Chat on WhatsApp
           </a>
-          <a href={`tel:${c.phone.replace(/\D/g,'')}`} className="carp-call-btn">ðŸ“ž Call</a>
+          <a href={`tel:${c.phone.replace(/\D/g,'')}`} className="carp-call-btn">📞 Call</a>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@ function ApplyForm({ onClose }: { onClose: () => void }) {
       <div style={{ background:'#0d1f3a', border:'1px solid rgba(249,115,22,0.2)', borderRadius:10, padding:36, width:'100%', maxWidth:520, maxHeight:'90vh', overflowY:'auto' }} onClick={e=>e.stopPropagation()}>
         {done ? (
           <div style={{ textAlign:'center', padding:'28px 0' }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>âœ…</div>
+            <div style={{ fontSize:48, marginBottom:12 }}>✅</div>
             <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>APPLICATION RECEIVED!</div>
             <p style={{ color:'#7A8EA8', fontSize:14, lineHeight:1.7, marginBottom:20 }}>We&apos;ll verify your details and add you to the directory within 24 hours.</p>
             <button onClick={onClose} style={{ padding:'10px 24px', background:'#F97316', color:'#0B2447', border:'none', borderRadius:4, fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>Close</button>
@@ -110,7 +110,7 @@ function ApplyForm({ onClose }: { onClose: () => void }) {
           <>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB' }}>JOIN AS A CARPENTER</div>
-              <button onClick={onClose} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>âœ• Close</button>
+              <button onClick={onClose} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕ Close</button>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
               <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Full Name *</label><input style={inp} value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Rajan Kumar" /></div>
@@ -131,7 +131,7 @@ function ApplyForm({ onClose }: { onClose: () => void }) {
             {error && <div style={{ color:'#FCA5A5', fontSize:13, marginBottom:12 }}>{error}</div>}
             <button onClick={handleSubmit} disabled={loading}
               style={{ width:'100%', padding:'12px 0', borderRadius:4, background: loading ? 'rgba(249,115,22,0.4)' : '#F97316', color:'#0B2447', border:'none', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.1em', textTransform:'uppercase', cursor: loading ? 'default' : 'pointer' }}>
-              {loading ? 'â³ Submitting...' : 'âœ“ Submit Application'}
+              {loading ? '⏳ Submitting...' : '✓ Submit Application'}
             </button>
             <p style={{ fontSize:12, color:'#7A8EA8', textAlign:'center', marginTop:10 }}>We&apos;ll verify and call you within 24 hours before listing.</p>
           </>
@@ -153,7 +153,7 @@ export default function CarpentersPage() {
   useEffect(() => {
     const area = areaFilter === 'All Areas' ? '' : areaFilter;
     const controller = new AbortController();
-    // 8-second timeout â€” prevents infinite spinner
+    // 8-second timeout — prevents infinite spinner
     const timer = setTimeout(() => controller.abort(), 8000);
 
     setLoading(true);
@@ -208,8 +208,8 @@ export default function CarpentersPage() {
             Find skilled carpenters who use quality materials from Karur Plywood. Every carpenter is personally verified by our team.
           </p>
           <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-            <button className="btn-p" onClick={() => setShowApply(true)} style={{ border:'none', cursor:'pointer' }}>ðŸ”¨ Join as a Carpenter</button>
-            <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">ðŸ’¬ Ask for a Recommendation</a>
+            <button className="btn-p" onClick={() => setShowApply(true)} style={{ border:'none', cursor:'pointer' }}>🔨 Join as a Carpenter</button>
+            <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">💬 Ask for a Recommendation</a>
           </div>
         </div>
       </section>
@@ -250,12 +250,12 @@ export default function CarpentersPage() {
           {/* Error state */}
           {!loading && fetchError && (
             <div style={{ textAlign:'center', padding:'60px 0' }}>
-              <div style={{ fontSize:48, marginBottom:12 }}>âš ï¸</div>
+              <div style={{ fontSize:48, marginBottom:12 }}>⚠️</div>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>UNABLE TO LOAD</div>
               <p style={{ color:'#7A8EA8', marginBottom:24 }}>There was a problem loading the directory. Please try again or ask us on WhatsApp.</p>
               <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-                <button onClick={() => setAreaFilter(areaFilter)} className="btn-s" style={{ cursor:'pointer' }}>ðŸ”„ Try Again</button>
-                <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">ðŸ’¬ Ask on WhatsApp</a>
+                <button onClick={() => setAreaFilter(areaFilter)} className="btn-s" style={{ cursor:'pointer' }}>🔄 Try Again</button>
+                <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">💬 Ask on WhatsApp</a>
               </div>
             </div>
           )}
@@ -263,7 +263,7 @@ export default function CarpentersPage() {
           {/* Empty state */}
           {!loading && !fetchError && filtered.length === 0 && (
             <div style={{ textAlign:'center', padding:'60px 0' }}>
-              <div style={{ fontSize:48, marginBottom:12 }}>ðŸ”¨</div>
+              <div style={{ fontSize:48, marginBottom:12 }}>🔨</div>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>
                 {carpenters.length === 0 ? 'COMING SOON' : 'NO MATCH FOUND'}
               </div>
@@ -273,8 +273,8 @@ export default function CarpentersPage() {
                   : 'Try a different filter or ask us directly.'}
               </p>
               <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-                <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">ðŸ’¬ Ask on WhatsApp</a>
-                <button onClick={() => setShowApply(true)} className="btn-s" style={{ cursor:'pointer' }}>ðŸ”¨ Join as Carpenter</button>
+                <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">💬 Ask on WhatsApp</a>
+                <button onClick={() => setShowApply(true)} className="btn-s" style={{ cursor:'pointer' }}>🔨 Join as Carpenter</button>
               </div>
             </div>
           )}
@@ -295,9 +295,9 @@ export default function CarpentersPage() {
           <div style={{ marginTop:56, background:'linear-gradient(135deg,#0d1f3a,#19376D)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:10, padding:'40px 48px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:32, flexWrap:'wrap' }}>
             <div>
               <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:6 }}>ARE YOU A CARPENTER?</div>
-              <p style={{ color:'#7A8EA8', fontSize:14 }}>Join our verified directory. Get discovered by homeowners â€” free listing.</p>
+              <p style={{ color:'#7A8EA8', fontSize:14 }}>Join our verified directory. Get discovered by homeowners — free listing.</p>
             </div>
-            <button className="btn-p" onClick={() => setShowApply(true)} style={{ border:'none', cursor:'pointer', flexShrink:0 }}>ðŸ”¨ Apply Now â€” It&apos;s Free</button>
+            <button className="btn-p" onClick={() => setShowApply(true)} style={{ border:'none', cursor:'pointer', flexShrink:0 }}>🔨 Apply Now — It&apos;s Free</button>
           </div>
         </div>
       </section>
@@ -314,4 +314,3 @@ export default function CarpentersPage() {
     </>
   );
 }
-

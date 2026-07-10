@@ -41,7 +41,7 @@ export interface ProductVariant {
 }
 
 export interface Product {
-  // Core â€” exist in DB before our migration
+  // Core — exist in DB before our migration
   id: string | number;          // DB uses integer (serial), not uuid
   slug?: string;                // pSEO slug field present in DB
   name: string;
@@ -66,7 +66,7 @@ export interface Product {
   type: 'project' | 'quick';
   unit: string;
   in_stock: boolean;
-  is_active?: boolean;          // original DB column â€” kept alongside in_stock
+  is_active?: boolean;          // original DB column — kept alongside in_stock
 
   // Joined relations
   categories?: Category;
@@ -175,4 +175,3 @@ export interface EnquiryPayload {
   quantity?: number;
   total_value?: number;
 }
-

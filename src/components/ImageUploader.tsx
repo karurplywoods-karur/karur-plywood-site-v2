@@ -11,8 +11,8 @@ interface Props {
   hint?: string;
 }
 
-// â”€â”€ WebP converter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Converts any image file to WebP at â‰¤1200px wide, 85% quality, client-side
+// ── WebP converter ────────────────────────────────────────────────────────────
+// Converts any image file to WebP at ≤1200px wide, 85% quality, client-side
 // using the Canvas API. Falls back to the original file if conversion fails.
 const MAX_WIDTH  = 1200;
 const MAX_HEIGHT = 1200;
@@ -32,7 +32,7 @@ async function toWebP(file: File): Promise<File> {
     img.onload = () => {
       URL.revokeObjectURL(url);
 
-      // Calculate dimensions â€” maintain aspect ratio, cap at max
+      // Calculate dimensions — maintain aspect ratio, cap at max
       let { width, height } = img;
       if (width > MAX_WIDTH || height > MAX_HEIGHT) {
         const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
@@ -66,7 +66,7 @@ async function toWebP(file: File): Promise<File> {
     img.src = url;
   });
 }
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function ImageUploader({ value, onChange, folder = 'products', label = 'Image', hint }: Props) {
   const [uploading, setUploading]   = useState(false);
@@ -81,19 +81,19 @@ export default function ImageUploader({ value, onChange, folder = 'products', la
 
     // Step 1: Convert to WebP
     setConverting(true);
-    setProgress('Converting to WebPâ€¦');
+    setProgress('Converting to WebP…');
     let finalFile: File;
     try {
       finalFile = await toWebP(file);
       const savedKB = Math.round((file.size - finalFile.size) / 1024);
       if (savedKB > 0) {
-        setProgress(`Converted âœ“ â€” saved ${savedKB}KB â†’ uploadingâ€¦`);
+        setProgress(`Converted ✓ — saved ${savedKB}KB → uploading…`);
       } else {
-        setProgress('Uploadingâ€¦');
+        setProgress('Uploading…');
       }
     } catch {
       finalFile = file; // fallback to original
-      setProgress('Uploadingâ€¦');
+      setProgress('Uploading…');
     }
     setConverting(false);
 
@@ -155,7 +155,7 @@ export default function ImageUploader({ value, onChange, folder = 'products', la
       >
         {busy ? (
           <div>
-            <div style={{ fontSize: 28, marginBottom: 6 }}>{converting ? 'ðŸ”„' : 'â³'}</div>
+            <div style={{ fontSize: 28, marginBottom: 6 }}>{converting ? '🔄' : '⏳'}</div>
             <div style={{ fontSize: 13, color: '#C8884A', fontWeight: 600 }}>{progress}</div>
             {/* Progress bar */}
             <div style={{ marginTop: 10, height: 3, background: 'rgba(200,136,74,0.15)', borderRadius: 99, overflow: 'hidden' }}>
@@ -170,10 +170,10 @@ export default function ImageUploader({ value, onChange, folder = 'products', la
           </div>
         ) : (
           <div>
-            <div style={{ fontSize: 28, marginBottom: 6 }}>ðŸ“</div>
+            <div style={{ fontSize: 28, marginBottom: 6 }}>📁</div>
             <div style={{ fontSize: 13, color: '#C8B8A0', fontWeight: 500 }}>Click to upload or drag & drop</div>
             <div style={{ fontSize: 11, color: '#9A8070', marginTop: 4 }}>
-              JPEG Â· PNG Â· WebP â€” Auto-converted to WebP Â· Max 5MB
+              JPEG · PNG · WebP — Auto-converted to WebP · Max 5MB
             </div>
           </div>
         )}
@@ -207,7 +207,7 @@ export default function ImageUploader({ value, onChange, folder = 'products', la
       />
 
       {hint  && <div style={{ fontSize: 11, color: '#9A8070', marginTop: 6 }}>{hint}</div>}
-      {error && <div style={{ fontSize: 12, color: '#F87171', marginTop: 6 }}>âš ï¸ {error}</div>}
+      {error && <div style={{ fontSize: 12, color: '#F87171', marginTop: 6 }}>⚠️ {error}</div>}
 
       {/* Preview */}
       {value && (
@@ -217,7 +217,7 @@ export default function ImageUploader({ value, onChange, folder = 'products', la
           <button
             onClick={() => onChange('')}
             style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: 6, color: 'white', padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontFamily: 'Outfit,sans-serif' }}>
-            âœ• Remove
+            ✕ Remove
           </button>
         </div>
       )}
@@ -241,4 +241,3 @@ interface Props {
   label?: string;
   hint?: string;
 }
-

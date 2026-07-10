@@ -20,7 +20,7 @@ const TEMPLATES: Record<string, { filename: string; content: string }> = {
   variants: {
     filename: 'variants_template.csv',
     content: [
-      // Header â€” product_slug must match an existing product slug in DB
+      // Header — product_slug must match an existing product slug in DB
       'product_slug,thickness,size,grade,finish,color,pack_size,price,mrp,stock_quantity,stock_status',
       // Example rows
       'century-marine-plywood-19mm-abc123,19mm,8x4 ft,BWR,,,1 sheet,3200,3500,50,in_stock',
@@ -32,7 +32,7 @@ const TEMPLATES: Record<string, { filename: string; content: string }> = {
   images: {
     filename: 'images_template.csv',
     content: [
-      // Header â€” product_slug must match an existing product slug
+      // Header — product_slug must match an existing product slug
       'product_slug,image_url,sort_order,alt_text',
       // Example rows
       'century-marine-plywood-19mm-abc123,https://example.com/img-front.jpg,1,Front view',
@@ -43,7 +43,7 @@ const TEMPLATES: Record<string, { filename: string; content: string }> = {
 
 };
 
-// â”€â”€ GET /api/import/templates?type=products|variants|images â”€â”€â”€â”€
+// ── GET /api/import/templates?type=products|variants|images ────
 export async function GET(req: NextRequest) {
   const type = req.nextUrl.searchParams.get('type') || 'products';
 
@@ -60,4 +60,3 @@ export async function GET(req: NextRequest) {
     },
   });
 }
-

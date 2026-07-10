@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   // Build the WhatsApp review request message
   const customerName = enquiry.name && enquiry.name !== 'WhatsApp Click' ? enquiry.name : 'Customer';
   const message = encodeURIComponent(
-    `Hi ${customerName}! ðŸ˜Š\n\nThank you for choosing *Karur Plywood & Company*.\n\nWe hope you are happy with your purchase. It would mean a lot to us if you could leave us a Google review â€” it helps other customers find us and takes only 30 seconds!\n\nâ­ Leave a review here:\n${CONTACT.googleReviewUrl}\n\nThank you for your support!\n\n_Karur Plywood & Company, Karur_`
+    `Hi ${customerName}! 😊\n\nThank you for choosing *Karur Plywood & Company*.\n\nWe hope you are happy with your purchase. It would mean a lot to us if you could leave us a Google review — it helps other customers find us and takes only 30 seconds!\n\n⭐ Leave a review here:\n${CONTACT.googleReviewUrl}\n\nThank you for your support!\n\n_Karur Plywood & Company, Karur_`
   );
 
   const waURL = `https://wa.me/${phone.startsWith('91') ? phone : '91' + phone}?text=${message}`;
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ success: true, wa_url: waURL, message: 'Open this URL to send the review request on WhatsApp.' });
 }
 
-// GET â€” fetch all converted enquiries eligible for review request
+// GET — fetch all converted enquiries eligible for review request
 export async function GET() {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -59,4 +59,3 @@ export async function GET() {
 
   return NextResponse.json(data ?? []);
 }
-

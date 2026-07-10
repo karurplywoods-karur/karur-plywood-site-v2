@@ -1,4 +1,4 @@
-// src/lib/whatsapp.ts â€” WhatsApp notification helpers
+// src/lib/whatsapp.ts — WhatsApp notification helpers
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 const SITE_URL = 'https://www.karurplywood.co.in';
 
@@ -37,45 +37,45 @@ export function getOwnerWhatsAppURL(message: string) {
   return `https://wa.me/${WA}?text=${encodeURIComponent(message)}`;
 }
 
-// â”€â”€ Customer-facing status messages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Customer-facing status messages ──────────────────────────────────────────
 
 const STATUS_MESSAGES: Record<string, (data: CustomerStatusData) => string> = {
   confirmed: (d) =>
-    `âœ… *Order Confirmed â€” ${d.orderNumber}*\n\n` +
+    `✅ *Order Confirmed — ${d.orderNumber}*\n\n` +
     `Hi ${d.customerName}, your order has been confirmed by Karur Plywood & Company.\n\n` +
     `We will dispatch it within 1-2 business days and notify you before delivery.\n\n` +
-    `Order total: â‚¹${d.total.toLocaleString('en-IN')}\n` +
+    `Order total: ₹${d.total.toLocaleString('en-IN')}\n` +
     `Payment: ${d.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Paid Online'}\n\n` +
-    `Questions? Reply to this message anytime. ðŸªµ`,
+    `Questions? Reply to this message anytime. 🪵`,
 
   processing: (d) =>
-    `ðŸ”„ *Order Being Processed â€” ${d.orderNumber}*\n\n` +
+    `🔄 *Order Being Processed — ${d.orderNumber}*\n\n` +
     `Hi ${d.customerName}, we are currently preparing your order.\n\n` +
     `Estimated dispatch: within 1 business day.\n\n` +
-    `Questions? Reply to this message. â€” Karur Plywood & Company`,
+    `Questions? Reply to this message. — Karur Plywood & Company`,
 
   shipped: (d) =>
-    `ðŸš› *Your Order is On the Way! â€” ${d.orderNumber}*\n\n` +
+    `🚛 *Your Order is On the Way! — ${d.orderNumber}*\n\n` +
     `Hi ${d.customerName}, your order has been dispatched from our depot in Karur.\n\n` +
     `${d.trackingNumber ? `Tracking ref: ${d.trackingNumber}\n\n` : ''}` +
     `Please ensure someone is available to receive the delivery.\n\n` +
-    `Payment due on delivery: â‚¹${d.total.toLocaleString('en-IN')}\n\n` +
-    `â€” Karur Plywood & Company ðŸ­`,
+    `Payment due on delivery: ₹${d.total.toLocaleString('en-IN')}\n\n` +
+    `— Karur Plywood & Company 🏭`,
 
   delivered: (d) =>
-    `ðŸ“¦ *Order Delivered â€” ${d.orderNumber}*\n\n` +
+    `📦 *Order Delivered — ${d.orderNumber}*\n\n` +
     `Hi ${d.customerName}, we hope your order was delivered in perfect condition!\n\n` +
     `If you notice any damage or issue, please reply here within 48 hours with photos.\n\n` +
     `Rate your experience: ${SITE_URL}/products\n\n` +
-    `Thank you for shopping with Karur Plywood & Company! ðŸ™`,
+    `Thank you for shopping with Karur Plywood & Company! 🙏`,
 
   cancelled: (d) =>
-    `âŒ *Order Cancelled â€” ${d.orderNumber}*\n\n` +
+    `❌ *Order Cancelled — ${d.orderNumber}*\n\n` +
     `Hi ${d.customerName}, your order has been cancelled.\n\n` +
     `${d.adminNotes ? `Reason: ${d.adminNotes}\n\n` : ''}` +
     `If a payment was made, a refund will be processed within 5-7 business days.\n\n` +
     `Need help? Call us: +91 91596 66538\n` +
-    `â€” Karur Plywood & Company`,
+    `— Karur Plywood & Company`,
 };
 
 interface CustomerStatusData {
@@ -103,7 +103,7 @@ export async function sendCustomerWhatsAppStatus(
 
   const message = messageFn(data);
 
-  // â”€â”€ Option A: Meta WhatsApp Business API (if token is configured) â”€â”€
+  // ── Option A: Meta WhatsApp Business API (if token is configured) ──
   const token   = process.env.WHATSAPP_API_TOKEN;
   const phoneId = process.env.WHATSAPP_PHONE_ID;
 
@@ -142,9 +142,8 @@ export async function sendCustomerWhatsAppStatus(
     }
   }
 
-  // â”€â”€ Option B: No API token â€” log the message so it's visible in Vercel logs â”€â”€
+  // ── Option B: No API token — log the message so it's visible in Vercel logs ──
   // Owner can copy-paste or set up the API later.
   console.log(`[whatsapp] STATUS UPDATE for ${data.customerPhone} (${status}):\n${message}`);
   return { ok: true, method: 'skipped' };
 }
-

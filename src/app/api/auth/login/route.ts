@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createToken } from '@/lib/auth';
 
-// In-memory brute-force protection. Resets on cold start/redeploy â€” fine for
+// In-memory brute-force protection. Resets on cold start/redeploy — fine for
 // a single small admin login endpoint; not meant as a distributed rate limiter.
 const attempts = new Map<string, { count: number; firstAttempt: number }>();
 const MAX_ATTEMPTS = 5;

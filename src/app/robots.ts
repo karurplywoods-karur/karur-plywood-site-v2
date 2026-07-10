@@ -14,4 +14,3 @@ export default function robots(): MetadataRoute.Robots {
     host: 'https://www.karurplywood.co.in',
   };
 }
-

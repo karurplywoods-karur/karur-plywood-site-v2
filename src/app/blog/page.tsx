@@ -5,14 +5,14 @@ import Image from 'next/image';
 import { supabase } from '@/lib/db';
 import { CONTACT } from '@/lib/contact';
 
-const SITE_URL = 'https://www.karurplywood.co.in';
+const SITE_URL = 'https://karurplywood.co.in';
 
 export const metadata: Metadata = {
-  title: 'Blog | Plywood & Hardware Buying Guides â€” Karur Plywood',
+  title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',
   description: "Expert buying guides, tips and product advice from Karur's most trusted plywood dealer.",
   alternates: { canonical: `${SITE_URL}/blog` },
   openGraph: {
-    title: 'Blog | Plywood & Hardware Buying Guides â€” Karur Plywood',
+    title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',
     description: "Expert buying guides, tips and product advice from Karur's most trusted plywood dealer.",
     url: `${SITE_URL}/blog`,
   },
@@ -32,8 +32,8 @@ const CAT_CHIP: Record<string, { bg: string; color: string }> = {
 };
 
 const EMOJI: Record<string, string> = {
-  'Buying Guide':'ðŸªµ','Interior Design':'ðŸŽ¨','Construction':'ðŸ—ï¸',
-  'Brand Comparison':'ðŸ†','Tips & Advice':'ðŸ’¡','Pricing':'ðŸ’°','Local News':'ðŸ“',
+  'Buying Guide':'🪵','Interior Design':'🎨','Construction':'🏗️',
+  'Brand Comparison':'🏆','Tips & Advice':'💡','Pricing':'💰','Local News':'📍',
 };
 
 function Placeholder({ category }: { category: string }) {
@@ -41,7 +41,7 @@ function Placeholder({ category }: { category: string }) {
   return (
     <div style={{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center',
       background:'linear-gradient(135deg,#0d1f3a,#19376D)', flexDirection:'column', gap:10 }}>
-      <span style={{ fontSize:44 }}>{EMOJI[category] || 'ðŸ“'}</span>
+      <span style={{ fontSize:44 }}>{EMOJI[category] || '📝'}</span>
       <span style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.2em',
         textTransform:'uppercase', background:chip.bg, color:chip.color, padding:'3px 10px', borderRadius:3 }}>
         {category}
@@ -89,18 +89,18 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
 
           {posts.length === 0 ? (
             <div style={{ textAlign:'center', padding:'80px 0' }}>
-              <div style={{ fontSize:48, marginBottom:16 }}>ðŸ“</div>
+              <div style={{ fontSize:48, marginBottom:16 }}>📝</div>
               <div className="s-title">COMING SOON</div>
               <p className="s-desc" style={{ margin:'0 auto 28px', textAlign:'center' }}>
                 Expert guides coming soon. Ask us on WhatsApp.
               </p>
               <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="btn-p">
-                ðŸ’¬ Ask on WhatsApp
+                💬 Ask on WhatsApp
               </a>
             </div>
           ) : (
             <>
-              {/* Featured â€” page 1 only */}
+              {/* Featured — page 1 only */}
               {page === 1 && posts[0] && (
                 <Link href={`/blog/${posts[0].slug}`} className="blog-featured">
                   <div className="blog-feat-img">
@@ -114,19 +114,19 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
                         background: CAT_CHIP[posts[0].category]?.bg || 'rgba(249,115,22,0.15)',
                         color:      CAT_CHIP[posts[0].category]?.color || '#F97316',
                       }}>{posts[0].category}</span>
-                      <span style={{ fontSize:11, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700 }}>â­ Featured</span>
+                      <span style={{ fontSize:11, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700 }}>⭐ Featured</span>
                     </div>
                     <div className="blog-feat-title">{posts[0].title}</div>
                     <p className="blog-feat-exc">{posts[0].excerpt}</p>
                     <div className="blog-meta">
-                      <span>âœï¸ {posts[0].author}</span>
-                      <span>â± {posts[0].read_time} min</span>
+                      <span>✍️ {posts[0].author}</span>
+                      <span>⏱ {posts[0].read_time} min</span>
                       {posts[0].published_at && (
-                        <span>ðŸ“… {new Date(posts[0].published_at).toLocaleDateString('en-IN',
+                        <span>📅 {new Date(posts[0].published_at).toLocaleDateString('en-IN',
                           { day:'numeric', month:'short', year:'numeric' })}</span>
                       )}
                     </div>
-                    <div className="blog-read-link">Read Article â†’</div>
+                    <div className="blog-read-link">Read Article →</div>
                   </div>
                 </Link>
               )}
@@ -152,7 +152,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
                           </div>
                           <div className="blog-card-title">{post.title}</div>
                           <p className="blog-card-exc">{post.excerpt}</p>
-                          <div className="blog-card-read">Read More â†’</div>
+                          <div className="blog-card-read">Read More →</div>
                         </div>
                       </Link>
                     );
@@ -160,11 +160,11 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
                 </div>
               )}
 
-              {/* Pagination â€” auto-appears as posts grow */}
+              {/* Pagination — auto-appears as posts grow */}
               {totalPages > 1 && (
                 <div className="blog-pages">
                   {page > 1 && (
-                    <Link href={`/blog?page=${page - 1}`} className="blog-page-btn">â† Prev</Link>
+                    <Link href={`/blog?page=${page - 1}`} className="blog-page-btn">← Prev</Link>
                   )}
                   <div style={{ display:'flex', gap:6 }}>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
@@ -175,7 +175,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
                     ))}
                   </div>
                   {page < totalPages && (
-                    <Link href={`/blog?page=${page + 1}`} className="blog-page-btn">Next â†’</Link>
+                    <Link href={`/blog?page=${page + 1}`} className="blog-page-btn">Next →</Link>
                   )}
                 </div>
               )}
@@ -195,7 +195,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
             </div>
             <a href={`https://wa.me/${WA}?text=Hi%2C+I+have+a+question+about+plywood.`}
               target="_blank" rel="noopener" className="btn-wa">
-              ðŸ’¬ Ask on WhatsApp
+              💬 Ask on WhatsApp
             </a>
           </div>
         </div>
@@ -234,4 +234,3 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
     </>
   );
 }
-

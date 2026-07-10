@@ -46,9 +46,9 @@ async function getCategories() {
 const BRANDS = ['Century', 'Sharon', 'Unibind', 'Greenply', 'Hettich', 'Fevicol'];
 
 const FAQS = [
-  { q: 'What brands of plywood do you stock?', a: 'We stock Century, Sharon, Unibind, Greenply and other top brands â€” all ISI-certified.' },
+  { q: 'What brands of plywood do you stock?', a: 'We stock Century, Sharon, Unibind, Greenply and other top brands — all ISI-certified.' },
   { q: 'Do you offer wholesale pricing for contractors?', a: 'Yes! Contractors, builders and carpenters get special wholesale rates. WhatsApp us with your requirement for bulk pricing.' },
-  { q: 'What areas do you deliver to?', a: 'We deliver across Karur, Trichy, Namakkal, Erode, Salem and Dindigul. Same-day dispatch for Karur orders above â‚¹5,000.' },
+  { q: 'What areas do you deliver to?', a: 'We deliver across Karur, Trichy, Namakkal, Erode, Salem and Dindigul. Same-day dispatch for Karur orders above ₹5,000.' },
   { q: 'Can I visit your showroom?', a: `Absolutely. We're open ${CONTACT.hours} and closed on Sunday at ${CONTACT.address}.` },
 ];
 
@@ -65,9 +65,9 @@ export default async function HomePage() {
     <main>
       <LocalBusinessSchema />
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           HERO SECTION
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="hero-section">
         <div className="hero-bg-grid" />
         <div className="hero-orange-glow" />
@@ -87,8 +87,8 @@ export default async function HomePage() {
             </h1>
 
             <p className="hero-sub">
-              Century, Sharon, Unibind &amp; Greenply â€” all major brands at the best prices in Karur.
-              Wholesale &amp; retail. ISI certified. Free delivery on orders above â‚¹5,000.
+              Century, Sharon, Unibind &amp; Greenply — all major brands at the best prices in Karur.
+              Wholesale &amp; retail. ISI certified. Free delivery on orders above ₹5,000.
             </p>
 
             <div className="hero-ctas">
@@ -99,15 +99,15 @@ export default async function HomePage() {
                 Get Best Price
               </a>
               <Link href="/products" className="cta-outline">
-                View Products â†’
+                View Products →
               </Link>
             </div>
 
             {/* Trust badges */}
             <div className="hero-trust">
-              {['ISI Certified', 'Free Del. â‚¹5K+', 'Same-Day Dispatch', 'GST Billing'].map(t => (
+              {['ISI Certified', 'Free Del. ₹5K+', 'Same-Day Dispatch', 'GST Billing'].map(t => (
                 <div key={t} className="trust-chip">
-                  <span className="trust-check">âœ“</span> {t}
+                  <span className="trust-check">✓</span> {t}
                 </div>
               ))}
             </div>
@@ -129,7 +129,7 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="hero-contact-card">
-              <div className="hero-contact-label">ðŸ“ž Call Us Now</div>
+              <div className="hero-contact-label">📞 Call Us Now</div>
               <a href={`tel:${PHONE_RAW}`} className="hero-contact-phone">{PHONE}</a>
               <div className="hero-contact-hours">{CONTACT.hoursShort}</div>
             </div>
@@ -147,23 +147,23 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           CATEGORIES
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="section section-dark">
         <div className="container">
           <div className="section-header">
             <div className="eyebrow">Our Products</div>
             <h2 className="section-title">EXPLORE OUR RANGE</h2>
-            <p className="section-desc">From ISI-grade plywood to premium laminates â€” everything a builder needs, all under one roof.</p>
+            <p className="section-desc">From ISI-grade plywood to premium laminates — everything a builder needs, all under one roof.</p>
           </div>
 
           <div className="cat-grid">
             {(categories.length > 0 ? categories : [
-              { slug: 'plywood', name: 'Plywood', icon: 'ðŸªµ', id: '1' },
-              { slug: 'laminates', name: 'Laminates', icon: 'ðŸŽ¨', id: '2' },
-              { slug: 'hardware', name: 'Hardware', icon: 'ðŸ”©', id: '3' },
-              { slug: 'doors', name: 'Doors', icon: 'ðŸšª', id: '4' },
+              { slug: 'plywood', name: 'Plywood', icon: '🪵', id: '1' },
+              { slug: 'laminates', name: 'Laminates', icon: '🎨', id: '2' },
+              { slug: 'hardware', name: 'Hardware', icon: '🔩', id: '3' },
+              { slug: 'doors', name: 'Doors', icon: '🚪', id: '4' },
             ]).map((cat: any) => (
               <Link key={cat.id} href={`/products?category=${cat.slug}`} className="cat-card">
                 <div className="cat-icon-wrap">
@@ -171,18 +171,18 @@ export default async function HomePage() {
                 </div>
                 <div className="cat-info">
                   <div className="cat-name">{cat.name}</div>
-                  <div className="cat-cta">Browse Range â†’</div>
+                  <div className="cat-cta">Browse Range →</div>
                 </div>
-                <div className="cat-arrow">â†—</div>
+                <div className="cat-arrow">↗</div>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           FEATURED PRODUCTS
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="section section-mid">
         <div className="container">
           <div className="section-header">
@@ -198,7 +198,7 @@ export default async function HomePage() {
                     {p.image_url ? (
                       <Image src={p.image_url} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 25vw" />
                     ) : (
-                      <div className="prod-img-placeholder">{p.categories?.icon || 'ðŸ“¦'}</div>
+                      <div className="prod-img-placeholder">{p.categories?.icon || '📦'}</div>
                     )}
                     {p.categories && (
                       <div className="prod-cat-badge">{p.categories.icon} {p.categories.name}</div>
@@ -208,7 +208,7 @@ export default async function HomePage() {
                     <div className="prod-name">{p.name}</div>
                     {p.price && (
                       <div className="prod-price-row">
-                        <span className="prod-price">â‚¹{p.price.toLocaleString('en-IN')}</span>
+                        <span className="prod-price">₹{p.price.toLocaleString('en-IN')}</span>
                         {p.unit && <span className="prod-unit">/{p.unit}</span>}
                       </div>
                     )}
@@ -217,7 +217,7 @@ export default async function HomePage() {
                       target="_blank" rel="noopener"
                       className="prod-wa-btn"
                     >
-                      ðŸ’¬ Enquire on WhatsApp
+                      💬 Enquire on WhatsApp
                     </a>
                   </div>
                 </div>
@@ -225,23 +225,23 @@ export default async function HomePage() {
             </div>
           ) : (
             <div className="prod-empty">
-              <div style={{ fontSize: 48, marginBottom: 12 }}>ðŸ“¦</div>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>📦</div>
               <div style={{ fontSize: 16, color: '#7A8EA8', marginBottom: 20 }}>Products are being added. Check back soon!</div>
               <a href={waUrl} target="_blank" rel="noopener" className="cta-wa" style={{ display: 'inline-flex' }}>
-                ðŸ’¬ Ask About Products
+                💬 Ask About Products
               </a>
             </div>
           )}
 
           <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <Link href="/products" className="cta-outline-orange">View All Products â†’</Link>
+            <Link href="/products" className="cta-outline-orange">View All Products →</Link>
           </div>
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           HOW TO ORDER
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="section section-dark">
         <div className="container">
           <div className="how-grid">
@@ -249,18 +249,18 @@ export default async function HomePage() {
               <div className="eyebrow">Simple Process</div>
               <h2 className="section-title" style={{ marginBottom: '1rem' }}>HOW TO ORDER</h2>
               <p style={{ fontSize: 14, color: '#7A8EA8', lineHeight: 1.8, marginBottom: 28 }}>
-                Getting your plywood and hardware has never been easier. Two ways to order â€” both take less than 2 minutes.
+                Getting your plywood and hardware has never been easier. Two ways to order — both take less than 2 minutes.
               </p>
               <div className="how-modes">
                 <Link href="/quick-order" className="how-mode-card">
-                  <div className="how-mode-icon">âš¡</div>
+                  <div className="how-mode-icon">⚡</div>
                   <div>
                     <div className="how-mode-title">Quick Order</div>
                     <div className="how-mode-desc">Add fast-moving items to cart and order directly on WhatsApp</div>
                   </div>
                 </Link>
                 <Link href="/bom-quote" className="how-mode-card">
-                  <div className="how-mode-icon">ðŸ“‹</div>
+                  <div className="how-mode-icon">📋</div>
                   <div>
                     <div className="how-mode-title">Upload BOM</div>
                     <div className="how-mode-desc">Have a list? Snap a photo and get a quote in minutes</div>
@@ -273,7 +273,7 @@ export default async function HomePage() {
               {[
                 { n: '01', t: 'Browse & Select', d: 'Choose from our 50+ products or send us your complete material list.' },
                 { n: '02', t: 'WhatsApp Quote', d: 'We confirm availability and send you the best price instantly.' },
-                { n: '03', t: 'Pay & Deliver', d: 'Pay via UPI or cash. Free delivery in Karur above â‚¹5,000.' },
+                { n: '03', t: 'Pay & Deliver', d: 'Pay via UPI or cash. Free delivery in Karur above ₹5,000.' },
               ].map(s => (
                 <div key={s.n} className="how-step">
                   <div className="how-step-num">{s.n}</div>
@@ -288,9 +288,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           WHY CHOOSE US
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="section section-mid">
         <div className="container">
           <div className="section-header">
@@ -300,12 +300,12 @@ export default async function HomePage() {
 
           <div className="why-grid">
             {[
-              { icon: 'ðŸ…', t: 'ISI Certified Stock', d: 'Every product we sell is BIS/ISI certified. No spurious or uncertified material â€” ever.' },
-              { icon: 'ðŸ’°', t: 'Best Price in Karur', d: 'Our buying power means you get wholesale rates whether you\'re buying 1 sheet or 1,000.' },
-              { icon: 'ðŸšš', t: 'Same-Day Delivery', d: 'Free delivery within Karur for orders above â‚¹5,000. Delivered to your site.' },
-              { icon: 'ðŸ§‘â€ðŸ’¼', t: 'Expert Guidance', d: '25+ years of experience. We help you pick the right grade and brand for your specific use.' },
-              { icon: 'ðŸ”–', t: 'GST Billing', d: 'Full GST invoices for contractors and businesses. All transactions transparent.' },
-              { icon: 'ðŸ“ž', t: 'Always Reachable', d: 'WhatsApp or call â€” we respond fast. No waiting on hold or automated systems.' },
+              { icon: '🏅', t: 'ISI Certified Stock', d: 'Every product we sell is BIS/ISI certified. No spurious or uncertified material — ever.' },
+              { icon: '💰', t: 'Best Price in Karur', d: 'Our buying power means you get wholesale rates whether you\'re buying 1 sheet or 1,000.' },
+              { icon: '🚚', t: 'Same-Day Delivery', d: 'Free delivery within Karur for orders above ₹5,000. Delivered to your site.' },
+              { icon: '🧑‍💼', t: 'Expert Guidance', d: '25+ years of experience. We help you pick the right grade and brand for your specific use.' },
+              { icon: '🔖', t: 'GST Billing', d: 'Full GST invoices for contractors and businesses. All transactions transparent.' },
+              { icon: '📞', t: 'Always Reachable', d: 'WhatsApp or call — we respond fast. No waiting on hold or automated systems.' },
             ].map(w => (
               <div key={w.t} className="why-card">
                 <div className="why-icon">{w.icon}</div>
@@ -317,9 +317,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           TESTIMONIALS
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="section section-dark">
         <div className="container">
           <div className="section-header">
@@ -334,7 +334,7 @@ export default async function HomePage() {
               { id: 3, name: 'Karthik Homes', role: 'Builder, Namakkal', rating: 5, message: 'Bulk pricing is excellent. They have everything in stock and dispatch on the same day.' },
             ]).map((r: any) => (
               <div key={r.id} className="review-card">
-                <div className="review-stars">{'â˜…'.repeat(r.rating)}{'â˜†'.repeat(5 - r.rating)}</div>
+                <div className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
                 <p className="review-msg">&ldquo;{r.message}&rdquo;</p>
                 <div className="review-author">
                   <div className="review-avatar">{r.name.charAt(0)}</div>
@@ -349,9 +349,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           FAQ
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="section section-mid">
         <div className="container faq-container">
           <div>
@@ -361,7 +361,7 @@ export default async function HomePage() {
               Have more questions? WhatsApp us and we&apos;ll answer within minutes.
             </p>
             <a href={waUrl} target="_blank" rel="noopener" className="cta-wa" style={{ display: 'inline-flex' }}>
-              ðŸ’¬ Ask on WhatsApp
+              💬 Ask on WhatsApp
             </a>
           </div>
 
@@ -376,46 +376,46 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+      {/* ══════════════════════════════════════════
           FINAL CTA BANNER
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      ══════════════════════════════════════════ */}
       <section className="cta-banner">
         <div className="cta-banner-grid" />
         <div className="container cta-banner-inner">
           <div>
             <div className="eyebrow" style={{ color: 'rgba(249,115,22,0.7)' }}>Get Started Today</div>
             <h2 className="cta-banner-title">GET THE BEST PRICE<br />IN KARUR TODAY</h2>
-            <p className="cta-banner-sub">Tell us what you need â€” we respond in minutes.</p>
+            <p className="cta-banner-sub">Tell us what you need — we respond in minutes.</p>
           </div>
           <div className="cta-banner-actions">
             <a href={waUrl} target="_blank" rel="noopener" className="cta-wa cta-wa-lg">
-              ðŸ’¬ WhatsApp Us Now
+              💬 WhatsApp Us Now
             </a>
             <a href={`tel:${PHONE_RAW}`} className="cta-call-lg">
-              ðŸ“ž {PHONE}
+              📞 {PHONE}
             </a>
             <Link href="/location" className="cta-location-link">
-              ðŸ“ Visit Our Karur Showroom â†’
+              📍 Visit Our Karur Showroom →
             </Link>
           </div>
         </div>
       </section>
 
       <style>{`
-        /* â”€â”€ LAYOUT â”€â”€ */
+        /* ── LAYOUT ── */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
         .section { padding: 80px 0; }
         .section-dark { background: #070F1F; }
         .section-mid { background: rgba(11,36,71,0.3); border-top: 1px solid rgba(249,115,22,0.08); }
 
-        /* â”€â”€ SECTION HEADER â”€â”€ */
+        /* ── SECTION HEADER ── */
         .section-header { text-align: center; margin-bottom: 52px; }
         .eyebrow { font-family: 'Syne', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: #F97316; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .eyebrow::before, .eyebrow::after { content: ''; width: 20px; height: 1px; background: #F97316; }
         .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.04em; color: #F8F9FB; line-height: 0.95; margin-bottom: 16px; }
         .section-desc { font-size: 14px; color: #7A8EA8; line-height: 1.8; max-width: 500px; margin: 0 auto; }
 
-        /* â”€â”€ HERO â”€â”€ */
+        /* ── HERO ── */
         .hero-section { position: relative; min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(160deg, #0a1d3a 0%, #070F1F 100%); border-bottom: 1px solid rgba(249,115,22,0.15); padding-top: 58px; overflow: hidden; }
         .hero-bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(249,115,22,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
         .hero-orange-glow { position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%); pointer-events: none; }
@@ -456,7 +456,7 @@ export default async function HomePage() {
         .brand-strip-label { font-family: 'Syne', sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #F97316; white-space: nowrap; }
         .brand-name { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7A8EA8; padding: 4px 12px; border-left: 1px solid rgba(249,115,22,0.15); }
 
-        /* â”€â”€ CATEGORIES â”€â”€ */
+        /* ── CATEGORIES ── */
         .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
         .cat-card { display: flex; flex-direction: column; gap: 16px; background: rgba(25,55,109,0.35); border: 1px solid rgba(249,115,22,0.15); border-radius: 12px; padding: 28px 22px; text-decoration: none; transition: all 0.25s; position: relative; overflow: hidden; }
         .cat-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(249,115,22,0.0), rgba(249,115,22,0.06)); opacity: 0; transition: opacity 0.25s; }
@@ -469,7 +469,7 @@ export default async function HomePage() {
         .cat-arrow { position: absolute; top: 20px; right: 20px; font-size: 18px; color: rgba(249,115,22,0.3); transition: color 0.25s; }
         .cat-card:hover .cat-arrow { color: #F97316; }
 
-        /* â”€â”€ PRODUCTS â”€â”€ */
+        /* ── PRODUCTS ── */
         .prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
         .prod-card { background: rgba(25,55,109,0.35); border: 1px solid rgba(249,115,22,0.12); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.28s; }
         .prod-card:hover { border-color: rgba(249,115,22,0.4); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
@@ -486,7 +486,7 @@ export default async function HomePage() {
         .prod-wa-btn:hover { background: #1fbc59; }
         .prod-empty { text-align: center; padding: 80px 0; }
 
-        /* â”€â”€ HOW TO ORDER â”€â”€ */
+        /* ── HOW TO ORDER ── */
         .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
         .how-modes { display: flex; flex-direction: column; gap: 12px; }
         .how-mode-card { display: flex; gap: 14px; align-items: flex-start; background: rgba(25,55,109,0.35); border: 1px solid rgba(249,115,22,0.14); border-radius: 10px; padding: 18px; text-decoration: none; transition: all 0.25s; }
@@ -501,7 +501,7 @@ export default async function HomePage() {
         .how-step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.92rem; color: #F8F9FB; margin-bottom: 4px; }
         .how-step-desc { font-size: 0.78rem; color: #7A8EA8; line-height: 1.65; }
 
-        /* â”€â”€ WHY CHOOSE US â”€â”€ */
+        /* ── WHY CHOOSE US ── */
         .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
         .why-card { background: rgba(25,55,109,0.25); border: 1px solid rgba(249,115,22,0.1); border-radius: 10px; padding: 26px 22px; transition: all 0.25s; }
         .why-card:hover { border-color: rgba(249,115,22,0.3); background: rgba(25,55,109,0.4); }
@@ -509,7 +509,7 @@ export default async function HomePage() {
         .why-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.92rem; color: #F8F9FB; margin-bottom: 8px; }
         .why-desc { font-size: 0.78rem; color: #7A8EA8; line-height: 1.7; }
 
-        /* â”€â”€ REVIEWS â”€â”€ */
+        /* ── REVIEWS ── */
         .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
         .review-card { background: rgba(25,55,109,0.35); border: 1px solid rgba(249,115,22,0.12); border-radius: 10px; padding: 24px 22px; }
         .review-stars { color: #F97316; font-size: 16px; margin-bottom: 12px; }
@@ -519,17 +519,17 @@ export default async function HomePage() {
         .review-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: #F8F9FB; }
         .review-role { font-size: 0.72rem; color: #7A8EA8; margin-top: 2px; }
 
-        /* â”€â”€ FAQ â”€â”€ */
+        /* ── FAQ ── */
         .faq-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: start; }
         .faq-list { display: flex; flex-direction: column; gap: 10px; }
         .faq-item { background: rgba(25,55,109,0.25); border: 1px solid rgba(249,115,22,0.12); border-radius: 8px; overflow: hidden; transition: border-color 0.2s; }
         .faq-item[open] { border-color: rgba(249,115,22,0.3); }
         .faq-q { padding: 16px 20px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: #F8F9FB; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
         .faq-q::after { content: '+'; color: #F97316; font-size: 18px; flex-shrink: 0; }
-        .faq-item[open] .faq-q::after { content: 'âˆ’'; }
+        .faq-item[open] .faq-q::after { content: '−'; }
         .faq-a { padding: 0 20px 16px; font-size: 13px; color: #7A8EA8; line-height: 1.75; }
 
-        /* â”€â”€ CTA BANNER â”€â”€ */
+        /* ── CTA BANNER ── */
         .cta-banner { position: relative; background: linear-gradient(135deg, #0a1d3a, #0d2545); border-top: 1px solid rgba(249,115,22,0.2); padding: 80px 0; overflow: hidden; }
         .cta-banner-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(249,115,22,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.05) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
         .cta-banner-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; position: relative; z-index: 2; }
@@ -542,7 +542,7 @@ export default async function HomePage() {
         .cta-location-link { font-size: 0.75rem; font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: 0.08em; color: #7A8EA8; text-decoration: none; transition: color 0.2s; }
         .cta-location-link:hover { color: #F97316; }
 
-        /* â”€â”€ RESPONSIVE â”€â”€ */
+        /* ── RESPONSIVE ── */
         @media (max-width: 1100px) {
           .hero-inner { grid-template-columns: 1fr; gap: 40px; padding-top: 60px; }
           .hero-stats-panel { display: none; }
@@ -566,7 +566,7 @@ export default async function HomePage() {
         }
       `}</style>
 
-      {/* Recently Viewed â€” shows for returning visitors who browsed products */}
+      {/* Recently Viewed — shows for returning visitors who browsed products */}
       <RecentlyViewed />
 
     </main>

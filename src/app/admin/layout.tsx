@@ -1,6 +1,6 @@
 // src/app/admin/layout.tsx
 // Auth protection for all /admin/* sub-routes.
-// The login page at /admin/page.tsx is the only exception â€”
+// The login page at /admin/page.tsx is the only exception —
 // detected by checking if it's a direct /admin path with no sub-route.
 import { getAdminSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -30,4 +30,3 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return <>{children}</>;
 }
-

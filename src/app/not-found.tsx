@@ -1,20 +1,20 @@
 // src/app/not-found.tsx
-// Custom 404 page â€” shown for any unmatched route.
+// Custom 404 page — shown for any unmatched route.
 // Matches the site's dark navy / orange design system.
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '404 â€” Page Not Found',
+  title: '404 — Page Not Found',
   robots: { index: false, follow: false },
 };
 
 const QUICK_LINKS = [
-  { href: '/products',     label: 'ðŸ“¦ Browse Products'    },
-  { href: '/location',     label: 'ðŸ“ Delivery Areas'     },
-  { href: '/quick-order',  label: 'âš¡ Quick Order'        },
-  { href: '/contact',      label: 'ðŸ“ž Contact Us'         },
-  { href: '/blog',         label: 'ðŸ“– Blog'               },
+  { href: '/products',     label: '📦 Browse Products'    },
+  { href: '/location',     label: '📍 Delivery Areas'     },
+  { href: '/quick-order',  label: '⚡ Quick Order'        },
+  { href: '/contact',      label: '📞 Contact Us'         },
+  { href: '/blog',         label: '📖 Blog'               },
 ];
 
 export default function NotFoundPage() {
@@ -46,7 +46,7 @@ export default function NotFoundPage() {
         </div>
 
         {/* Plywood icon */}
-        <div style={{ fontSize: 44, marginBottom: 20 }}>ðŸªµ</div>
+        <div style={{ fontSize: 44, marginBottom: 20 }}>🪵</div>
 
         <h1 style={{
           fontFamily: "'Cormorant Garamond', serif",
@@ -89,7 +89,7 @@ export default function NotFoundPage() {
           letterSpacing: '0.1em', textTransform: 'uppercase',
           textDecoration: 'none', transition: 'opacity 0.2s',
         }}>
-          â† Back to Home
+          ← Back to Home
         </Link>
 
         {/* WhatsApp help */}
@@ -104,7 +104,7 @@ export default function NotFoundPage() {
               color: '#25D366', fontSize: 13, fontWeight: 600,
               textDecoration: 'none',
             }}>
-            ðŸ’¬ Ask us on WhatsApp
+            💬 Ask us on WhatsApp
           </a>
         </div>
 
@@ -132,4 +132,3 @@ export default function NotFoundPage() {
     </main>
   );
 }
-

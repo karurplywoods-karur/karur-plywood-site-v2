@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
       deliveryAddress,
     }).catch(console.error);
 
-    // 7b. Notify the owner by email too â€” independent of WhatsApp, so the
+    // 7b. Notify the owner by email too — independent of WhatsApp, so the
     // order isn't missed if the WhatsApp tab is closed/not seen in time.
     sendOwnerOrderAlert({
       orderNumber:    order.order_number,

@@ -1,6 +1,6 @@
 'use client';
 // src/app/admin/brands/page.tsx
-// Full brand management â€” create, edit, delete, logo upload, SEO fields
+// Full brand management — create, edit, delete, logo upload, SEO fields
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -122,10 +122,10 @@ export default function BrandsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => router.push('/admin/dashboard')}
             style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '6px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: 13 }}>
-            â† Dashboard
+            ← Dashboard
           </button>
           <div style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 700, fontSize: 18, color: '#F0E8DC' }}>
-            ðŸ·ï¸ Brand Management
+            🏷️ Brand Management
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -144,12 +144,12 @@ export default function BrandsPage() {
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 24px' }}>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: '#9A8070' }}>â³ Loading...</div>
+          <div style={{ textAlign: 'center', padding: '80px 0', color: '#9A8070' }}>⏳ Loading...</div>
         ) : brands.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <div style={{ fontSize: 48, marginBottom: 14 }}>ðŸ·ï¸</div>
+            <div style={{ fontSize: 48, marginBottom: 14 }}>🏷️</div>
             <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC', marginBottom: 8 }}>No brands yet</div>
-            <p style={{ color: '#9A8070', marginBottom: 24 }}>Add your first brand â€” Century, Greenply, Hettich etc.</p>
+            <p style={{ color: '#9A8070', marginBottom: 24 }}>Add your first brand — Century, Greenply, Hettich etc.</p>
             <button onClick={openNew}
               style={{ padding: '12px 28px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
               + Add Brand
@@ -173,7 +173,7 @@ export default function BrandsPage() {
                     <td style={{ padding: '12px 16px' }}>
                       {b.logo_url
                         ? <img src={b.logo_url} alt={b.name} style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 6, background: 'rgba(255,255,255,0.05)' }} />
-                        : <div style={{ width: 40, height: 40, borderRadius: 6, background: 'rgba(200,136,74,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>ðŸ·ï¸</div>
+                        : <div style={{ width: 40, height: 40, borderRadius: 6, background: 'rgba(200,136,74,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🏷️</div>
                       }
                     </td>
                     <td style={{ padding: '12px 16px' }}>
@@ -183,8 +183,8 @@ export default function BrandsPage() {
                     <td style={{ padding: '12px 16px', color: '#9A8070', fontFamily: 'monospace', fontSize: 12 }}>{b.slug}</td>
                     <td style={{ padding: '12px 16px' }}>
                       {b.website
-                        ? <a href={b.website} target="_blank" rel="noopener" style={{ color: '#C8884A', fontSize: 12, textDecoration: 'none' }}>â†— {b.website.replace(/^https?:\/\//, '')}</a>
-                        : <span style={{ color: '#9A8070', fontSize: 12 }}>â€”</span>}
+                        ? <a href={b.website} target="_blank" rel="noopener" style={{ color: '#C8884A', fontSize: 12, textDecoration: 'none' }}>↗ {b.website.replace(/^https?:\/\//, '')}</a>
+                        : <span style={{ color: '#9A8070', fontSize: 12 }}>—</span>}
                     </td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: b.is_active ? 'rgba(37,211,102,0.12)' : 'rgba(248,113,113,0.12)', color: b.is_active ? '#25D366' : '#F87171' }}>
@@ -194,8 +194,8 @@ export default function BrandsPage() {
                     <td style={{ padding: '12px 16px', color: '#9A8070', textAlign: 'center' }}>{b.sort_order}</td>
                     <td style={{ padding: '12px 16px' }}>
                       <div style={{ display: 'flex', gap: 8 }}>
-                        <button onClick={() => openEdit(b)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœï¸ Edit</button>
-                        <button onClick={() => handleDelete(b)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ—‘ï¸</button>
+                        <button onClick={() => openEdit(b)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✏️ Edit</button>
+                        <button onClick={() => handleDelete(b)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>🗑️</button>
                       </div>
                     </td>
                   </tr>
@@ -215,7 +215,7 @@ export default function BrandsPage() {
               <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC' }}>
                 {editBrand ? 'Edit Brand' : 'Add Brand'}
               </div>
-              <button onClick={closeModal} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœ•</button>
+              <button onClick={closeModal} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✕</button>
             </div>
 
             {/* Logo */}
@@ -225,7 +225,7 @@ export default function BrandsPage() {
                 onChange={v => setForm(f => ({ ...f, logo_url: v }))}
                 folder="brands"
                 label="Brand Logo"
-                hint="PNG or SVG with transparent background â€” recommended 200Ã—200px"
+                hint="PNG or SVG with transparent background — recommended 200×200px"
               />
             </div>
 
@@ -265,17 +265,17 @@ export default function BrandsPage() {
               <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: 2 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))}>
                   <div style={{ width: 20, height: 20, borderRadius: 4, border: '2px solid', borderColor: form.is_active ? '#25D366' : 'rgba(200,136,74,0.3)', background: form.is_active ? '#25D366' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {form.is_active && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>âœ“</span>}
+                    {form.is_active && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>✓</span>}
                   </div>
                   <span style={{ fontSize: 13, color: '#C8B8A0' }}>Active</span>
                 </div>
               </div>
             </div>
 
-            {/* Advanced â€” SEO */}
+            {/* Advanced — SEO */}
             <button onClick={() => setShowAdvanced(v => !v)}
               style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#9A8070', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Outfit,sans-serif', padding: '4px 0', marginBottom: showAdvanced ? 12 : 18, textTransform: 'uppercase', letterSpacing: 1 }}>
-              <span style={{ display: 'inline-block', transform: showAdvanced ? 'rotate(90deg)' : 'none', transition: 'transform .15s' }}>â–¶</span>
+              <span style={{ display: 'inline-block', transform: showAdvanced ? 'rotate(90deg)' : 'none', transition: 'transform .15s' }}>▶</span>
               SEO (optional)
             </button>
 
@@ -295,7 +295,7 @@ export default function BrandsPage() {
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={handleSave} disabled={saving}
                 style={{ flex: 1, padding: '13px 0', borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-                {saving ? 'â³ Saving...' : editBrand ? 'âœ“ Update Brand' : '+ Create Brand'}
+                {saving ? '⏳ Saving...' : editBrand ? '✓ Update Brand' : '+ Create Brand'}
               </button>
               <button onClick={closeModal}
                 style={{ padding: '13px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
@@ -313,4 +313,3 @@ export default function BrandsPage() {
     </div>
   );
 }
-

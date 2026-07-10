@@ -43,4 +43,3 @@ export function useRecentlyViewed(currentProduct?: Product) {
 
   return displayed;
 }
-

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase, supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
 
-// â”€â”€ GET /api/brands  (public) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── GET /api/brands  (public) ──────────────────────────────────
 export async function GET() {
   const { data, error } = await supabase
     .from('brands')
@@ -15,7 +15,7 @@ export async function GET() {
   return NextResponse.json(data ?? []);
 }
 
-// â”€â”€ POST /api/brands  (admin) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── POST /api/brands  (admin) ──────────────────────────────────
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -59,4 +59,3 @@ export async function POST(req: NextRequest) {
   }
   return NextResponse.json(data, { status: 201 });
 }
-

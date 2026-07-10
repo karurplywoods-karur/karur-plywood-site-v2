@@ -211,7 +211,7 @@ export default function CheckoutPage() {
     setOrderDone({ order_number: data.order_number, wa_url: data.wa_url });
     setLoading(false);
 
-    // Fire GA4 purchase event â€” imported into Google Ads as a conversion.
+    // Fire GA4 purchase event — imported into Google Ads as a conversion.
     // Fires once per order right after creation succeeds, regardless of
     // payment_method (COD orders are still real, confirmed orders).
     trackPurchase({
@@ -233,11 +233,11 @@ export default function CheckoutPage() {
     }
   };
 
-  // â”€â”€ ORDER SUCCESS â”€â”€
+  // ── ORDER SUCCESS ──
   if (orderDone) return (
     <div className="checkout-page">
       <div className="checkout-success">
-        <div className="success-icon">âœ…</div>
+        <div className="success-icon">✅</div>
         <h1 className="success-title">Order Placed!</h1>
         <div className="success-order-num">{orderDone.order_number}</div>
         <p className="success-msg">
@@ -248,18 +248,18 @@ export default function CheckoutPage() {
           <Link href="/products" className="success-btn-secondary">Continue Shopping</Link>
         </div>
         <div className="success-wa-note">
-          ðŸ’¬ A WhatsApp notification was sent to our team about your order.
+          💬 A WhatsApp notification was sent to our team about your order.
         </div>
       </div>
       <CheckoutStyles />
     </div>
   );
 
-  // â”€â”€ EMPTY CART â”€â”€
+  // ── EMPTY CART ──
   if (count === 0 && !orderDone) return (
     <div className="checkout-page">
       <div className="checkout-empty">
-        <div style={{ fontSize: 52, marginBottom: 16 }}>ðŸ›’</div>
+        <div style={{ fontSize: 52, marginBottom: 16 }}>🛒</div>
         <h2 className="co-section-title">Your cart is empty</h2>
         <p style={{ color: '#7A8EA8', marginBottom: 24 }}>Add some products before checking out.</p>
         <Link href="/products" className="co-btn-primary">Browse Products</Link>
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
         <div className="co-steps">
           {STEPS.map((s, i) => (
             <div key={s} className={`co-step${i === step ? ' co-step--active' : i < step ? ' co-step--done' : ''}`}>
-              <div className="co-step-num">{i < step ? 'âœ“' : i + 1}</div>
+              <div className="co-step-num">{i < step ? '✓' : i + 1}</div>
               <div className="co-step-label">{s}</div>
               {i < STEPS.length - 1 && <div className="co-step-line" />}
             </div>
@@ -285,10 +285,10 @@ export default function CheckoutPage() {
 
         <div className="co-layout">
 
-          {/* â”€â”€ LEFT: STEP CONTENT â”€â”€ */}
+          {/* ── LEFT: STEP CONTENT ── */}
           <div className="co-main">
 
-            {/* STEP 0 â€” DELIVERY ADDRESS */}
+            {/* STEP 0 — DELIVERY ADDRESS */}
             {step === 0 && (
               <div className="co-section">
                 <div className="co-section-title">Delivery Address</div>
@@ -315,9 +315,9 @@ export default function CheckoutPage() {
                                 <a href={a.google_map_link} target="_blank" rel="noopener" className="review-map-link">View Map Location</a><br />
                               </>
                             )}
-                            {a.city}, {a.state} â€” {a.pincode}
+                            {a.city}, {a.state} — {a.pincode}
                           </div>
-                          <div className="addr-phone">ðŸ“ž {a.phone}</div>
+                          <div className="addr-phone">📞 {a.phone}</div>
                         </div>
                       </div>
                     )) : (
@@ -340,7 +340,7 @@ export default function CheckoutPage() {
                 {newAddr && (
                   <div className="co-form">
                     {addresses.length > 0 && (
-                      <button onClick={() => setNewAddr(false)} className="co-back-link">â† Use saved address</button>
+                      <button onClick={() => setNewAddr(false)} className="co-back-link">← Use saved address</button>
                     )}
                     <div className="location-card">
                       <div>
@@ -400,14 +400,14 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* STEP 1 â€” PAYMENT */}
+            {/* STEP 1 — PAYMENT */}
             {step === 1 && (
               <div className="co-section">
                 <div className="co-section-title">Payment Method</div>
                 <div className="payment-options">
                   <div onClick={() => setPayment('cod')} className={`payment-card${payment === 'cod' ? ' payment-card--selected' : ''}`}>
                     <div className="payment-radio"><div className={`addr-radio-dot${payment === 'cod' ? ' active' : ''}`} /></div>
-                    <div className="payment-icon">ðŸ’µ</div>
+                    <div className="payment-icon">💵</div>
                     <div>
                       <div className="payment-name">Cash on Delivery</div>
                       <div className="payment-sub">Pay when your order arrives. No upfront payment needed.</div>
@@ -415,7 +415,7 @@ export default function CheckoutPage() {
                   </div>
                   <div onClick={() => setPayment('razorpay')} className={`payment-card${payment === 'razorpay' ? ' payment-card--selected' : ''}`}>
                     <div className="payment-radio"><div className={`addr-radio-dot${payment === 'razorpay' ? ' active' : ''}`} /></div>
-                    <div className="payment-icon">ðŸ’³</div>
+                    <div className="payment-icon">💳</div>
                     <div>
                       <div className="payment-name">Pay Online</div>
                       <div className="payment-sub">UPI, Cards, Net Banking via Razorpay. Secure & instant.</div>
@@ -431,7 +431,7 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* STEP 2 â€” REVIEW */}
+            {/* STEP 2 — REVIEW */}
             {step === 2 && (
               <div className="co-section">
                 <div className="co-section-title">Review Your Order</div>
@@ -443,8 +443,8 @@ export default function CheckoutPage() {
                     <div className="review-addr">
                       <strong>{selectedAddress.full_name}</strong><br />
                       {selectedAddress.line1}{selectedAddress.line2 ? `, ${selectedAddress.line2}` : ''}<br />
-                      {selectedAddress.city}, {selectedAddress.state} â€” {selectedAddress.pincode}<br />
-                      ðŸ“ž {selectedAddress.phone}
+                      {selectedAddress.city}, {selectedAddress.state} — {selectedAddress.pincode}<br />
+                      📞 {selectedAddress.phone}
                     </div>
                     {selectedAddress.google_map_link && (
                       <a href={selectedAddress.google_map_link} target="_blank" rel="noopener" className="review-map-link">View Map Location</a>
@@ -457,7 +457,7 @@ export default function CheckoutPage() {
                 <div className="review-block">
                   <div className="review-block-label">Payment</div>
                   <div className="review-payment">
-                    {payment === 'cod' ? 'ðŸ’µ Cash on Delivery' : 'ðŸ’³ Online Payment (Razorpay)'}
+                    {payment === 'cod' ? '💵 Cash on Delivery' : '💳 Online Payment (Razorpay)'}
                   </div>
                   <button onClick={() => setStep(1)} className="review-edit-btn">Edit</button>
                 </div>
@@ -471,9 +471,9 @@ export default function CheckoutPage() {
                         {i.product.name}
                         {cartItemVariantLabel(i) && <small className="review-item-variant">{cartItemVariantLabel(i)}</small>}
                       </span>
-                      <span className="review-item-qty">Ã— {i.quantity}</span>
+                      <span className="review-item-qty">× {i.quantity}</span>
                       <span className="review-item-price">
-                        {cartItemPrice(i) ? `â‚¹${(cartItemPrice(i) * i.quantity).toLocaleString('en-IN')}` : 'â€”'}
+                        {cartItemPrice(i) ? `₹${(cartItemPrice(i) * i.quantity).toLocaleString('en-IN')}` : '—'}
                       </span>
                     </div>
                   ))}
@@ -493,16 +493,16 @@ export default function CheckoutPage() {
             {/* Navigation */}
             <div className="co-nav">
               {step > 0 && (
-                <button onClick={() => setStep(s => s - 1)} className="co-btn-back">â† Back</button>
+                <button onClick={() => setStep(s => s - 1)} className="co-btn-back">← Back</button>
               )}
               <button onClick={handleNext} disabled={loading} className="co-btn-primary">
-                {loading ? 'â³ Placing order...' :
-                  step < 2 ? 'Continue â†’' : 'âœ“ Place Order'}
+                {loading ? '⏳ Placing order...' :
+                  step < 2 ? 'Continue →' : '✓ Place Order'}
               </button>
             </div>
           </div>
 
-          {/* â”€â”€ RIGHT: ORDER SUMMARY â”€â”€ */}
+          {/* ── RIGHT: ORDER SUMMARY ── */}
           <div className="co-summary">
             <div className="co-summary-title">Order Summary</div>
             <div className="co-summary-items">
@@ -511,12 +511,12 @@ export default function CheckoutPage() {
                   <div className="co-summary-item-name">
                     {i.product.name}
                     {cartItemVariantLabel(i) && <small className="co-summary-item-variant">{cartItemVariantLabel(i)}</small>}
-                    <span className="co-summary-item-qty"> Ã— {i.quantity}</span>
+                    <span className="co-summary-item-qty"> × {i.quantity}</span>
                   </div>
                   <div className="co-summary-item-price">
                     {cartItemPrice(i)
-                      ? `â‚¹${(cartItemPrice(i) * i.quantity).toLocaleString('en-IN')}`
-                      : 'â€”'}
+                      ? `₹${(cartItemPrice(i) * i.quantity).toLocaleString('en-IN')}`
+                      : '—'}
                   </div>
                 </div>
               ))}
@@ -524,7 +524,7 @@ export default function CheckoutPage() {
             <div className="co-summary-totals">
               <div className="co-summary-row">
                 <span>Subtotal</span>
-                <span>â‚¹{total.toLocaleString('en-IN')}</span>
+                <span>₹{total.toLocaleString('en-IN')}</span>
               </div>
 
               {/* Coupon / promo code */}
@@ -540,25 +540,25 @@ export default function CheckoutPage() {
                     />
                     <button onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
                       style={{ padding: '8px 16px', borderRadius: 8, background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                      {couponLoading ? 'â€¦' : 'Apply'}
+                      {couponLoading ? '…' : 'Apply'}
                     </button>
                   </div>
-                  {couponError && <div style={{ fontSize: 11, color: '#F87171', marginTop: 5 }}>âš ï¸ {couponError}</div>}
+                  {couponError && <div style={{ fontSize: 11, color: '#F87171', marginTop: 5 }}>⚠️ {couponError}</div>}
                 </div>
               ) : (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '8px 12px', margin: '8px 0' }}>
                   <div>
-                    <div style={{ fontSize: 12, color: '#4ADE80', fontWeight: 700 }}>ðŸŽ‰ {couponResult.coupon_code} applied!</div>
+                    <div style={{ fontSize: 12, color: '#4ADE80', fontWeight: 700 }}>🎉 {couponResult.coupon_code} applied!</div>
                     <div style={{ fontSize: 11, color: '#7A8EA8' }}>{couponResult.description}</div>
                   </div>
-                  <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 16 }}>âœ•</button>
+                  <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 16 }}>✕</button>
                 </div>
               )}
 
               {couponResult && (
                 <div className="co-summary-row" style={{ color: '#4ADE80' }}>
                   <span>Discount ({couponResult.coupon_code})</span>
-                  <span>âˆ’â‚¹{couponResult.discount_amount.toLocaleString('en-IN')}</span>
+                  <span>−₹{couponResult.discount_amount.toLocaleString('en-IN')}</span>
                 </div>
               )}
 
@@ -568,11 +568,11 @@ export default function CheckoutPage() {
               </div>
               <div className="co-summary-total">
                 <span>Total</span>
-                <span>â‚¹{(couponResult ? total - couponResult.discount_amount : total).toLocaleString('en-IN')}</span>
+                <span>₹{(couponResult ? total - couponResult.discount_amount : total).toLocaleString('en-IN')}</span>
               </div>
             </div>
             <div className="co-summary-note">
-              ðŸ”’ Secure checkout Â· Delivery confirmed by our team
+              🔒 Secure checkout · Delivery confirmed by our team
             </div>
           </div>
         </div>

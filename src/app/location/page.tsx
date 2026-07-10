@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Plywood & Hardware Delivery Locations Across Tamil Nadu | Karur Plywood',
     description: 'Karur Plywood & Company supplies wholesale plywood, laminates, doors, and hardware with direct job-site delivery across Karur and surrounding districts in Tamil Nadu. Find your area.',
-    alternates: { canonical: 'https://www.karurplywood.co.in/location' },
+    alternates: { canonical: 'https://karurplywood.co.in/location' },
     robots: { index: true, follow: true },
   };
 }
@@ -35,7 +35,7 @@ export default async function LocationIndexPage() {
 
       <header className="mt-4 mb-8 border-b border-gray-100 pb-8">
         <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-full w-fit uppercase tracking-wider mb-3">
-          ðŸ¢ Authorized B2B Showroom Supply Depot
+          🏢 Authorized B2B Showroom Supply Depot
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4">
           Delivery Locations Across Tamil Nadu
@@ -56,8 +56,8 @@ export default async function LocationIndexPage() {
             >
               <h3 className="font-bold text-lg text-gray-900 mb-1">{area.display_name}</h3>
               <p className="text-sm text-gray-600">{area.distance_km ? `${area.distance_km}km from Karur` : 'Karur district'}</p>
-              <p className="text-sm text-amber-700 font-medium mt-1">ðŸš› Delivery: {area.delivery_time || '1-2 days'}</p>
-              <span className="text-blue-600 text-sm mt-3 inline-block font-semibold">View Materials & Pricing â†’</span>
+              <p className="text-sm text-amber-700 font-medium mt-1">🚛 Delivery: {area.delivery_time || '1-2 days'}</p>
+              <span className="text-blue-600 text-sm mt-3 inline-block font-semibold">View Materials & Pricing →</span>
             </a>
           ))}
         </div>

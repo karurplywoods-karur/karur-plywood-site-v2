@@ -6,7 +6,7 @@ export default function Breadcrumb({ items }: { items: { name: string; href: str
       "@type": "ListItem",
       "position": i + 1,
       "name": item.name,
-      "item": `https://www.karurplywood.co.in${item.href}`
+      "item": `https://karurplywood.co.in${item.href}`
     }))
   };
 
@@ -28,4 +28,3 @@ export default function Breadcrumb({ items }: { items: { name: string; href: str
     </>
   );
 }
-

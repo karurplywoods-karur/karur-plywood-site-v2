@@ -1,6 +1,6 @@
 'use client';
 // src/app/admin/categories/page.tsx
-// Full category management â€” create, edit, delete, parent/sub tree,
+// Full category management — create, edit, delete, parent/sub tree,
 // category image, icon, and SEO fields.
 
 import { useState, useEffect, useCallback } from 'react';
@@ -25,13 +25,13 @@ interface Category {
 }
 
 const EMPTY: Partial<Category> = {
-  name: '', slug: '', display_name: '', icon: 'ðŸ“¦',
+  name: '', slug: '', display_name: '', icon: '📦',
   description: '', parent_id: null, image_url: '',
   seo_title: '', seo_description: '',
   sort_order: 0, is_active: true, base_price: undefined, price_unit: 'per sheet',
 };
 
-const EMOJI_PRESETS = ['ðŸ“¦','ðŸªµ','ðŸŒŠ','ðŸŸ«','â¬œ','ðŸ§±','ðŸšª','ðŸŒ¿','âœ¨','ðŸ”§','ðŸ ','âš¡','ðŸŽ¨','ðŸ›‹ï¸','ðŸª‘'];
+const EMOJI_PRESETS = ['📦','🪵','🌊','🟫','⬜','🧱','🚪','🌿','✨','🔧','🏠','⚡','🎨','🛋️','🪑'];
 
 function slugify(s: string) {
   return s.toLowerCase().trim()
@@ -113,7 +113,7 @@ export default function CategoriesPage() {
     else showMsg(data.error || 'Error deleting category.', false);
   };
 
-  // Build parentâ†’children tree for display
+  // Build parent→children tree for display
   const topLevel = categories.filter(c => !c.parent_id);
   const childrenOf = (id: number) => categories.filter(c => c.parent_id === id);
 
@@ -128,10 +128,10 @@ export default function CategoriesPage() {
         <tr style={{ borderTop: '1px solid rgba(200,136,74,0.08)' }}>
           <td style={{ padding: '12px 16px', paddingLeft: 16 + depth * 24 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {depth > 0 && <span style={{ color: '#9A8070', fontSize: 12 }}>â””â”€</span>}
+              {depth > 0 && <span style={{ color: '#9A8070', fontSize: 12 }}>└─</span>}
               {cat.image_url
                 ? <img src={cat.image_url} alt={cat.name} style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 6 }} />
-                : <span style={{ fontSize: 20 }}>{cat.icon || 'ðŸ“¦'}</span>}
+                : <span style={{ fontSize: 20 }}>{cat.icon || '📦'}</span>}
               <div>
                 <div style={{ fontWeight: 600, color: '#F0E8DC' }}>{cat.name}</div>
                 {cat.description && <div style={{ fontSize: 11, color: '#9A8070', marginTop: 1, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cat.description}</div>}
@@ -140,7 +140,7 @@ export default function CategoriesPage() {
           </td>
           <td style={{ padding: '12px 16px', color: '#9A8070', fontFamily: 'monospace', fontSize: 12 }}>{cat.slug}</td>
           <td style={{ padding: '12px 16px', color: '#9A8070', fontSize: 12 }}>
-            {cat.base_price ? `â‚¹${cat.base_price.toLocaleString('en-IN')} ${cat.price_unit || ''}` : 'â€”'}
+            {cat.base_price ? `₹${cat.base_price.toLocaleString('en-IN')} ${cat.price_unit || ''}` : '—'}
           </td>
           <td style={{ padding: '12px 16px' }}>
             <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: cat.is_active ? 'rgba(37,211,102,0.12)' : 'rgba(248,113,113,0.12)', color: cat.is_active ? '#25D366' : '#F87171' }}>
@@ -150,9 +150,9 @@ export default function CategoriesPage() {
           <td style={{ padding: '12px 16px', textAlign: 'center', color: '#9A8070' }}>{cat.sort_order}</td>
           <td style={{ padding: '12px 16px' }}>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              <button onClick={() => openEdit(cat)} style={{ padding: '5px 10px', borderRadius: 6, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœï¸ Edit</button>
+              <button onClick={() => openEdit(cat)} style={{ padding: '5px 10px', borderRadius: 6, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✏️ Edit</button>
               <button onClick={() => openNew(cat.id)} style={{ padding: '5px 10px', borderRadius: 6, background: 'rgba(200,136,74,0.06)', border: '1px solid rgba(200,136,74,0.15)', color: '#9A8070', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>+ Sub</button>
-              <button onClick={() => handleDelete(cat)} style={{ padding: '5px 10px', borderRadius: 6, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ—‘ï¸</button>
+              <button onClick={() => handleDelete(cat)} style={{ padding: '5px 10px', borderRadius: 6, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>🗑️</button>
             </div>
           </td>
         </tr>
@@ -168,10 +168,10 @@ export default function CategoriesPage() {
       <div style={{ background: '#1C140D', borderBottom: '1px solid rgba(200,136,74,0.15)', padding: '0 28px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => router.push('/admin/dashboard')} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '6px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: 13 }}>
-            â† Dashboard
+            ← Dashboard
           </button>
           <div style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 700, fontSize: 18, color: '#F0E8DC' }}>
-            ðŸ·ï¸ Category Management
+            🏷️ Category Management
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -189,10 +189,10 @@ export default function CategoriesPage() {
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 24px' }}>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: '#9A8070' }}>â³ Loading...</div>
+          <div style={{ textAlign: 'center', padding: '80px 0', color: '#9A8070' }}>⏳ Loading...</div>
         ) : categories.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
-            <div style={{ fontSize: 48, marginBottom: 14 }}>ðŸ—‚ï¸</div>
+            <div style={{ fontSize: 48, marginBottom: 14 }}>🗂️</div>
             <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC', marginBottom: 8 }}>No categories yet</div>
             <button onClick={() => openNew()} style={{ padding: '12px 28px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
               + Add Category
@@ -225,13 +225,13 @@ export default function CategoriesPage() {
               <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 700, color: '#F0E8DC' }}>
                 {editCat ? 'Edit Category' : form.parent_id ? 'Add Sub-Category' : 'Add Category'}
               </div>
-              <button onClick={closeModal} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœ•</button>
+              <button onClick={closeModal} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✕</button>
             </div>
 
             {/* Parent indicator */}
             {form.parent_id && (
               <div style={{ background: 'rgba(200,136,74,0.08)', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 12, color: '#C8884A' }}>
-                ðŸ“ Sub-category of: <strong>{categories.find(c => c.id === form.parent_id)?.name}</strong>
+                📁 Sub-category of: <strong>{categories.find(c => c.id === form.parent_id)?.name}</strong>
               </div>
             )}
 
@@ -242,7 +242,7 @@ export default function CategoriesPage() {
                 <div style={{ position: 'relative' }}>
                   <button onClick={() => setShowEmojiPicker(v => !v)}
                     style={{ width: 52, height: 44, fontSize: 24, background: '#0E0B08', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {form.icon || 'ðŸ“¦'}
+                    {form.icon || '📦'}
                   </button>
                   {showEmojiPicker && (
                     <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 10, background: '#1C140D', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 10, padding: 10, display: 'flex', flexWrap: 'wrap', gap: 6, width: 220, marginTop: 4 }}>
@@ -272,7 +272,7 @@ export default function CategoriesPage() {
             <div style={fg}>
               <label style={lbl}>Parent Category</label>
               <select style={inp} value={form.parent_id ?? ''} onChange={e => setForm(f => ({ ...f, parent_id: e.target.value ? Number(e.target.value) : null }))}>
-                <option value="">â€” Top level (no parent) â€”</option>
+                <option value="">— Top level (no parent) —</option>
                 {categories.filter(c => !c.parent_id && c.id !== editCat?.id).map(c => (
                   <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
                 ))}
@@ -292,7 +292,7 @@ export default function CategoriesPage() {
                 onChange={v => setForm(f => ({ ...f, image_url: v }))}
                 folder="categories"
                 label="Category Image"
-                hint="Shown on category landing pages â€” recommended 800Ã—600px"
+                hint="Shown on category landing pages — recommended 800×600px"
               />
             </div>
 
@@ -305,7 +305,7 @@ export default function CategoriesPage() {
               <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: 2 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => setForm(f => ({ ...f, is_active: !f.is_active }))}>
                   <div style={{ width: 20, height: 20, borderRadius: 4, border: '2px solid', borderColor: form.is_active ? '#25D366' : 'rgba(200,136,74,0.3)', background: form.is_active ? '#25D366' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {form.is_active && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>âœ“</span>}
+                    {form.is_active && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>✓</span>}
                   </div>
                   <span style={{ fontSize: 13, color: '#C8B8A0' }}>Active</span>
                 </div>
@@ -315,7 +315,7 @@ export default function CategoriesPage() {
             {/* Advanced */}
             <button onClick={() => setShowAdvanced(v => !v)}
               style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#9A8070', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: 'Outfit,sans-serif', padding: '4px 0', marginBottom: showAdvanced ? 12 : 18, textTransform: 'uppercase', letterSpacing: 1 }}>
-              <span style={{ display: 'inline-block', transform: showAdvanced ? 'rotate(90deg)' : 'none', transition: 'transform .15s' }}>â–¶</span>
+              <span style={{ display: 'inline-block', transform: showAdvanced ? 'rotate(90deg)' : 'none', transition: 'transform .15s' }}>▶</span>
               Pricing & SEO (optional)
             </button>
 
@@ -323,7 +323,7 @@ export default function CategoriesPage() {
               <div style={{ background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(200,136,74,0.1)', borderRadius: 8, padding: '14px 16px', marginBottom: 18 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, ...fg }}>
                   <div>
-                    <label style={lbl}>Base Price (â‚¹)</label>
+                    <label style={lbl}>Base Price (₹)</label>
                     <input style={inp} type="number" value={form.base_price ?? ''} onChange={e => setForm(f => ({ ...f, base_price: e.target.value ? Number(e.target.value) : undefined }))} placeholder="e.g. 3200" />
                   </div>
                   <div>
@@ -345,7 +345,7 @@ export default function CategoriesPage() {
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={handleSave} disabled={saving}
                 style={{ flex: 1, padding: '13px 0', borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-                {saving ? 'â³ Saving...' : editCat ? 'âœ“ Update Category' : '+ Create Category'}
+                {saving ? '⏳ Saving...' : editCat ? '✓ Update Category' : '+ Create Category'}
               </button>
               <button onClick={closeModal}
                 style={{ padding: '13px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>

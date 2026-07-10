@@ -2,12 +2,12 @@ import Image from 'next/image';
 
 export default function ProductGrid({ area }: { area: any }) {
   const productCategories = [
-    { name: 'Marine Plywood', slug: 'marine-plywood', price: 'â‚¹3,200', image: '/products/marine-plywood.jpg' },
-    { name: 'Commercial Plywood', slug: 'commercial-plywood', price: 'â‚¹1,800', image: '/products/commercial-plywood.jpg' },
-    { name: 'MDF Board', slug: 'mdf-board', price: 'â‚¹1,200', image: '/products/mdf-board.jpg' },
-    { name: 'HDHMR Board', slug: 'hdhmr-board', price: 'â‚¹2,200', image: '/products/hdhmr-board.jpg' },
-    { name: 'Block Board', slug: 'block-board', price: 'â‚¹2,400', image: '/products/block-board.jpg' },
-    { name: 'Flush Doors', slug: 'flush-doors', price: 'â‚¹2,800', image: '/products/flush-doors.jpg' },
+    { name: 'Marine Plywood', slug: 'marine-plywood', price: '₹3,200', image: '/products/marine-plywood.jpg' },
+    { name: 'Commercial Plywood', slug: 'commercial-plywood', price: '₹1,800', image: '/products/commercial-plywood.jpg' },
+    { name: 'MDF Board', slug: 'mdf-board', price: '₹1,200', image: '/products/mdf-board.jpg' },
+    { name: 'HDHMR Board', slug: 'hdhmr-board', price: '₹2,200', image: '/products/hdhmr-board.jpg' },
+    { name: 'Block Board', slug: 'block-board', price: '₹2,400', image: '/products/block-board.jpg' },
+    { name: 'Flush Doors', slug: 'flush-doors', price: '₹2,800', image: '/products/flush-doors.jpg' },
   ];
 
   return (
@@ -30,4 +30,3 @@ export default function ProductGrid({ area }: { area: any }) {
     </div>
   );
 }
-

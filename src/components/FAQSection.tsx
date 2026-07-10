@@ -30,7 +30,7 @@ export default function FAQSection({ faqs }: { faqs: FAQItem[] }) {
             >
               <span>{question}</span>
               <span className={`transform transition-transform text-gray-400 ${isOpen ? 'rotate-180' : ''}`}>
-                â–¼
+                ▼
               </span>
             </button>
             {isOpen && (

@@ -106,8 +106,8 @@ export default function AddressesPage() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 48px' }} className="addr-pg-pad">
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, fontSize: 12, color: '#7A8EA8', fontFamily: "'Syne',sans-serif" }}>
-          <Link href="/account" style={{ color: '#7A8EA8', textDecoration: 'none' }}>â† My Account</Link>
-          <span>â€º</span>
+          <Link href="/account" style={{ color: '#7A8EA8', textDecoration: 'none' }}>← My Account</Link>
+          <span>›</span>
           <span style={{ color: '#F8F9FB', fontWeight: 700 }}>Addresses</span>
         </div>
 
@@ -180,7 +180,7 @@ export default function AddressesPage() {
               <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
                 <button type="submit" disabled={saving}
                   style={{ flex: 1, padding: '12px 0', background: '#F97316', color: '#0B2447', border: 'none', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.78rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', opacity: saving ? 0.6 : 1 }}>
-                  {saving ? 'â³ Saving...' : editing ? 'âœ“ Update Address' : 'âœ“ Save Address'}
+                  {saving ? '⏳ Saving...' : editing ? '✓ Update Address' : '✓ Save Address'}
                 </button>
                 <button type="button" onClick={() => { setShowForm(false); setEditing(null); }}
                   style={{ padding: '12px 20px', background: 'transparent', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 6, color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.72rem', cursor: 'pointer' }}>
@@ -193,10 +193,10 @@ export default function AddressesPage() {
 
         {/* Address list */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px 0', color: '#7A8EA8' }}>â³ Loading...</div>
+          <div style={{ textAlign: 'center', padding: '40px 0', color: '#7A8EA8' }}>⏳ Loading...</div>
         ) : addresses.length === 0 && !showForm ? (
           <div style={{ textAlign: 'center', padding: '48px 0' }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>ðŸ“</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>📍</div>
             <div style={{ color: '#7A8EA8', fontSize: 14, marginBottom: 16 }}>No saved addresses yet.</div>
             <button onClick={openNew}
               style={{ padding: '10px 22px', background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.25)', borderRadius: 6, color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
@@ -220,14 +220,14 @@ export default function AddressesPage() {
                         <a href={addr.google_map_link} target="_blank" rel="noopener" style={{ color: '#4ADE80', textDecoration: 'none', fontWeight: 700 }}>View Map Location</a><br />
                       </>
                     )}
-                    {addr.city}, {addr.state} â€” {addr.pincode}<br />
-                    ðŸ“ž {addr.phone}
+                    {addr.city}, {addr.state} — {addr.pincode}<br />
+                    📞 {addr.phone}
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <button onClick={() => openEdit(addr)}
                     style={{ padding: '7px 14px', background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '11px', cursor: 'pointer', letterSpacing: '.08em', textTransform: 'uppercase' }}>
-                    âœï¸ Edit
+                    ✏️ Edit
                   </button>
                   {!addr.is_default && (
                     <button onClick={() => setDefault(addr.id)}
@@ -237,7 +237,7 @@ export default function AddressesPage() {
                   )}
                   <button onClick={() => handleDelete(addr.id)}
                     style={{ padding: '7px 14px', background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 4, color: '#F87171', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '11px', cursor: 'pointer', letterSpacing: '.08em', textTransform: 'uppercase' }}>
-                    ðŸ—‘ï¸ Delete
+                    🗑️ Delete
                   </button>
                 </div>
               </div>
@@ -254,4 +254,3 @@ export default function AddressesPage() {
     </div>
   );
 }
-

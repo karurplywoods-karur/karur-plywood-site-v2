@@ -14,4 +14,3 @@ export async function GET() {
 
   return NextResponse.json({ areas: areas || [], categories: categories || [] });
 }
-

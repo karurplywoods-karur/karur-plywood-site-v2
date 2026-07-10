@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
 import { CONTACT } from '@/lib/contact';
 
-const SITE_URL = 'https://www.karurplywood.co.in';
+const SITE_URL = 'https://karurplywood.co.in';
 const WA = CONTACT.wa;
 
 async function getPost(slug: string) {

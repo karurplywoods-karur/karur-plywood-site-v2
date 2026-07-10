@@ -107,7 +107,7 @@ export default function RecentlyViewed({ excludeId }: { excludeId?: string | num
                     {product.price ? (
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                         <span style={{ fontSize: 15, fontWeight: 700, color: '#F97316', fontFamily: "'Cormorant Garamond',serif" }}>
-                          â‚¹{product.price.toLocaleString('en-IN')}
+                          ₹{product.price.toLocaleString('en-IN')}
                         </span>
                         {product.unit && <span style={{ fontSize: 10, color: '#7A8EA8' }}>/ {product.unit}</span>}
                       </div>
@@ -131,4 +131,3 @@ export default function RecentlyViewed({ excludeId }: { excludeId?: string | num
     </section>
   );
 }
-

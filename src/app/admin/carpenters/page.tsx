@@ -42,7 +42,7 @@ export default function AdminCarpentersPage() {
   const [filter, setFilter]           = useState<'all' | 'pending' | 'verified'>('all');
   const [msg, setMsg]                 = useState<{ text: string; ok: boolean } | null>(null);
 
-  // â”€â”€ Edit state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Edit state ─────────────────────────────────────────────
   const [editId, setEditId]           = useState<string | null>(null);
   const [editForm, setEditForm]       = useState<Partial<Carpenter> & { specialityRaw?: string }>({});
   const [saving, setSaving]           = useState(false);
@@ -63,7 +63,7 @@ export default function AdminCarpentersPage() {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  // â”€â”€ Open edit form pre-filled â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Open edit form pre-filled ─────────────────────────────
   const openEdit = (c: Carpenter) => {
     setEditId(c.id);
     setEditForm({
@@ -83,7 +83,7 @@ export default function AdminCarpentersPage() {
 
   const setF = (k: string, v: any) => setEditForm(f => ({ ...f, [k]: v }));
 
-  // â”€â”€ Save edits â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Save edits ─────────────────────────────────────────────
   const saveEdit = async () => {
     if (!editId) return;
     if (!editForm.name?.trim()) { showMsg('Name is required.', false); return; }
@@ -111,8 +111,8 @@ export default function AdminCarpentersPage() {
     });
 
     if (res.ok) {
-      showMsg('âœ… Carpenter profile updated!');
-      // Update local state immediately â€” no refetch needed
+      showMsg('✅ Carpenter profile updated!');
+      // Update local state immediately — no refetch needed
       setCarpenters(prev =>
         prev.map(c =>
           c.id === editId
@@ -128,7 +128,7 @@ export default function AdminCarpentersPage() {
     setSaving(false);
   };
 
-  // â”€â”€ Verify / unlist toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Verify / unlist toggle ─────────────────────────────────
   const toggle = async (id: string, verified: boolean) => {
     const res = await fetch(`/api/carpenters/${id}`, {
       method: 'PATCH',
@@ -136,12 +136,12 @@ export default function AdminCarpentersPage() {
       body: JSON.stringify({ verified: !verified }),
     });
     if (res.ok) {
-      showMsg(verified ? 'Carpenter unlisted.' : 'âœ… Verified & listed!');
+      showMsg(verified ? 'Carpenter unlisted.' : '✅ Verified & listed!');
       setCarpenters(c => c.map(x => x.id === id ? { ...x, verified: !x.verified } : x));
     } else showMsg('Error updating.', false);
   };
 
-  // â”€â”€ Delete â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Delete ─────────────────────────────────────────────────
   const del = async (id: string, name: string) => {
     if (!confirm(`Delete ${name} from directory?`)) return;
     const res = await fetch(`/api/carpenters/${id}`, { method: 'DELETE' });
@@ -153,7 +153,7 @@ export default function AdminCarpentersPage() {
     filter === 'all' ? true : filter === 'pending' ? !c.verified : c.verified
   );
 
-  // â”€â”€ Shared button style â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Shared button style ────────────────────────────────────
   const actionBtn = (label: string, onClick: () => void, color: string, bg: string) => (
     <button
       onClick={onClick}
@@ -177,10 +177,10 @@ export default function AdminCarpentersPage() {
           <button
             onClick={() => router.push('/admin/dashboard')}
             style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '6px 12px', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase' }}>
-            â† Dashboard
+            ← Dashboard
           </button>
           <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 20, letterSpacing: '.06em', color: '#F8F9FB' }}>
-            ðŸ”¨ Carpenter Directory
+            🔨 Carpenter Directory
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -193,7 +193,7 @@ export default function AdminCarpentersPage() {
           )}
           <button onClick={fetchAll}
             style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#F97316', padding: '6px 14px', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase' }}>
-            ðŸ”„ Refresh
+            🔄 Refresh
           </button>
         </div>
       </div>
@@ -226,14 +226,14 @@ export default function AdminCarpentersPage() {
                 fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11,
                 letterSpacing: '.12em', textTransform: 'uppercase', cursor: 'pointer',
               }}>
-              {f === 'all' ? 'All' : f === 'pending' ? 'â³ Pending' : 'âœ… Verified'}
+              {f === 'all' ? 'All' : f === 'pending' ? '⏳ Pending' : '✅ Verified'}
             </button>
           ))}
         </div>
 
         {/* Carpenter list */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0', color: '#7A8EA8' }}>â³ Loading...</div>
+          <div style={{ textAlign: 'center', padding: '60px 0', color: '#7A8EA8' }}>⏳ Loading...</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: '#7A8EA8' }}>No carpenters in this filter.</div>
         ) : (
@@ -257,14 +257,14 @@ export default function AdminCarpentersPage() {
                         background: c.verified ? 'rgba(37,211,102,0.12)' : 'rgba(249,115,22,0.1)',
                         color: c.verified ? '#4ADE80' : '#F97316',
                       }}>
-                        {c.verified ? 'âœ“ Verified' : 'â³ Pending'}
+                        {c.verified ? '✓ Verified' : '⏳ Pending'}
                       </span>
                     </div>
                     <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#7A8EA8', flexWrap: 'wrap', marginBottom: c.bio ? 8 : 0 }}>
-                      <span>ðŸ“ž {c.phone}</span>
-                      <span>ðŸ“ {c.area}</span>
-                      <span>ðŸ”¨ {c.experience} yrs</span>
-                      {c.rating > 0 && <span>â­ {c.rating}</span>}
+                      <span>📞 {c.phone}</span>
+                      <span>📍 {c.area}</span>
+                      <span>🔨 {c.experience} yrs</span>
+                      {c.rating > 0 && <span>⭐ {c.rating}</span>}
                       <span style={{ fontSize: 11 }}>
                         Applied: {new Date(c.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </span>
@@ -285,28 +285,28 @@ export default function AdminCarpentersPage() {
                       href={`https://wa.me/${(c.wa_number || c.phone).replace(/\D/g,'')}?text=Hi+${encodeURIComponent(c.name)}%2C+this+is+Karur+Plywood.+Regarding+your+carpenter+directory+listing...`}
                       target="_blank" rel="noopener"
                       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '7px 0', borderRadius: 3, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
-                      ðŸ’¬ WhatsApp
+                      💬 WhatsApp
                     </a>
 
-                    {/* Edit button â€” toggles the edit form below */}
+                    {/* Edit button — toggles the edit form below */}
                     {actionBtn(
-                      editId === c.id ? 'âœ• Cancel' : 'âœï¸ Edit Profile',
+                      editId === c.id ? '✕ Cancel' : '✏️ Edit Profile',
                       () => editId === c.id ? closeEdit() : openEdit(c),
                       '#F97316', 'rgba(249,115,22,0.1)'
                     )}
 
                     {actionBtn(
-                      c.verified ? 'â¸ Unlist' : 'âœ“ Verify & List',
+                      c.verified ? '⏸ Unlist' : '✓ Verify & List',
                       () => toggle(c.id, c.verified),
                       c.verified ? '#F97316' : '#4ADE80',
                       c.verified ? 'rgba(249,115,22,0.1)' : 'rgba(37,211,102,0.15)'
                     )}
 
-                    {actionBtn('ðŸ—‘ï¸ Delete', () => del(c.id, c.name), '#F87171', 'rgba(248,113,113,0.08)')}
+                    {actionBtn('🗑️ Delete', () => del(c.id, c.name), '#F87171', 'rgba(248,113,113,0.08)')}
                   </div>
                 </div>
 
-                {/* â”€â”€ INLINE EDIT FORM â”€â”€ appears below the card when editing */}
+                {/* ── INLINE EDIT FORM ── appears below the card when editing */}
                 {editId === c.id && (
                   <div style={{
                     background: 'rgba(11,36,71,0.6)',
@@ -316,7 +316,7 @@ export default function AdminCarpentersPage() {
                     padding: '24px 20px',
                   }}>
                     <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.18em', textTransform: 'uppercase', color: '#F97316', marginBottom: 18 }}>
-                      âœï¸ Editing: {c.name}
+                      ✏️ Editing: {c.name}
                     </div>
 
                     {/* Row 1: Name + Phone */}
@@ -352,7 +352,7 @@ export default function AdminCarpentersPage() {
                         <input style={inp} type="number" min="1" value={editForm.experience || 1} onChange={e => setF('experience', e.target.value)} />
                       </div>
                       <div>
-                        <label style={lbl}>Rating (1â€“5)</label>
+                        <label style={lbl}>Rating (1–5)</label>
                         <input style={inp} type="number" min="0" max="5" step="0.1" value={editForm.rating || 0} onChange={e => setF('rating', e.target.value)} />
                       </div>
                     </div>
@@ -387,7 +387,7 @@ export default function AdminCarpentersPage() {
                         onClick={saveEdit}
                         disabled={saving}
                         style={{ flex: 1, padding: '10px 0', borderRadius: 4, background: saving ? 'rgba(249,115,22,0.4)' : '#F97316', color: '#0B2447', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', cursor: saving ? 'default' : 'pointer' }}>
-                        {saving ? 'â³ Saving...' : 'âœ“ Save Changes'}
+                        {saving ? '⏳ Saving...' : '✓ Save Changes'}
                       </button>
                       <button
                         onClick={closeEdit}
@@ -410,4 +410,3 @@ export default function AdminCarpentersPage() {
     </div>
   );
 }
-

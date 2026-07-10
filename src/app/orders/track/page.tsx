@@ -1,6 +1,6 @@
 'use client';
 // src/app/orders/track/page.tsx
-// Public order tracking â€” no login needed.
+// Public order tracking — no login needed.
 // Customer enters order number (from confirmation email) + last 4 digits of phone.
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -9,12 +9,12 @@ import Link from 'next/link';
 const STATUS_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
 
 const STATUS_CONFIG: Record<string, { color: string; label: string; icon: string; desc: string }> = {
-  pending:    { color: '#F97316', label: 'Order Placed',    icon: 'ðŸ“‹', desc: 'Your order has been received and is awaiting confirmation from our team.' },
-  confirmed:  { color: '#25D366', label: 'Confirmed',       icon: 'âœ…', desc: 'Your order is confirmed. We are preparing it for dispatch.' },
-  processing: { color: '#3B82F6', label: 'Being Prepared',  icon: 'ðŸ­', desc: 'Your items are being picked and packed at our depot.' },
-  shipped:    { color: '#A855F7', label: 'Out for Delivery', icon: 'ðŸš›', desc: 'Your order is on its way. Please ensure someone is available to receive it.' },
-  delivered:  { color: '#10B981', label: 'Delivered',       icon: 'ðŸ“¦', desc: 'Your order has been delivered. Thank you for shopping with us!' },
-  cancelled:  { color: '#EF4444', label: 'Cancelled',       icon: 'âŒ', desc: 'This order has been cancelled.' },
+  pending:    { color: '#F97316', label: 'Order Placed',    icon: '📋', desc: 'Your order has been received and is awaiting confirmation from our team.' },
+  confirmed:  { color: '#25D366', label: 'Confirmed',       icon: '✅', desc: 'Your order is confirmed. We are preparing it for dispatch.' },
+  processing: { color: '#3B82F6', label: 'Being Prepared',  icon: '🏭', desc: 'Your items are being picked and packed at our depot.' },
+  shipped:    { color: '#A855F7', label: 'Out for Delivery', icon: '🚛', desc: 'Your order is on its way. Please ensure someone is available to receive it.' },
+  delivered:  { color: '#10B981', label: 'Delivered',       icon: '📦', desc: 'Your order has been delivered. Thank you for shopping with us!' },
+  cancelled:  { color: '#EF4444', label: 'Cancelled',       icon: '❌', desc: 'This order has been cancelled.' },
 };
 
 function TrackingContent() {
@@ -52,7 +52,7 @@ function TrackingContent() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <div style={{ fontSize: 36, marginBottom: 12 }}>ðŸ“¦</div>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>📦</div>
           <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(1.8rem,4vw,2.4rem)', fontWeight: 700, color: '#F8F9FB', margin: '0 0 8px' }}>
             Track Your Order
           </h1>
@@ -88,11 +88,11 @@ function TrackingContent() {
             </div>
           </div>
 
-          {error && <div style={{ fontSize: 13, color: '#F87171', marginBottom: 12 }}>âš ï¸ {error}</div>}
+          {error && <div style={{ fontSize: 13, color: '#F87171', marginBottom: 12 }}>⚠️ {error}</div>}
 
           <button onClick={handleTrack} disabled={loading}
             style={{ width: '100%', padding: '13px', borderRadius: 10, background: loading ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.8rem', letterSpacing: '.12em', textTransform: 'uppercase', cursor: loading ? 'default' : 'pointer' }}>
-            {loading ? 'Looking upâ€¦' : 'Track Order â†’'}
+            {loading ? 'Looking up…' : 'Track Order →'}
           </button>
         </div>
 
@@ -130,7 +130,7 @@ function TrackingContent() {
                         )}
                         {/* Circle */}
                         <div style={{ width: 28, height: 28, borderRadius: '50%', background: done ? (current ? '#F97316' : '#5c3a1e') : 'rgba(249,115,22,0.08)', border: `2px solid ${done ? '#F97316' : 'rgba(249,115,22,0.2)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, zIndex: 1, transition: 'all 0.3s' }}>
-                          {done ? (current ? sc.icon : 'âœ“') : ''}
+                          {done ? (current ? sc.icon : '✓') : ''}
                         </div>
                         <div style={{ fontSize: 9, color: done ? '#C8884A' : '#5A6E80', fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', marginTop: 5, textAlign: 'center' }}>
                           {sc.label}
@@ -148,12 +148,12 @@ function TrackingContent() {
                 <div>
                   <div style={{ fontSize: 11, color: '#7A8EA8', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 3 }}>Delivery To</div>
                   <div style={{ fontSize: 14, color: '#F0E8DC' }}>{order.delivery_name}</div>
-                  <div style={{ fontSize: 13, color: '#7A8EA8' }}>{order.delivery_city} â€” {order.delivery_pincode}</div>
+                  <div style={{ fontSize: 13, color: '#7A8EA8' }}>{order.delivery_city} — {order.delivery_pincode}</div>
                 </div>
                 <div>
                   <div style={{ fontSize: 11, color: '#7A8EA8', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 3 }}>Payment</div>
                   <div style={{ fontSize: 14, color: '#F0E8DC' }}>{order.payment_method === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</div>
-                  <div style={{ fontSize: 13, color: '#7A8EA8' }}>Total: â‚¹{order.total?.toLocaleString('en-IN')}</div>
+                  <div style={{ fontSize: 13, color: '#7A8EA8' }}>Total: ₹{order.total?.toLocaleString('en-IN')}</div>
                 </div>
               </div>
 
@@ -174,7 +174,7 @@ function TrackingContent() {
                       {item.variant_label && <div style={{ fontSize: 11, color: '#7A8EA8' }}>{item.variant_label}</div>}
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: 13, color: '#F97316', fontWeight: 600 }}>â‚¹{item.line_total?.toLocaleString('en-IN')}</div>
+                      <div style={{ fontSize: 13, color: '#F97316', fontWeight: 600 }}>₹{item.line_total?.toLocaleString('en-IN')}</div>
                       <div style={{ fontSize: 11, color: '#7A8EA8' }}>Qty: {item.quantity}</div>
                     </div>
                   </div>
@@ -186,12 +186,12 @@ function TrackingContent() {
                 {order.discount_amount > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#4ADE80' }}>
                     <span>Discount {order.coupon_code ? `(${order.coupon_code})` : ''}</span>
-                    <span>âˆ’â‚¹{order.discount_amount?.toLocaleString('en-IN')}</span>
+                    <span>−₹{order.discount_amount?.toLocaleString('en-IN')}</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, color: '#F8F9FB', fontSize: 15 }}>
                   <span>Total</span>
-                  <span>â‚¹{order.total?.toLocaleString('en-IN')}</span>
+                  <span>₹{order.total?.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
@@ -199,7 +199,7 @@ function TrackingContent() {
               <div style={{ marginTop: 20, textAlign: 'center' }}>
                 <a href="https://wa.me/919159666538" target="_blank" rel="noopener"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#25D366', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-                  ðŸ’¬ Questions? Chat with us on WhatsApp
+                  💬 Questions? Chat with us on WhatsApp
                 </a>
               </div>
             </div>
@@ -208,7 +208,7 @@ function TrackingContent() {
 
         {/* Back link */}
         <div style={{ textAlign: 'center', marginTop: 28 }}>
-          <Link href="/products" style={{ fontSize: 13, color: '#7A8EA8', textDecoration: 'none' }}>â† Continue Shopping</Link>
+          <Link href="/products" style={{ fontSize: 13, color: '#7A8EA8', textDecoration: 'none' }}>← Continue Shopping</Link>
         </div>
       </div>
     </div>
@@ -226,4 +226,3 @@ export default function TrackOrderPage() {
     </Suspense>
   );
 }
-

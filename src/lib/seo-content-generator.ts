@@ -82,7 +82,7 @@ Nearby areas served: ${nearby}.
 
 === PRODUCT CONTEXT ===
 ${categoryAngle}
-Base price range: â‚¹${category.base_price} per unit.
+Base price range: ₹${category.base_price} per unit.
 Parent category: ${category.parent_category}.
 
 === CONTENT REQUIREMENTS ===
@@ -212,4 +212,3 @@ export async function generateBatch(
 
   return { success, failed, errors };
 }
-

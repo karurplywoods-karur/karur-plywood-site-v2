@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const HOW_IT_WORKS = [
-  { step:'01', icon:'ðŸ“¸', title:'Upload Your Material List', desc:'Take a photo of your handwritten material list, or upload any image/PDF of your BOM.' },
-  { step:'02', icon:'ðŸ“', title:'Add Your Details', desc:'Enter your name, phone number and delivery location.' },
-  { step:'03', icon:'ðŸ’¬', title:'Submit for Quote', desc:'Your material list and details are securely submitted to our team.' },
-  { step:'04', icon:'âš¡', title:'Receive Quote on WhatsApp', desc:'We review your list and send pricing within 10â€“30 minutes.' },
+  { step:'01', icon:'📸', title:'Upload Your Material List', desc:'Take a photo of your handwritten material list, or upload any image/PDF of your BOM.' },
+  { step:'02', icon:'📝', title:'Add Your Details', desc:'Enter your name, phone number and delivery location.' },
+  { step:'03', icon:'💬', title:'Submit for Quote', desc:'Your material list and details are securely submitted to our team.' },
+  { step:'04', icon:'⚡', title:'Receive Quote on WhatsApp', desc:'We review your list and send pricing within 10–30 minutes.' },
 ];
 
 export default function BOMPage() {
@@ -62,9 +62,9 @@ export default function BOMPage() {
           <h2 className="s-title" style={{ marginBottom:'2rem' }}>WHO IS THIS FOR?</h2>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }} className="bom-who-grid">
             {[
-              { icon:'ðŸ—ï¸', who:'Contractors & Builders', desc:'Building multiple homes? Upload your full material schedule and get bulk pricing instantly.' },
-              { icon:'ðŸ”¨', who:'Carpenters', desc:'Have a client order? Send us the list and we\'ll quote all materials together with delivery.' },
-              { icon:'ðŸ ', who:'Homeowners', desc:'Received a material list from your architect? Upload it and compare our pricing in one shot.' },
+              { icon:'🏗️', who:'Contractors & Builders', desc:'Building multiple homes? Upload your full material schedule and get bulk pricing instantly.' },
+              { icon:'🔨', who:'Carpenters', desc:'Have a client order? Send us the list and we\'ll quote all materials together with delivery.' },
+              { icon:'🏠', who:'Homeowners', desc:'Received a material list from your architect? Upload it and compare our pricing in one shot.' },
             ].map(w => (
               <div key={w.who} style={{ background:'rgba(25,55,109,0.35)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:8, padding:'1.5rem' }}>
                 <div style={{ fontSize:32, marginBottom:12 }}>{w.icon}</div>
@@ -84,4 +84,3 @@ export default function BOMPage() {
     </>
   );
 }
-

@@ -1,5 +1,5 @@
 'use client';
-// src/app/admin/page.tsx  â€” Login page
+// src/app/admin/page.tsx  — Login page
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -30,7 +30,7 @@ export default function AdminLogin() {
       <div style={{ width:'100%',maxWidth:400 }}>
         {/* Logo */}
         <div style={{ textAlign:'center',marginBottom:40 }}>
-          <div style={{ width:60,height:60,background:'linear-gradient(135deg,#C8884A,#8B5E2A)',borderRadius:16,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,margin:'0 auto 16px' }}>ðŸªµ</div>
+          <div style={{ width:60,height:60,background:'linear-gradient(135deg,#C8884A,#8B5E2A)',borderRadius:16,display:'flex',alignItems:'center',justifyContent:'center',fontSize:28,margin:'0 auto 16px' }}>🪵</div>
           <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:26,fontWeight:700,color:'#F0E8DC' }}>Admin Dashboard</div>
           <div style={{ fontSize:13,color:'#9A8070',marginTop:4 }}>Karur Plywood &amp; Company</div>
         </div>
@@ -48,15 +48,14 @@ export default function AdminLogin() {
           {err && <div style={{ color:'#F87171',fontSize:13,marginBottom:12 }}>{err}</div>}
           <button onClick={login} disabled={loading}
             style={{ width:'100%',background:loading?'#5c4a2e':'linear-gradient(135deg,#C8884A,#8B5E2A)',color:'white',border:'none',borderRadius:8,padding:'13px 0',fontWeight:700,fontSize:15,cursor:loading?'default':'pointer',fontFamily:'Outfit,sans-serif' }}>
-            {loading ? 'â³ Signing in...' : 'ðŸ” Sign In'}
+            {loading ? '⏳ Signing in...' : '🔐 Sign In'}
           </button>
         </div>
         <div style={{ textAlign:'center',marginTop:20 }}>
-          <a href="/" style={{ fontSize:13,color:'#9A8070',textDecoration:'none' }}>â† Back to Website</a>
+          <a href="/" style={{ fontSize:13,color:'#9A8070',textDecoration:'none' }}>← Back to Website</a>
         </div>
       </div>
       <style>{`input:focus{border-color:#C8884A!important}`}</style>
     </div>
   );
 }
-

@@ -3,7 +3,7 @@ import React from 'react';
 // 1. Import the default component from its standalone file
 import StandaloneLocalBusinessSchema from './LocalBusinessSchema';
 
-const SITE_URL = 'https://www.karurplywood.co.in';
+const SITE_URL = 'https://karurplywood.co.in';
 
 interface BreadcrumbItem {
   name: string;

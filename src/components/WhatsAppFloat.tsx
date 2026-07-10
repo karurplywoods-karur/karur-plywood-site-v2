@@ -14,7 +14,7 @@ export default function WhatsAppFloat() {
     // GA4
     trackWAClick({ source: 'floating_button' });
 
-    // Supabase â€” fire and forget
+    // Supabase — fire and forget
     const trackingId = generateTrackingId();
     fetch('/api/enquiries', {
       method: 'POST',
@@ -28,7 +28,7 @@ export default function WhatsAppFloat() {
         wa_source: 'floating_button',
       }),
     }).catch(() => {});
-    // Don't preventDefault â€” link still opens
+    // Don't preventDefault — link still opens
   }, []);
 
   if (pathname.startsWith('/admin')) return null;
@@ -59,4 +59,3 @@ export default function WhatsAppFloat() {
     </a>
   );
 }
-

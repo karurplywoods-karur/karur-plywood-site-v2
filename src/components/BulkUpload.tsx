@@ -71,7 +71,7 @@ export default function BulkUpload({ onSuccess }: Props) {
         </div>
         <button onClick={downloadTemplate}
           style={{ ...inp, display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 4, background: 'transparent', border: '1px solid rgba(249,115,22,0.3)', color: 'var(--orange)', cursor: 'pointer' }}>
-          â†“ Download CSV Template
+          ↓ Download CSV Template
         </button>
       </div>
 
@@ -81,17 +81,17 @@ export default function BulkUpload({ onSuccess }: Props) {
           Required CSV Columns
         </div>
         <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--grey)', lineHeight: 1.8 }}>
-          <span style={{ color: 'var(--orange)' }}>name</span> Â· 
-          <span style={{ color: 'var(--orange)' }}> type</span> (project/quick) Â· 
-          <span style={{ color: 'var(--grey-light)' }}> category_name</span> Â· 
-          <span style={{ color: 'var(--grey-light)' }}> description</span> Â· 
-          <span style={{ color: 'var(--grey-light)' }}> price</span> Â· 
-          <span style={{ color: 'var(--grey-light)' }}> unit</span> Â· 
-          <span style={{ color: 'var(--grey-light)' }}> image_url</span> Â· 
+          <span style={{ color: 'var(--orange)' }}>name</span> · 
+          <span style={{ color: 'var(--orange)' }}> type</span> (project/quick) · 
+          <span style={{ color: 'var(--grey-light)' }}> category_name</span> · 
+          <span style={{ color: 'var(--grey-light)' }}> description</span> · 
+          <span style={{ color: 'var(--grey-light)' }}> price</span> · 
+          <span style={{ color: 'var(--grey-light)' }}> unit</span> · 
+          <span style={{ color: 'var(--grey-light)' }}> image_url</span> · 
           <span style={{ color: 'var(--grey-light)' }}> in_stock</span> (true/false)
         </div>
         <div style={{ fontSize: 11, color: 'var(--grey)', marginTop: 8 }}>
-          Orange = required Â· Grey = optional Â· category_name must match exactly (e.g. "Plywood", "Hardware")
+          Orange = required · Grey = optional · category_name must match exactly (e.g. "Plywood", "Hardware")
         </div>
       </div>
 
@@ -114,22 +114,22 @@ export default function BulkUpload({ onSuccess }: Props) {
       >
         {uploading ? (
           <div>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>â³</div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>⏳</div>
             <div style={{ fontSize: 13, color: 'var(--grey)' }}>Uploading and processing...</div>
           </div>
         ) : file ? (
           <div>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>ðŸ“„</div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>📄</div>
             <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: 'var(--white)', fontSize: 14, marginBottom: 4 }}>{file.name}</div>
-            <div style={{ fontSize: 12, color: 'var(--grey)' }}>{(file.size / 1024).toFixed(1)} KB Â· Click to change</div>
+            <div style={{ fontSize: 12, color: 'var(--grey)' }}>{(file.size / 1024).toFixed(1)} KB · Click to change</div>
           </div>
         ) : (
           <div>
-            <div style={{ fontSize: 32, marginBottom: 10 }}>ðŸ“</div>
+            <div style={{ fontSize: 32, marginBottom: 10 }}>📁</div>
             <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: 'var(--grey-light)', fontSize: 13, marginBottom: 4 }}>
               Click to select or drag &amp; drop your CSV file
             </div>
-            <div style={{ fontSize: 11, color: 'var(--grey)' }}>Max 2MB Â· .csv only</div>
+            <div style={{ fontSize: 11, color: 'var(--grey)' }}>Max 2MB · .csv only</div>
           </div>
         )}
       </div>
@@ -140,7 +140,7 @@ export default function BulkUpload({ onSuccess }: Props) {
       {file && !uploading && (
         <button onClick={handleUpload}
           style={{ ...inp, width: '100%', padding: '12px 0', borderRadius: 4, background: 'var(--orange)', color: 'var(--navy)', border: 'none', cursor: 'pointer', fontSize: '0.82rem', marginBottom: 12 }}>
-          â†‘ Upload &amp; Import Products
+          ↑ Upload &amp; Import Products
         </button>
       )}
 
@@ -154,17 +154,17 @@ export default function BulkUpload({ onSuccess }: Props) {
           {result.success ? (
             <div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#4ADE80', fontSize: 14, marginBottom: 6 }}>
-                âœ… Import successful!
+                ✅ Import successful!
               </div>
               <div style={{ fontSize: 13, color: 'var(--grey)' }}>
                 <strong style={{ color: 'var(--white)' }}>{result.inserted}</strong> products added.
-                {result.skipped ? <> Â· <strong style={{ color: 'var(--orange)' }}>{result.skipped}</strong> rows skipped.</> : null}
+                {result.skipped ? <> · <strong style={{ color: 'var(--orange)' }}>{result.skipped}</strong> rows skipped.</> : null}
               </div>
             </div>
           ) : (
             <div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: 'var(--orange)', fontSize: 14, marginBottom: 6 }}>
-                âš ï¸ {result.error || 'Import failed'}
+                ⚠️ {result.error || 'Import failed'}
               </div>
             </div>
           )}
@@ -175,7 +175,7 @@ export default function BulkUpload({ onSuccess }: Props) {
               </div>
               <div style={{ maxHeight: 120, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {result.row_errors.map((e, i) => (
-                  <div key={i} style={{ fontSize: 11, color: '#FCA5A5', fontFamily: 'monospace' }}>Â· {e}</div>
+                  <div key={i} style={{ fontSize: 11, color: '#FCA5A5', fontFamily: 'monospace' }}>· {e}</div>
                 ))}
               </div>
             </div>
@@ -185,4 +185,3 @@ export default function BulkUpload({ onSuccess }: Props) {
     </div>
   );
 }
-

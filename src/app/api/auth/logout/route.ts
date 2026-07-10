@@ -6,4 +6,3 @@ export async function POST() {
   res.cookies.set('admin_token', '', { maxAge: 0, path: '/' });
   return res;
 }
-

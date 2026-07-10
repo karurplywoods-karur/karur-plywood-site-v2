@@ -38,7 +38,7 @@ export default function LegalPageLayout({
             lineHeight: 1.2,
           }} dangerouslySetInnerHTML={{ __html: title }} />
           <p style={{ color: '#5A6E80', fontSize: 12, margin: 0 }}>
-            Last updated: {updated} Â· {CONTACT.businessName}
+            Last updated: {updated} · {CONTACT.businessName}
           </p>
         </div>
       </section>
@@ -105,4 +105,3 @@ export default function LegalPageLayout({
     </>
   );
 }
-

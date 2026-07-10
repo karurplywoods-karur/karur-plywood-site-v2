@@ -1,5 +1,5 @@
 // src/lib/analytics.ts
-// Central analytics module â€” GA4 + WhatsApp conversion tracking
+// Central analytics module — GA4 + WhatsApp conversion tracking
 
 declare global {
   interface Window {
@@ -10,13 +10,13 @@ declare global {
 
 export const GA_ID = process.env.NEXT_PUBLIC_GA_ID || '';
 
-// â”€â”€ PAGE VIEW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── PAGE VIEW ──────────────────────────────────────────────
 export function pageview(url: string) {
   if (!GA_ID || typeof window === 'undefined' || !window.gtag) return;
   window.gtag('config', GA_ID, { page_path: url });
 }
 
-// â”€â”€ GENERIC EVENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── GENERIC EVENT ──────────────────────────────────────────
 export function event(
   action: string,
   params: Record<string, string | number | boolean | undefined> = {}
@@ -25,7 +25,7 @@ export function event(
   window.gtag('event', action, params);
 }
 
-// â”€â”€ TYPED EVENTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── TYPED EVENTS ───────────────────────────────────────────
 
 export type WASource = 'product_card' | 'cart' | 'floating_button' | 'widget' | 'enquiry_form';
 
@@ -85,7 +85,7 @@ export function trackAddToCart(params: {
 }
 
 /**
- * Fire GA4 'purchase' event â€” the conversion event Google Ads imports for
+ * Fire GA4 'purchase' event — the conversion event Google Ads imports for
  * Smart Bidding optimization. Fires regardless of payment method (COD or
  * Razorpay), since the order is confirmed either way once it's created.
  * transaction_id MUST be unique per order to avoid GA4 de-duplicating
@@ -120,7 +120,7 @@ export function trackPurchase(params: {
   });
 }
 
-// â”€â”€ SUPABASE TRACKING HELPER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── SUPABASE TRACKING HELPER ────────────────────────────────
 /** Generate a UUID v4 for tracking_id (browser-safe) */
 export function generateTrackingId(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -132,4 +132,3 @@ export function generateTrackingId(): string {
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
 }
-

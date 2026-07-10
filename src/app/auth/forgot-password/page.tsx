@@ -24,15 +24,15 @@ export default function ForgotPasswordPage() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">
-          <div className="auth-logo-mark">ðŸªµ</div>
+          <div className="auth-logo-mark">🪵</div>
           <div className="auth-logo-text">KARUR PLYWOOD</div>
         </div>
         {done ? (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 14 }}>ðŸ“§</div>
+            <div style={{ fontSize: 48, marginBottom: 14 }}>📧</div>
             <h2 className="auth-title">Check your email</h2>
             <p className="auth-sub">We sent a password reset link to <strong style={{ color: '#F97316' }}>{email}</strong></p>
-            <Link href="/auth/login" style={{ display: 'block', marginTop: 20, color: '#F97316', fontSize: 13, textAlign: 'center' }}>â† Back to Login</Link>
+            <Link href="/auth/login" style={{ display: 'block', marginTop: 20, color: '#F97316', fontSize: 13, textAlign: 'center' }}>← Back to Login</Link>
           </div>
         ) : (
           <>
@@ -46,10 +46,10 @@ export default function ForgotPasswordPage() {
                   value={email} onChange={e => setEmail(e.target.value)} />
               </div>
               <button type="submit" disabled={loading} className="auth-btn-primary">
-                {loading ? 'â³ Sending...' : 'Send Reset Link'}
+                {loading ? '⏳ Sending...' : 'Send Reset Link'}
               </button>
             </form>
-            <p className="auth-switch"><Link href="/auth/login" className="auth-link">â† Back to Login</Link></p>
+            <p className="auth-switch"><Link href="/auth/login" className="auth-link">← Back to Login</Link></p>
           </>
         )}
       </div>
@@ -77,4 +77,3 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
-

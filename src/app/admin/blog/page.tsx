@@ -87,7 +87,7 @@ export default function AdminBlogPage() {
       const data = await res.json();
       if (!res.ok) { showMsg(data.error || 'Error saving post.', false); }
       else {
-        showMsg(publishNow ? 'ðŸŽ‰ Post published!' : editPost ? 'Post updated!' : 'Post saved as draft!');
+        showMsg(publishNow ? '🎉 Post published!' : editPost ? 'Post updated!' : 'Post saved as draft!');
         await fetchPosts();
         setView('list');
       }
@@ -107,7 +107,7 @@ export default function AdminBlogPage() {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ published: !p.published }),
     });
-    if (res.ok) { showMsg(p.published ? 'Post unpublished.' : 'ðŸŽ‰ Post published!'); fetchPosts(); }
+    if (res.ok) { showMsg(p.published ? 'Post unpublished.' : '🎉 Post published!'); fetchPosts(); }
     else showMsg('Error updating post.', false);
   };
 
@@ -123,10 +123,10 @@ export default function AdminBlogPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => { if (view === 'edit') setView('list'); else router.push('/admin/dashboard'); }}
             style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '6px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: 13 }}>
-            â† {view === 'edit' ? 'Back to Posts' : 'Dashboard'}
+            ← {view === 'edit' ? 'Back to Posts' : 'Dashboard'}
           </button>
           <div style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 700, fontSize: 18, color: '#F0E8DC' }}>
-            ðŸ“ Blog CMS {view === 'edit' && <span style={{ fontSize: 14, color: '#9A8070', fontFamily: 'Outfit,sans-serif', fontWeight: 400 }}> â€” {editPost ? 'Edit Post' : 'New Post'}</span>}
+            📝 Blog CMS {view === 'edit' && <span style={{ fontSize: 14, color: '#9A8070', fontFamily: 'Outfit,sans-serif', fontWeight: 400 }}> — {editPost ? 'Edit Post' : 'New Post'}</span>}
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -141,21 +141,21 @@ export default function AdminBlogPage() {
 
       <div style={{ maxWidth: view === 'edit' ? 860 : 1100, margin: '0 auto', padding: '32px 24px' }}>
 
-        {/* â”€â”€ LIST VIEW â”€â”€ */}
+        {/* ── LIST VIEW ── */}
         {view === 'list' && (
           <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
                 <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontWeight: 700, color: '#F0E8DC' }}>Blog Posts</div>
-                <div style={{ fontSize: 13, color: '#9A8070', marginTop: 2 }}>{posts.filter(p => p.published).length} published Â· {posts.filter(p => !p.published).length} drafts</div>
+                <div style={{ fontSize: 13, color: '#9A8070', marginTop: 2 }}>{posts.filter(p => p.published).length} published · {posts.filter(p => !p.published).length} drafts</div>
               </div>
             </div>
 
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '60px 0', color: '#9A8070' }}>â³ Loading posts...</div>
+              <div style={{ textAlign: 'center', padding: '60px 0', color: '#9A8070' }}>⏳ Loading posts...</div>
             ) : posts.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '80px 0' }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>ðŸ“</div>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
                 <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, fontWeight: 700, color: '#F0E8DC', marginBottom: 8 }}>No posts yet</div>
                 <p style={{ color: '#9A8070', marginBottom: 24 }}>Create your first blog post to start driving SEO traffic.</p>
                 <button onClick={openNew} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
@@ -170,23 +170,23 @@ export default function AdminBlogPage() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
                         <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, fontWeight: 700, color: '#F0E8DC' }}>{p.title}</span>
                         <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: p.published ? 'rgba(37,211,102,0.12)' : 'rgba(200,136,74,0.1)', color: p.published ? '#25D366' : '#9A8070', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                          {p.published ? 'âœ“ Published' : 'âœï¸ Draft'}
+                          {p.published ? '✓ Published' : '✏️ Draft'}
                         </span>
                         <span style={{ fontSize: 11, color: '#9A8070', background: 'rgba(200,136,74,0.07)', padding: '2px 8px', borderRadius: 10 }}>{p.category}</span>
                       </div>
                       <div style={{ fontSize: 12, color: '#9A8070', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                        <span>ðŸ”— /blog/{p.slug}</span>
-                        <span>â± {p.read_time} min read</span>
-                        <span>ðŸ“… {new Date(p.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                        {p.published && <a href={`/blog/${p.slug}`} target="_blank" rel="noopener" style={{ color: '#C8884A', textDecoration: 'none' }}>â†— View live</a>}
+                        <span>🔗 /blog/{p.slug}</span>
+                        <span>⏱ {p.read_time} min read</span>
+                        <span>📅 {new Date(p.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                        {p.published && <a href={`/blog/${p.slug}`} target="_blank" rel="noopener" style={{ color: '#C8884A', textDecoration: 'none' }}>↗ View live</a>}
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                       <button onClick={() => togglePublish(p)} style={{ padding: '7px 14px', borderRadius: 7, border: 'none', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 12, background: p.published ? 'rgba(248,113,113,0.1)' : 'rgba(37,211,102,0.15)', color: p.published ? '#F87171' : '#25D366' }}>
-                        {p.published ? 'Unpublish' : 'â–¶ Publish'}
+                        {p.published ? 'Unpublish' : '▶ Publish'}
                       </button>
-                      <button onClick={() => openEdit(p)} style={{ padding: '7px 14px', borderRadius: 7, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600 }}>âœï¸ Edit</button>
-                      <button onClick={() => handleDelete(p.id, p.title)} style={{ padding: '7px 12px', borderRadius: 7, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ—‘ï¸</button>
+                      <button onClick={() => openEdit(p)} style={{ padding: '7px 14px', borderRadius: 7, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600 }}>✏️ Edit</button>
+                      <button onClick={() => handleDelete(p.id, p.title)} style={{ padding: '7px 12px', borderRadius: 7, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>🗑️</button>
                     </div>
                   </div>
                 ))}
@@ -195,13 +195,13 @@ export default function AdminBlogPage() {
           </>
         )}
 
-        {/* â”€â”€ EDIT VIEW â”€â”€ */}
+        {/* ── EDIT VIEW ── */}
         {view === 'edit' && (
           <div>
             {/* Preview toggle */}
             <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-              <button onClick={() => setPreview(false)} style={{ padding: '8px 18px', borderRadius: 8, border: '1px solid', borderColor: !preview ? '#C8884A' : 'rgba(200,136,74,0.2)', background: !preview ? 'rgba(200,136,74,0.12)' : 'transparent', color: !preview ? '#E0A86A' : '#9A8070', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœï¸ Edit</button>
-              <button onClick={() => setPreview(true)} style={{ padding: '8px 18px', borderRadius: 8, border: '1px solid', borderColor: preview ? '#C8884A' : 'rgba(200,136,74,0.2)', background: preview ? 'rgba(200,136,74,0.12)' : 'transparent', color: preview ? '#E0A86A' : '#9A8070', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ‘ Preview</button>
+              <button onClick={() => setPreview(false)} style={{ padding: '8px 18px', borderRadius: 8, border: '1px solid', borderColor: !preview ? '#C8884A' : 'rgba(200,136,74,0.2)', background: !preview ? 'rgba(200,136,74,0.12)' : 'transparent', color: !preview ? '#E0A86A' : '#9A8070', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✏️ Edit</button>
+              <button onClick={() => setPreview(true)} style={{ padding: '8px 18px', borderRadius: 8, border: '1px solid', borderColor: preview ? '#C8884A' : 'rgba(200,136,74,0.2)', background: preview ? 'rgba(200,136,74,0.12)' : 'transparent', color: preview ? '#E0A86A' : '#9A8070', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>👁 Preview</button>
             </div>
 
             {preview ? (
@@ -210,7 +210,7 @@ export default function AdminBlogPage() {
                 {form.cover_image && <div style={{ borderRadius: 12, overflow: 'hidden', height: 280, position: 'relative', marginBottom: 28 }}><img src={form.cover_image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>}
                 <div style={{ fontSize: 12, color: '#C8884A', fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 12 }}>{form.category}</div>
                 <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 40, fontWeight: 700, color: '#F0E8DC', lineHeight: 1.2, marginBottom: 16 }}>{form.title || 'Post Title'}</h1>
-                <div style={{ fontSize: 14, color: '#9A8070', marginBottom: 28 }}>{form.author} Â· {form.read_time} min read</div>
+                <div style={{ fontSize: 14, color: '#9A8070', marginBottom: 28 }}>{form.author} · {form.read_time} min read</div>
                 {form.excerpt && <p style={{ fontSize: 16, color: '#C8B8A0', lineHeight: 1.8, marginBottom: 28, fontStyle: 'italic', borderLeft: '3px solid #C8884A', paddingLeft: 20 }}>{form.excerpt}</p>}
                 <div style={{ fontSize: 15, color: '#C8B8A0', lineHeight: 1.9, whiteSpace: 'pre-wrap' }}>{form.content}</div>
               </div>
@@ -219,7 +219,7 @@ export default function AdminBlogPage() {
               <div>
                 <div style={fg}>
                   <label style={lbl}>Post Title *</label>
-                  <input style={inp} value={form.title || ''} onChange={e => handleTitleChange(e.target.value)} placeholder="e.g. BWR vs MR Plywood â€” Which One Should You Choose?" />
+                  <input style={inp} value={form.title || ''} onChange={e => handleTitleChange(e.target.value)} placeholder="e.g. BWR vs MR Plywood — Which One Should You Choose?" />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, ...fg }}>
@@ -255,7 +255,7 @@ export default function AdminBlogPage() {
                 </div>
 
                 <div style={fg}>
-                  <ImageUploader value={form.cover_image || ''} onChange={v => set('cover_image', v)} folder="blog" label="Cover Image" hint="Recommended: 1200Ã—630px" />
+                  <ImageUploader value={form.cover_image || ''} onChange={v => set('cover_image', v)} folder="blog" label="Cover Image" hint="Recommended: 1200×630px" />
                 </div>
 
                 <div style={fg}>
@@ -278,11 +278,11 @@ export default function AdminBlogPage() {
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', paddingTop: 8 }}>
                   <button onClick={() => handleSave(false)} disabled={saving}
                     style={{ flex: 1, minWidth: 140, padding: '13px 0', borderRadius: 8, background: saving ? '#2a2218' : 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.25)', color: '#E0A86A', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-                    {saving ? 'â³...' : 'ðŸ’¾ Save Draft'}
+                    {saving ? '⏳...' : '💾 Save Draft'}
                   </button>
                   <button onClick={() => handleSave(true)} disabled={saving}
                     style={{ flex: 2, minWidth: 200, padding: '13px 0', borderRadius: 8, background: saving ? '#1a5c2e' : '#25D366', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-                    {saving ? 'â³ Publishing...' : 'ðŸš€ Publish Post'}
+                    {saving ? '⏳ Publishing...' : '🚀 Publish Post'}
                   </button>
                   <button onClick={() => setView('list')} disabled={saving}
                     style={{ padding: '13px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.15)', color: '#9A8070', fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
@@ -298,4 +298,3 @@ export default function AdminBlogPage() {
     </div>
   );
 }
-

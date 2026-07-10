@@ -12,8 +12,8 @@ const BRANDS = [
   { name: 'CenturyPly', warranty: 'Up to 50 years (product-dependent) on select BWP/BWR plywood; documented on the product panel and warranty card included in packaging.' },
   { name: 'Greenlam Laminates', warranty: '5 years against manufacturing defects under normal use conditions; claim via Greenlam\'s authorized service channel.' },
   { name: 'Hettich', warranty: 'Lifetime warranty on select hinges and drawer systems under normal residential use; subject to Hettich India\'s warranty terms.' },
-  { name: 'Ebco', warranty: 'Warranty varies by product category (typically 1â€“3 years); refer to the warranty card supplied with hardware fittings.' },
-  { name: 'Hafele', warranty: 'Product-specific warranty (1â€“5 years); refer to the warranty documentation included with your purchase.' },
+  { name: 'Ebco', warranty: 'Warranty varies by product category (typically 1–3 years); refer to the warranty card supplied with hardware fittings.' },
+  { name: 'Hafele', warranty: 'Product-specific warranty (1–5 years); refer to the warranty documentation included with your purchase.' },
   { name: 'Asis / Other hardware', warranty: 'Manufacturer warranty as documented on packaging; typically 1 year against manufacturing defects.' },
 ];
 
@@ -47,7 +47,7 @@ export default function WarrantyPolicyPage() {
 
       <h2>2. How to Make a Warranty Claim</h2>
       <ul>
-        <li>Retain your <strong>purchase invoice</strong> (GST bill) â€” this is required for all warranty claims</li>
+        <li>Retain your <strong>purchase invoice</strong> (GST bill) — this is required for all warranty claims</li>
         <li>Retain the <strong>original warranty card</strong> or registration confirmation from the manufacturer if one is provided</li>
         <li>Contact us via <a href={`https://wa.me/${CONTACT.wa}`} target="_blank" rel="noopener">WhatsApp</a> or <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a> with your invoice number, product details, and a description/photos of the defect</li>
         <li>We will assist in coordinating with the manufacturer's authorized service team in your area</li>
@@ -67,9 +67,9 @@ export default function WarrantyPolicyPage() {
         <li>Damage caused by improper installation, cutting, drilling, or handling</li>
         <li>Damage from exposure to conditions beyond the product's rated specification (e.g. using MR-grade plywood in a permanently wet area)</li>
         <li>Normal wear and tear, scratches, dents, or surface staining</li>
-        <li>Natural wood characteristics: grain variation, knots, mineral streaks â€” these are not defects</li>
+        <li>Natural wood characteristics: grain variation, knots, mineral streaks — these are not defects</li>
         <li>Color variation in laminates over time due to UV exposure or cleaning chemicals</li>
-        <li>Damage caused by pests (termites, borers) after delivery â€” use appropriate treated/protection products</li>
+        <li>Damage caused by pests (termites, borers) after delivery — use appropriate treated/protection products</li>
         <li>Products modified or repaired by unauthorized persons</li>
       </ul>
 
@@ -82,10 +82,10 @@ export default function WarrantyPolicyPage() {
       <p>
         <strong>{CONTACT.businessName}</strong><br />
         GST No: {CONTACT.gst}<br />
-        ðŸ“ {CONTACT.address}<br />
-        ðŸ“ž <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
-        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
-        â° {CONTACT.hours}
+        📍 {CONTACT.address}<br />
+        📞 <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
+        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
+        ⏰ {CONTACT.hours}
       </p>
     </LegalPageLayout>
   );

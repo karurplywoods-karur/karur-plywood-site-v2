@@ -1,6 +1,6 @@
 'use client';
 // src/components/ProductVariantSelector.tsx
-// Client component â€” renders variant pills on the product detail page.
+// Client component — renders variant pills on the product detail page.
 // Shows thickness / size / grade pills; updates displayed price live.
 
 import { useState } from 'react';
@@ -14,15 +14,15 @@ interface Props {
 }
 
 const STOCK_LABEL: Record<ProductVariant['stock_status'], { label: string; color: string }> = {
-  in_stock:      { label: 'âœ… In Stock',       color: '#4ADE80' },
-  low_stock:     { label: 'ðŸŸ¡ Low Stock',      color: '#FBBF24' },
-  out_of_stock:  { label: 'âŒ Out of Stock',   color: '#F87171' },
-  made_to_order: { label: 'ðŸ›  Made to Order',  color: '#A78BFA' },
+  in_stock:      { label: '✅ In Stock',       color: '#4ADE80' },
+  low_stock:     { label: '🟡 Low Stock',      color: '#FBBF24' },
+  out_of_stock:  { label: '❌ Out of Stock',   color: '#F87171' },
+  made_to_order: { label: '🛠 Made to Order',  color: '#A78BFA' },
 };
 
-// Group variants by a dimension label (thickness â†’ size â†’ grade)
+// Group variants by a dimension label (thickness → size → grade)
 function getPrimaryLabel(v: ProductVariant): string {
-  return [v.thickness, v.size, v.grade].filter(Boolean).join(' Â· ') || 'Standard';
+  return [v.thickness, v.size, v.grade].filter(Boolean).join(' · ') || 'Standard';
 }
 
 export default function ProductVariantSelector({ variants, basePrice, baseMrp, unit }: Props) {
@@ -41,7 +41,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
 
   return (
     <div style={{ marginBottom: 24 }}>
-      {/* â”€â”€ Section header â”€â”€ */}
+      {/* ── Section header ── */}
       <div style={{
         fontSize: 11, fontFamily: "'Syne',sans-serif",
         fontWeight: 700, letterSpacing: '.12em',
@@ -50,7 +50,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
         Choose Variant
       </div>
 
-      {/* â”€â”€ Variant pills â”€â”€ */}
+      {/* ── Variant pills ── */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
         {variants.map(v => {
           const isActive = v.id === selected.id;
@@ -101,7 +101,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
         })}
       </div>
 
-      {/* â”€â”€ Selected variant detail card â”€â”€ */}
+      {/* ── Selected variant detail card ── */}
       <div style={{
         background: 'rgba(25,55,109,0.4)',
         border: '1px solid rgba(249,115,22,0.2)',
@@ -149,7 +149,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
           {displayMrp && displayPrice && displayMrp > displayPrice && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 14, color: '#7A8EA8', textDecoration: 'line-through' }}>
-                â‚¹{displayMrp.toLocaleString('en-IN')}
+                ₹{displayMrp.toLocaleString('en-IN')}
               </span>
               {discount && (
                 <span style={{
@@ -175,7 +175,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
                 color: '#F97316',
                 letterSpacing: '.03em', lineHeight: 1,
               }}>
-                â‚¹{displayPrice.toLocaleString('en-IN')}
+                ₹{displayPrice.toLocaleString('en-IN')}
               </span>
               {unit && (
                 <span style={{ fontSize: 13, color: '#7A8EA8', fontFamily: "'Syne',sans-serif" }}>
@@ -208,18 +208,17 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
         {/* Savings line */}
         {displayMrp && displayPrice && displayMrp > displayPrice && (
           <div style={{ marginTop: 8, fontSize: 12, color: '#4ADE80' }}>
-            You save â‚¹{(displayMrp - displayPrice).toLocaleString('en-IN')} on this variant
+            You save ₹{(displayMrp - displayPrice).toLocaleString('en-IN')} on this variant
           </div>
         )}
 
         {/* Stock quantity hint */}
         {selected.stock_status === 'low_stock' && selected.stock_quantity > 0 && (
           <div style={{ marginTop: 6, fontSize: 11, color: '#FBBF24' }}>
-            âš ï¸ Only {selected.stock_quantity} left in stock â€” order soon
+            ⚠️ Only {selected.stock_quantity} left in stock — order soon
           </div>
         )}
       </div>
     </div>
   );
 }
-

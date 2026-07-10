@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     // Check minimum order value
     if (coupon.min_order_value && cart_total < coupon.min_order_value) {
       return NextResponse.json({
-        error: `Minimum order of â‚¹${coupon.min_order_value.toLocaleString('en-IN')} required for this coupon.`,
+        error: `Minimum order of ₹${coupon.min_order_value.toLocaleString('en-IN')} required for this coupon.`,
       }, { status: 400 });
     }
 
@@ -92,4 +92,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 });
   }
 }
-

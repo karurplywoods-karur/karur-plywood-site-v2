@@ -98,4 +98,3 @@ const styles = `
   }
   .patc-checkout { margin-top: 10px; background: #F97316; color: #0B2447; }
 `;
-

@@ -24,4 +24,3 @@ export default function RecordProductView({ product }: { product: Product }) {
 
   return null; // renders nothing
 }
-

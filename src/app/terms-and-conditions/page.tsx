@@ -18,15 +18,15 @@ export default function TermsPage() {
       <h2>1. About Us</h2>
       <p>
         {CONTACT.businessName} is a wholesale and retail supplier of plywood, laminates, doors, and hardware.<br />
-        ðŸ“ {CONTACT.address}<br />
+        📍 {CONTACT.address}<br />
         GST No: {CONTACT.gst}
       </p>
 
       <h2>2. Products &amp; Pricing</h2>
       <ul>
-        <li>Product images are for reference; actual colour, grain, and finish may vary due to natural material variation and screen differences â€” see our <a href="/disclaimer">Disclaimer</a></li>
+        <li>Product images are for reference; actual colour, grain, and finish may vary due to natural material variation and screen differences — see our <a href="/disclaimer">Disclaimer</a></li>
         <li>Prices are subject to change without prior notice due to raw material costs, manufacturer pricing, or GST revisions</li>
-        <li>Stock availability is updated regularly but is not guaranteed at the time of order â€” we will notify you promptly if an item becomes unavailable</li>
+        <li>Stock availability is updated regularly but is not guaranteed at the time of order — we will notify you promptly if an item becomes unavailable</li>
         <li>For bulk or project orders, request a formal quotation for binding price validity</li>
       </ul>
 
@@ -63,7 +63,7 @@ export default function TermsPage() {
       <p>You agree not to misuse the site, including attempting unauthorised access to our systems, submitting false information, or using the site for any unlawful purpose.</p>
 
       <h2>9. Intellectual Property</h2>
-      <p>All content on this site â€” including text, images, logos, and design â€” is the property of {CONTACT.businessName} unless otherwise stated, and may not be reproduced without written permission.</p>
+      <p>All content on this site — including text, images, logos, and design — is the property of {CONTACT.businessName} unless otherwise stated, and may not be reproduced without written permission.</p>
 
       <h2>10. Limitation of Liability</h2>
       <p>
@@ -81,12 +81,11 @@ export default function TermsPage() {
       <h2>13. Contact Us</h2>
       <p>
         <strong>{CONTACT.businessName}</strong><br />
-        ðŸ“ {CONTACT.address}<br />
-        ðŸ“ž <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
-        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
-        â° {CONTACT.hours}
+        📍 {CONTACT.address}<br />
+        📞 <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
+        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
+        ⏰ {CONTACT.hours}
       </p>
     </LegalPageLayout>
   );
 }
-

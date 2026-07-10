@@ -10,7 +10,7 @@ export const CONTACT = {
   address: process.env.NEXT_PUBLIC_ADDRESS || 'Covai Main Road, Reddipalayam, Karur, Tamil Nadu - 639 008',
   addressShort: 'Karur, Tamil Nadu',
   hours: 'Mon - Sat: 9:30 AM - 7:30 PM',
-  hoursShort: 'Mon - Sat Â· 9:30 AM - 7:30 PM',
+  hoursShort: 'Mon - Sat · 9:30 AM - 7:30 PM',
   sundayHours: 'Sunday: Closed',
   siteUrl: 'https://www.karurplywood.co.in',
   googleReviewUrl: 'https://g.page/r/Cfm8SzhbcyobEBM/review',

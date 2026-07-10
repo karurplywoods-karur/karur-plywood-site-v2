@@ -22,7 +22,7 @@ interface Product {
   image_urls: string[];
   type: string;
   price: number | null;
-  mrp: number | null;          // â† NEW
+  mrp: number | null;          // ← NEW
   unit: string;
   in_stock: boolean;
   categories?: { name: string; icon: string };
@@ -34,7 +34,7 @@ interface Review   { id: number; name: string; role: string; rating: number; mes
 const EMPTY_PRODUCT = {
   name: '', category_id: '', description: '',
   image_url: '', type: 'project', image_urls: [],
-  price: '', mrp: '',             // â† NEW
+  price: '', mrp: '',             // ← NEW
   unit: '', in_stock: true,
 };
 
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
       description: p.description, image_url: p.image_url, image_urls: (p as any).image_urls || [],
       type: p.type,
       price: p.price || '',
-      mrp: p.mrp || '',          // â† NEW
+      mrp: p.mrp || '',          // ← NEW
       unit: p.unit, in_stock: p.in_stock,
     });
     setEditProduct(p); setShowForm(true);
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#0E0B08', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>â³</div>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
         <div style={{ color: '#9A8070' }}>Loading...</div>
       </div>
     </div>
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
       {/* Topbar */}
       <div style={{ background: '#1C140D', borderBottom: '1px solid rgba(200,136,74,0.15)', padding: '0 28px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>ðŸªµ</div>
+          <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>🪵</div>
           <div>
             <div style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 700, fontSize: 15, lineHeight: 1.2 }}>Admin Dashboard</div>
             <div style={{ fontSize: 10, color: '#9A8070' }}>Karur Plywood &amp; Company</div>
@@ -243,7 +243,7 @@ export default function AdminDashboard() {
               {msg.text}
             </div>
           )}
-          <a href="/" target="_blank" style={{ fontSize: 13, color: '#9A8070', textDecoration: 'none', padding: '6px 12px', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 7 }}>ðŸŒ Site</a>
+          <a href="/" target="_blank" style={{ fontSize: 13, color: '#9A8070', textDecoration: 'none', padding: '6px 12px', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 7 }}>🌐 Site</a>
           <button onClick={logout} style={{ fontSize: 13, background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', color: '#F87171', borderRadius: 7, padding: '6px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Logout</button>
         </div>
       </div>
@@ -262,10 +262,10 @@ export default function AdminDashboard() {
                 {orderCounts.pending} new
               </div>
             )}
-            <div style={{ fontSize: 24, marginBottom: 8 }}>ðŸ§¾</div>
+            <div style={{ fontSize: 24, marginBottom: 8 }}>🧾</div>
             <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 36, fontWeight: 700, color: '#E0A86A', lineHeight: 1 }}>{orderCounts.total}</div>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#F0E8DC', marginTop: 4 }}>Orders</div>
-            <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>{orderCounts.pending} pending â†’</div>
+            <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>{orderCounts.pending} pending →</div>
           </a>
 
           {/* Low stock alert card */}
@@ -277,7 +277,7 @@ export default function AdminDashboard() {
                 border: outOfStock.length > 0 ? '1px solid rgba(239,68,68,0.35)' : '1px solid rgba(200,136,74,0.15)',
                 borderRadius: 14, padding: '20px 22px', position: 'relative',
               }}>
-                <div style={{ fontSize: 24, marginBottom: 8 }}>ðŸ“¦</div>
+                <div style={{ fontSize: 24, marginBottom: 8 }}>📦</div>
                 <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 36, fontWeight: 700, color: outOfStock.length > 0 ? '#F87171' : '#E0A86A', lineHeight: 1 }}>{outOfStock.length}</div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#F0E8DC', marginTop: 4 }}>Out of Stock</div>
                 {outOfStock.length > 0 ? (
@@ -285,16 +285,16 @@ export default function AdminDashboard() {
                     {outOfStock.slice(0, 2).map(p => p.name).join(', ')}{outOfStock.length > 2 ? ` +${outOfStock.length - 2} more` : ''}
                   </div>
                 ) : (
-                  <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>All products in stock âœ“</div>
+                  <div style={{ fontSize: 11, color: '#9A8070', marginTop: 2 }}>All products in stock ✓</div>
                 )}
               </div>
             );
           })()}
           {[
-            { icon: 'ðŸ“¦', num: products.length, label: 'Products', sub: `${products.filter(p => p.type === 'project').length} project Â· ${products.filter(p => p.type === 'quick').length} quick` },
-            { icon: 'ðŸ“‹', num: enquiries.length, label: 'Enquiries', sub: `${enquiries.filter(e => e.status === 'new').length} new` },
-            { icon: 'â­', num: reviews.length, label: 'Reviews', sub: `${reviews.filter(r => r.approved).length} published` },
-            { icon: 'ðŸ·ï¸', num: categories.length, label: 'Categories', sub: 'Product categories' },
+            { icon: '📦', num: products.length, label: 'Products', sub: `${products.filter(p => p.type === 'project').length} project · ${products.filter(p => p.type === 'quick').length} quick` },
+            { icon: '📋', num: enquiries.length, label: 'Enquiries', sub: `${enquiries.filter(e => e.status === 'new').length} new` },
+            { icon: '⭐', num: reviews.length, label: 'Reviews', sub: `${reviews.filter(r => r.approved).length} published` },
+            { icon: '🏷️', num: categories.length, label: 'Categories', sub: 'Product categories' },
           ].map(s => (
             <div key={s.label} style={{ background: '#1C140D', border: '1px solid rgba(200,136,74,0.15)', borderRadius: 14, padding: '20px 22px' }}>
               <div style={{ fontSize: 24, marginBottom: 8 }}>{s.icon}</div>
@@ -307,23 +307,23 @@ export default function AdminDashboard() {
 
         {/* Tab nav */}
         <div style={{ display: 'flex', gap: 4, marginBottom: 24, background: '#1C140D', border: '1px solid rgba(200,136,74,0.15)', borderRadius: 12, padding: 5, width: 'fit-content', flexWrap: 'wrap' }}>
-          {tabBtn('products', `ðŸ“¦ Products (${products.length})`)}
-          {tabBtn('import', 'ðŸ“¥ Import CSV')}
-          {tabBtn('enquiries', `ðŸ“‹ Enquiries (${enquiries.filter(e => e.status === 'new').length} new)`)}
-          {tabBtn('reviews', `â­ Reviews (${reviews.filter(r => !r.approved).length} pending)`)}
-          {tabBtn('coupons', 'ðŸŽŸï¸ Coupons')}
-          <a href="/admin/orders" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: 13, background: orderCounts.pending > 0 ? 'rgba(249,115,22,0.15)' : 'transparent', color: orderCounts.pending > 0 ? '#F97316' : '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>ðŸ§¾ Orders{orderCounts.pending > 0 ? ` (${orderCounts.pending})` : ''} â†—</a>
-          <a href="/admin/brands"     style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>ðŸ·ï¸ Brands â†—</a>
-          <a href="/admin/categories" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>ðŸ—‚ï¸ Categories â†—</a>
-          <a href="/admin/blog"       style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>ðŸ“ Blog CMS â†—</a>
-          <a href="/admin/architects" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>ðŸ›ï¸ Architects â†—</a>
-          <a href="/admin/carpenters" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>ðŸ”¨ Carpenters â†—</a>
+          {tabBtn('products', `📦 Products (${products.length})`)}
+          {tabBtn('import', '📥 Import CSV')}
+          {tabBtn('enquiries', `📋 Enquiries (${enquiries.filter(e => e.status === 'new').length} new)`)}
+          {tabBtn('reviews', `⭐ Reviews (${reviews.filter(r => !r.approved).length} pending)`)}
+          {tabBtn('coupons', '🎟️ Coupons')}
+          <a href="/admin/orders" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: 13, background: orderCounts.pending > 0 ? 'rgba(249,115,22,0.15)' : 'transparent', color: orderCounts.pending > 0 ? '#F97316' : '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🧾 Orders{orderCounts.pending > 0 ? ` (${orderCounts.pending})` : ''} ↗</a>
+          <a href="/admin/brands"     style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🏷️ Brands ↗</a>
+          <a href="/admin/categories" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🗂️ Categories ↗</a>
+          <a href="/admin/blog"       style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>📝 Blog CMS ↗</a>
+          <a href="/admin/architects" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🏛️ Architects ↗</a>
+          <a href="/admin/carpenters" style={{ padding: '9px 20px', borderRadius: 8, fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 13, background: 'transparent', color: '#9A8070', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>🔨 Carpenters ↗</a>
         </div>
 
-        {/* â”€â”€ BULK UPLOAD TAB â”€â”€ */}
+        {/* ── BULK UPLOAD TAB ── */}
         {tab === 'import' && <CatalogImport onSuccess={() => { fetchAll(); setTab('products'); }} />}
 
-        {/* â”€â”€ PRODUCTS TAB â”€â”€ */}
+        {/* ── PRODUCTS TAB ── */}
         {tab === 'products' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
@@ -352,21 +352,21 @@ export default function AdminDashboard() {
                           <div style={{ fontWeight: 600, color: '#F0E8DC', marginBottom: 2 }}>{p.name}</div>
                           {p.description && <div style={{ fontSize: 11, color: '#9A8070', maxWidth: 240, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.description}</div>}
                         </td>
-                        <td style={{ padding: '12px 16px', color: '#C8B8A0' }}>{p.categories ? `${p.categories.icon} ${p.categories.name}` : 'â€”'}</td>
+                        <td style={{ padding: '12px 16px', color: '#C8B8A0' }}>{p.categories ? `${p.categories.icon} ${p.categories.name}` : '—'}</td>
                         <td style={{ padding: '12px 16px' }}>
                           <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: p.type === 'quick' ? 'rgba(37,211,102,0.12)' : 'rgba(200,136,74,0.12)', color: p.type === 'quick' ? '#25D366' : '#E0A86A' }}>
-                            {p.type === 'quick' ? 'âš¡ Quick' : 'ðŸ  Project'}
+                            {p.type === 'quick' ? '⚡ Quick' : '🏠 Project'}
                           </span>
                         </td>
-                        {/* â”€â”€ MRP / PRICE COLUMN â”€â”€ */}
+                        {/* ── MRP / PRICE COLUMN ── */}
                         <td style={{ padding: '12px 16px' }}>
                           {p.mrp && (
                             <div style={{ fontSize: 11, color: '#9A8070', textDecoration: 'line-through', marginBottom: 2 }}>
-                              â‚¹{p.mrp.toLocaleString('en-IN')} MRP
+                              ₹{p.mrp.toLocaleString('en-IN')} MRP
                             </div>
                           )}
                           <div style={{ color: '#E0A86A', fontWeight: 600 }}>
-                            {p.price ? `â‚¹${p.price.toLocaleString('en-IN')}` : 'â€”'}
+                            {p.price ? `₹${p.price.toLocaleString('en-IN')}` : '—'}
                             {p.unit && <span style={{ fontSize: 11, color: '#9A8070', fontWeight: 400 }}> {p.unit}</span>}
                           </div>
                           {p.mrp && p.price && (
@@ -382,8 +382,8 @@ export default function AdminDashboard() {
                         </td>
                         <td style={{ padding: '12px 16px' }}>
                           <div style={{ display: 'flex', gap: 8 }}>
-                            <button onClick={() => openEdit(p)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœï¸ Edit</button>
-                            <button onClick={() => handleDelete(p.id, p.name)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ—‘ï¸</button>
+                            <button onClick={() => openEdit(p)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(200,136,74,0.1)', border: '1px solid rgba(200,136,74,0.2)', color: '#E0A86A', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✏️ Edit</button>
+                            <button onClick={() => handleDelete(p.id, p.name)} style={{ padding: '6px 12px', borderRadius: 6, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>🗑️</button>
                           </div>
                         </td>
                       </tr>
@@ -395,19 +395,19 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* â”€â”€ ENQUIRIES TAB â”€â”€ */}
+        {/* ── ENQUIRIES TAB ── */}
         {tab === 'enquiries' && (
           <div>
             <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="ðŸ” Search name or phone..."
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍 Search name or phone..."
                 style={{ ...inp, flex: 1, minWidth: 200 }} />
               <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
                 style={{ ...inp, width: 'auto', cursor: 'pointer' }}>
                 <option value="all">All Statuses</option>
-                <option value="new">ðŸŸ¢ New</option>
-                <option value="contacted">ðŸŸ¡ Contacted</option>
-                <option value="converted">ðŸŸ  Converted</option>
-                <option value="closed">âš« Closed</option>
+                <option value="new">🟢 New</option>
+                <option value="contacted">🟡 Contacted</option>
+                <option value="converted">🟠 Converted</option>
+                <option value="closed">⚫ Closed</option>
               </select>
             </div>
             {filteredEnquiries.length === 0 && <div style={{ textAlign: 'center', padding: '60px 0', color: '#9A8070' }}>No enquiries found.</div>}
@@ -419,10 +419,10 @@ export default function AdminDashboard() {
                     <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: `${STATUS_COLORS[e.status]}20`, color: STATUS_COLORS[e.status], textTransform: 'uppercase', letterSpacing: 0.5 }}>{e.status}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: '#9A8070', marginBottom: e.message ? 8 : 0 }}>
-                    <span>ðŸ“ž {e.phone}</span>
-                    {e.location && <span>ðŸ“ {e.location}</span>}
-                    {e.product && <span style={{ color: '#C8884A' }}>ðŸ“¦ {e.product}</span>}
-                    <span>ðŸ• {new Date(e.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                    <span>📞 {e.phone}</span>
+                    {e.location && <span>📍 {e.location}</span>}
+                    {e.product && <span style={{ color: '#C8884A' }}>📦 {e.product}</span>}
+                    <span>🕐 {new Date(e.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                   </div>
                   {e.message && <div style={{ fontSize: 13, color: '#9A8070', fontStyle: 'italic', lineHeight: 1.6 }}>"{e.message}"</div>}
                 </div>
@@ -430,36 +430,36 @@ export default function AdminDashboard() {
                   <a href={`https://wa.me/${e.phone.replace(/\D/g, '')}?text=Hi+${encodeURIComponent(e.name)}%2C+this+is+Karur+Plywood.+Regarding+your+enquiry...`}
                     target="_blank" rel="noopener"
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '7px 0', borderRadius: 7, background: '#25D366', color: 'white', fontWeight: 600, fontSize: 12, textDecoration: 'none' }}>
-                    ðŸ’¬ Reply
+                    💬 Reply
                   </a>
                   {e.status === 'converted' && (
                     <button onClick={async () => {
                       const res = await fetch('/api/admin/review-request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enquiry_id: e.id }) });
                       const d = await res.json();
-                      if (d.wa_url) { window.open(d.wa_url, '_blank'); showMsg('â­ Review request WA opened!'); }
+                      if (d.wa_url) { window.open(d.wa_url, '_blank'); showMsg('⭐ Review request WA opened!'); }
                       else showMsg(d.error || 'Error sending.', false);
                     }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '7px 0', borderRadius: 7, background: 'rgba(250,204,21,0.1)', border: '1px solid rgba(250,204,21,0.25)', color: '#FDE047', fontSize: 11, cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600 }}>
-                      â­ Request Review
+                      ⭐ Request Review
                     </button>
                   )}
                   <select value={e.status} onChange={ev => updateEnquiryStatus(e.id, ev.target.value)}
                     style={{ ...inp, fontSize: 12, padding: '7px 10px', cursor: 'pointer' }}>
-                    <option value="new">ðŸŸ¢ New</option>
-                    <option value="contacted">ðŸŸ¡ Contacted</option>
-                    <option value="converted">ðŸŸ  Converted</option>
-                    <option value="closed">âš« Closed</option>
+                    <option value="new">🟢 New</option>
+                    <option value="contacted">🟡 Contacted</option>
+                    <option value="converted">🟠 Converted</option>
+                    <option value="closed">⚫ Closed</option>
                   </select>
-                  <button onClick={() => deleteEnquiry(e.id)} style={{ padding: '7px 0', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 7, color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ—‘ï¸ Delete</button>
+                  <button onClick={() => deleteEnquiry(e.id)} style={{ padding: '7px 0', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 7, color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>🗑️ Delete</button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* â”€â”€ REVIEWS TAB â”€â”€ */}
+        {/* ── REVIEWS TAB ── */}
         {tab === 'reviews' && (
           <div>
-            <div style={{ fontSize: 13, color: '#9A8070', marginBottom: 20 }}>{reviews.filter(r => !r.approved).length} pending Â· {reviews.filter(r => r.approved).length} published</div>
+            <div style={{ fontSize: 13, color: '#9A8070', marginBottom: 20 }}>{reviews.filter(r => !r.approved).length} pending · {reviews.filter(r => r.approved).length} published</div>
             {reviews.length === 0 && <div style={{ textAlign: 'center', padding: '60px 0', color: '#9A8070' }}>No reviews yet.</div>}
             {reviews.map(r => (
               <div key={r.id} style={{ background: '#1C140D', border: `1px solid ${r.approved ? 'rgba(200,136,74,0.15)' : 'rgba(248,113,113,0.15)'}`, borderRadius: 14, padding: '20px 22px', marginBottom: 12, display: 'grid', gridTemplateColumns: '1fr auto', gap: 16, alignItems: 'start' }}>
@@ -468,30 +468,30 @@ export default function AdminDashboard() {
                     <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 16, fontWeight: 700, color: '#F0E8DC' }}>{r.name}</span>
                     {r.role && <span style={{ fontSize: 12, color: '#9A8070' }}>{r.role}</span>}
                     <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: r.approved ? 'rgba(37,211,102,0.12)' : 'rgba(248,113,113,0.12)', color: r.approved ? '#25D366' : '#F87171' }}>
-                      {r.approved ? 'âœ“ Published' : 'â³ Pending'}
+                      {r.approved ? '✓ Published' : '⏳ Pending'}
                     </span>
                   </div>
-                  <div style={{ color: '#E8B820', fontSize: 14, marginBottom: 6 }}>{'â˜…'.repeat(r.rating)}{'â˜†'.repeat(5 - r.rating)}</div>
+                  <div style={{ color: '#E8B820', fontSize: 14, marginBottom: 6 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
                   <div style={{ fontSize: 13, color: '#9A8070', lineHeight: 1.7, fontStyle: 'italic' }}>"{r.message}"</div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 110 }}>
                   <button onClick={() => toggleReview(r.id, r.approved)} style={{ padding: '8px 12px', borderRadius: 7, border: 'none', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 600, fontSize: 12, background: r.approved ? 'rgba(248,113,113,0.1)' : 'rgba(37,211,102,0.15)', color: r.approved ? '#F87171' : '#25D366' }}>
-                    {r.approved ? 'Unpublish' : 'âœ“ Approve'}
+                    {r.approved ? 'Unpublish' : '✓ Approve'}
                   </button>
-                  <button onClick={() => deleteReview(r.id)} style={{ padding: '8px 12px', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 7, color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>ðŸ—‘ï¸ Delete</button>
+                  <button onClick={() => deleteReview(r.id)} style={{ padding: '8px 12px', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 7, color: '#F87171', fontSize: 12, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>🗑️ Delete</button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* â”€â”€ COUPONS TAB â”€â”€ */}
+        {/* ── COUPONS TAB ── */}
         {tab === 'coupons' && (
           <CouponsPanel />
         )}
       </div>
 
-      {/* â”€â”€ PRODUCT FORM MODAL â”€â”€ */}
+      {/* ── PRODUCT FORM MODAL ── */}
       {showForm && (
         <div onClick={() => setShowForm(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: '#1C140D', borderRadius: 20, padding: 36, width: '100%', maxWidth: 560, maxHeight: '92vh', overflowY: 'auto', border: '1px solid rgba(200,136,74,0.2)' }}>
@@ -499,7 +499,7 @@ export default function AdminDashboard() {
               <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, fontWeight: 700, color: '#F0E8DC' }}>
                 {editProduct ? 'Edit Product' : 'Add Product'}
               </div>
-              <button onClick={() => setShowForm(false)} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>âœ•</button>
+              <button onClick={() => setShowForm(false)} style={{ background: 'none', border: '1px solid rgba(200,136,74,0.2)', borderRadius: 8, color: '#9A8070', padding: '5px 12px', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>✕</button>
             </div>
 
             {/* Name */}
@@ -513,8 +513,8 @@ export default function AdminDashboard() {
               <div>
                 <label style={lbl}>Type *</label>
                 <select style={inp} value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                  <option value="project">ðŸ  Project</option>
-                  <option value="quick">âš¡ Quick Order</option>
+                  <option value="project">🏠 Project</option>
+                  <option value="quick">⚡ Quick Order</option>
                 </select>
               </div>
               <div>
@@ -557,18 +557,18 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* â”€â”€ MRP + SELLING PRICE â”€â”€ KEY FIX */}
+            {/* ── MRP + SELLING PRICE ── KEY FIX */}
             <div style={{ background: 'rgba(200,136,74,0.06)', border: '1px solid rgba(200,136,74,0.15)', borderRadius: 10, padding: '16px 16px 4px', marginBottom: 16 }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: '#C8884A', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>
-                ðŸ’° Pricing
+                💰 Pricing
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
                 <div>
-                  <label style={{ ...lbl, color: '#9A8070' }}>MRP (â‚¹) <span style={{ color: '#9A8070', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>â€” crossed out</span></label>
+                  <label style={{ ...lbl, color: '#9A8070' }}>MRP (₹) <span style={{ color: '#9A8070', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>— crossed out</span></label>
                   <input style={inp} type="number" value={form.mrp} onChange={e => setForm({ ...form, mrp: e.target.value })} placeholder="e.g. 3500" />
                 </div>
                 <div>
-                  <label style={{ ...lbl, color: '#E0A86A' }}>Our Price (â‚¹) *</label>
+                  <label style={{ ...lbl, color: '#E0A86A' }}>Our Price (₹) *</label>
                   <input style={{ ...inp, borderColor: 'rgba(200,136,74,0.4)' }} type="number" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="e.g. 2800" />
                 </div>
                 <div>
@@ -579,7 +579,7 @@ export default function AdminDashboard() {
               {/* Live discount preview */}
               {form.mrp && form.price && parseFloat(form.mrp) > parseFloat(form.price) && (
                 <div style={{ fontSize: 12, color: '#4ADE80', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  âœ… Customer saves â‚¹{(parseFloat(form.mrp) - parseFloat(form.price)).toLocaleString('en-IN')} ({Math.round(((parseFloat(form.mrp) - parseFloat(form.price)) / parseFloat(form.mrp)) * 100)}% off MRP)
+                  ✅ Customer saves ₹{(parseFloat(form.mrp) - parseFloat(form.price)).toLocaleString('en-IN')} ({Math.round(((parseFloat(form.mrp) - parseFloat(form.price)) / parseFloat(form.mrp)) * 100)}% off MRP)
                 </div>
               )}
             </div>
@@ -588,12 +588,12 @@ export default function AdminDashboard() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, padding: '14px 16px', background: 'rgba(200,136,74,0.06)', borderRadius: 10, border: '1px solid rgba(200,136,74,0.12)', cursor: 'pointer' }}
               onClick={() => setForm({ ...form, in_stock: !form.in_stock })}>
               <div style={{ width: 20, height: 20, borderRadius: 4, border: '2px solid', borderColor: form.in_stock ? '#25D366' : 'rgba(200,136,74,0.3)', background: form.in_stock ? '#25D366' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
-                {form.in_stock && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>âœ“</span>}
+                {form.in_stock && <span style={{ color: 'white', fontSize: 12, fontWeight: 700 }}>✓</span>}
               </div>
               <span style={{ fontSize: 14, fontWeight: 500, color: '#C8B8A0' }}>Product is in stock</span>
             </div>
 
-            {/* â”€â”€ VARIANTS â€” only available after product is created â”€â”€ */}
+            {/* ── VARIANTS — only available after product is created ── */}
             {editProduct ? (
               <div style={{ marginBottom: 24 }}>
                 <VariantManager productId={String(editProduct.id)} onChange={fetchAll} />
@@ -605,14 +605,14 @@ export default function AdminDashboard() {
                 border: '1px dashed rgba(200,136,74,0.2)',
                 borderRadius: 10, fontSize: 12, color: '#9A8070', textAlign: 'center',
               }}>
-                ðŸ“ <strong style={{ color: '#C8884A' }}>Variants</strong> (thickness, size, grade, price per variant) can be added after the product is saved. Save this product first, then click âœï¸ Edit to manage variants.
+                📐 <strong style={{ color: '#C8884A' }}>Variants</strong> (thickness, size, grade, price per variant) can be added after the product is saved. Save this product first, then click ✏️ Edit to manage variants.
               </div>
             )}
 
             {/* Save */}
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={handleSave} disabled={saving} style={{ flex: 1, padding: '13px 0', borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: saving ? 'default' : 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-                {saving ? 'â³ Saving...' : editProduct ? 'âœ“ Update Product' : '+ Add Product'}
+                {saving ? '⏳ Saving...' : editProduct ? '✓ Update Product' : '+ Add Product'}
               </button>
               <button onClick={() => setShowForm(false)} style={{ padding: '13px 20px', borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', fontSize: 14, cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Cancel</button>
             </div>
@@ -630,7 +630,7 @@ export default function AdminDashboard() {
   );
 }
 
-// â”€â”€ CouponsPanel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── CouponsPanel ─────────────────────────────────────────────────────────────
 function CouponsPanel() {
   const [coupons,  setCoupons]  = useState<any[]>([]);
   const [loading,  setLoading]  = useState(true);
@@ -682,24 +682,24 @@ function CouponsPanel() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <div style={{ fontSize: 13, color: '#9A8070' }}>{coupons.filter(c => c.is_active).length} active Â· {coupons.length} total</div>
+        <div style={{ fontSize: 13, color: '#9A8070' }}>{coupons.filter(c => c.is_active).length} active · {coupons.length} total</div>
         <button onClick={() => setShowForm(true)} style={{ padding: '9px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12 }}>+ New Coupon</button>
       </div>
 
-      {loading ? <div style={{ textAlign: 'center', padding: 40, color: '#9A8070' }}>Loadingâ€¦</div> : (
+      {loading ? <div style={{ textAlign: 'center', padding: 40, color: '#9A8070' }}>Loading…</div> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {coupons.length === 0 && <div style={{ textAlign: 'center', padding: 40, color: '#9A8070' }}>No coupons yet. Create your first one.</div>}
           {coupons.map(c => (
             <div key={c.id} style={{ background: '#1C140D', border: `1px solid ${c.is_active ? 'rgba(200,136,74,0.15)' : 'rgba(100,100,100,0.15)'}`, borderRadius: 14, padding: '16px 20px', display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: 16, alignItems: 'center', opacity: c.is_active ? 1 : 0.5 }}>
               <div style={{ background: 'rgba(249,115,22,0.1)', border: '1px dashed rgba(249,115,22,0.3)', borderRadius: 8, padding: '8px 14px', fontFamily: 'monospace', fontWeight: 700, color: '#F97316', fontSize: 15, letterSpacing: 2 }}>{c.code}</div>
               <div>
-                <div style={{ fontSize: 13, color: '#F0E8DC', fontWeight: 600 }}>{c.description || 'â€”'}</div>
+                <div style={{ fontSize: 13, color: '#F0E8DC', fontWeight: 600 }}>{c.description || '—'}</div>
                 <div style={{ fontSize: 12, color: '#9A8070', marginTop: 3 }}>
-                  {c.discount_type === 'percent' ? `${c.discount_value}% off` : `â‚¹${c.discount_value} off`}
-                  {c.min_order_value > 0 ? ` Â· Min â‚¹${c.min_order_value}` : ''}
-                  {c.max_discount ? ` Â· Cap â‚¹${c.max_discount}` : ''}
-                  {c.usage_limit ? ` Â· ${c.used_count}/${c.usage_limit} used` : ` Â· ${c.used_count} used`}
-                  {c.expires_at ? ` Â· Expires ${new Date(c.expires_at).toLocaleDateString('en-IN')}` : ''}
+                  {c.discount_type === 'percent' ? `${c.discount_value}% off` : `₹${c.discount_value} off`}
+                  {c.min_order_value > 0 ? ` · Min ₹${c.min_order_value}` : ''}
+                  {c.max_discount ? ` · Cap ₹${c.max_discount}` : ''}
+                  {c.usage_limit ? ` · ${c.used_count}/${c.usage_limit} used` : ` · ${c.used_count} used`}
+                  {c.expires_at ? ` · Expires ${new Date(c.expires_at).toLocaleDateString('en-IN')}` : ''}
                 </div>
               </div>
               <button onClick={() => toggleActive(c.id, c.is_active)} style={{ padding: '7px 14px', borderRadius: 7, border: 'none', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: 12, fontWeight: 600, background: c.is_active ? 'rgba(248,113,113,0.1)' : 'rgba(37,211,102,0.1)', color: c.is_active ? '#F87171' : '#25D366' }}>
@@ -714,14 +714,14 @@ function CouponsPanel() {
       {showForm && (
         <div onClick={() => setShowForm(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: '#1C140D', borderRadius: 16, padding: 28, width: '100%', maxWidth: 500, border: '1px solid rgba(200,136,74,0.2)', maxHeight: '90vh', overflowY: 'auto' }}>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#F0E8DC', marginBottom: 20 }}>ðŸŽŸï¸ New Coupon</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#F0E8DC', marginBottom: 20 }}>🎟️ New Coupon</div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
               <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Code *</label><input style={s} value={form.code} onChange={e => setForm({...form, code: e.target.value.toUpperCase()})} placeholder="WELCOME10" /></div>
               <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Type *</label>
                 <select style={s} value={form.discount_type} onChange={e => setForm({...form, discount_type: e.target.value})}>
                   <option value="percent">Percentage (%)</option>
-                  <option value="flat">Flat (â‚¹)</option>
+                  <option value="flat">Flat (₹)</option>
                 </select>
               </div>
             </div>
@@ -730,11 +730,11 @@ function CouponsPanel() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
               <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Value *</label><input style={s} type="number" value={form.discount_value} onChange={e => setForm({...form, discount_value: e.target.value})} placeholder={form.discount_type === 'percent' ? '10' : '200'} /></div>
-              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Min Order (â‚¹)</label><input style={s} type="number" value={form.min_order_value} onChange={e => setForm({...form, min_order_value: e.target.value})} placeholder="500" /></div>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Min Order (₹)</label><input style={s} type="number" value={form.min_order_value} onChange={e => setForm({...form, min_order_value: e.target.value})} placeholder="500" /></div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Max Discount (â‚¹)</label><input style={s} type="number" value={form.max_discount} onChange={e => setForm({...form, max_discount: e.target.value})} placeholder="Optional" /></div>
+              <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Max Discount (₹)</label><input style={s} type="number" value={form.max_discount} onChange={e => setForm({...form, max_discount: e.target.value})} placeholder="Optional" /></div>
               <div><label style={{ fontSize: 10, color: '#9A8070', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 5 }}>Usage Limit</label><input style={s} type="number" value={form.usage_limit} onChange={e => setForm({...form, usage_limit: e.target.value})} placeholder="Unlimited" /></div>
             </div>
 
@@ -743,7 +743,7 @@ function CouponsPanel() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <button onClick={() => setShowForm(false)} style={{ padding: 12, borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Cancel</button>
               <button onClick={handleSave} disabled={saving} style={{ padding: 12, borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', border: 'none', color: '#fff', cursor: saving ? 'default' : 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12 }}>
-                {saving ? 'Savingâ€¦' : '+ Create Coupon'}
+                {saving ? 'Saving…' : '+ Create Coupon'}
               </button>
             </div>
           </div>

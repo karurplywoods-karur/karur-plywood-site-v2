@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(data);
 }
 
-// POST /api/products â€” admin only
+// POST /api/products — admin only
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -84,4 +84,3 @@ export async function POST(req: NextRequest) {
   }
   return NextResponse.json(data, { status: 201 });
 }
-

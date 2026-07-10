@@ -57,7 +57,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     return {
       title: pageData.title || `Wholesale ${formatSlugText(category)} Dealer in ${formatSlugText(area)} | Karur Plywood`,
       description: pageData.meta_description || `Looking for a trusted ${formatSlugText(category)} dealer in ${formatSlugText(area)}? Get direct wholesale pricing, commercial grading, and fast job-site delivery.`,
-      alternates: { canonical: `https://www.karurplywood.co.in/location/${area}/${category}` },
+      alternates: { canonical: `https://karurplywood.co.in/location/${area}/${category}` },
       robots: pageData.is_published ? { index: true, follow: true } : { index: false, follow: false },
     };
   } catch {

@@ -7,12 +7,12 @@ import { trackWAClick, generateTrackingId } from '@/lib/analytics';
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
 const QUICK_MESSAGES = [
-  { label: 'ðŸªµ Plywood Pricing',   text: 'Hi, I need plywood for my project. Can you share pricing and available sizes?',   category: 'Plywood' },
-  { label: 'ðŸšª Door Enquiry',      text: "Hi, I'm looking for doors for my home. What options and prices do you have?",      category: 'Doors' },
-  { label: 'ðŸŽ¨ Laminate Designs',  text: 'Hi, I need laminate sheet designs for my kitchen/bedroom. Can you help?',          category: 'Laminates' },
-  { label: 'ðŸ”© Hardware Fittings', text: 'Hi, I need hardware fittings for my furniture. What do you have available?',       category: 'Hardware' },
-  { label: 'ðŸ“¦ Bulk / Wholesale',  text: "Hi, I'm a contractor and need bulk pricing. Can we discuss wholesale rates?",      category: 'Wholesale' },
-  { label: 'ðŸ“ Showroom Visit',    text: "Hi, I'd like to visit your Karur showroom. What are your working hours?",          category: 'Showroom' },
+  { label: '🪵 Plywood Pricing',   text: 'Hi, I need plywood for my project. Can you share pricing and available sizes?',   category: 'Plywood' },
+  { label: '🚪 Door Enquiry',      text: "Hi, I'm looking for doors for my home. What options and prices do you have?",      category: 'Doors' },
+  { label: '🎨 Laminate Designs',  text: 'Hi, I need laminate sheet designs for my kitchen/bedroom. Can you help?',          category: 'Laminates' },
+  { label: '🔩 Hardware Fittings', text: 'Hi, I need hardware fittings for my furniture. What do you have available?',       category: 'Hardware' },
+  { label: '📦 Bulk / Wholesale',  text: "Hi, I'm a contractor and need bulk pricing. Can we discuss wholesale rates?",      category: 'Wholesale' },
+  { label: '📍 Showroom Visit',    text: "Hi, I'd like to visit your Karur showroom. What are your working hours?",          category: 'Showroom' },
 ];
 
 function WAIcon({ size = 22 }: { size?: number }) {
@@ -52,12 +52,12 @@ export default function WhatsAppWidget() {
 
   return (
     <>
-      {/* Chat Panel â€” hardcoded hex colors so CSS vars can't fail */}
+      {/* Chat Panel — hardcoded hex colors so CSS vars can't fail */}
       {open && (
         <div className="wa-panel">
           {/* Header */}
           <div className="wa-panel-header">
-            <div className="wa-panel-avatar">ðŸªµ</div>
+            <div className="wa-panel-avatar">🪵</div>
             <div className="wa-panel-info">
               <div className="wa-panel-name">Karur Plywood &amp; Co.</div>
               <div className="wa-panel-status">
@@ -65,14 +65,14 @@ export default function WhatsAppWidget() {
                 Usually replies within minutes
               </div>
             </div>
-            <button className="wa-panel-close" onClick={() => setOpen(false)} aria-label="Close chat">âœ•</button>
+            <button className="wa-panel-close" onClick={() => setOpen(false)} aria-label="Close chat">✕</button>
           </div>
 
           {/* Greeting bubble */}
           <div className="wa-panel-body">
             <div className="wa-bubble">
-              <p className="wa-bubble-text">ðŸ‘‹ Hi! What can we help you with today?</p>
-              <span className="wa-bubble-time">Now âœ“âœ“</span>
+              <p className="wa-bubble-text">👋 Hi! What can we help you with today?</p>
+              <span className="wa-bubble-time">Now ✓✓</span>
             </div>
           </div>
 
@@ -95,10 +95,10 @@ export default function WhatsAppWidget() {
               placeholder="Type your message..."
               aria-label="Custom WhatsApp message"
             />
-            <button className="wa-send-btn" onClick={sendCustom} aria-label="Send">âž¤</button>
+            <button className="wa-send-btn" onClick={sendCustom} aria-label="Send">➤</button>
           </div>
 
-          <div className="wa-panel-footer">Secured by WhatsApp Â· Karur Plywood &amp; Co.</div>
+          <div className="wa-panel-footer">Secured by WhatsApp · Karur Plywood &amp; Co.</div>
         </div>
       )}
 
@@ -109,13 +109,13 @@ export default function WhatsAppWidget() {
         aria-label={open ? 'Close WhatsApp chat' : 'Chat with us on WhatsApp'}
       >
         {open
-          ? <span style={{ color: 'white', fontSize: 18, fontWeight: 700, lineHeight: 1 }}>âœ•</span>
+          ? <span style={{ color: 'white', fontSize: 18, fontWeight: 700, lineHeight: 1 }}>✕</span>
           : <WAIcon size={26} />
         }
       </button>
 
       <style>{`
-        /* â”€â”€ PANEL â”€â”€ */
+        /* ── PANEL ── */
         .wa-panel {
           position: fixed; bottom: 90px; right: 28px; z-index: 9998;
           width: 330px;
@@ -229,7 +229,7 @@ export default function WhatsAppWidget() {
           font-size: 10px; color: #7A8EA8; text-align: center;
         }
 
-        /* â”€â”€ TOGGLE BUTTON â”€â”€ */
+        /* ── TOGGLE BUTTON ── */
         .wa-toggle-btn {
           position: fixed; bottom: 28px; right: 28px; z-index: 9999;
           width: 54px; height: 54px;
@@ -258,4 +258,3 @@ export default function WhatsAppWidget() {
     </>
   );
 }
-

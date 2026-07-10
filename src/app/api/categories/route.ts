@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase, supabaseAdmin } from '@/lib/db';
 import { getAdminSession } from '@/lib/auth';
 
-// â”€â”€ GET /api/categories  (public) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── GET /api/categories  (public) ─────────────────────────────
 export async function GET() {
   const { data, error } = await supabase
     .from('categories')
@@ -15,7 +15,7 @@ export async function GET() {
   return NextResponse.json(data ?? []);
 }
 
-// â”€â”€ POST /api/categories  (admin) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── POST /api/categories  (admin) ──────────────────────────────
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       name:            name.trim(),
       slug:            finalSlug,
       display_name:    display_name    || name.trim(),
-      icon:            icon            || 'ðŸ“¦',
+      icon:            icon            || '📦',
       description:     description     || '',
       parent_id:       parent_id       || null,
       image_url:       image_url       || '',
@@ -65,4 +65,3 @@ export async function POST(req: NextRequest) {
   }
   return NextResponse.json(data, { status: 201 });
 }
-

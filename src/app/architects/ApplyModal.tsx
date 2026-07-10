@@ -27,7 +27,7 @@ export default function ArchitectApplyModal() {
   return (
     <>
       <button className="btn-p" onClick={()=>setOpen(true)} style={{ border:'none', cursor:'pointer' }}>
-        ðŸ›ï¸ Join as Architect
+        🏛️ Join as Architect
       </button>
 
       {open && (
@@ -35,7 +35,7 @@ export default function ArchitectApplyModal() {
           <div style={{ background:'#0d1f3a', border:'1px solid rgba(249,115,22,0.2)', borderRadius:10, padding:36, width:'100%', maxWidth:560, maxHeight:'90vh', overflowY:'auto' }} onClick={e=>e.stopPropagation()}>
             {done ? (
               <div style={{ textAlign:'center', padding:'28px 0' }}>
-                <div style={{ fontSize:48, marginBottom:12 }}>âœ…</div>
+                <div style={{ fontSize:48, marginBottom:12 }}>✅</div>
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>APPLICATION RECEIVED!</div>
                 <p style={{ color:'#7A8EA8', fontSize:14, lineHeight:1.7, marginBottom:20 }}>We&apos;ll review your portfolio and contact you within 24 hours to set up your listing.</p>
                 <button onClick={()=>{setOpen(false);setDone(false);}} className="btn-p" style={{border:'none',cursor:'pointer'}}>Close</button>
@@ -44,7 +44,7 @@ export default function ArchitectApplyModal() {
               <>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
                   <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB' }}>JOIN AS AN ARCHITECT</div>
-                  <button onClick={()=>setOpen(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>âœ•</button>
+                  <button onClick={()=>setOpen(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕</button>
                 </div>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
                   <div><label style={lbl}>Full Name *</label><input style={inp} value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Ar. Ramesh Iyer" /></div>
@@ -78,7 +78,7 @@ export default function ArchitectApplyModal() {
                 <div style={{ marginBottom:20 }}><label style={lbl}>About You / Bio</label><textarea style={{...inp,resize:'none'} as React.CSSProperties} rows={3} value={form.bio} onChange={e=>set('bio',e.target.value)} placeholder="Tell homeowners about your design style and notable projects..." /></div>
                 {error && <div style={{ color:'#FCA5A5', fontSize:13, marginBottom:12 }}>{error}</div>}
                 <button onClick={submit} disabled={loading} className="btn-p" style={{ width:'100%', border:'none', cursor:'pointer', justifyContent:'center' }}>
-                  {loading ? 'â³ Submitting...' : 'âœ“ Submit Application'}
+                  {loading ? '⏳ Submitting...' : '✓ Submit Application'}
                 </button>
                 <p style={{ fontSize:12, color:'#7A8EA8', textAlign:'center', marginTop:10 }}>Free listing. We&apos;ll call you to verify and set up your portfolio.</p>
               </>
@@ -90,4 +90,3 @@ export default function ArchitectApplyModal() {
     </>
   );
 }
-

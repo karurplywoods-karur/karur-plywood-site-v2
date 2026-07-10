@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
       <ul>
         <li>Name, phone number, and email address when you register, order, or submit an enquiry</li>
         <li>Delivery address and pincode for order fulfilment</li>
-        <li>Order details â€” products, quantities, and purchase history</li>
+        <li>Order details — products, quantities, and purchase history</li>
         <li>Messages sent via the contact form, WhatsApp, or quote requests</li>
         <li>Technical data (device type, browser, pages visited, approximate city-level location) collected automatically via cookies and analytics tools</li>
       </ul>
@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage() {
       <p>We do not sell your personal information. We may share it with:</p>
       <ul>
         <li>Delivery and logistics partners, solely to fulfil your order</li>
-        <li>Payment processors (Razorpay), to process payments securely â€” they never share your data with us beyond transaction confirmation</li>
+        <li>Payment processors (Razorpay), to process payments securely — they never share your data with us beyond transaction confirmation</li>
         <li>Service providers who help us operate the site (hosting, email delivery), bound by confidentiality obligations</li>
         <li>Government or regulatory authorities, where required by law</li>
       </ul>
@@ -73,13 +73,12 @@ export default function PrivacyPolicyPage() {
         For any questions about this Privacy Policy:<br /><br />
         <strong>{CONTACT.businessName}</strong><br />
         GST No: {CONTACT.gst}<br />
-        ðŸ“ {CONTACT.address}<br />
-        ðŸ“ž <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
-        âœ‰ï¸ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
-        â° {CONTACT.hours}
+        📍 {CONTACT.address}<br />
+        📞 <a href={`tel:${CONTACT.phoneRaw}`}>{CONTACT.phone}</a><br />
+        ✉️ <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><br />
+        ⏰ {CONTACT.hours}
       </p>
-      <p>Related: <a href="/cookie-policy">Cookie Policy</a> Â· <a href="/terms-and-conditions">Terms &amp; Conditions</a> Â· <a href="/disclaimer">Disclaimer</a></p>
+      <p>Related: <a href="/cookie-policy">Cookie Policy</a> · <a href="/terms-and-conditions">Terms &amp; Conditions</a> · <a href="/disclaimer">Disclaimer</a></p>
     </LegalPageLayout>
   );
 }
-

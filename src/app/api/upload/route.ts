@@ -66,4 +66,3 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: err.message || 'Delete failed.' }, { status: 500 });
   }
 }
-

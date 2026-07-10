@@ -28,4 +28,3 @@ export async function getAdminSession() {
   if (!token) return null;
   return await verifyToken(token);
 }
-

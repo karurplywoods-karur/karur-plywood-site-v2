@@ -1,6 +1,6 @@
 // src/components/ProductImagePlaceholder.tsx
 // Shown when a product has no image_url.
-// Looks intentional â€” not a broken placeholder.
+// Looks intentional — not a broken placeholder.
 
 interface Props {
   name: string;
@@ -33,7 +33,7 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
   const brandSize = isDetail ? 11 : 9;
 
   // Shorten name for display
-  const shortName = name.length > 28 ? name.slice(0, 26) + 'â€¦' : name;
+  const shortName = name.length > 28 ? name.slice(0, 26) + '…' : name;
 
   return (
     <svg
@@ -73,10 +73,10 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
       {/* Vignette */}
       <rect width="400" height="300" fill={`url(#vignette-${name.slice(0, 4)})`} />
 
-      {/* Accent line â€” top */}
+      {/* Accent line — top */}
       <rect x="0" y="0" width="400" height="2" fill={accent} opacity="0.7" />
 
-      {/* Brand pill â€” top left */}
+      {/* Brand pill — top left */}
       {brandName && (
         <>
           <rect x="14" y="12" width={brandName.length * (brandSize * 0.62) + 16} height={brandSize + 10} rx="3" fill="rgba(0,0,0,0.5)" stroke={accent} strokeWidth="0.6" strokeOpacity="0.4" />
@@ -88,7 +88,7 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
 
       {/* Centre icon */}
       <text x="200" y={isDetail ? 130 : 125} textAnchor="middle" fontSize={iconSize} dominantBaseline="middle">
-        {categoryIcon || 'ðŸ“¦'}
+        {categoryIcon || '📦'}
       </text>
 
       {/* Product name */}
@@ -131,7 +131,7 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
       <line x1="390" y1="290" x2="370" y2="290" stroke={accent} strokeWidth="1.5" opacity="0.4" />
       <line x1="390" y1="290" x2="390" y2="270" stroke={accent} strokeWidth="1.5" opacity="0.4" />
 
-      {/* Bottom: "Photo coming soon" â€” subtle */}
+      {/* Bottom: "Photo coming soon" — subtle */}
       <text
         x="200" y="285"
         textAnchor="middle"
@@ -146,4 +146,3 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
     </svg>
   );
 }
-

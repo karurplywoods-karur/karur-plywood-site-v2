@@ -1,6 +1,6 @@
 // src/app/api/import/execute/route.ts
 // Executes the import for a previously previewed batch.
-// Supports rollback â€” stores inserted IDs so they can be deleted
+// Supports rollback — stores inserted IDs so they can be deleted
 // if the admin requests an undo within the session.
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -15,7 +15,7 @@ function slugify(name: string, suffix: string): string {
     .slice(0, 70) + '-' + suffix;
 }
 
-// â”€â”€ POST /api/import/execute â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── POST /api/import/execute ───────────────────────────────────
 // Body: { batch_id: string, skip_errors: boolean }
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
@@ -177,7 +177,7 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (fatal: any) {
-    // Fatal error (skip_errors = false) â€” roll back everything inserted so far
+    // Fatal error (skip_errors = false) — roll back everything inserted so far
     if (inserted.length > 0) {
       const table = batch.batch_type === 'products'
         ? 'products'
@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// â”€â”€ DELETE /api/import/execute â€” rollback a completed import â”€â”€â”€
+// ── DELETE /api/import/execute — rollback a completed import ───
 export async function DELETE(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -233,4 +233,3 @@ export async function DELETE(req: NextRequest) {
 
   return NextResponse.json({ success: true, deleted: rollback.ids.length });
 }
-

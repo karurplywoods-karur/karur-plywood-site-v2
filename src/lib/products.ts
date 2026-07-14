@@ -14,12 +14,21 @@ export const PRODUCT_SELECT = `
 
 // ── PUBLIC QUERIES ──────────────────────────────────────
 
-export async function getProjectProducts(categorySlug?: string, searchQuery?: string): Promise<Product[]> {
+export interface ProductFilters {
+  categorySlug?: string;
+  searchQuery?: string;
+  brandSlugs?: string[];
+  thickness?: string[];
+  priceMin?: number;
+  priceMax?: number;
+  sort?: 'popular' | 'price_asc' | 'price_desc' | 'newest';
+}
+
+export async function getProjectProducts(categorySlug?: string, searchQuery?: string, filters?: Omit<ProductFilters, 'categorySlug' | 'searchQuery'>): Promise<Product[]> {
   let query = supabase
     .from('products')
     .select(PRODUCT_SELECT)
-    .eq('in_stock', true)
-    .order('sort_order', { ascending: true });
+    .eq('in_stock', true);
 
   // Only filter by type if no search — search should span all types
   if (!searchQuery) query = query.eq('type', 'project');
@@ -35,9 +44,32 @@ export async function getProjectProducts(categorySlug?: string, searchQuery?: st
 
   if (searchQuery) query = query.ilike('name', `%${searchQuery}%`);
 
+  if (filters?.brandSlugs?.length) {
+    const { data: brandRows } = await supabase.from('brands').select('id').in('slug', filters.brandSlugs);
+    const ids = (brandRows || []).map(b => b.id);
+    if (ids.length) query = query.in('brand_id', ids);
+  }
+
+  if (filters?.thickness?.length) query = query.in('thickness', filters.thickness);
+  if (filters?.priceMin != null) query = query.gte('price', filters.priceMin);
+  if (filters?.priceMax != null) query = query.lte('price', filters.priceMax);
+
+  switch (filters?.sort) {
+    case 'price_asc': query = query.order('price', { ascending: true }); break;
+    case 'price_desc': query = query.order('price', { ascending: false }); break;
+    case 'newest': query = query.order('created_at', { ascending: false }); break;
+    default: query = query.order('sort_order', { ascending: true });
+  }
+
   const { data, error } = await query;
   if (error) { console.error(error); return []; }
   return (data as Product[]) || [];
+}
+
+export async function getBrands(): Promise<{ id: string | number; name: string; slug: string }[]> {
+  const { data, error } = await supabase.from('brands').select('id,name,slug').order('name', { ascending: true });
+  if (error) { console.error(error); return []; }
+  return data || [];
 }
 
 export async function getQuickProducts(): Promise<Product[]> {

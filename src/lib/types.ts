@@ -6,6 +6,9 @@ export interface Category {
   slug: string;
   icon: string;
   sort_order: number;
+  parent_id?: string | number | null;
+  image_url?: string | null;
+  description?: string | null;
 }
 
 export interface Brand {

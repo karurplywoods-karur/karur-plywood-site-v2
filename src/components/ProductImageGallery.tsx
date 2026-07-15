@@ -41,9 +41,40 @@ export default function ProductImageGallery({
   }
 
   return (
-    <div>
+    <div style={{ display: 'flex', gap: 12 }}>
+      {/* Thumbnail rail (vertical) */}
+      {validImages.length > 1 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0, maxHeight: 480, overflowY: 'auto' }}>
+          {validImages.map((src, i) => (
+            <button
+              key={src}
+              onClick={() => setActive(i)}
+              style={{
+                flexShrink: 0,
+                width: 64, height: 64,
+                borderRadius: 8, overflow: 'hidden',
+                border: `2px solid ${i === active ? '#F07316' : '#E5E1DC'}`,
+                padding: 0, cursor: 'pointer',
+                background: '#F2EDE5',
+                transition: 'border-color 0.2s',
+                position: 'relative',
+              }}
+              aria-label={`View image ${i + 1}`}
+            >
+              <Image
+                src={src}
+                alt={`${productName} thumbnail ${i + 1}`}
+                fill
+                style={{ objectFit: 'cover' }}
+                sizes="64px"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Main image */}
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', borderRadius: 16, overflow: 'hidden', background: '#0a1628', marginBottom: validImages.length > 1 ? 12 : 0 }}>
+      <div style={{ position: 'relative', flex: 1, minWidth: 0, aspectRatio: '4/3', borderRadius: 12, overflow: 'hidden', background: '#F2EDE5' }}>
         <Image
           key={validImages[active]}
           src={validImages[active]}
@@ -58,14 +89,24 @@ export default function ProductImageGallery({
         {validImages.length > 1 && (
           <div style={{
             position: 'absolute', bottom: 12, right: 12,
-            background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
-            color: '#F8F9FB', fontSize: 11, fontWeight: 700,
+            background: 'rgba(11,36,71,0.75)', backdropFilter: 'blur(4px)',
+            color: '#FFFFFF', fontSize: 11, fontWeight: 700,
             fontFamily: "'Syne',sans-serif", letterSpacing: '.06em',
             padding: '4px 10px', borderRadius: 20,
           }}>
             {active + 1} / {validImages.length}
           </div>
         )}
+
+        <div style={{
+          position: 'absolute', bottom: 12, left: 12,
+          background: 'rgba(255,255,255,0.9)',
+          color: '#6B7280', fontSize: 10, fontWeight: 600,
+          fontFamily: "'Syne',sans-serif", letterSpacing: '.04em',
+          padding: '4px 10px', borderRadius: 20,
+        }}>
+          🔍 Hover to zoom
+        </div>
 
         {/* Prev / Next arrows for mobile swipe-feel */}
         {validImages.length > 1 && (
@@ -83,37 +124,6 @@ export default function ProductImageGallery({
           </>
         )}
       </div>
-
-      {/* Thumbnail strip */}
-      {validImages.length > 1 && (
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
-          {validImages.map((src, i) => (
-            <button
-              key={src}
-              onClick={() => setActive(i)}
-              style={{
-                flexShrink: 0,
-                width: 64, height: 64,
-                borderRadius: 8, overflow: 'hidden',
-                border: `2px solid ${i === active ? '#F97316' : 'rgba(249,115,22,0.15)'}`,
-                padding: 0, cursor: 'pointer',
-                background: '#0a1628',
-                transition: 'border-color 0.2s',
-                position: 'relative',
-              }}
-              aria-label={`View image ${i + 1}`}
-            >
-              <Image
-                src={src}
-                alt={`${productName} thumbnail ${i + 1}`}
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="64px"
-              />
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

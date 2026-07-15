@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
-import ProductAddToCart from '@/components/ProductAddToCart';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/lib/CartContext';
 import { CONTACT } from '@/lib/contact';
 import type { Product, ProductVariant } from '@/lib/types';
 
@@ -17,12 +17,16 @@ function formatPrice(value: number | null | undefined) {
 }
 
 export default function ProductPurchasePanel({ product }: { product: Product }) {
+  const router = useRouter();
+  const { add } = useCart();
   const variants = useMemo(
     () => [...(product.product_variants || [])].sort((a, b) => Number(b.is_default) - Number(a.is_default) || a.sort_order - b.sort_order),
     [product.product_variants]
   );
   const [selectedId, setSelectedId] = useState(() => variants.find(v => v.is_default)?.id || variants[0]?.id || '');
   const selected = variants.find(v => v.id === selectedId);
+  const [qty, setQty] = useState(1);
+  const [added, setAdded] = useState(false);
 
   const price = selected?.price ?? product.price;
   const mrp = selected?.mrp ?? product.mrp;
@@ -31,11 +35,21 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
   const stockStatus = selected?.stock_status || (product.in_stock ? 'in_stock' : 'out_of_stock');
   const inStock = stockStatus !== 'out_of_stock';
 
+  const addToCart = () => {
+    for (let i = 0; i < qty; i++) add(product, selected);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
+  };
+  const buyNow = () => {
+    for (let i = 0; i < qty; i++) add(product, selected);
+    router.push('/checkout');
+  };
+
   return (
     <div className="purchase-panel">
       {variants.length > 0 && (
         <div className="variant-block">
-          <div className="panel-label">Choose Variant</div>
+          <div className="panel-label">Thickness</div>
           <div className="variant-grid">
             {variants.map(variant => (
               <button
@@ -45,7 +59,6 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
                 className={`variant-btn${variant.id === selectedId ? ' variant-btn--active' : ''}`}
               >
                 <span>{variantLabel(variant)}</span>
-                {variant.sku && <small>{variant.sku}</small>}
               </button>
             ))}
           </div>
@@ -73,10 +86,21 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
       </div>
 
       <div className="actions">
-        <ProductAddToCart product={product} variant={selected} />
-        <div className="secondary-actions">
-          <a href={`tel:${CONTACT.phoneRaw}`} className="secondary-btn">Call Now</a>
-          <Link href="/products" className="secondary-btn secondary-btn--muted">All Products</Link>
+        <div className="qty-row">
+          <div className="qty-stepper">
+            <button type="button" onClick={() => setQty(q => Math.max(1, q - 1))} aria-label="Decrease quantity">−</button>
+            <span>{qty}</span>
+            <button type="button" onClick={() => setQty(q => q + 1)} aria-label="Increase quantity">+</button>
+          </div>
+          {product.unit && <span className="qty-unit">{product.unit}</span>}
+        </div>
+        <div className="btn-row">
+          <button type="button" onClick={addToCart} disabled={!inStock} className="btn-add-to-cart">
+            {added ? '✓ Added' : '🛒 Add to Cart'}
+          </button>
+          <button type="button" onClick={buyNow} disabled={!inStock} className="btn-buy-now">
+            Buy Now
+          </button>
         </div>
       </div>
 
@@ -93,42 +117,35 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           font-weight: 800;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: #7A8EA8;
+          color: #6B7280;
           margin-bottom: 10px;
         }
         .variant-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          display: flex;
+          flex-wrap: wrap;
           gap: 8px;
         }
         .variant-btn {
-          min-height: 48px;
-          border: 1px solid rgba(249,115,22,0.18);
-          border-radius: 8px;
-          background: rgba(11,36,71,0.45);
-          color: #F8F9FB;
-          text-align: left;
-          padding: 9px 11px;
+          min-height: 42px;
+          border: 1.5px solid #E5E1DC;
+          border-radius: 6px;
+          background: #FFFFFF;
+          color: #0B2447;
+          text-align: center;
+          padding: 8px 16px;
           cursor: pointer;
           font-family: 'Syne', sans-serif;
           font-size: 12px;
           font-weight: 700;
         }
-        .variant-btn small {
-          display: block;
-          margin-top: 3px;
-          color: #7A8EA8;
-          font-size: 10px;
-          font-family: 'DM Sans', sans-serif;
-          font-weight: 500;
-        }
         .variant-btn--active {
-          border-color: #F97316;
-          box-shadow: 0 0 0 2px rgba(249,115,22,0.12);
+          border-color: #0B2447;
+          background: #0B2447;
+          color: #FFFFFF;
         }
         .price-box {
-          background: rgba(25,55,109,0.4);
-          border: 1px solid rgba(249,115,22,0.2);
+          background: #FAF8F5;
+          border: 1.5px solid #E5E1DC;
           border-radius: 10px;
           padding: 20px 22px;
         }
@@ -139,16 +156,16 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
         }
         .mrp {
           font-size: 15px;
-          color: #7A8EA8;
+          color: #9CA3AF;
           text-decoration: line-through;
         }
         .save {
           font-size: 12px;
           font-family: 'Syne', sans-serif;
           font-weight: 700;
-          background: rgba(37,211,102,0.15);
-          color: #4ADE80;
-          border: 1px solid rgba(37,211,102,0.25);
+          background: #f0fdf4;
+          color: #16a34a;
+          border: 1px solid #bbf7d0;
           border-radius: 3px;
           padding: 2px 8px;
           letter-spacing: .06em;
@@ -156,13 +173,13 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
         .price {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 2.8rem;
-          color: #F97316;
+          color: #F07316;
           letter-spacing: .03em;
           line-height: 1;
         }
         .unit {
           font-size: 14px;
-          color: #7A8EA8;
+          color: #6B7280;
           font-family: 'Syne', sans-serif;
         }
         .stock {
@@ -173,43 +190,39 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           letter-spacing: .08em;
           text-transform: uppercase;
         }
-        .stock--ok { color: #4ADE80; }
-        .stock--out { color: #F87171; }
+        .stock--ok { color: #16a34a; }
+        .stock--out { color: #dc2626; }
         .saving {
           margin-top: 8px;
           font-size: 12px;
-          color: #4ADE80;
+          color: #16a34a;
         }
         .actions {
           display: flex;
           flex-direction: column;
           gap: 12px;
         }
-        .secondary-actions {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
-        }
-        .secondary-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 13px 0;
+        .qty-row { display: flex; align-items: center; gap: 12px; }
+        .qty-stepper { display: grid; grid-template-columns: 38px 44px 38px; border: 1.5px solid #E5E1DC; border-radius: 6px; overflow: hidden; }
+        .qty-stepper button { border: none; background: #FAF8F5; color: #0B2447; font-size: 16px; font-weight: 700; cursor: pointer; height: 38px; }
+        .qty-stepper span { display: flex; align-items: center; justify-content: center; color: #0B2447; font-family: 'Syne', sans-serif; font-weight: 800; border-left: 1px solid #E5E1DC; border-right: 1px solid #E5E1DC; }
+        .qty-unit { font-size: 13px; color: #6B7280; }
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-add-to-cart, .btn-buy-now {
+          min-height: 46px;
           border-radius: 8px;
-          background: transparent;
-          border: 1px solid rgba(249,115,22,0.3);
-          color: #F97316;
           font-family: 'Syne', sans-serif;
-          font-size: 0.72rem;
+          font-size: 0.78rem;
           font-weight: 700;
-          letter-spacing: .1em;
+          letter-spacing: 0.06em;
           text-transform: uppercase;
-          text-decoration: none;
+          cursor: pointer;
         }
-        .secondary-btn--muted {
-          border-color: rgba(255,255,255,0.1);
-          color: #7A8EA8;
-        }
+        .btn-add-to-cart { background: #FFFFFF; border: 1.5px solid #0B2447; color: #0B2447; }
+        .btn-add-to-cart:hover { background: #F7F4F0; }
+        .btn-buy-now { background: #F07316; border: none; color: #FFFFFF; }
+        .btn-buy-now:hover { background: #D9640F; }
+        .btn-add-to-cart:disabled, .btn-buy-now:disabled { opacity: 0.5; cursor: not-allowed; }
         @media(max-width: 560px) {
           .variant-grid { grid-template-columns: 1fr; }
         }

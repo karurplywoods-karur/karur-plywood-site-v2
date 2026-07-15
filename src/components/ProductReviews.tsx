@@ -50,25 +50,25 @@ export default function ProductReviews({ productName }: { productName: string })
   const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) : 0;
 
   return (
-    <section style={{ background: '#0A1628', borderTop: '1px solid rgba(249,115,22,0.1)', padding: '56px 0' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+    <div>
+      <div>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 36 }}>
           <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 8 }}>
+            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F07316', marginBottom: 8 }}>
               Customer Reviews
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: '2rem', fontWeight: 700, color: '#F8F9FB' }}>
+              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: '2rem', fontWeight: 700, color: '#0B2447' }}>
                 {reviews.length > 0 ? avg.toFixed(1) : '—'}
               </span>
               {reviews.length > 0 && (
-                <span style={{ color: '#F97316', fontSize: '1.1rem', letterSpacing: 2 }}>
+                <span style={{ color: '#F07316', fontSize: '1.1rem', letterSpacing: 2 }}>
                   {'★'.repeat(Math.round(avg))}{'☆'.repeat(5 - Math.round(avg))}
                 </span>
               )}
-              <span style={{ fontSize: 13, color: '#5A6E80' }}>
+              <span style={{ fontSize: 13, color: '#6B7280' }}>
                 {reviews.length > 0 ? `${reviews.length} review${reviews.length > 1 ? 's' : ''}` : 'No reviews yet'}
               </span>
             </div>
@@ -76,7 +76,7 @@ export default function ProductReviews({ productName }: { productName: string })
           {!done && (
             <button
               onClick={() => setShowForm(s => !s)}
-              style={{ padding: '10px 22px', borderRadius: 8, background: showForm ? 'rgba(249,115,22,0.15)' : 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}>
+              style={{ padding: '10px 22px', borderRadius: 8, background: showForm ? '#FFE8D6' : '#FFF4ED', border: '1px solid rgba(240,115,22,0.3)', color: '#F07316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}>
               {showForm ? '✕ Close' : '✏️ Write a Review'}
             </button>
           )}
@@ -84,25 +84,25 @@ export default function ProductReviews({ productName }: { productName: string })
 
         {/* Success message */}
         {done && (
-          <div style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.2)', borderRadius: 10, padding: '16px 20px', marginBottom: 28, color: '#25D366', fontSize: 14 }}>
+          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '16px 20px', marginBottom: 28, color: '#16a34a', fontSize: 14 }}>
             ✅ Thank you for your review! It will appear once approved by our team.
           </div>
         )}
 
         {/* Review form */}
         {showForm && !done && (
-          <div style={{ background: 'rgba(11,36,71,0.5)', border: '1px solid rgba(249,115,22,0.15)', borderRadius: 14, padding: '28px 24px', marginBottom: 36 }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#C8884A', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 20 }}>
+          <div style={{ background: '#FAF8F5', border: '1px solid #E5E1DC', borderRadius: 14, padding: '28px 24px', marginBottom: 36 }}>
+            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 20 }}>
               Your Review for {productName}
             </div>
 
             {/* Star rating */}
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, color: '#7A8EA8', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 8 }}>Rating</div>
+              <div style={{ fontSize: 11, color: '#6B7280', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 8 }}>Rating</div>
               <div style={{ display: 'flex', gap: 6 }}>
                 {[1,2,3,4,5].map(n => (
                   <button key={n} onClick={() => set('rating', n)}
-                    style={{ fontSize: 24, background: 'none', border: 'none', cursor: 'pointer', color: n <= form.rating ? '#F97316' : '#2A3A55', padding: 0, transition: 'color 0.1s' }}>
+                    style={{ fontSize: 24, background: 'none', border: 'none', cursor: 'pointer', color: n <= form.rating ? '#F07316' : '#D1CBC2', padding: 0, transition: 'color 0.1s' }}>
                     ★
                   </button>
                 ))}
@@ -112,14 +112,14 @@ export default function ProductReviews({ productName }: { productName: string })
             {/* Name + Role */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
               <div>
-                <div style={{ fontSize: 11, color: '#7A8EA8', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 6 }}>Your Name *</div>
+                <div style={{ fontSize: 11, color: '#6B7280', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 6 }}>Your Name *</div>
                 <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. Ravi Kumar"
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(249,115,22,0.2)', color: '#F8F9FB', fontSize: 14, boxSizing: 'border-box' as const }} />
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8, background: '#FFFFFF', border: '1px solid #E5E1DC', color: '#0B2447', fontSize: 14, boxSizing: 'border-box' as const }} />
               </div>
               <div>
-                <div style={{ fontSize: 11, color: '#7A8EA8', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 6 }}>You Are</div>
+                <div style={{ fontSize: 11, color: '#6B7280', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 6 }}>You Are</div>
                 <select value={form.role} onChange={e => set('role', e.target.value)}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8, background: '#0d1f3a', border: '1px solid rgba(249,115,22,0.2)', color: '#F8F9FB', fontSize: 14 }}>
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: 8, background: '#FFFFFF', border: '1px solid #E5E1DC', color: '#0B2447', fontSize: 14 }}>
                   <option value="">Select...</option>
                   <option value="Homeowner">Homeowner</option>
                   <option value="Contractor">Contractor</option>
@@ -133,16 +133,16 @@ export default function ProductReviews({ productName }: { productName: string })
 
             {/* Message */}
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 11, color: '#7A8EA8', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 6 }}>Your Review *</div>
+              <div style={{ fontSize: 11, color: '#6B7280', fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 6 }}>Your Review *</div>
               <textarea value={form.message} onChange={e => set('message', e.target.value)}
                 placeholder={`Share your experience with ${productName}...`} rows={4}
-                style={{ width: '100%', padding: '10px 14px', borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(249,115,22,0.2)', color: '#F8F9FB', fontSize: 14, resize: 'vertical', boxSizing: 'border-box' as const }} />
+                style={{ width: '100%', padding: '10px 14px', borderRadius: 8, background: '#FFFFFF', border: '1px solid #E5E1DC', color: '#0B2447', fontSize: 14, resize: 'vertical', boxSizing: 'border-box' as const }} />
             </div>
 
-            {error && <div style={{ color: '#F97316', fontSize: 13, marginBottom: 12 }}>{error}</div>}
+            {error && <div style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
             <button onClick={handleSubmit} disabled={submitting}
-              style={{ padding: '12px 28px', borderRadius: 8, background: submitting ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: 'white', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: submitting ? 'default' : 'pointer' }}>
+              style={{ padding: '12px 28px', borderRadius: 8, background: submitting ? '#D9640F' : '#F07316', color: 'white', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: submitting ? 'default' : 'pointer' }}>
               {submitting ? 'Submitting...' : 'Submit Review'}
             </button>
           </div>
@@ -150,33 +150,33 @@ export default function ProductReviews({ productName }: { productName: string })
 
         {/* Review list */}
         {loading ? (
-          <div style={{ color: '#5A6E80', fontSize: 14, textAlign: 'center', padding: '24px 0' }}>Loading reviews...</div>
+          <div style={{ color: '#6B7280', fontSize: 14, textAlign: 'center', padding: '24px 0' }}>Loading reviews...</div>
         ) : reviews.length === 0 ? (
-          <div style={{ color: '#5A6E80', fontSize: 14, textAlign: 'center', padding: '32px 0', border: '1px dashed rgba(249,115,22,0.1)', borderRadius: 12 }}>
+          <div style={{ color: '#6B7280', fontSize: 14, textAlign: 'center', padding: '32px 0', border: '1px dashed #E5E1DC', borderRadius: 12 }}>
             No reviews yet — be the first to share your experience with this product.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {reviews.map(r => (
-              <div key={r.id} style={{ background: 'rgba(11,36,71,0.4)', border: '1px solid rgba(249,115,22,0.1)', borderRadius: 12, padding: '20px 22px' }}>
+              <div key={r.id} style={{ background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 12, padding: '20px 22px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#fff', flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#F07316,#FF9A45)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#fff', flexShrink: 0 }}>
                       {r.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 600, color: '#F8F9FB', fontSize: 14 }}>{r.name}</div>
-                      {r.role && <div style={{ fontSize: 11, color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{r.role}</div>}
+                      <div style={{ fontWeight: 600, color: '#0B2447', fontSize: 14 }}>{r.name}</div>
+                      {r.role && <div style={{ fontSize: 11, color: '#6B7280', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{r.role}</div>}
                     </div>
                   </div>
-                  <span style={{ color: '#F97316', fontSize: 14, letterSpacing: 2 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                  <span style={{ color: '#F07316', fontSize: 14, letterSpacing: 2 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
                 </div>
-                <p style={{ fontSize: 14, color: '#C8B8A0', lineHeight: 1.7, margin: 0 }}>{r.message}</p>
+                <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.7, margin: 0 }}>{r.message}</p>
               </div>
             ))}
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }

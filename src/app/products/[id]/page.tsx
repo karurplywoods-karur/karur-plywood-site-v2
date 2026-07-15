@@ -1,23 +1,21 @@
 // src/app/products/[id]/page.tsx
-// KEY FIX: This page was blank — now shows full product detail + linked products
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/db';
 import { PRODUCT_SELECT } from '@/lib/products';
-import ProductAddToCart from '@/components/ProductAddToCart';
+import { getProductBadge } from '@/lib/badges';
+import ProductCard from '@/components/ProductCard';
 import ProductPurchasePanel from '@/components/product/ProductPurchasePanel';
+import ProductTabs from '@/components/product/ProductTabs';
 import ProductReviews from '@/components/ProductReviews';
-import ProductImagePlaceholder from '@/components/ProductImagePlaceholder';
 import ProductImageGallery from '@/components/ProductImageGallery';
 import WishlistButton from '@/components/WishlistButton';
 import { CONTACT } from '@/lib/contact';
 
 const SITE_URL = 'https://www.karurplywood.co.in';
-const WA = CONTACT.wa;
 
-// ── Fetch single product ────────────────────────────────────────
 async function getProduct(id: string) {
   const { data, error } = await supabase
     .from('products')
@@ -28,7 +26,6 @@ async function getProduct(id: string) {
   return data;
 }
 
-// ── Fetch related products (same category, exclude current) ────
 async function getRelated(categoryId: string | null, currentId: string) {
   if (!categoryId) return [];
   const { data } = await supabase
@@ -38,7 +35,7 @@ async function getRelated(categoryId: string | null, currentId: string) {
     .eq('in_stock', true)
     .neq('id', currentId)
     .order('sort_order', { ascending: true })
-    .limit(4);
+    .limit(5);
   return data || [];
 }
 
@@ -63,12 +60,13 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
   if (!product) notFound();
 
   const related = await getRelated(product.category_id, product.id);
+  const badge = getProductBadge(product as any);
+  const brandName = (product as any).brands?.name;
 
   const discount = product.mrp && product.price
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : null;
 
-  // Product JSON-LD
   const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -76,7 +74,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
     description: product.description || product.name,
     image: product.image_url ? [product.image_url] : [],
     sku: `KPC-${product.id}`,
-    brand: { '@type': 'Brand', name: (product as any).brands?.name || 'Karur Plywood & Company' },
+    brand: { '@type': 'Brand', name: brandName || 'Karur Plywood & Company' },
     offers: {
       '@type': 'Offer',
       priceCurrency: 'INR',
@@ -86,183 +84,303 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
     },
   };
 
+  // Split description into sentences to use as a feature checklist (best-effort, no fabrication)
+  const descSentences = (product.description || '')
+    .split(/(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 3);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
 
-      <div style={{ background: 'var(--bg-body)', paddingTop: 58 }}>
+      <div style={{ background: '#FAF8F5', paddingTop: 58 }}>
 
         {/* ── BREADCRUMB ── */}
-        <div style={{ background: 'var(--bg-white)', borderBottom: '1px solid var(--border)', padding: '10px 0' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-meta)', flexWrap: 'wrap' }}>
-              <Link href="/" style={{ color: 'var(--text-meta)', textDecoration: 'none' }}>Home</Link>
+        <div style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E1DC', padding: '10px 0' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#9CA3AF', flexWrap: 'wrap' }}>
+              <Link href="/" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Home</Link>
               <span>›</span>
-              <Link href="/products" style={{ color: 'var(--text-meta)', textDecoration: 'none' }}>Products</Link>
+              <Link href="/products" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Products</Link>
               {product.categories && (<><span>›</span>
-                <Link href={`/products?category=${product.categories.slug}`} style={{ color: 'var(--text-meta)', textDecoration: 'none' }}>{product.categories.name}</Link>
+                <Link href={`/products?category=${product.categories.slug}`} style={{ color: '#9CA3AF', textDecoration: 'none' }}>{product.categories.name}</Link>
               </>)}
+              {brandName && (<><span>›</span><span style={{ color: '#9CA3AF' }}>{brandName}</span></>)}
               <span>›</span>
-              <span style={{ color: 'var(--orange)', fontWeight: 600 }}>{product.name}</span>
+              <span style={{ color: '#F07316', fontWeight: 600 }}>{product.name}</span>
             </div>
           </div>
         </div>
 
-        {/* ── MAIN PRODUCT ── */}
-        <section style={{ background: 'var(--bg-white)', borderBottom: '1px solid var(--border)', padding: '40px 0' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'start' }} className="pd-grid">
+        {/* ── MAIN PRODUCT: gallery | info | delivery ── */}
+        <section style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E1DC', padding: '32px 0' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+            <div className="pd-grid">
 
-              {/* LEFT — Gallery */}
-              <div>
+              {/* Gallery */}
+              <div style={{ position: 'relative' }}>
+                {badge && (
+                  <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 3, background: 'rgba(11,36,71,0.92)', color: '#FFFFFF', fontFamily: "'Syne',sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 3 }}>
+                    {badge.emoji} {badge.label}
+                  </div>
+                )}
                 <ProductImageGallery
                   images={[product.image_url, ...((product as any).image_urls || [])].filter(Boolean)}
                   productName={product.name}
                   categoryName={product.categories?.name}
                   categoryIcon={product.categories?.icon}
-                  brandName={(product as any).brands?.name}
+                  brandName={brandName}
                 />
-                <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-                  {product.in_stock !== false
-                    ? <span style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: 'var(--f-ui)', letterSpacing: '.08em' }}>✓ In Stock</span>
-                    : <span style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: 'var(--f-ui)', letterSpacing: '.08em' }}>Out of Stock</span>}
-                  {discount && discount > 0 && <span style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: 'var(--orange)', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: 'var(--f-ui)' }}>{discount}% OFF</span>}
-                  {product.categories && (
-                    <Link href={`/products?category=${product.categories.slug}`} style={{ background: 'var(--orange-light)', border: '1px solid rgba(249,115,22,0.2)', color: 'var(--orange)', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: 'var(--f-ui)', textDecoration: 'none' }}>
-                      {product.categories.icon} {product.categories.name}
-                    </Link>
-                  )}
-                </div>
               </div>
 
-              {/* RIGHT — Details */}
+              {/* Info */}
               <div>
-                <h1 style={{ fontFamily: 'var(--f-ui)', fontSize: 'clamp(1.5rem,3vw,2rem)', fontWeight: 800, color: 'var(--text-h)', lineHeight: 1.2, marginBottom: 16 }}>{product.name}</h1>
-
-                {/* Price */}
-                <div style={{ background: 'var(--bg-cream)', border: '1.5px solid var(--border)', borderRadius: 'var(--r-md)', padding: '18px 20px', marginBottom: 24 }}>
-                  {product.mrp && product.mrp > (product.price || 0) && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-meta)', textDecoration: 'line-through' }}>₹{product.mrp.toLocaleString('en-IN')}</span>
-                      {discount && <span style={{ fontSize: 11, fontFamily: 'var(--f-ui)', fontWeight: 700, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 3, padding: '1px 8px' }}>Save {discount}%</span>}
-                    </div>
-                  )}
-                  {product.price ? (
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                      <span style={{ fontFamily: 'var(--f-display)', fontSize: '2.8rem', color: 'var(--orange)', letterSpacing: '.03em', lineHeight: 1 }}>₹{product.price.toLocaleString('en-IN')}</span>
-                      {product.unit && <span style={{ fontSize: 14, color: 'var(--text-meta)' }}>/ {product.unit}</span>}
-                    </div>
-                  ) : <div style={{ fontFamily: 'var(--f-ui)', fontWeight: 700, color: 'var(--orange)', fontSize: '1.2rem' }}>Contact for price</div>}
-                  {product.mrp && product.price && product.mrp > product.price && (
-                    <div style={{ fontSize: 12, color: '#16a34a', fontWeight: 600, marginTop: 6 }}>You save ₹{(product.mrp - product.price).toLocaleString('en-IN')}</div>
-                  )}
-                </div>
-
-                {/* Description */}
-                {product.description && (
-                  <div style={{ marginBottom: 24 }}>
-                    <div style={{ fontSize: 11, fontFamily: 'var(--f-ui)', fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-meta)', marginBottom: 8 }}>About this product</div>
-                    <p style={{ fontSize: 14, color: 'var(--text-body)', lineHeight: 1.85 }}>{product.description}</p>
-                  </div>
+                <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.3rem,2.4vw,1.7rem)', fontWeight: 700, color: '#0B2447', lineHeight: 1.25, marginBottom: 6 }}>
+                  {product.name}
+                </h1>
+                {brandName && (
+                  <Link href={`/products?brand=${(product as any).brands?.slug || ''}`} style={{ fontFamily: "'Syne',sans-serif", fontSize: 13, fontWeight: 700, color: '#F07316', textDecoration: 'none' }}>
+                    {brandName}
+                  </Link>
                 )}
 
-                {/* Quick facts */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 24 }}>
-                  {[
-                    { label: 'Category', value: product.categories?.name || 'General' },
-                    { label: 'Availability', value: product.in_stock ? '✓ In Stock' : 'Out of Stock' },
-                    { label: 'Supply Type', value: product.type === 'quick' ? '⚡ Quick' : '🏠 Project' },
-                    { label: 'Location', value: 'Karur, TN' },
-                  ].map(f => (
-                    <div key={f.label} style={{ background: 'var(--bg-white)', border: '1px solid var(--border)', borderRadius: 'var(--r)', padding: '10px 14px' }}>
-                      <div style={{ fontSize: 10, fontFamily: 'var(--f-ui)', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--text-meta)', marginBottom: 3 }}>{f.label}</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-h)', fontWeight: 600 }}>{f.value}</div>
-                    </div>
-                  ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, marginBottom: 18 }}>
+                  {product.in_stock !== false
+                    ? <span style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif", letterSpacing: '.06em' }}>✓ In Stock</span>
+                    : <span style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif", letterSpacing: '.06em' }}>Out of Stock</span>}
+                  {discount && discount > 0 && <span style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: '#F07316', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif" }}>{discount}% OFF</span>}
                 </div>
 
-                <ProductPurchasePanel product={product} />
+                {descSentences.length > 0 && (
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {descSentences.slice(0, 5).map((s, i) => (
+                      <li key={i} style={{ display: 'flex', gap: 8, fontSize: 13.5, color: '#4B5563', lineHeight: 1.5 }}>
+                        <span style={{ color: '#F07316', flexShrink: 0 }}>◈</span>{s}
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
-                {/* Wishlist + Share */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
+                <ProductPurchasePanel product={product as any} />
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4, paddingTop: 16, borderTop: '1px solid #E5E1DC', flexWrap: 'wrap' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <WishlistButton product={product} size="md" />
-                    <span style={{ fontSize: 13, color: 'var(--text-meta)' }}>Save to Wishlist</span>
+                    <WishlistButton product={product as any} size="md" />
+                    <span style={{ fontSize: 13, color: '#6B7280' }}>Save to Wishlist</span>
                   </div>
                   <a href={`https://wa.me/?text=${encodeURIComponent(`Check this: ${product.name}${product.price ? ` at ₹${product.price.toLocaleString('en-IN')}` : ''} — ${CONTACT.siteUrl}/products/${product.id}`)}`}
                     target="_blank" rel="noopener"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 'var(--r)', background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', fontFamily: 'var(--f-ui)', fontWeight: 700, fontSize: 12, textDecoration: 'none' }}>
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, textDecoration: 'none' }}>
                     💬 Share
                   </a>
                 </div>
-
-                {/* Trust strip */}
-                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
-                  {['✅ ISI Certified', '🚚 Fast Delivery', '🏪 Showroom', '📄 GST Invoice'].map(t => (
-                    <span key={t} style={{ fontSize: 11, color: 'var(--text-meta)', fontFamily: 'var(--f-ui)', fontWeight: 600 }}>{t}</span>
-                  ))}
-                </div>
               </div>
+
+              {/* Delivery sidebar */}
+              <aside className="pd-delivery">
+                <div className="pd-delivery-block">
+                  <div className="pd-delivery-title">📦 Delivery</div>
+                  <div style={{ fontSize: 11, color: '#6B7280', marginBottom: 8 }}>Check delivery time</div>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <input placeholder="Enter Pincode" className="pd-pincode-input" />
+                    <button className="pd-pincode-btn">Check</button>
+                  </div>
+                </div>
+                {[
+                  { i: '🚚', t: 'Free Delivery', d: 'On orders above ₹10,000' },
+                  { i: '🔒', t: 'Secure Payments', d: '100% safe & secure' },
+                  { i: '↺', t: 'Easy Returns', d: '7 days easy returns' },
+                  { i: '📄', t: 'GST Invoice', d: 'Billing with GST' },
+                ].map(f => (
+                  <div key={f.t} className="pd-delivery-block pd-delivery-row">
+                    <span className="pd-delivery-icon">{f.i}</span>
+                    <div>
+                      <div className="pd-delivery-t">{f.t}</div>
+                      <div className="pd-delivery-d">{f.d}</div>
+                    </div>
+                  </div>
+                ))}
+              </aside>
             </div>
           </div>
         </section>
 
-        {/* ── RELATED ── */}
-        {related.length > 0 && (
-          <section style={{ padding: '48px 0', background: 'var(--bg-cream)', borderTop: '1px solid var(--border)' }}>
-            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
-              <div className="eyebrow">More from this Category</div>
-              <h2 style={{ fontFamily: 'var(--f-display)', fontSize: 'clamp(1.8rem,3vw,2.4rem)', letterSpacing: '.04em', color: 'var(--text-h)', marginBottom: 28 }}>YOU MAY ALSO NEED</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }} className="pd-related-grid">
-                {related.map((rp: any) => {
-                  const rDiscount = rp.mrp && rp.price ? Math.round(((rp.mrp - rp.price) / rp.mrp) * 100) : null;
-                  return (
-                    <div key={rp.id} className="pc-card">
-                      <Link href={`/products/${rp.id}`} style={{ display:'block', textDecoration:'none', position:'relative', height:160, overflow:'hidden', background:'var(--bg-cream)', flexShrink:0 }}>
-                        {rp.image_url
-                          ? <Image src={rp.image_url} alt={rp.name} fill style={{ objectFit:'cover' }} sizes="25vw" />
-                          : <ProductImagePlaceholder name={rp.name} categoryName={rp.categories?.name} categoryIcon={rp.categories?.icon} brandName={rp.brands?.name} size="card" />}
-                        {rDiscount && rDiscount > 0 && <div style={{ position:'absolute', top:8, left:8, background:'#16a34a', color:'#fff', borderRadius:3, padding:'2px 7px', fontSize:10, fontWeight:700 }}>{rDiscount}% OFF</div>}
-                      </Link>
-                      <div style={{ padding:'12px 14px' }}>
-                        <Link href={`/products/${rp.id}`} style={{ textDecoration:'none', fontFamily:'var(--f-ui)', fontWeight:700, fontSize:'.84rem', color:'var(--text-h)', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' as const, overflow:'hidden', marginBottom:6, lineHeight:1.3 }}>{rp.name}</Link>
-                        {rp.price
-                          ? <div style={{ fontFamily:'var(--f-display)', fontSize:'1.3rem', color:'var(--orange)', letterSpacing:'.03em', marginBottom:8 }}>₹{rp.price.toLocaleString('en-IN')}{rp.unit && <span style={{ fontSize:11, color:'var(--text-meta)', fontFamily:'var(--f-body)', fontWeight:400, marginLeft:4 }}>{rp.unit}</span>}</div>
-                          : <div style={{ fontSize:12, color:'var(--orange)', fontWeight:700, marginBottom:8 }}>Ask for price</div>}
-                        <ProductAddToCart product={rp} layout="compact" />
+        {/* ── FEATURE STRIP ── */}
+        <div className="pd-feature-strip">
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }} className="pd-pad pd-feature-inner">
+            {[
+              { i: '🛡️', t: '100% Original Products', d: 'Sourced from trusted brands' },
+              { i: '✓', t: 'Best Price Guarantee', d: 'Get the best price always' },
+              { i: '🚚', t: 'Fast Delivery Across India', d: 'Quick & reliable delivery' },
+              { i: '🎧', t: 'Expert Support', d: 'We are here to help' },
+            ].map(f => (
+              <div key={f.t} className="pd-feature-item">
+                <span className="pd-feature-icon">{f.i}</span>
+                <div>
+                  <div className="pd-feature-t">{f.t}</div>
+                  <div className="pd-feature-d">{f.d}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── TABS ── */}
+        <section style={{ padding: '40px 0', background: '#FAF8F5' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+            <ProductTabs
+              tabs={[
+                {
+                  key: 'description', label: 'Description', content: (
+                    <div className="pd-desc-grid">
+                      <div>
+                        <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 14 }}>Product Description</h3>
+                        <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.85, marginBottom: 26 }}>
+                          {product.description || `${product.name} is available at Karur Plywood & Company. Contact us for detailed specifications and bulk pricing.`}
+                        </p>
+
+                        {descSentences.length > 0 && (
+                          <>
+                            <h4 style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.95rem', fontWeight: 700, color: '#0B2447', marginBottom: 12 }}>Features</h4>
+                            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 26px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                              {descSentences.slice(0, 6).map((s, i) => (
+                                <li key={i} style={{ display: 'flex', gap: 8, fontSize: 13.5, color: '#374151' }}>
+                                  <span style={{ color: '#16a34a' }}>✓</span>{s}
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+
+                        <h4 style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.95rem', fontWeight: 700, color: '#0B2447', marginBottom: 14 }}>Ideal For</h4>
+                        <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap' }}>
+                          {['🍽️ Kitchen', '🛁 Bathroom', '🪑 Furniture', '🏠 Interior Work', '🏢 Commercial'].map(item => {
+                            const [icon, ...rest] = item.split(' ');
+                            return (
+                              <div key={item} style={{ textAlign: 'center', width: 72 }}>
+                                <div style={{ fontSize: 22, marginBottom: 6 }}>{icon}</div>
+                                <div style={{ fontSize: 11, color: '#6B7280', fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>{rest.join(' ')}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div className="pd-desc-img">
+                        <Image src="/images/about-showroom.jpg" alt={product.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:900px) 0px, 40vw" />
                       </div>
                     </div>
-                  );
-                })}
+                  ),
+                },
+                {
+                  key: 'specifications', label: 'Specifications', content: (
+                    <div style={{ maxWidth: 640 }}>
+                      {[
+                        ['Category', product.categories?.name || '—'],
+                        ['Brand', brandName || '—'],
+                        ['Unit', product.unit || '—'],
+                        ['Supply Type', product.type === 'quick' ? 'Quick' : 'Project'],
+                        ['Availability', product.in_stock ? 'In Stock' : 'Out of Stock'],
+                      ].map(([k, v]) => (
+                        <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #E5E1DC', fontSize: 13.5 }}>
+                          <span style={{ color: '#6B7280' }}>{k}</span>
+                          <span style={{ color: '#0B2447', fontWeight: 600 }}>{v}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ),
+                },
+                {
+                  key: 'applications', label: 'Applications', content: (
+                    <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.85, maxWidth: 640 }}>
+                      Commonly used across residential and commercial interior work — kitchens, wardrobes, furniture and general carpentry.
+                      Speak to our team on WhatsApp for guidance on the right product for your specific project.
+                    </p>
+                  ),
+                },
+                {
+                  key: 'reviews', label: 'Reviews', content: <ProductReviews productName={product.name} />,
+                },
+                {
+                  key: 'faq', label: 'FAQ', content: (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 640 }}>
+                      {[
+                        ['Do you offer delivery for this product?', 'Yes, we deliver across Karur and nearby areas. Free delivery on orders above ₹10,000.'],
+                        ['Can I get a bulk quote?', 'Yes — WhatsApp us or click Buy Now for a wholesale/contractor quote on bulk orders.'],
+                        ['Is GST invoice available?', 'Yes, GST invoices are provided for all orders on request.'],
+                      ].map(([q, a]) => (
+                        <details key={q} style={{ background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, padding: '12px 16px' }}>
+                          <summary style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13.5, color: '#0B2447', cursor: 'pointer' }}>{q}</summary>
+                          <p style={{ fontSize: 13, color: '#6B7280', marginTop: 8, lineHeight: 1.6 }}>{a}</p>
+                        </details>
+                      ))}
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </section>
+
+        {/* ── YOU MAY ALSO LIKE ── */}
+        {related.length > 0 && (
+          <section style={{ padding: '40px 0', background: '#FFFFFF', borderTop: '1px solid #E5E1DC' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
+              <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.2rem', fontWeight: 700, color: '#0B2447', marginBottom: 20 }}>You May Also Like</h2>
+              <div className="pd-related-grid">
+                {related.map((rp: any) => <ProductCard key={rp.id} product={rp} />)}
               </div>
-              {product.categories && (
-                <div style={{ textAlign:'center', marginTop:28 }}>
-                  <Link href={`/products?category=${product.categories.slug}`} className="btn-s">View All {product.categories.name} →</Link>
-                </div>
-              )}
             </div>
           </section>
         )}
 
-        <ProductReviews productName={product.name} />
-
-        {/* ── BULK CTA ── */}
-        <section style={{ padding:'48px 0', background:'var(--navy)', borderTop:'3px solid var(--orange)' }}>
-          <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 48px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:24, flexWrap:'wrap' }} className="pd-pad">
+        {/* ── CTA BANNER ── */}
+        <section style={{ padding: '32px 0', background: '#0B2447' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }} className="pd-pad">
             <div>
-              <div style={{ fontFamily:'var(--f-display)', fontSize:'clamp(1.5rem,3vw,2rem)', color:'#fff', letterSpacing:'.04em', marginBottom:8 }}>NEED BULK PRICING?</div>
-              <p style={{ fontSize:13, color:'var(--text-muted-d)', fontWeight:300 }}>Contractors and builders get special wholesale rates. GST invoice included.</p>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#FF9A45', marginBottom: 6 }}>Have a project in mind?</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.1rem,2vw,1.4rem)', fontWeight: 700, color: '#FFFFFF' }}>Upload your BOM and get the best quote in minutes.</div>
             </div>
-            <a href={`https://wa.me/${WA}?text=Hi%2C+I+need+bulk+pricing+for+${encodeURIComponent(product.name)}.`} target="_blank" rel="noopener" className="btn-wa">💬 Get Bulk Quote</a>
+            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
+              {['Best Prices Guaranteed', 'Accurate Estimation', 'Quick Response', 'Save Time & Money'].map(t => (
+                <span key={t} style={{ fontSize: 12, color: '#C7D2E0', fontFamily: "'Syne',sans-serif", fontWeight: 600, whiteSpace: 'nowrap' }}>◈ {t}</span>
+              ))}
+              <Link href="/bom-quote" style={{ display: 'inline-flex', alignItems: 'center', padding: '12px 24px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.06em', textTransform: 'uppercase', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                📤 Upload BOM Now
+              </Link>
+            </div>
           </div>
         </section>
       </div>
 
       <style>{`
         .pd-pad { padding-left:48px; padding-right:48px; }
-        @media(max-width:1024px){ .pd-grid { grid-template-columns:1fr !important; } .pd-related-grid { grid-template-columns:repeat(2,1fr) !important; } }
-        @media(max-width:640px){ .pd-pad { padding-left:16px !important; padding-right:16px !important; } }
-        @media(max-width:400px){ .pd-related-grid { grid-template-columns:1fr !important; } }
+        .pd-grid { display: grid; grid-template-columns: 1fr 1fr 260px; gap: 40px; align-items: start; }
+        .pd-delivery-block { background: #FAF8F5; border: 1px solid #E5E1DC; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+        .pd-delivery-title { font-family: 'Syne',sans-serif; font-size: 0.78rem; font-weight: 700; color: #0B2447; margin-bottom: 8px; }
+        .pd-pincode-input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 12px; background: #FFFFFF; }
+        .pd-pincode-btn { padding: 8px 14px; background: #0B2447; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .pd-delivery-row { display: flex; gap: 12px; align-items: flex-start; }
+        .pd-delivery-icon { font-size: 20px; flex-shrink: 0; }
+        .pd-delivery-t { font-family: 'Syne',sans-serif; font-size: 0.76rem; font-weight: 700; color: #0B2447; margin-bottom: 2px; }
+        .pd-delivery-d { font-size: 0.68rem; color: #6B7280; }
+
+        .pd-feature-strip { background: #FAF8F5; border-top: 1px solid #E5E1DC; border-bottom: 1px solid #E5E1DC; padding: 22px 0; }
+        .pd-feature-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .pd-feature-item { display: flex; align-items: center; gap: 12px; }
+        .pd-feature-icon { font-size: 22px; flex-shrink: 0; }
+        .pd-feature-t { font-family: 'Syne',sans-serif; font-size: 0.76rem; font-weight: 700; color: #0B2447; }
+        .pd-feature-d { font-size: 0.66rem; color: #6B7280; margin-top: 2px; }
+
+        .pd-desc-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start; }
+        .pd-desc-img { position: relative; aspect-ratio: 4/3.2; border-radius: 12px; overflow: hidden; background: #F2EDE5; }
+
+        .pd-related-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+
+        @media(max-width:1150px){ .pd-grid { grid-template-columns: 1fr 1fr !important; } .pd-delivery { grid-column: span 2; display: flex !important; gap: 12px; flex-wrap: wrap; } .pd-delivery-block { flex: 1; min-width: 180px; } }
+        @media(max-width:900px){ .pd-desc-grid { grid-template-columns: 1fr !important; } .pd-desc-img { display: none; } .pd-related-grid { grid-template-columns: repeat(3,1fr) !important; } .pd-feature-inner { grid-template-columns: repeat(2,1fr) !important; } }
+        @media(max-width:768px){ .pd-grid { grid-template-columns: 1fr !important; } .pd-delivery { display: grid !important; grid-template-columns: 1fr 1fr !important; } }
+        @media(max-width:640px){ .pd-pad { padding-left:16px !important; padding-right:16px !important; } .pd-related-grid { grid-template-columns: repeat(2,1fr) !important; } }
       `}</style>
     </>
   );

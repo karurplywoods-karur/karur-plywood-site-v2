@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/auth-client';
 import { useCart } from '@/lib/CartContext';
 import { trackPurchase } from '@/lib/analytics';
+import { CONTACT } from '@/lib/contact';
 
 interface Address {
   id: string; label: string; full_name: string; phone: string;
@@ -14,7 +15,12 @@ interface Address {
   longitude: number | null; is_default: boolean;
 }
 
-const STEPS = ['Delivery', 'Payment', 'Review'];
+const STEPS = ['Shipping Address', 'Shipping Method', 'Payment', 'Review & Place Order'];
+const SHIPPING_METHODS = [
+  { key: 'standard', label: 'Standard Delivery', sub: '3-5 Business Days', cost: 0, icon: '🚚' },
+  { key: 'express',  label: 'Express Delivery',  sub: '1-2 Business Days', cost: 299, icon: '⚡' },
+  { key: 'pickup',   label: 'Store Pickup',      sub: 'Same Day',          cost: 0, icon: '🏬' },
+] as const;
 
 const STATUS_LABEL: Record<string, { color: string; label: string }> = {
   pending:    { color: '#F97316', label: 'Pending' },
@@ -40,6 +46,10 @@ function cartItemVariantLabel(item: any) {
     .join(' / ') || item.variant.sku || '';
 }
 
+const PAY_DISPLAY_TO_METHOD: Record<string, 'cod' | 'razorpay'> = {
+  upi: 'razorpay', card: 'razorpay', netbanking: 'razorpay', cod: 'cod',
+};
+
 export default function CheckoutPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -64,6 +74,8 @@ export default function CheckoutPage() {
     longitude: null as number | null,
   });
   const [payment,    setPayment]    = useState<'cod' | 'razorpay'>('cod');
+  const [payDisplay, setPayDisplay] = useState<'upi' | 'card' | 'netbanking' | 'cod'>('upi');
+  const [shippingMethod, setShippingMethod] = useState<'standard' | 'express' | 'pickup'>('standard');
   const [notes,      setNotes]      = useState('');
   const [loading,    setLoading]    = useState(false);
   const [error,      setError]      = useState('');
@@ -158,7 +170,7 @@ export default function CheckoutPage() {
         setError('Please select a delivery address.'); return;
       }
     }
-    if (step < 2) setStep(s => s + 1);
+    if (step < 3) setStep(s => s + 1);
     else await handlePlaceOrder();
   };
 
@@ -179,6 +191,9 @@ export default function CheckoutPage() {
   };
 
   const removeCoupon = () => { setCouponResult(null); setCouponCode(''); setCouponError(''); };
+
+  const shippingCost = SHIPPING_METHODS.find(m => m.key === shippingMethod)?.cost || 0;
+  const grandTotal = (couponResult ? total - couponResult.discount_amount : total) + shippingCost;
 
   const handlePlaceOrder = async () => {
     setLoading(true); setError('');
@@ -201,7 +216,7 @@ export default function CheckoutPage() {
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address: addr, items: orderItems, payment_method: payment, notes, coupon_code: couponResult?.coupon_code || null }),
+      body: JSON.stringify({ address: addr, items: orderItems, payment_method: payment, shipping_method: shippingMethod, shipping_cost: shippingCost, notes, coupon_code: couponResult?.coupon_code || null }),
     });
 
     const data = await res.json();
@@ -216,7 +231,7 @@ export default function CheckoutPage() {
     // payment_method (COD orders are still real, confirmed orders).
     trackPurchase({
       order_number: data.order_number,
-      value: couponResult ? total - couponResult.discount_amount : total,
+      value: grandTotal,
       payment_method: payment,
       items: items.map((i) => ({
         product_id: i.product.id,
@@ -261,7 +276,7 @@ export default function CheckoutPage() {
       <div className="checkout-empty">
         <div style={{ fontSize: 52, marginBottom: 16 }}>🛒</div>
         <h2 className="co-section-title">Your cart is empty</h2>
-        <p style={{ color: '#7A8EA8', marginBottom: 24 }}>Add some products before checking out.</p>
+        <p style={{ color: '#6B7280', marginBottom: 24 }}>Add some products before checking out.</p>
         <Link href="/products" className="co-btn-primary">Browse Products</Link>
       </div>
       <CheckoutStyles />
@@ -400,27 +415,50 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* STEP 1 — PAYMENT */}
+            {/* STEP 1 — SHIPPING METHOD */}
             {step === 1 && (
+              <div className="co-section">
+                <div className="co-section-title">Shipping Method</div>
+                <div className="payment-options">
+                  {SHIPPING_METHODS.map(m => (
+                    <div key={m.key} onClick={() => setShippingMethod(m.key)}
+                      className={`payment-card${shippingMethod === m.key ? ' payment-card--selected' : ''}`}>
+                      <div className="payment-radio"><div className={`addr-radio-dot${shippingMethod === m.key ? ' active' : ''}`} /></div>
+                      <div className="payment-icon">{m.icon}</div>
+                      <div style={{ flex: 1 }}>
+                        <div className="payment-name">{m.label}</div>
+                        <div className="payment-sub">{m.sub}{m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : m.key === 'pickup' ? ' · Collect from our Karur store' : ' · Faster delivery to your location'}</div>
+                      </div>
+                      <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: m.cost ? '#0B2447' : '#16a34a' }}>
+                        {m.cost ? `₹${m.cost}` : 'FREE'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2 — PAYMENT */}
+            {step === 2 && (
               <div className="co-section">
                 <div className="co-section-title">Payment Method</div>
                 <div className="payment-options">
-                  <div onClick={() => setPayment('cod')} className={`payment-card${payment === 'cod' ? ' payment-card--selected' : ''}`}>
-                    <div className="payment-radio"><div className={`addr-radio-dot${payment === 'cod' ? ' active' : ''}`} /></div>
-                    <div className="payment-icon">💵</div>
-                    <div>
-                      <div className="payment-name">Cash on Delivery</div>
-                      <div className="payment-sub">Pay when your order arrives. No upfront payment needed.</div>
+                  {[
+                    { key: 'upi', icon: '📱', name: 'UPI / QR Code', sub: 'Pay instantly using any UPI app' },
+                    { key: 'card', icon: '💳', name: 'Credit / Debit Card', sub: 'Visa, Mastercard, RuPay accepted' },
+                    { key: 'netbanking', icon: '🏦', name: 'Net Banking', sub: 'All major banks supported' },
+                    { key: 'cod', icon: '💵', name: 'Cash on Delivery (COD)', sub: 'Available for orders below ₹50,000' },
+                  ].map(opt => (
+                    <div key={opt.key} onClick={() => { setPayDisplay(opt.key as any); setPayment(PAY_DISPLAY_TO_METHOD[opt.key]); }}
+                      className={`payment-card${payDisplay === opt.key ? ' payment-card--selected' : ''}`}>
+                      <div className="payment-radio"><div className={`addr-radio-dot${payDisplay === opt.key ? ' active' : ''}`} /></div>
+                      <div className="payment-icon">{opt.icon}</div>
+                      <div>
+                        <div className="payment-name">{opt.name}</div>
+                        <div className="payment-sub">{opt.sub}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div onClick={() => setPayment('razorpay')} className={`payment-card${payment === 'razorpay' ? ' payment-card--selected' : ''}`}>
-                    <div className="payment-radio"><div className={`addr-radio-dot${payment === 'razorpay' ? ' active' : ''}`} /></div>
-                    <div className="payment-icon">💳</div>
-                    <div>
-                      <div className="payment-name">Pay Online</div>
-                      <div className="payment-sub">UPI, Cards, Net Banking via Razorpay. Secure & instant.</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 <div className="co-field" style={{ marginTop: 20 }}>
                   <label className="co-label">Order Notes (optional)</label>
@@ -431,8 +469,8 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* STEP 2 — REVIEW */}
-            {step === 2 && (
+            {/* STEP 3 — REVIEW */}
+            {step === 3 && (
               <div className="co-section">
                 <div className="co-section-title">Review Your Order</div>
 
@@ -453,13 +491,22 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
+                {/* Shipping method summary */}
+                <div className="review-block">
+                  <div className="review-block-label">Shipping Method</div>
+                  <div className="review-payment">
+                    {SHIPPING_METHODS.find(m => m.key === shippingMethod)?.icon} {SHIPPING_METHODS.find(m => m.key === shippingMethod)?.label}
+                  </div>
+                  <button onClick={() => setStep(1)} className="review-edit-btn">Edit</button>
+                </div>
+
                 {/* Payment summary */}
                 <div className="review-block">
                   <div className="review-block-label">Payment</div>
                   <div className="review-payment">
-                    {payment === 'cod' ? '💵 Cash on Delivery' : '💳 Online Payment (Razorpay)'}
+                    {payDisplay === 'cod' ? '💵 Cash on Delivery' : payDisplay === 'upi' ? '📱 UPI / QR Code' : payDisplay === 'card' ? '💳 Credit / Debit Card' : '🏦 Net Banking'}
                   </div>
-                  <button onClick={() => setStep(1)} className="review-edit-btn">Edit</button>
+                  <button onClick={() => setStep(2)} className="review-edit-btn">Edit</button>
                 </div>
 
                 {/* Items */}
@@ -482,7 +529,7 @@ export default function CheckoutPage() {
                 {notes && (
                   <div className="review-block">
                     <div className="review-block-label">Your Notes</div>
-                    <div style={{ fontSize: 13, color: '#7A8EA8', fontStyle: 'italic' }}>{notes}</div>
+                    <div style={{ fontSize: 13, color: '#6B7280', fontStyle: 'italic' }}>{notes}</div>
                   </div>
                 )}
               </div>
@@ -497,7 +544,9 @@ export default function CheckoutPage() {
               )}
               <button onClick={handleNext} disabled={loading} className="co-btn-primary">
                 {loading ? '⏳ Placing order...' :
-                  step < 2 ? 'Continue →' : '✓ Place Order'}
+                  step === 0 ? 'Continue to Shipping →' :
+                  step === 1 ? 'Continue to Payment →' :
+                  step === 2 ? 'Continue to Review →' : '✓ Place Order'}
               </button>
             </div>
           </div>
@@ -536,10 +585,10 @@ export default function CheckoutPage() {
                       onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponError(''); }}
                       onKeyDown={e => e.key === 'Enter' && applyCoupon()}
                       placeholder="Promo code"
-                      style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#F0E8DC', fontFamily: 'Outfit,sans-serif', outline: 'none' }}
+                      style={{ flex: 1, background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0B2447', fontFamily: 'DM Sans,sans-serif', outline: 'none' }}
                     />
                     <button onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
-                      style={{ padding: '8px 16px', borderRadius: 8, background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.3)', color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                      style={{ padding: '8px 16px', borderRadius: 8, background: '#FFF4ED', border: '1px solid rgba(240,115,22,0.3)', color: '#F07316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
                       {couponLoading ? '…' : 'Apply'}
                     </button>
                   </div>
@@ -549,9 +598,9 @@ export default function CheckoutPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '8px 12px', margin: '8px 0' }}>
                   <div>
                     <div style={{ fontSize: 12, color: '#4ADE80', fontWeight: 700 }}>🎉 {couponResult.coupon_code} applied!</div>
-                    <div style={{ fontSize: 11, color: '#7A8EA8' }}>{couponResult.description}</div>
+                    <div style={{ fontSize: 11, color: '#6B7280' }}>{couponResult.description}</div>
                   </div>
-                  <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 16 }}>✕</button>
+                  <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', fontSize: 16 }}>✕</button>
                 </div>
               )}
 
@@ -563,16 +612,30 @@ export default function CheckoutPage() {
               )}
 
               <div className="co-summary-row">
-                <span>Delivery</span>
-                <span style={{ color: '#4ADE80' }}>To be confirmed</span>
+                <span>Shipping ({SHIPPING_METHODS.find(m => m.key === shippingMethod)?.label})</span>
+                <span style={{ color: shippingCost ? '#0B2447' : '#16a34a' }}>{shippingCost ? `₹${shippingCost}` : 'Free'}</span>
+              </div>
+              <div className="co-summary-row">
+                <span>GST (18%)</span>
+                <span style={{ color: '#6B7280' }}>Included</span>
               </div>
               <div className="co-summary-total">
                 <span>Total</span>
-                <span>₹{(couponResult ? total - couponResult.discount_amount : total).toLocaleString('en-IN')}</span>
+                <span>₹{grandTotal.toLocaleString('en-IN')}</span>
               </div>
             </div>
             <div className="co-summary-note">
               🔒 Secure checkout · Delivery confirmed by our team
+            </div>
+
+            <div className="co-help-card">
+              <div>
+                <div className="co-help-title">Need help with your order?</div>
+                <div className="co-help-sub">Our team is here to assist you</div>
+                <a href={`tel:${CONTACT.phoneRaw}`} className="co-help-link">📞 {CONTACT.phone}</a>
+                <a href={`mailto:${CONTACT.email}`} className="co-help-link">✉️ {CONTACT.email}</a>
+              </div>
+              <div className="co-help-avatar">K</div>
             </div>
           </div>
         </div>
@@ -584,111 +647,117 @@ export default function CheckoutPage() {
 
 function CheckoutStyles() {
   return <style>{`
-    .checkout-page { min-height:100vh; background:#070F1F; padding: 80px 0 60px; }
+    .checkout-page { min-height:100vh; background:#F7F4F0; padding: 80px 0 60px; }
     .checkout-inner { max-width:1100px; margin:0 auto; padding:32px 48px; }
-    .checkout-success { max-width:500px; margin:80px auto; text-align:center; background:rgba(25,55,109,0.3); border:1px solid rgba(249,115,22,0.2); border-radius:14px; padding:48px 36px; }
+    .checkout-success { max-width:500px; margin:80px auto; text-align:center; background:#FFFFFF; border:1px solid #E5E1DC; border-radius:14px; padding:48px 36px; box-shadow:0 4px 20px rgba(11,36,71,0.06); }
     .checkout-empty { max-width:400px; margin:100px auto; text-align:center; }
     .success-icon { font-size:56px; margin-bottom:16px; }
-    .success-title { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.05em; color:#F8F9FB; margin-bottom:8px; }
-    .success-order-num { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:#F97316; margin-bottom:14px; }
-    .success-msg { font-size:14px; color:#7A8EA8; line-height:1.7; margin-bottom:28px; }
+    .success-title { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.05em; color:#0B2447; margin-bottom:8px; }
+    .success-order-num { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:#F07316; margin-bottom:14px; }
+    .success-msg { font-size:14px; color:#6B7280; line-height:1.7; margin-bottom:28px; }
     .success-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
-    .success-btn-primary { padding:12px 24px; background:#F97316; color:#0B2447; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
-    .success-btn-secondary { padding:12px 24px; border:1px solid rgba(249,115,22,0.3); color:#F97316; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
-    .success-wa-note { font-size:12px; color:#7A8EA8; background:rgba(37,211,102,0.08); border:1px solid rgba(37,211,102,0.15); border-radius:6px; padding:10px 14px; }
+    .success-btn-primary { padding:12px 24px; background:#F07316; color:#FFFFFF; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
+    .success-btn-secondary { padding:12px 24px; border:1px solid rgba(240,115,22,0.35); color:#F07316; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
+    .success-wa-note { font-size:12px; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; }
 
     .co-steps { display:flex; align-items:center; justify-content:center; margin-bottom:36px; gap:0; }
     .co-step { display:flex; align-items:center; gap:8px; }
-    .co-step-num { width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:11px; font-weight:700; color:#7A8EA8; }
-    .co-step--active .co-step-num { background:#F97316; border-color:#F97316; color:#0B2447; }
-    .co-step--done .co-step-num { background:rgba(37,211,102,0.2); border-color:#4ADE80; color:#4ADE80; }
-    .co-step-label { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#7A8EA8; }
-    .co-step--active .co-step-label { color:#F8F9FB; }
-    .co-step--done .co-step-label { color:#4ADE80; }
-    .co-step-line { width:40px; height:1px; background:rgba(255,255,255,0.1); margin:0 12px; }
+    .co-step-num { width:28px; height:28px; border-radius:50%; background:#F2EDE5; border:1px solid #E5E1DC; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:11px; font-weight:700; color:#6B7280; }
+    .co-step--active .co-step-num { background:#F07316; border-color:#F07316; color:#FFFFFF; }
+    .co-step--done .co-step-num { background:#dcfce7; border-color:#16a34a; color:#16a34a; }
+    .co-step-label { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6B7280; }
+    .co-step--active .co-step-label { color:#0B2447; }
+    .co-step--done .co-step-label { color:#16a34a; }
+    .co-step-line { width:40px; height:1px; background:#E5E1DC; margin:0 12px; }
 
     .co-layout { display:grid; grid-template-columns:1fr 340px; gap:28px; align-items:start; }
-    .co-section { background:rgba(25,55,109,0.25); border:1px solid rgba(249,115,22,0.12); border-radius:10px; padding:24px; margin-bottom:16px; }
-    .co-section-title { font-family:'Syne',sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F97316; margin-bottom:18px; }
+    .co-section { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:24px; margin-bottom:16px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
+    .co-section-title { font-family:'Syne',sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:18px; }
     .co-form { display:flex; flex-direction:column; gap:14px; }
     .co-form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .co-field { display:flex; flex-direction:column; gap:5px; }
-    .co-label { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#7A8EA8; }
-    .co-inp { background:rgba(7,15,31,0.6); border:1px solid rgba(249,115,22,0.15); border-radius:6px; padding:10px 13px; font-size:14px; color:#F8F9FB; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; width:100%; }
-    .co-inp:focus { border-color:#F97316; }
-    .co-inp::placeholder { color:#7A8EA8; }
-    .co-back-link { background:none; border:none; color:#F97316; font-size:12px; font-family:'Syne',sans-serif; cursor:pointer; margin-bottom:12px; padding:0; }
-    .co-info { background:rgba(37,211,102,0.08); border:1px solid rgba(37,211,102,0.2); border-radius:6px; padding:10px 14px; font-size:13px; color:#4ADE80; }
-    .map-preview-link, .review-map-link { display:inline-flex; align-items:center; width:max-content; color:#4ADE80; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
-    .map-preview-link:hover, .review-map-link:hover { color:#25D366; text-decoration:underline; }
+    .co-label { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#6B7280; }
+    .co-inp { background:#FAF8F5; border:1px solid #E5E1DC; border-radius:6px; padding:10px 13px; font-size:14px; color:#0B2447; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; width:100%; }
+    .co-inp:focus { border-color:#F07316; background:#FFFFFF; }
+    .co-inp::placeholder { color:#9CA3AF; }
+    .co-back-link { background:none; border:none; color:#F07316; font-size:12px; font-family:'Syne',sans-serif; cursor:pointer; margin-bottom:12px; padding:0; }
+    .co-info { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; font-size:13px; color:#166534; }
+    .map-preview-link, .review-map-link { display:inline-flex; align-items:center; width:max-content; color:#16a34a; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
+    .map-preview-link:hover, .review-map-link:hover { color:#15803d; text-decoration:underline; }
 
     .addr-list { display:flex; flex-direction:column; gap:10px; }
-    .addr-empty-box { background:rgba(7,15,31,0.35); border:1px dashed rgba(249,115,22,0.25); border-radius:8px; padding:22px; text-align:center; }
-    .addr-empty-title { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#F8F9FB; margin-bottom:8px; }
-    .addr-empty-box p { font-size:13px; color:#7A8EA8; line-height:1.6; }
+    .addr-empty-box { background:#FAF8F5; border:1px dashed #D1CBC2; border-radius:8px; padding:22px; text-align:center; }
+    .addr-empty-title { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#0B2447; margin-bottom:8px; }
+    .addr-empty-box p { font-size:13px; color:#6B7280; line-height:1.6; }
     .addr-actions-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:stretch; }
-    .addr-card { display:flex; gap:14px; align-items:flex-start; padding:16px; border:1px solid rgba(249,115,22,0.12); border-radius:8px; cursor:pointer; transition:border-color .2s; background:rgba(7,15,31,0.3); }
-    .addr-card--selected { border-color:#F97316; background:rgba(249,115,22,0.05); }
-    .addr-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(249,115,22,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+    .addr-card { display:flex; gap:14px; align-items:flex-start; padding:16px; border:1px solid #E5E1DC; border-radius:8px; cursor:pointer; transition:border-color .2s; background:#FFFFFF; }
+    .addr-card--selected { border-color:#F07316; background:#FFF9F4; }
+    .addr-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(240,115,22,0.35); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
     .addr-radio-dot { width:8px; height:8px; border-radius:50%; background:transparent; transition:background .15s; }
-    .addr-radio-dot.active { background:#F97316; }
+    .addr-radio-dot.active { background:#F07316; }
     .addr-info { flex:1; }
     .addr-label-row { display:flex; gap:6px; margin-bottom:4px; }
-    .addr-label-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:rgba(249,115,22,0.1); color:#F97316; border:1px solid rgba(249,115,22,0.2); padding:2px 7px; border-radius:2px; }
-    .addr-default-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:rgba(37,211,102,0.1); color:#4ADE80; border:1px solid rgba(37,211,102,0.2); padding:2px 7px; border-radius:2px; }
-    .addr-name { font-weight:700; color:#F8F9FB; font-size:14px; margin-bottom:3px; }
-    .addr-text { font-size:13px; color:#7A8EA8; line-height:1.6; margin-bottom:3px; }
-    .addr-phone { font-size:12px; color:#7A8EA8; }
-    .addr-add-btn { padding:10px 0; background:transparent; border:1px dashed rgba(249,115,22,0.3); border-radius:6px; color:#F97316; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
-    .addr-add-btn:hover { background:rgba(249,115,22,0.06); border-style:solid; }
-    .addr-manage-link { display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid rgba(249,115,22,0.2); border-radius:6px; color:#7A8EA8; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; white-space:nowrap; }
-    .addr-manage-link:hover { border-color:#F97316; color:#F97316; }
+    .addr-label-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:#FFF4ED; color:#F07316; border:1px solid rgba(240,115,22,0.25); padding:2px 7px; border-radius:2px; }
+    .addr-default-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; padding:2px 7px; border-radius:2px; }
+    .addr-name { font-weight:700; color:#0B2447; font-size:14px; margin-bottom:3px; }
+    .addr-text { font-size:13px; color:#6B7280; line-height:1.6; margin-bottom:3px; }
+    .addr-phone { font-size:12px; color:#6B7280; }
+    .addr-add-btn { padding:10px 0; background:transparent; border:1px dashed rgba(240,115,22,0.35); border-radius:6px; color:#F07316; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
+    .addr-add-btn:hover { background:#FFF4ED; border-style:solid; }
+    .addr-manage-link { display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid #E5E1DC; border-radius:6px; color:#6B7280; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; white-space:nowrap; }
+    .addr-manage-link:hover { border-color:#F07316; color:#F07316; }
 
-    .location-card { display:flex; align-items:center; justify-content:space-between; gap:16px; background:rgba(37,211,102,0.06); border:1px solid rgba(37,211,102,0.16); border-radius:8px; padding:14px 16px; }
-    .location-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#4ADE80; margin-bottom:4px; }
-    .location-card p { font-size:12px; color:#7A8EA8; line-height:1.5; }
+    .location-card { display:flex; align-items:center; justify-content:space-between; gap:16px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px 16px; }
+    .location-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#16a34a; margin-bottom:4px; }
+    .location-card p { font-size:12px; color:#4B5563; line-height:1.5; }
     .location-btn { flex-shrink:0; padding:9px 14px; border:none; border-radius:6px; background:#25D366; color:white; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
     .location-btn:disabled { opacity:.65; cursor:not-allowed; }
 
     .payment-options { display:flex; flex-direction:column; gap:10px; }
-    .payment-card { display:flex; gap:14px; align-items:center; padding:16px; border:1px solid rgba(249,115,22,0.12); border-radius:8px; cursor:pointer; transition:border-color .2s; background:rgba(7,15,31,0.3); }
-    .payment-card--selected { border-color:#F97316; background:rgba(249,115,22,0.05); }
-    .payment-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(249,115,22,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .payment-card { display:flex; gap:14px; align-items:center; padding:16px; border:1px solid #E5E1DC; border-radius:8px; cursor:pointer; transition:border-color .2s; background:#FFFFFF; }
+    .payment-card--selected { border-color:#F07316; background:#FFF9F4; }
+    .payment-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(240,115,22,0.35); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .payment-icon { font-size:24px; flex-shrink:0; }
-    .payment-name { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:#F8F9FB; margin-bottom:3px; }
-    .payment-sub { font-size:12px; color:#7A8EA8; line-height:1.5; }
+    .payment-name { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:#0B2447; margin-bottom:3px; }
+    .payment-sub { font-size:12px; color:#6B7280; line-height:1.5; }
 
-    .review-block { background:rgba(7,15,31,0.4); border:1px solid rgba(249,115,22,0.08); border-radius:6px; padding:14px 16px; margin-bottom:10px; position:relative; }
-    .review-block-label { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F97316; margin-bottom:8px; }
-    .review-addr { font-size:13px; color:#A8BCCC; line-height:1.75; }
-    .review-payment { font-size:14px; color:#F8F9FB; }
-    .review-edit-btn { position:absolute; top:12px; right:12px; background:none; border:1px solid rgba(249,115,22,0.2); border-radius:4px; color:#F97316; font-size:11px; font-family:'Syne',sans-serif; font-weight:700; padding:4px 10px; cursor:pointer; }
-    .review-item { display:flex; align-items:center; padding:7px 0; border-bottom:1px solid rgba(249,115,22,0.06); font-size:13px; }
+    .review-block { background:#FAF8F5; border:1px solid #E5E1DC; border-radius:6px; padding:14px 16px; margin-bottom:10px; position:relative; }
+    .review-block-label { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:8px; }
+    .review-addr { font-size:13px; color:#374151; line-height:1.75; }
+    .review-payment { font-size:14px; color:#0B2447; }
+    .review-edit-btn { position:absolute; top:12px; right:12px; background:none; border:1px solid rgba(240,115,22,0.3); border-radius:4px; color:#F07316; font-size:11px; font-family:'Syne',sans-serif; font-weight:700; padding:4px 10px; cursor:pointer; }
+    .review-item { display:flex; align-items:center; padding:7px 0; border-bottom:1px solid #F1EEE9; font-size:13px; }
     .review-item:last-child { border-bottom:none; }
-    .review-item-name { flex:1; color:#A8BCCC; }
-    .review-item-variant, .co-summary-item-variant { display:block; margin-top:2px; font-size:11px; color:#7A8EA8; font-family:'DM Sans',sans-serif; font-weight:500; }
-    .review-item-qty { color:#7A8EA8; margin-right:12px; font-size:12px; }
-    .review-item-price { color:#F97316; font-weight:700; font-family:'Syne',sans-serif; min-width:80px; text-align:right; }
+    .review-item-name { flex:1; color:#374151; }
+    .review-item-variant, .co-summary-item-variant { display:block; margin-top:2px; font-size:11px; color:#6B7280; font-family:'DM Sans',sans-serif; font-weight:500; }
+    .review-item-qty { color:#6B7280; margin-right:12px; font-size:12px; }
+    .review-item-price { color:#F07316; font-weight:700; font-family:'Syne',sans-serif; min-width:80px; text-align:right; }
 
-    .co-error { background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.2); border-radius:6px; padding:10px 14px; font-size:13px; color:#FCA5A5; margin-bottom:14px; }
+    .co-error { background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:10px 14px; font-size:13px; color:#dc2626; margin-bottom:14px; }
     .co-nav { display:flex; gap:12px; }
-    .co-btn-back { padding:12px 20px; background:transparent; border:1px solid rgba(249,115,22,0.2); border-radius:6px; color:#7A8EA8; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
-    .co-btn-back:hover { border-color:#F97316; color:#F97316; }
-    .co-btn-primary { flex:1; padding:13px 0; background:#F97316; color:#0B2447; border:none; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; text-decoration:none; text-align:center; display:block; }
-    .co-btn-primary:hover:not(:disabled) { background:#FF9A45; transform:translateY(-1px); }
+    .co-btn-back { padding:12px 20px; background:transparent; border:1px solid #E5E1DC; border-radius:6px; color:#6B7280; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+    .co-btn-back:hover { border-color:#F07316; color:#F07316; }
+    .co-btn-primary { flex:1; padding:13px 0; background:#F07316; color:#FFFFFF; border:none; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; text-decoration:none; text-align:center; display:block; }
+    .co-btn-primary:hover:not(:disabled) { background:#D9640F; transform:translateY(-1px); }
     .co-btn-primary:disabled { opacity:.6; cursor:not-allowed; }
 
-    .co-summary { background:rgba(25,55,109,0.25); border:1px solid rgba(249,115,22,0.12); border-radius:10px; padding:22px; position:sticky; top:80px; }
-    .co-summary-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F97316; margin-bottom:16px; }
+    .co-summary { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:22px; position:sticky; top:80px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
+    .co-summary-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:16px; }
     .co-summary-items { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
     .co-summary-item { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
-    .co-summary-item-name { font-size:13px; color:#A8BCCC; flex:1; line-height:1.4; }
-    .co-summary-item-qty { font-size:12px; color:#7A8EA8; }
-    .co-summary-item-price { font-size:13px; font-weight:700; color:#F8F9FB; white-space:nowrap; }
-    .co-summary-totals { border-top:1px solid rgba(249,115,22,0.1); padding-top:14px; display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
-    .co-summary-row { display:flex; justify-content:space-between; font-size:13px; color:#7A8EA8; }
-    .co-summary-total { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:#F8F9FB; border-top:1px solid rgba(249,115,22,0.15); padding-top:12px; margin-top:4px; }
-    .co-summary-note { font-size:11px; color:#7A8EA8; text-align:center; font-family:'Syne',sans-serif; }
+    .co-summary-item-name { font-size:13px; color:#374151; flex:1; line-height:1.4; }
+    .co-summary-item-qty { font-size:12px; color:#6B7280; }
+    .co-summary-item-price { font-size:13px; font-weight:700; color:#0B2447; white-space:nowrap; }
+    .co-summary-totals { border-top:1px solid #E5E1DC; padding-top:14px; display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+    .co-summary-row { display:flex; justify-content:space-between; font-size:13px; color:#6B7280; }
+    .co-summary-total { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:#0B2447; border-top:1px solid #E5E1DC; padding-top:12px; margin-top:4px; }
+    .co-summary-note { font-size:11px; color:#9CA3AF; text-align:center; font-family:'Syne',sans-serif; }
+    .co-help-card { margin-top:16px; background:#0B2447; border-radius:10px; padding:18px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+    .co-help-title { font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; color:#FFFFFF; margin-bottom:3px; }
+    .co-help-sub { font-size:11px; color:#93A3BC; margin-bottom:10px; }
+    .co-help-link { display:block; font-size:12px; color:#FF9A45; text-decoration:none; margin-bottom:4px; }
+    .co-help-link:hover { text-decoration:underline; }
+    .co-help-avatar { width:44px; height:44px; border-radius:50%; background:#F07316; color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:16px; flex-shrink:0; border:2px solid rgba(240,115,22,0.4); }
 
     @media(max-width:900px){
       .checkout-inner { padding:24px 20px !important; }
@@ -698,6 +767,6 @@ function CheckoutStyles() {
       .addr-actions-row { grid-template-columns:1fr !important; }
       .location-card { align-items:stretch; flex-direction:column; }
     }
-    select option { background:#0d1f3a; }
+    select option { background:#FFFFFF; color:#0B2447; }
   `}</style>;
 }

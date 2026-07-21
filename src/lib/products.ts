@@ -66,10 +66,55 @@ export async function getProjectProducts(categorySlug?: string, searchQuery?: st
   return (data as Product[]) || [];
 }
 
-export async function getBrands(): Promise<{ id: string | number; name: string; slug: string }[]> {
-  const { data, error } = await supabase.from('brands').select('id,name,slug').order('name', { ascending: true });
+export async function getBrands(): Promise<{ id: string | number; name: string; slug: string; logo_url?: string; description?: string; website?: string }[]> {
+  const { data, error } = await supabase.from('brands').select('id,name,slug,logo_url,description,website').order('name', { ascending: true });
   if (error) { console.error(error); return []; }
   return data || [];
+}
+
+export async function getBrandBySlug(slug: string) {
+  const { data } = await supabase.from('brands').select('*').eq('slug', slug).maybeSingle();
+  return data;
+}
+
+export async function getBrandProductCount(brandId: string | number) {
+  const { count } = await supabase.from('products').select('id', { count: 'exact', head: true }).eq('brand_id', brandId).eq('in_stock', true);
+  return count || 0;
+}
+
+// Counts for sidebar filter facets, scoped to the current category/search context
+// (but not the facet being counted itself — standard faceted-search behavior).
+export async function getFacetCounts(categorySlug?: string, searchQuery?: string) {
+  let categoryId: string | number | null = null;
+  if (categorySlug) {
+    const { data: cat } = await supabase.from('categories').select('id').eq('slug', categorySlug).single();
+    categoryId = cat?.id ?? null;
+  }
+
+  const baseFilter = (q: any) => {
+    q = q.eq('in_stock', true);
+    if (!searchQuery) q = q.eq('type', 'project');
+    if (categoryId) q = q.eq('category_id', categoryId);
+    if (searchQuery) q = q.ilike('name', `%${searchQuery}%`);
+    return q;
+  };
+
+  const [brands, thicknessRows] = await Promise.all([
+    getBrands(),
+    baseFilter(supabase.from('products').select('thickness')).not('thickness', 'is', null),
+  ]);
+
+  const brandCounts = await Promise.all(brands.map(async b => {
+    const { count } = await baseFilter(supabase.from('products').select('id', { count: 'exact', head: true })).eq('brand_id', b.id);
+    return [b.slug, count || 0] as const;
+  }));
+
+  const thicknessCounts: Record<string, number> = {};
+  (thicknessRows.data || []).forEach((r: any) => {
+    if (r.thickness) thicknessCounts[r.thickness] = (thicknessCounts[r.thickness] || 0) + 1;
+  });
+
+  return { brandCounts: Object.fromEntries(brandCounts), thicknessCounts };
 }
 
 export async function getQuickProducts(): Promise<Product[]> {

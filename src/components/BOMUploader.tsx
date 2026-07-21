@@ -77,10 +77,10 @@ export default function BOMUploader() {
   const inp: React.CSSProperties = {
     width: '100%',
     background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(249,115,22,0.18)',
+    border: '1px solid rgba(240,115,22,0.18)',
     borderRadius: 3,
     padding: '10px 14px',
-    color: '#F8F9FB',
+    color: '#0B2447',
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 14,
     outline: 'none',
@@ -93,7 +93,7 @@ export default function BOMUploader() {
     fontWeight: 700,
     letterSpacing: '0.15em',
     textTransform: 'uppercase',
-    color: '#7A8EA8',
+    color: '#6B7280',
     marginBottom: 6,
   };
 
@@ -105,10 +105,10 @@ export default function BOMUploader() {
         <div>
           <div className="bom-header">
             <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', letterSpacing: '0.05em', color: '#F8F9FB', marginBottom: 6 }}>
+            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', letterSpacing: '0.05em', color: '#0B2447', marginBottom: 6 }}>
               UPLOAD YOUR MATERIAL LIST
             </div>
-            <p style={{ fontSize: 13, color: '#7A8EA8', lineHeight: 1.7, maxWidth: 400, margin: '0 auto' }}>
+            <p style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.7, maxWidth: 400, margin: '0 auto' }}>
               Snap a photo of your handwritten list or upload any BOM image. We&apos;ll review it and send your quote on WhatsApp within 10–30 minutes.
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function BOMUploader() {
             <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: '#A8BCCC', marginBottom: 4 }}>
               Drag &amp; drop your material list here
             </div>
-            <div style={{ fontSize: 12, color: '#7A8EA8' }}>JPG, PNG, WebP · Max 10 MB</div>
+            <div style={{ fontSize: 12, color: '#6B7280' }}>JPG, PNG, WebP · Max 10 MB</div>
           </div>
 
           {errMsg && <div style={{ color: '#FCA5A5', fontSize: 13, textAlign: 'center', marginBottom: 12 }}>{errMsg}</div>}
@@ -142,8 +142,8 @@ export default function BOMUploader() {
           <input ref={inputRef}  type="file" accept="image/*"              style={{ display: 'none' }} onChange={e => handleFile(e.target.files?.[0] || null)} />
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={e => handleFile(e.target.files?.[0] || null)} />
 
-          <div style={{ marginTop: 24, padding: '14px 16px', background: 'rgba(249,115,22,0.06)', border: '1px solid rgba(249,115,22,0.15)', borderRadius: 6, fontSize: 12, color: '#7A8EA8', lineHeight: 1.7, textAlign: 'center' }}>
-            💡 <strong style={{ color: '#F8F9FB' }}>How it works:</strong> Upload photo → Enter your details → We call/WhatsApp you with a quote in minutes.
+          <div style={{ marginTop: 24, padding: '14px 16px', background: 'rgba(240,115,22,0.06)', border: '1px solid rgba(240,115,22,0.15)', borderRadius: 6, fontSize: 12, color: '#6B7280', lineHeight: 1.7, textAlign: 'center' }}>
+            💡 <strong style={{ color: '#0B2447' }}>How it works:</strong> Upload photo → Enter your details → We call/WhatsApp you with a quote in minutes.
           </div>
         </div>
       )}
@@ -152,10 +152,10 @@ export default function BOMUploader() {
       {step === 'preview' && imageURL && (
         <div>
           <div className="bom-step-label">Step 1 of 2 — Check your image</div>
-          <div style={{ borderRadius: 8, overflow: 'hidden', marginBottom: 16, border: '1px solid rgba(249,115,22,0.2)', position: 'relative', maxHeight: 340 }}>
-            <img src={imageURL} alt="BOM preview" style={{ width: '100%', maxHeight: 340, objectFit: 'contain', display: 'block', background: '#0d1f3a' }} />
+          <div style={{ borderRadius: 8, overflow: 'hidden', marginBottom: 16, border: '1px solid rgba(240,115,22,0.2)', position: 'relative', maxHeight: 340 }}>
+            <img src={imageURL} alt="BOM preview" style={{ width: '100%', maxHeight: 340, objectFit: 'contain', display: 'block', background: '#FFFFFF' }} />
           </div>
-          <p style={{ fontSize: 13, color: '#7A8EA8', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16 }}>
             Make sure your material list is clearly visible and readable. If blurry, take a new photo.
           </p>
           <div style={{ display: 'flex', gap: 10 }}>
@@ -172,13 +172,13 @@ export default function BOMUploader() {
 
           {/* Image thumb */}
           {imageURL && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(249,115,22,0.06)', border: '1px solid rgba(249,115,22,0.15)', borderRadius: 6, padding: '10px 14px', marginBottom: 22 }}>
-              <img src={imageURL} alt="thumb" style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 4, border: '1px solid rgba(249,115,22,0.2)', flexShrink: 0 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(240,115,22,0.06)', border: '1px solid rgba(240,115,22,0.15)', borderRadius: 6, padding: '10px 14px', marginBottom: 22 }}>
+              <img src={imageURL} alt="thumb" style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 4, border: '1px solid rgba(240,115,22,0.2)', flexShrink: 0 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#F8F9FB', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{imageFile?.name}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#0B2447', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{imageFile?.name}</div>
                 <div style={{ fontSize: 11, color: '#4ADE80' }}>✅ Image ready to upload</div>
               </div>
-              <button onClick={reset} style={{ background: 'none', border: 'none', color: '#7A8EA8', cursor: 'pointer', fontSize: 18, flexShrink: 0 }}>✕</button>
+              <button onClick={reset} style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', fontSize: 18, flexShrink: 0 }}>✕</button>
             </div>
           )}
 
@@ -236,10 +236,10 @@ export default function BOMUploader() {
       {step === 'submitting' && (
         <div style={{ textAlign: 'center', padding: '48px 20px' }}>
           <div style={{ fontSize: 48, marginBottom: 16, animation: 'bomSpin 1s linear infinite', display: 'inline-block' }}>⏳</div>
-          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: '#F8F9FB', marginBottom: 6 }}>
+          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: '#0B2447', marginBottom: 6 }}>
             Uploading your material list...
           </div>
-          <div style={{ fontSize: 13, color: '#7A8EA8' }}>Please don&apos;t close this page.</div>
+          <div style={{ fontSize: 13, color: '#6B7280' }}>Please don&apos;t close this page.</div>
         </div>
       )}
 
@@ -247,17 +247,17 @@ export default function BOMUploader() {
       {step === 'done' && (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
           <div style={{ fontSize: 64, marginBottom: 20 }}>✅</div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2rem', letterSpacing: '0.05em', color: '#F8F9FB', marginBottom: 10 }}>
+          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2rem', letterSpacing: '0.05em', color: '#0B2447', marginBottom: 10 }}>
             REQUEST RECEIVED!
           </div>
-          <p style={{ color: '#7A8EA8', fontSize: 15, lineHeight: 1.8, marginBottom: 6 }}>
+          <p style={{ color: '#6B7280', fontSize: 15, lineHeight: 1.8, marginBottom: 6 }}>
             We&apos;ve received your material list.
           </p>
           <p style={{ color: '#4ADE80', fontSize: 14, fontWeight: 600, marginBottom: 24 }}>
             📲 Our team will send your quote on WhatsApp within 10–30 minutes.
           </p>
-          <div style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.18)', borderRadius: 8, padding: '16px 20px', marginBottom: 28, fontSize: 13, color: '#7A8EA8', lineHeight: 1.7 }}>
-            <strong style={{ color: '#F8F9FB' }}>What happens next?</strong><br/>
+          <div style={{ background: 'rgba(37,211,102,0.08)', border: '1px solid rgba(37,211,102,0.18)', borderRadius: 8, padding: '16px 20px', marginBottom: 28, fontSize: 13, color: '#6B7280', lineHeight: 1.7 }}>
+            <strong style={{ color: '#0B2447' }}>What happens next?</strong><br/>
             Our team reviews your list → Checks current stock and pricing → Sends you a complete quote on WhatsApp with product details and delivery timeline.
           </div>
           <button className="bom-action-btn bom-action-btn--outline" onClick={reset} style={{ margin: '0 auto' }}>
@@ -269,26 +269,26 @@ export default function BOMUploader() {
       <style>{`
         .bom-wrap {
           padding: 32px;
-          background: rgba(25,55,109,0.35);
-          border: 1px solid rgba(249,115,22,0.2);
+          background: #FAF8F5;
+          border: 1px solid rgba(240,115,22,0.2);
           border-radius: 10px;
         }
         .bom-header { text-align: center; margin-bottom: 24px; }
         .bom-step-label {
           font-family: 'Syne', sans-serif; font-size: 0.68rem;
           font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-          color: #F97316; margin-bottom: 16px;
+          color: #F07316; margin-bottom: 16px;
         }
         .bom-drop {
-          border: 2px dashed rgba(249,115,22,0.3);
+          border: 2px dashed rgba(240,115,22,0.3);
           border-radius: 8px; padding: 32px 20px;
           text-align: center; cursor: pointer;
-          background: rgba(249,115,22,0.02);
+          background: rgba(240,115,22,0.02);
           transition: all 0.2s; margin-bottom: 16px;
         }
         .bom-drop:hover, .bom-drop--over {
-          border-color: #F97316;
-          background: rgba(249,115,22,0.06);
+          border-color: #F07316;
+          background: rgba(240,115,22,0.06);
         }
         .bom-pick-btn {
           display: inline-flex; align-items: center; gap: 7px;
@@ -299,12 +299,12 @@ export default function BOMUploader() {
           font-size: 0.75rem; letter-spacing: 0.08em;
           text-transform: uppercase; cursor: pointer; transition: all 0.2s;
         }
-        .bom-pick-btn:hover { border-color: #F97316; color: #F97316; }
+        .bom-pick-btn:hover { border-color: #F07316; color: #F07316; }
         .bom-pick-btn--orange {
-          background: rgba(249,115,22,0.1);
-          border-color: rgba(249,115,22,0.3); color: #F97316;
+          background: rgba(240,115,22,0.1);
+          border-color: rgba(240,115,22,0.3); color: #F07316;
         }
-        .bom-pick-btn--orange:hover { background: rgba(249,115,22,0.2); }
+        .bom-pick-btn--orange:hover { background: rgba(240,115,22,0.2); }
         .bom-action-btn {
           padding: 12px 20px; border-radius: 3px; cursor: pointer;
           font-family: 'Syne', sans-serif; font-weight: 700;
@@ -313,18 +313,18 @@ export default function BOMUploader() {
         }
         .bom-action-btn--outline {
           background: transparent;
-          border: 1px solid rgba(249,115,22,0.3); color: #F97316;
+          border: 1px solid rgba(240,115,22,0.3); color: #F07316;
         }
-        .bom-action-btn--outline:hover { background: rgba(249,115,22,0.08); }
-        .bom-action-btn--primary { background: #F97316; color: #0B2447; flex: 1; }
+        .bom-action-btn--outline:hover { background: rgba(240,115,22,0.08); }
+        .bom-action-btn--primary { background: #F07316; color: #0B2447; flex: 1; }
         .bom-action-btn--primary:hover { background: #FF9A45; }
         .bom-action-btn--submit {
-          background: #F97316; color: #0B2447; flex: 1;
+          background: #F07316; color: #0B2447; flex: 1;
         }
         .bom-action-btn--submit:hover { background: #FF9A45; transform: translateY(-1px); }
         .bom-action-btn--submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
         @keyframes bomSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        input:focus, textarea:focus { border-color: #F97316 !important; }
+        input:focus, textarea:focus { border-color: #F07316 !important; }
         @media(max-width:600px){ .bom-wrap { padding: 20px; } }
       `}</style>
     </div>

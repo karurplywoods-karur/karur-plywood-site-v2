@@ -18,9 +18,9 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
       {[1,2,3,4,5].map(n => (
-        <span key={n} style={{ fontSize: 13, color: n <= Math.round(rating) ? '#F97316' : 'rgba(249,115,22,0.2)' }}>★</span>
+        <span key={n} style={{ fontSize: 13, color: n <= Math.round(rating) ? '#F07316' : 'rgba(249,115,22,0.2)' }}>★</span>
       ))}
-      <span style={{ fontSize: 12, color: '#7A8EA8', marginLeft: 4 }}>{rating.toFixed(1)}</span>
+      <span style={{ fontSize: 12, color: '#6B7280', marginLeft: 4 }}>{rating.toFixed(1)}</span>
     </div>
   );
 }
@@ -94,49 +94,49 @@ function ApplyForm({ onClose }: { onClose: () => void }) {
     finally { setLoading(false); }
   };
 
-  const inp: React.CSSProperties = { width:'100%', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(249,115,22,0.18)', borderRadius:3, padding:'10px 14px', color:'#F8F9FB', fontFamily:"'DM Sans',sans-serif", fontSize:14, outline:'none' };
+  const inp: React.CSSProperties = { width:'100%', background:'#FFFFFF', border:'1px solid #E5E1DC', borderRadius:3, padding:'10px 14px', color:'#0B2447', fontFamily:"'DM Sans',sans-serif", fontSize:14, outline:'none' };
 
   return (
-    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.8)', zIndex:9000, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }} onClick={onClose}>
-      <div style={{ background:'#0d1f3a', border:'1px solid rgba(249,115,22,0.2)', borderRadius:10, padding:36, width:'100%', maxWidth:520, maxHeight:'90vh', overflowY:'auto' }} onClick={e=>e.stopPropagation()}>
+    <div style={{ position:'fixed', inset:0, background:'rgba(11,36,71,0.55)', zIndex:9000, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }} onClick={onClose}>
+      <div style={{ background:'#FFFFFF', border:'1px solid #E5E1DC', borderRadius:10, padding:36, width:'100%', maxWidth:520, maxHeight:'90vh', overflowY:'auto' }} onClick={e=>e.stopPropagation()}>
         {done ? (
           <div style={{ textAlign:'center', padding:'28px 0' }}>
             <div style={{ fontSize:48, marginBottom:12 }}>✅</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>APPLICATION RECEIVED!</div>
-            <p style={{ color:'#7A8EA8', fontSize:14, lineHeight:1.7, marginBottom:20 }}>We&apos;ll verify your details and add you to the directory within 24 hours.</p>
-            <button onClick={onClose} style={{ padding:'10px 24px', background:'#F97316', color:'#0B2447', border:'none', borderRadius:4, fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>Close</button>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#0B2447', marginBottom:8 }}>APPLICATION RECEIVED!</div>
+            <p style={{ color:'#6B7280', fontSize:14, lineHeight:1.7, marginBottom:20 }}>We&apos;ll verify your details and add you to the directory within 24 hours.</p>
+            <button onClick={onClose} style={{ padding:'10px 24px', background:'#F07316', color:'#0B2447', border:'none', borderRadius:4, fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>Close</button>
           </div>
         ) : (
           <>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB' }}>JOIN AS A CARPENTER</div>
-              <button onClick={onClose} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕ Close</button>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#0B2447' }}>JOIN AS A CARPENTER</div>
+              <button onClick={onClose} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#6B7280', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕ Close</button>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
-              <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Full Name *</label><input style={inp} value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Rajan Kumar" /></div>
-              <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Phone *</label><input style={inp} value={form.phone} onChange={e=>set('phone',e.target.value)} placeholder="+91 98765 43210" /></div>
+              <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Full Name *</label><input style={inp} value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Rajan Kumar" /></div>
+              <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Phone *</label><input style={inp} value={form.phone} onChange={e=>set('phone',e.target.value)} placeholder="+91 98765 43210" /></div>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
               <div>
-                <label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Area / City *</label>
+                <label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Area / City *</label>
                 <select style={{ ...inp, cursor:'pointer' }} value={form.area} onChange={e=>set('area',e.target.value)}>
                   {['Karur','Trichy','Namakkal','Erode','Salem','Dindigul'].map(a=><option key={a}>{a}</option>)}
                 </select>
               </div>
-              <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Years Experience</label><input style={inp} type="number" min="1" value={form.experience} onChange={e=>set('experience',e.target.value)} placeholder="8" /></div>
+              <div><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Years Experience</label><input style={inp} type="number" min="1" value={form.experience} onChange={e=>set('experience',e.target.value)} placeholder="8" /></div>
             </div>
-            <div style={{ marginBottom:14 }}><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Specialities (comma separated)</label><input style={inp} value={form.speciality} onChange={e=>set('speciality',e.target.value)} placeholder="wardrobes, kitchen cabinets, doors" /></div>
-            <div style={{ marginBottom:14 }}><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>WhatsApp Number (if different)</label><input style={inp} value={form.wa_number} onChange={e=>set('wa_number',e.target.value)} placeholder="+91 98765 43210" /></div>
-            <div style={{ marginBottom:20 }}><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 }}>Short Bio</label><textarea style={{ ...inp, resize:'none' } as React.CSSProperties} rows={3} value={form.bio} onChange={e=>set('bio',e.target.value)} placeholder="Tell homeowners about your work and experience..." /></div>
+            <div style={{ marginBottom:14 }}><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Specialities (comma separated)</label><input style={inp} value={form.speciality} onChange={e=>set('speciality',e.target.value)} placeholder="wardrobes, kitchen cabinets, doors" /></div>
+            <div style={{ marginBottom:14 }}><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>WhatsApp Number (if different)</label><input style={inp} value={form.wa_number} onChange={e=>set('wa_number',e.target.value)} placeholder="+91 98765 43210" /></div>
+            <div style={{ marginBottom:20 }}><label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Short Bio</label><textarea style={{ ...inp, resize:'none' } as React.CSSProperties} rows={3} value={form.bio} onChange={e=>set('bio',e.target.value)} placeholder="Tell homeowners about your work and experience..." /></div>
             {error && <div style={{ color:'#FCA5A5', fontSize:13, marginBottom:12 }}>{error}</div>}
             <button onClick={handleSubmit} disabled={loading}
-              style={{ width:'100%', padding:'12px 0', borderRadius:4, background: loading ? 'rgba(249,115,22,0.4)' : '#F97316', color:'#0B2447', border:'none', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.1em', textTransform:'uppercase', cursor: loading ? 'default' : 'pointer' }}>
+              style={{ width:'100%', padding:'12px 0', borderRadius:4, background: loading ? 'rgba(249,115,22,0.4)' : '#F07316', color:'#0B2447', border:'none', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.1em', textTransform:'uppercase', cursor: loading ? 'default' : 'pointer' }}>
               {loading ? '⏳ Submitting...' : '✓ Submit Application'}
             </button>
-            <p style={{ fontSize:12, color:'#7A8EA8', textAlign:'center', marginTop:10 }}>We&apos;ll verify and call you within 24 hours before listing.</p>
+            <p style={{ fontSize:12, color:'#6B7280', textAlign:'center', marginTop:10 }}>We&apos;ll verify and call you within 24 hours before listing.</p>
           </>
         )}
-        <style>{`input:focus,select:focus,textarea:focus{border-color:#F97316!important} select option{background:#0d1f3a}`}</style>
+        <style>{`input:focus,select:focus,textarea:focus{border-color:#F07316!important} select option{background:#FFFFFF}`}</style>
       </div>
     </div>
   );
@@ -198,13 +198,13 @@ export default function CarpentersPage() {
   return (
     <>
       {/* Hero */}
-      <section style={{ background:'linear-gradient(160deg,#0a1d3a,#0d2545)', borderBottom:'1px solid rgba(249,115,22,0.15)', padding:'80px 0 60px', paddingTop:'calc(58px + 80px)' }}>
+      <section style={{ background:'linear-gradient(160deg,#0a1d3a,#070F1F)', borderBottom:'1px solid rgba(240,115,22,0.15)', padding:'80px 0 60px', paddingTop:'calc(58px + 80px)' }}>
         <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem' }} className="carp-pad">
           <div className="eyebrow">Pro Directory</div>
-          <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'1rem' }}>
-            VERIFIED CARPENTERS<br/><span style={{ color:'#F97316' }}>IN KARUR &amp; NEARBY</span>
+          <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#0B2447', lineHeight:0.95, marginBottom:'1rem' }}>
+            VERIFIED CARPENTERS<br/><span style={{ color:'#F07316' }}>IN KARUR &amp; NEARBY</span>
           </h1>
-          <p style={{ fontSize:14, color:'#7A8EA8', lineHeight:1.8, maxWidth:540, marginBottom:'2rem', fontWeight:300 }}>
+          <p style={{ fontSize:14, color:'#6B7280', lineHeight:1.8, maxWidth:540, marginBottom:'2rem', fontWeight:300 }}>
             Find skilled carpenters who use quality materials from Karur Plywood. Every carpenter is personally verified by our team.
           </p>
           <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
@@ -220,7 +220,7 @@ export default function CarpentersPage() {
           {/* Filters */}
           <div style={{ display:'flex', gap:16, flexWrap:'wrap', marginBottom:36, alignItems:'flex-start' }}>
             <div>
-              <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:8 }}>Filter by Area</div>
+              <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:8 }}>Filter by Area</div>
               <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
                 {AREAS.map(a => (
                   <button key={a} onClick={() => setAreaFilter(a)} className={`fbtn${areaFilter===a?' active':''}`}>{a}</button>
@@ -228,7 +228,7 @@ export default function CarpentersPage() {
               </div>
             </div>
             <div>
-              <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:8 }}>Filter by Speciality</div>
+              <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:8 }}>Filter by Speciality</div>
               <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
                 {SPECIALITIES.map(s => (
                   <button key={s} onClick={() => setSpecFilter(s)} className={`fbtn${specFilter===s?' active':''}`} style={{ textTransform:'capitalize' }}>{s}</button>
@@ -241,7 +241,7 @@ export default function CarpentersPage() {
           {loading && (
             <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
               {[1,2,3].map(i => (
-                <div key={i} style={{ background:'rgba(25,55,109,0.2)', border:'1px solid rgba(249,115,22,0.08)', borderRadius:10, padding:'22px', height:120, animation:'shimmer 1.5s ease-in-out infinite', opacity: 0.6 }} />
+                <div key={i} style={{ background:'#FFFFFF', border:'1px solid #E5E1DC', borderRadius:10, padding:'22px', height:120, animation:'shimmer 1.5s ease-in-out infinite', opacity: 0.6 }} />
               ))}
               <style>{`@keyframes shimmer{0%,100%{opacity:0.4}50%{opacity:0.7}}`}</style>
             </div>
@@ -251,8 +251,8 @@ export default function CarpentersPage() {
           {!loading && fetchError && (
             <div style={{ textAlign:'center', padding:'60px 0' }}>
               <div style={{ fontSize:48, marginBottom:12 }}>⚠️</div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>UNABLE TO LOAD</div>
-              <p style={{ color:'#7A8EA8', marginBottom:24 }}>There was a problem loading the directory. Please try again or ask us on WhatsApp.</p>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#0B2447', marginBottom:8 }}>UNABLE TO LOAD</div>
+              <p style={{ color:'#6B7280', marginBottom:24 }}>There was a problem loading the directory. Please try again or ask us on WhatsApp.</p>
               <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
                 <button onClick={() => setAreaFilter(areaFilter)} className="btn-s" style={{ cursor:'pointer' }}>🔄 Try Again</button>
                 <a href={waRecommend} target="_blank" rel="noopener" className="btn-wa">💬 Ask on WhatsApp</a>
@@ -264,10 +264,10 @@ export default function CarpentersPage() {
           {!loading && !fetchError && filtered.length === 0 && (
             <div style={{ textAlign:'center', padding:'60px 0' }}>
               <div style={{ fontSize:48, marginBottom:12 }}>🔨</div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#0B2447', marginBottom:8 }}>
                 {carpenters.length === 0 ? 'COMING SOON' : 'NO MATCH FOUND'}
               </div>
-              <p style={{ color:'#7A8EA8', marginBottom:24 }}>
+              <p style={{ color:'#6B7280', marginBottom:24 }}>
                 {carpenters.length === 0
                   ? 'We\'re onboarding verified carpenters. Ask us on WhatsApp for a personal recommendation.'
                   : 'Try a different filter or ask us directly.'}
@@ -282,8 +282,8 @@ export default function CarpentersPage() {
           {/* Results */}
           {!loading && !fetchError && filtered.length > 0 && (
             <>
-              <div style={{ fontSize:13, color:'#7A8EA8', marginBottom:20 }}>
-                Showing <strong style={{ color:'#F8F9FB' }}>{filtered.length}</strong> verified carpenter{filtered.length !== 1 ? 's' : ''}{areaFilter !== 'All Areas' ? ` in ${areaFilter}` : ''}
+              <div style={{ fontSize:13, color:'#6B7280', marginBottom:20 }}>
+                Showing <strong style={{ color:'#0B2447' }}>{filtered.length}</strong> verified carpenter{filtered.length !== 1 ? 's' : ''}{areaFilter !== 'All Areas' ? ` in ${areaFilter}` : ''}
               </div>
               <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
                 {filtered.map(c => <CarpenterCard key={c.id} c={c} />)}
@@ -292,10 +292,10 @@ export default function CarpentersPage() {
           )}
 
           {/* Join CTA */}
-          <div style={{ marginTop:56, background:'linear-gradient(135deg,#0d1f3a,#19376D)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:10, padding:'40px 48px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:32, flexWrap:'wrap' }}>
+          <div style={{ marginTop:56, background:'#0B2447', border:'1px solid rgba(240,115,22,0.2)', borderRadius:10, padding:'40px 48px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:32, flexWrap:'wrap' }}>
             <div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:6 }}>ARE YOU A CARPENTER?</div>
-              <p style={{ color:'#7A8EA8', fontSize:14 }}>Join our verified directory. Get discovered by homeowners — free listing.</p>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#0B2447', marginBottom:6 }}>ARE YOU A CARPENTER?</div>
+              <p style={{ color:'#6B7280', fontSize:14 }}>Join our verified directory. Get discovered by homeowners — free listing.</p>
             </div>
             <button className="btn-p" onClick={() => setShowApply(true)} style={{ border:'none', cursor:'pointer', flexShrink:0 }}>🔨 Apply Now — It&apos;s Free</button>
           </div>
@@ -306,8 +306,8 @@ export default function CarpentersPage() {
 
       <style>{`
         .carp-pad { padding: 0 5rem; }
-        .eyebrow { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:#F97316; display:flex; align-items:center; gap:.6rem; margin-bottom:.75rem; }
-        .eyebrow::before { content:''; width:20px; height:2px; background:#F97316; flex-shrink:0; }
+        .eyebrow { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:#F07316; display:flex; align-items:center; gap:.6rem; margin-bottom:.75rem; }
+        .eyebrow::before { content:''; width:20px; height:2px; background:#F07316; flex-shrink:0; }
         @media(max-width:768px){ .carp-pad { padding: 0 1.5rem !important; } }
         @media(max-width:640px){ .carp-card { flex-direction: column !important; } .carp-avatar { width: 48px !important; height: 48px !important; } }
       `}</style>

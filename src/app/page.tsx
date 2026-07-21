@@ -156,7 +156,7 @@ export default async function HomePage() {
               { slug: 'adhesives', name: 'Adhesives', icon: '🧴', id: '5' },
               { slug: 'accessories', name: 'Accessories', icon: '🗄️', id: '6' },
             ]).map((cat: any) => (
-              <Link key={cat.id} href={`/products?category=${cat.slug}`} className="cat-card">
+              <Link key={cat.id} href={`/category/${cat.slug}`} className="cat-card">
                 <div className="cat-card-img">
                   {cat.image_url ? (
                     <Image src={cat.image_url} alt={cat.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 50vw, 16vw" />

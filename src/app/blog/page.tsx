@@ -11,226 +11,208 @@ export const metadata: Metadata = {
   title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',
   description: "Expert buying guides, tips and product advice from Karur's most trusted plywood dealer.",
   alternates: { canonical: `${SITE_URL}/blog` },
-  openGraph: {
-    title: 'Blog | Plywood & Hardware Buying Guides — Karur Plywood',
-    description: "Expert buying guides, tips and product advice from Karur's most trusted plywood dealer.",
-    url: `${SITE_URL}/blog`,
-  },
 };
 
-const WA   = CONTACT.wa;
-const PER  = 9;
+const WA  = CONTACT.wa;
+const PER = 9;
 
-const CAT_CHIP: Record<string, { bg: string; color: string }> = {
-  'Buying Guide':    { bg:'rgba(249,115,22,0.15)',  color:'#F97316' },
-  'Interior Design': { bg:'rgba(168,85,247,0.15)',  color:'#C084FC' },
-  'Construction':    { bg:'rgba(59,130,246,0.15)',   color:'#93C5FD' },
-  'Brand Comparison':{ bg:'rgba(232,184,32,0.15)',   color:'#FDE047' },
-  'Tips & Advice':   { bg:'rgba(37,211,102,0.15)',   color:'#4ADE80' },
-  'Pricing':         { bg:'rgba(248,113,113,0.15)',  color:'#FCA5A5' },
-  'Local News':      { bg:'rgba(20,184,166,0.15)',   color:'#5EEAD4' },
-};
-
-const EMOJI: Record<string, string> = {
-  'Buying Guide':'🪵','Interior Design':'🎨','Construction':'🏗️',
-  'Brand Comparison':'🏆','Tips & Advice':'💡','Pricing':'💰','Local News':'📍',
-};
-
-function Placeholder({ category }: { category: string }) {
-  const chip = CAT_CHIP[category] || CAT_CHIP['Buying Guide'];
-  return (
-    <div style={{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center',
-      background:'linear-gradient(135deg,#0d1f3a,#19376D)', flexDirection:'column', gap:10 }}>
-      <span style={{ fontSize:44 }}>{EMOJI[category] || '📝'}</span>
-      <span style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.2em',
-        textTransform:'uppercase', background:chip.bg, color:chip.color, padding:'3px 10px', borderRadius:3 }}>
-        {category}
-      </span>
-    </div>
-  );
-}
-
-async function getPosts(page: number) {
+async function getPosts(page: number, category?: string, sort?: string) {
   const from = (page - 1) * PER;
-  const { data, count } = await supabase
+  let query = supabase
     .from('blog_posts')
-    .select('id,title,slug,excerpt,cover_image,category,tags,published_at,read_time,author', { count: 'exact' })
-    .eq('published', true)
-    .order('published_at', { ascending: false })
-    .range(from, from + PER - 1);
+    .select('id,title,slug,excerpt,cover_image,category,published_at,read_time,author', { count: 'exact' })
+    .eq('published', true);
+  if (category && category !== 'all') query = query.eq('category', category);
+  query = query.order('published_at', { ascending: sort === 'oldest' }).range(from, from + PER - 1);
+  const { data, count } = await query;
   return { posts: data || [], total: count || 0 };
 }
 
-export default async function BlogPage({ searchParams }: { searchParams: { page?: string } }) {
+async function getCategoryCounts() {
+  const { data } = await supabase.from('blog_posts').select('category').eq('published', true);
+  const counts: Record<string, number> = {};
+  (data || []).forEach((p: any) => { if (p.category) counts[p.category] = (counts[p.category] || 0) + 1; });
+  return counts;
+}
+
+async function getRecentPosts() {
+  const { data } = await supabase.from('blog_posts').select('id,title,slug,cover_image,published_at').eq('published', true).order('published_at', { ascending: false }).limit(4);
+  return data || [];
+}
+
+export default async function BlogPage({ searchParams }: { searchParams: { page?: string; category?: string; sort?: string } }) {
   const page = Math.max(1, parseInt(searchParams.page || '1'));
-  const { posts, total } = await getPosts(page);
-  const totalPages = Math.ceil(total / PER);
+  const category = searchParams.category || 'all';
+  const sort = searchParams.sort || 'latest';
+
+  const [{ posts, total }, categoryCounts, recent] = await Promise.all([
+    getPosts(page, category, sort),
+    getCategoryCounts(),
+    getRecentPosts(),
+  ]);
+  const totalPages = Math.max(1, Math.ceil(total / PER));
+  const totalAll = Object.values(categoryCounts).reduce((s, c) => s + c, 0);
+
+  const buildHref = (overrides: Record<string, string | undefined>) => {
+    const merged = { page: String(page), category, sort, ...overrides };
+    const params = new URLSearchParams();
+    Object.entries(merged).forEach(([k, v]) => { if (v && v !== 'all' && !(k === 'page' && v === '1')) params.set(k, v); });
+    const qs = params.toString();
+    return `/blog${qs ? `?${qs}` : ''}`;
+  };
 
   return (
-    <>
-      {/* Hero */}
-      <section style={{ background:'linear-gradient(160deg,#0a1d3a,#070F1F)',
-        borderBottom:'1px solid rgba(249,115,22,0.15)', padding:'calc(80px + 70px) 0 56px' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem' }} className="blog-pad">
-          <div className="eyebrow">Knowledge Base</div>
-          <h1 className="s-title">
-            PLYWOOD &amp; HARDWARE<br/>
-            <span style={{ color:'#F97316' }}>BUYING GUIDES</span>
-          </h1>
-          <p className="s-desc">
-            Expert advice from Karur&apos;s most trusted plywood dealer.
-            {total > 0 && <span style={{ color:'#F97316' }}> {total} articles</span>}
-          </p>
+    <div style={{ background: '#FAF8F5', paddingTop: 58, minHeight: '100vh' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 48px 60px' }} className="blog-pad">
+
+        <div style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 14 }}>
+          <Link href="/" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Home</Link> › <span style={{ color: '#F07316', fontWeight: 600 }}>Blog</span>
         </div>
-      </section>
 
-      <section style={{ padding:'56px 0' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem' }} className="blog-pad">
-
-          {posts.length === 0 ? (
-            <div style={{ textAlign:'center', padding:'80px 0' }}>
-              <div style={{ fontSize:48, marginBottom:16 }}>📝</div>
-              <div className="s-title">COMING SOON</div>
-              <p className="s-desc" style={{ margin:'0 auto 28px', textAlign:'center' }}>
-                Expert guides coming soon. Ask us on WhatsApp.
-              </p>
-              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="btn-p">
-                💬 Ask on WhatsApp
-              </a>
-            </div>
-          ) : (
-            <>
-              {/* Featured — page 1 only */}
-              {page === 1 && posts[0] && (
-                <Link href={`/blog/${posts[0].slug}`} className="blog-featured">
-                  <div className="blog-feat-img">
-                    {posts[0].cover_image
-                      ? <Image src={posts[0].cover_image} alt={posts[0].title} fill style={{ objectFit:'cover' }} />
-                      : <Placeholder category={posts[0].category} />}
-                  </div>
-                  <div className="blog-feat-body">
-                    <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12 }}>
-                      <span className="blog-chip" style={{
-                        background: CAT_CHIP[posts[0].category]?.bg || 'rgba(249,115,22,0.15)',
-                        color:      CAT_CHIP[posts[0].category]?.color || '#F97316',
-                      }}>{posts[0].category}</span>
-                      <span style={{ fontSize:11, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700 }}>⭐ Featured</span>
-                    </div>
-                    <div className="blog-feat-title">{posts[0].title}</div>
-                    <p className="blog-feat-exc">{posts[0].excerpt}</p>
-                    <div className="blog-meta">
-                      <span>✍️ {posts[0].author}</span>
-                      <span>⏱ {posts[0].read_time} min</span>
-                      {posts[0].published_at && (
-                        <span>📅 {new Date(posts[0].published_at).toLocaleDateString('en-IN',
-                          { day:'numeric', month:'short', year:'numeric' })}</span>
-                      )}
-                    </div>
-                    <div className="blog-read-link">Read Article →</div>
-                  </div>
-                </Link>
-              )}
-
-              {/* Grid */}
-              {(page === 1 ? posts.slice(1) : posts).length > 0 && (
-                <div className="blog-grid">
-                  {(page === 1 ? posts.slice(1) : posts).map(post => {
-                    const chip = CAT_CHIP[post.category] || CAT_CHIP['Buying Guide'];
-                    return (
-                      <Link key={post.id} href={`/blog/${post.slug}`} className="blog-card">
-                        <div className="blog-card-img">
-                          {post.cover_image
-                            ? <Image src={post.cover_image} alt={post.title} fill style={{ objectFit:'cover' }} />
-                            : <Placeholder category={post.category} />}
-                        </div>
-                        <div className="blog-card-body">
-                          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10 }}>
-                            <span className="blog-chip" style={{ background:chip.bg, color:chip.color }}>
-                              {post.category}
-                            </span>
-                            <span style={{ fontSize:11, color:'#7A8EA8' }}>{post.read_time} min</span>
-                          </div>
-                          <div className="blog-card-title">{post.title}</div>
-                          <p className="blog-card-exc">{post.excerpt}</p>
-                          <div className="blog-card-read">Read More →</div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Pagination — auto-appears as posts grow */}
-              {totalPages > 1 && (
-                <div className="blog-pages">
-                  {page > 1 && (
-                    <Link href={`/blog?page=${page - 1}`} className="blog-page-btn">← Prev</Link>
-                  )}
-                  <div style={{ display:'flex', gap:6 }}>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
-                      <Link key={n} href={`/blog?page=${n}`}
-                        className={`blog-page-num${n === page ? ' blog-page-num--active' : ''}`}>
-                        {n}
-                      </Link>
-                    ))}
-                  </div>
-                  {page < totalPages && (
-                    <Link href={`/blog?page=${page + 1}`} className="blog-page-btn">Next →</Link>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-
-          {/* WA CTA */}
-          <div className="blog-cta-banner">
-            <div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem',
-                letterSpacing:'.05em', color:'#F8F9FB', marginBottom:6 }}>
-                STILL HAVE QUESTIONS?
-              </div>
-              <div style={{ fontSize:13, color:'rgba(255,255,255,0.5)' }}>
-                Our experts in Karur reply on WhatsApp within minutes.
-              </div>
-            </div>
-            <a href={`https://wa.me/${WA}?text=Hi%2C+I+have+a+question+about+plywood.`}
-              target="_blank" rel="noopener" className="btn-wa">
-              💬 Ask on WhatsApp
-            </a>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
+          <div>
+            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Karur Plywood Blog</h1>
+            <p style={{ fontSize: 14, color: '#6B7280', margin: 0 }}>Expert tips, product insights and ideas to help you build better.</p>
           </div>
+          <a href={`https://wa.me/${WA}?text=Hi%2C+I+have+a+question+about+plywood.`} target="_blank" rel="noopener" className="blog-ask-card">
+            <span style={{ fontSize: 20 }}>💬</span>
+            <div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447' }}>Have a question?</div>
+              <div style={{ fontSize: 11.5, color: '#6B7280' }}>Ask our experts on WhatsApp</div>
+            </div>
+          </a>
         </div>
-      </section>
+
+        <div className="blog-layout">
+          <div>
+            {/* Category tabs */}
+            <div className="blog-tabs">
+              <Link href={buildHref({ category: undefined, page: '1' })} className={`blog-tab${category === 'all' ? ' blog-tab--active' : ''}`}>All Posts</Link>
+              {Object.keys(categoryCounts).map(c => (
+                <Link key={c} href={buildHref({ category: c, page: '1' })} className={`blog-tab${category === c ? ' blog-tab--active' : ''}`}>{c}</Link>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+              <span style={{ fontSize: 12.5, color: '#6B7280' }}>{total} article{total === 1 ? '' : 's'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <label style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Syne',sans-serif" }}>Sort by:</label>
+                <Link href={buildHref({ sort: sort === 'latest' ? 'oldest' : 'latest' })} className="blog-sort-btn">{sort === 'latest' ? 'Latest' : 'Oldest'} ⇅</Link>
+              </div>
+            </div>
+
+            {posts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '80px 0' }}>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', marginBottom: 8, fontSize: 18 }}>Coming soon</div>
+                <p style={{ color: '#6B7280', marginBottom: 24 }}>Expert guides coming soon. Ask us on WhatsApp in the meantime.</p>
+                <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="blog-ask-btn">💬 Ask on WhatsApp</a>
+              </div>
+            ) : (
+              <div className="blog-grid">
+                {posts.map(post => (
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="blog-card">
+                    <div className="blog-card-img">
+                      {post.cover_image
+                        ? <Image src={post.cover_image} alt={post.title} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
+                        : <div className="blog-card-img-fallback">📝</div>}
+                    </div>
+                    <div className="blog-card-body">
+                      <div className="blog-card-cat">{post.category}</div>
+                      <div className="blog-card-title">{post.title}</div>
+                      {post.excerpt && <p className="blog-card-exc">{post.excerpt}</p>}
+                      <div className="blog-card-meta">
+                        {post.published_at && <span>{new Date(post.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
+                        {post.read_time && <span>· {post.read_time} min read</span>}
+                      </div>
+                      <div className="blog-card-read">Read More →</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="blog-pages">
+                {page > 1 && <Link href={buildHref({ page: String(page - 1) })} className="blog-page-btn">← Prev</Link>}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).slice(0, 6).map(n => (
+                  <Link key={n} href={buildHref({ page: String(n) })} className={`blog-page-num${n === page ? ' blog-page-num--active' : ''}`}>{n}</Link>
+                ))}
+                {page < totalPages && <Link href={buildHref({ page: String(page + 1) })} className="blog-page-btn">Next →</Link>}
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside>
+            <div className="blog-sb-card" style={{ marginBottom: 16 }}>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Categories</div>
+              <Link href="/blog" style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: 13, color: category === 'all' ? '#F07316' : '#4B5563', textDecoration: 'none', fontWeight: category === 'all' ? 700 : 400, borderBottom: '1px solid #F1EEE9' }}>
+                <span>All Categories</span><span>{totalAll}</span>
+              </Link>
+              {Object.entries(categoryCounts).map(([c, n]) => (
+                <Link key={c} href={buildHref({ category: c, page: '1' })} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: 13, color: category === c ? '#F07316' : '#4B5563', textDecoration: 'none', fontWeight: category === c ? 700 : 400, borderBottom: '1px solid #F1EEE9' }}>
+                  <span>{c}</span><span>{n}</span>
+                </Link>
+              ))}
+            </div>
+
+            {recent.length > 0 && (
+              <div className="blog-sb-card" style={{ marginBottom: 16 }}>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Recent Posts</div>
+                {recent.map((p: any) => (
+                  <Link key={p.id} href={`/blog/${p.slug}`} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F1EEE9', textDecoration: 'none' }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 6, overflow: 'hidden', background: '#F2EDE5', flexShrink: 0, position: 'relative' }}>
+                      {p.cover_image ? <Image src={p.cover_image} alt={p.title} fill style={{ objectFit: 'cover' }} sizes="44px" /> : <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>📝</div>}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: '#0B2447', lineHeight: 1.3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>{p.title}</div>
+                      {p.published_at && <div style={{ fontSize: 10.5, color: '#9CA3AF', marginTop: 2 }}>{new Date(p.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            <div className="blog-expert-card">
+              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#FFFFFF', marginBottom: 4 }}>Need Expert Advice?</div>
+              <div style={{ fontSize: 12, color: '#93A3BC', marginBottom: 14 }}>Our experts are here to help you choose the right materials.</div>
+              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="blog-expert-btn">Contact Our Experts →</a>
+            </div>
+          </aside>
+        </div>
+      </div>
 
       <style>{`
-        .blog-pad{padding:0 5rem}
-        .blog-featured{display:grid;grid-template-columns:1fr 1fr;background:rgba(25,55,109,0.35);border:1px solid rgba(249,115,22,0.18);border-radius:10px;overflow:hidden;text-decoration:none;margin-bottom:32px;transition:border-color .25s,transform .25s,box-shadow .25s}
-        .blog-featured:hover{border-color:#F97316;transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
-        .blog-feat-img{position:relative;min-height:260px}
-        .blog-feat-body{padding:32px;display:flex;flex-direction:column;justify-content:center}
-        .blog-feat-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,2.5vw,2rem);letter-spacing:.04em;color:#F8F9FB;line-height:1.05;margin-bottom:12px}
-        .blog-feat-exc{font-size:13px;color:#7A8EA8;line-height:1.75;margin-bottom:18px;flex:1}
-        .blog-meta{display:flex;gap:14px;font-size:11px;color:#7A8EA8;flex-wrap:wrap;margin-bottom:14px}
-        .blog-read-link{font-size:12px;color:#F97316;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.1em;transition:letter-spacing .2s}
-        .blog-featured:hover .blog-read-link{letter-spacing:.16em}
-        .blog-chip{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:3px}
-        .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
-        .blog-card{background:rgba(25,55,109,0.35);border:1px solid rgba(249,115,22,0.15);border-radius:10px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;transition:border-color .25s,transform .25s,box-shadow .25s}
-        .blog-card:hover{border-color:#F97316;transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
-        .blog-card-img{position:relative;height:170px}
-        .blog-card-body{padding:16px 18px 20px;flex:1;display:flex;flex-direction:column}
-        .blog-card-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#F8F9FB;margin-bottom:7px;line-height:1.35}
-        .blog-card-exc{font-size:.75rem;color:#7A8EA8;line-height:1.65;flex:1;margin-bottom:12px}
-        .blog-card-read{font-size:.72rem;color:#F97316;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.08em}
-        .blog-pages{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:40px;flex-wrap:wrap}
-        .blog-page-btn{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F97316;border:1px solid rgba(249,115,22,0.3);border-radius:4px;padding:8px 16px;text-decoration:none;transition:background .2s}
-        .blog-page-btn:hover{background:rgba(249,115,22,0.1)}
-        .blog-page-num{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;border:1px solid rgba(255,255,255,0.1);border-radius:4px;text-decoration:none;color:#7A8EA8;transition:all .2s}
-        .blog-page-num:hover{border-color:#F97316;color:#F97316}
-        .blog-page-num--active{background:#F97316;border-color:#F97316;color:#0B2447}
-        .blog-cta-banner{margin-top:56px;background:linear-gradient(135deg,#0d2b17,#0a1f10);border:1px solid rgba(37,211,102,0.2);border-radius:10px;padding:36px 44px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
-        @media(max-width:1024px){.blog-featured{grid-template-columns:1fr!important}.blog-grid{grid-template-columns:repeat(2,1fr)!important}}
-        @media(max-width:640px){.blog-pad{padding:0 1.2rem!important}.blog-grid{grid-template-columns:1fr!important}.blog-cta-banner{padding:24px 20px!important}}
+        .blog-ask-card { display: flex; gap: 10px; align-items: center; background: #FFF4ED; border: 1px solid rgba(240,115,22,0.25); border-radius: 10px; padding: 12px 18px; text-decoration: none; }
+        .blog-layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+        .blog-tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid #E5E1DC; margin-bottom: 18px; }
+        .blog-tab { padding: 10px 14px; font-family: 'Syne',sans-serif; font-size: 0.72rem; font-weight: 700; color: #6B7280; text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; }
+        .blog-tab--active { color: #F07316; border-bottom-color: #F07316; }
+        .blog-sort-btn { font-size: 12px; color: #0B2447; border: 1px solid #E5E1DC; border-radius: 6px; padding: 6px 12px; text-decoration: none; background: #FFFFFF; }
+        .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .blog-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: all .2s; }
+        .blog-card:hover { border-color: rgba(240,115,22,0.4); transform: translateY(-4px); box-shadow: 0 14px 30px rgba(11,36,71,0.1); }
+        .blog-card-img { position: relative; height: 170px; background: #F2EDE5; }
+        .blog-card-img-fallback { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 36px; background: linear-gradient(135deg,#EDE6DB,#DCD0BE); }
+        .blog-card-body { padding: 16px 18px 20px; flex: 1; display: flex; flex-direction: column; }
+        .blog-card-cat { font-family: 'Syne',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #F07316; margin-bottom: 8px; }
+        .blog-card-title { font-family: 'Syne',sans-serif; font-size: .92rem; font-weight: 700; color: #0B2447; margin-bottom: 8px; line-height: 1.35; }
+        .blog-card-exc { font-size: .78rem; color: #6B7280; line-height: 1.6; flex: 1; margin-bottom: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .blog-card-meta { font-size: .68rem; color: #9CA3AF; margin-bottom: 10px; }
+        .blog-card-read { font-size: .72rem; color: #F07316; font-family: 'Syne',sans-serif; font-weight: 700; letter-spacing: .06em; }
+        .blog-pages { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 36px; flex-wrap: wrap; }
+        .blog-page-btn { font-family: 'Syne',sans-serif; font-size: .7rem; font-weight: 700; color: #0B2447; border: 1px solid #E5E1DC; border-radius: 6px; padding: 8px 14px; text-decoration: none; }
+        .blog-page-btn:hover { border-color: #F07316; color: #F07316; }
+        .blog-page-num { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-family: 'Syne',sans-serif; font-size: .78rem; font-weight: 700; border: 1px solid #E5E1DC; border-radius: 6px; text-decoration: none; color: #6B7280; }
+        .blog-page-num--active { background: #F07316; border-color: #F07316; color: #FFFFFF; }
+        .blog-sb-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 18px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
+        .blog-expert-card { background: #0B2447; border-radius: 10px; padding: 20px; }
+        .blog-expert-btn { display: inline-flex; align-items: center; padding: 10px 18px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12px; text-decoration: none; }
+        .blog-ask-btn { display: inline-flex; align-items: center; padding: 11px 22px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 13px; text-decoration: none; }
+        @media(max-width:1000px){ .blog-layout { grid-template-columns: 1fr !important; } .blog-grid { grid-template-columns: repeat(2,1fr) !important; } }
+        @media(max-width:640px){ .blog-pad { padding-left:16px !important; padding-right:16px !important; } .blog-grid { grid-template-columns: 1fr !important; } }
       `}</style>
-    </>
+    </div>
   );
 }

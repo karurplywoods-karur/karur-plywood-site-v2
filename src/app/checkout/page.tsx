@@ -7,6 +7,7 @@ import { createClient } from '@/lib/auth-client';
 import { useCart } from '@/lib/CartContext';
 import { trackPurchase } from '@/lib/analytics';
 import { CONTACT } from '@/lib/contact';
+import ProductCard from '@/components/ProductCard';
 
 interface Address {
   id: string; label: string; full_name: string; phone: string;
@@ -81,7 +82,9 @@ export default function CheckoutPage() {
   const [error,      setError]      = useState('');
   const [locating,   setLocating]   = useState(false);
   const [locationMsg,setLocationMsg]= useState('');
-  const [orderDone,  setOrderDone]  = useState<{ order_number: string; wa_url: string } | null>(null);
+  const [orderDone,  setOrderDone]  = useState<{ order_id: string; order_number: string; wa_url: string } | null>(null);
+  const [fullOrder,  setFullOrder]  = useState<any>(null);
+  const [related,    setRelated]    = useState<any[]>([]);
   const [couponCode,    setCouponCode]    = useState('');
   const [couponResult,  setCouponResult]  = useState<{ discount_amount: number; description: string; coupon_code: string } | null>(null);
   const [couponError,   setCouponError]   = useState('');
@@ -194,6 +197,7 @@ export default function CheckoutPage() {
 
   const shippingCost = SHIPPING_METHODS.find(m => m.key === shippingMethod)?.cost || 0;
   const grandTotal = (couponResult ? total - couponResult.discount_amount : total) + shippingCost;
+  const orderTotalDisplay = fullOrder?.total ?? grandTotal;
 
   const handlePlaceOrder = async () => {
     setLoading(true); setError('');
@@ -223,8 +227,10 @@ export default function CheckoutPage() {
     if (!res.ok) { setError(data.error || 'Order failed. Please try again.'); setLoading(false); return; }
 
     clear();
-    setOrderDone({ order_number: data.order_number, wa_url: data.wa_url });
+    setOrderDone({ order_id: data.order_id, order_number: data.order_number, wa_url: data.wa_url });
     setLoading(false);
+    fetch(`/api/orders/${data.order_id}`).then(r => r.json()).then(o => !o.error && setFullOrder(o));
+    fetch('/api/products?limit=5').then(r => r.json()).then(p => setRelated(Array.isArray(p) ? p.slice(0, 5) : []));
 
     // Fire GA4 purchase event — imported into Google Ads as a conversion.
     // Fires once per order right after creation succeeds, regardless of
@@ -250,23 +256,149 @@ export default function CheckoutPage() {
 
   // ── ORDER SUCCESS ──
   if (orderDone) return (
-    <div className="checkout-page">
-      <div className="checkout-success">
-        <div className="success-icon">✅</div>
-        <h1 className="success-title">Order Placed!</h1>
-        <div className="success-order-num">{orderDone.order_number}</div>
-        <p className="success-msg">
-          A confirmation email has been sent to you. Our team will contact you shortly to confirm delivery.
-        </p>
-        <div className="success-actions">
-          <Link href="/account/orders" className="success-btn-primary">View My Orders</Link>
-          <Link href="/products" className="success-btn-secondary">Continue Shopping</Link>
+    <div style={{ minHeight: '100vh', background: '#FAF8F5', paddingTop: 58 }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 48px 60px' }} className="os-pad">
+
+        <div style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 16 }}>
+          <Link href="/" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Home</Link> › <span style={{ color: '#9CA3AF' }}>Checkout</span> › <span style={{ color: '#F07316', fontWeight: 600 }}>Order Success</span>
         </div>
-        <div className="success-wa-note">
-          💬 A WhatsApp notification was sent to our team about your order.
+
+        {/* Hero banner */}
+        <div className="os-hero">
+          <div className="os-hero-icon">✅</div>
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Thank You!</h1>
+            <div style={{ fontSize: 15, color: '#16a34a', fontWeight: 700, marginBottom: 6 }}>Your Order Has Been Placed Successfully</div>
+            <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>Your order has been received and is being processed. We&apos;ve sent the order details to your email and WhatsApp.</p>
+            <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
+              <Link href="/products" className="os-btn-primary">Continue Shopping →</Link>
+              <Link href={`/account/orders/${orderDone.order_id}`} className="os-btn-outline">📦 Track Your Order</Link>
+            </div>
+          </div>
+          <div className="os-hero-confirm">
+            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#16a34a', fontSize: 13, marginBottom: 10 }}>Order Confirmed!</div>
+            <div className="os-label">Order ID</div>
+            <div className="os-val" style={{ marginBottom: 8 }}>{orderDone.order_number}</div>
+            {fullOrder && (
+              <>
+                <div className="os-label">Order Date</div>
+                <div className="os-val" style={{ marginBottom: 8, fontWeight: 600 }}>{new Date(fullOrder.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                <div className="os-label">Payment Method</div>
+                <div className="os-val" style={{ fontWeight: 600 }}>{fullOrder.payment_method === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</div>
+              </>
+            )}
+            <div style={{ fontSize: 11, color: '#16a34a', marginTop: 12, display: 'flex', gap: 6, alignItems: 'center' }}>🔒 Secured with 256-bit encryption</div>
+          </div>
         </div>
+
+        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', margin: '28px 0 16px' }}>Order Summary</h2>
+
+        <div className="os-grid">
+          <div>
+            <div className="os-card" style={{ marginBottom: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: 18 }}>
+              <div><div className="os-label">Estimated Delivery</div><div className="os-val">{fullOrder?.estimated_delivery || '3-5 business days'}</div><div style={{ fontSize: 11, color: '#16a34a', fontWeight: 700, marginTop: 2 }}>Standard Delivery</div></div>
+              {fullOrder && (
+                <div>
+                  <div className="os-label">Delivery Address</div>
+                  <div style={{ fontSize: 12.5, color: '#374151' }}>{fullOrder.delivery_name}<br />{fullOrder.delivery_line1}<br />{fullOrder.delivery_city} — {fullOrder.delivery_pincode}<br />📞 {fullOrder.delivery_phone}</div>
+                </div>
+              )}
+              <div><div className="os-label">Total Amount</div><div className="os-val" style={{ color: '#F07316', fontSize: 20 }}>₹{orderTotalDisplay.toLocaleString('en-IN')}</div></div>
+            </div>
+
+            {fullOrder && (
+              <div className="os-card" style={{ marginBottom: 16 }}>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Order Details</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 10, fontSize: 13 }}>
+                  <div><span style={{ color: '#9CA3AF' }}>Order ID: </span><span style={{ fontWeight: 700, color: '#0B2447' }}>{fullOrder.order_number}</span></div>
+                  <div><span style={{ color: '#9CA3AF' }}>Payment Status: </span><span style={{ fontWeight: 700, color: fullOrder.payment_status === 'paid' ? '#16a34a' : '#F07316' }}>{fullOrder.payment_status === 'paid' ? 'Paid' : 'Pending'}</span></div>
+                  <div><span style={{ color: '#9CA3AF' }}>Shipping Method: </span><span style={{ fontWeight: 700, color: '#0B2447' }}>Standard Delivery</span></div>
+                </div>
+                <div style={{ fontSize: 12, color: '#6B7280', marginTop: 12 }}>A confirmation email has been sent to your registered email address.</div>
+              </div>
+            )}
+
+            {/* What happens next */}
+            <div className="os-card">
+              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 18 }}>What Happens Next?</div>
+              <div className="os-next-grid">
+                {[
+                  { icon: '✓', t: 'Order Confirmed', d: "We've received your order" },
+                  { icon: '📦', t: 'Processing', d: "We're preparing your order" },
+                  { icon: '🚚', t: 'Shipped', d: 'Your order is on the way' },
+                  { icon: '🏠', t: 'Delivered', d: 'Enjoy your purchase!' },
+                ].map((s, i) => (
+                  <div key={s.t} className="os-next-item">
+                    <div className="os-next-icon" style={{ opacity: i === 0 ? 1 : 0.5 }}>{s.icon}</div>
+                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{s.t}</div>
+                    <div style={{ fontSize: 11, color: '#6B7280' }}>{s.d}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right — items */}
+          <aside>
+            <div className="os-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>Order Items {fullOrder ? `(${fullOrder.order_items?.length || 0})` : ''}</div>
+                <Link href={`/account/orders/${orderDone.order_id}`} style={{ fontSize: 11.5, color: '#F07316', fontWeight: 700, textDecoration: 'none' }}>Edit Cart</Link>
+              </div>
+              {fullOrder ? (
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 14 }}>
+                    {fullOrder.order_items?.map((item: any, i: number) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                        <div>
+                          <div style={{ fontSize: 12.5, color: '#0B2447', fontWeight: 600 }}>{item.product_name}</div>
+                          {item.variant_label && <div style={{ fontSize: 11, color: '#9CA3AF' }}>{item.variant_label}</div>}
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#0B2447', whiteSpace: 'nowrap' }}>₹{item.line_total?.toLocaleString('en-IN')}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ borderTop: '1px solid #E5E1DC', paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Subtotal ({fullOrder.order_items?.length || 0} Items)</span><span>₹{fullOrder.subtotal?.toLocaleString('en-IN')}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Shipping</span><span style={{ color: fullOrder.delivery_charge ? '#0B2447' : '#16a34a' }}>{fullOrder.delivery_charge ? `₹${fullOrder.delivery_charge}` : 'Free'}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>GST (18%)</span><span>Included</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 15, color: '#0B2447', borderTop: '1px solid #E5E1DC', paddingTop: 8 }}><span>Total Amount</span><span>₹{fullOrder.total?.toLocaleString('en-IN')}</span></div>
+                  </div>
+                </>
+              ) : (
+                <div style={{ fontSize: 13, color: '#9CA3AF' }}>Loading items…</div>
+              )}
+            </div>
+          </aside>
+        </div>
+
+        {/* You may also like */}
+        {related.length > 0 && (
+          <div style={{ marginTop: 40 }}>
+            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 16 }}>You May Also Like</h2>
+            <div className="os-related-grid">
+              {related.map((p: any) => <ProductCard key={p.id} product={p} />)}
+            </div>
+          </div>
+        )}
       </div>
-      <CheckoutStyles />
+
+      <style>{`
+        .os-hero { display: flex; gap: 24px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 14px; padding: 28px; flex-wrap: wrap; }
+        .os-hero-icon { width: 56px; height: 56px; border-radius: 50%; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+        .os-btn-primary { display: inline-flex; align-items: center; padding: 11px 22px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
+        .os-btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
+        .os-hero-confirm { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 18px 20px; min-width: 220px; }
+        .os-label { font-size: 10.5px; color: #9CA3AF; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+        .os-val { font-size: 15px; color: #0B2447; font-weight: 700; font-family: 'Syne',sans-serif; }
+        .os-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+        .os-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
+        .os-next-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; text-align: center; }
+        .os-next-icon { width: 40px; height: 40px; border-radius: 50%; background: #FFF4ED; display: flex; align-items: center; justify-content: center; font-size: 18px; margin: 0 auto 8px; }
+        .os-related-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; }
+        @media(max-width:900px){ .os-grid { grid-template-columns: 1fr !important; } .os-next-grid { grid-template-columns: 1fr 1fr !important; row-gap: 20px; } .os-related-grid { grid-template-columns: repeat(3,1fr) !important; } }
+        @media(max-width:640px){ .os-pad { padding-left: 16px !important; padding-right: 16px !important; } .os-related-grid { grid-template-columns: repeat(2,1fr) !important; } }
+      `}</style>
     </div>
   );
 

@@ -1,7 +1,7 @@
 // src/app/products/page.tsx
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getProjectProducts, getCategories, getBrands } from '@/lib/products';
+import { getProjectProducts, getCategories, getBrands, getFacetCounts } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import SortSelect from '@/components/SortSelect';
 import { CONTACT } from '@/lib/contact';
@@ -23,7 +23,7 @@ export default async function ProductsPage({
 }: {
   searchParams: {
     category?: string; search?: string; brand?: string; thickness?: string;
-    priceMin?: string; priceMax?: string; sort?: string; page?: string;
+    priceMin?: string; priceMax?: string; sort?: string; page?: string; view?: string;
   };
 }) {
   const searchQuery = searchParams.search?.trim();
@@ -33,11 +33,13 @@ export default async function ProductsPage({
   const priceMax = searchParams.priceMax ? Number(searchParams.priceMax) : undefined;
   const sort = (searchParams.sort as any) || 'popular';
   const page = Math.max(1, parseInt(searchParams.page || '1'));
+  const view = searchParams.view === 'list' ? 'list' : 'grid';
 
-  const [allProducts, categories, brands] = await Promise.all([
+  const [allProducts, categories, brands, facets] = await Promise.all([
     getProjectProducts(searchParams.category, searchQuery, { brandSlugs, thickness: thicknessVals, priceMin, priceMax, sort }),
     getCategories(),
     getBrands(),
+    getFacetCounts(searchParams.category, searchQuery),
   ]);
 
   const activeCategory = searchParams.category || 'all';
@@ -111,7 +113,7 @@ export default async function ProductsPage({
             <div className="sb-filter-group">
               <div className="sb-filter-label">Brand</div>
               <div className="sb-checklist">
-                {brands.map(b => (
+                {brands.filter(b => (facets.brandCounts[b.slug] || 0) > 0 || activeBrandSet.has(b.slug)).map(b => (
                   <Link
                     key={b.slug}
                     href={buildHref({ brand: activeBrandSet.has(b.slug)
@@ -120,7 +122,8 @@ export default async function ProductsPage({
                     className="sb-check-row"
                   >
                     <span className={`sb-checkbox${activeBrandSet.has(b.slug) ? ' sb-checkbox--on' : ''}`}>{activeBrandSet.has(b.slug) ? '✓' : ''}</span>
-                    {b.name}
+                    <span style={{ flex: 1 }}>{b.name}</span>
+                    <span style={{ color: '#9CA3AF', fontSize: 11 }}>({facets.brandCounts[b.slug] || 0})</span>
                   </Link>
                 ))}
               </div>
@@ -129,7 +132,7 @@ export default async function ProductsPage({
             <div className="sb-filter-group">
               <div className="sb-filter-label">Thickness</div>
               <div className="sb-checklist">
-                {THICKNESS_OPTIONS.map(t => (
+                {THICKNESS_OPTIONS.filter(t => (facets.thicknessCounts[t] || 0) > 0 || activeThicknessSet.has(t)).map(t => (
                   <Link
                     key={t}
                     href={buildHref({ thickness: activeThicknessSet.has(t)
@@ -138,7 +141,8 @@ export default async function ProductsPage({
                     className="sb-check-row"
                   >
                     <span className={`sb-checkbox${activeThicknessSet.has(t) ? ' sb-checkbox--on' : ''}`}>{activeThicknessSet.has(t) ? '✓' : ''}</span>
-                    {t}
+                    <span style={{ flex: 1 }}>{t}</span>
+                    <span style={{ color: '#9CA3AF', fontSize: 11 }}>({facets.thicknessCounts[t] || 0})</span>
                   </Link>
                 ))}
               </div>
@@ -173,14 +177,39 @@ export default async function ProductsPage({
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <label style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Syne',sans-serif" }}>Sort by:</label>
               <SortSelect current={sort} />
+              <div className="view-toggle">
+                <Link href={buildHref({ view: 'grid' })} className={`view-toggle-btn${view === 'grid' ? ' view-toggle-btn--active' : ''}`} aria-label="Grid view">▦</Link>
+                <Link href={buildHref({ view: 'list' })} className={`view-toggle-btn${view === 'list' ? ' view-toggle-btn--active' : ''}`} aria-label="List view">☰</Link>
+              </div>
             </div>
           </div>
 
-          {/* Grid */}
+          {/* Grid / List */}
           {products.length > 0 ? (
-            <div className="cp-grid">
-              {products.map(p => <ProductCard key={p.id} product={p} />)}
-            </div>
+            view === 'grid' ? (
+              <div className="cp-grid">
+                {products.map(p => <ProductCard key={p.id} product={p} />)}
+              </div>
+            ) : (
+              <div className="cp-list">
+                {products.map((p: any) => (
+                  <Link key={p.id} href={`/products/${p.id}`} className="cp-list-row">
+                    <div className="cp-list-img">
+                      {p.image_url ? <img src={p.image_url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className="cp-list-img-fallback">🪵</div>}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>{p.name}</div>
+                      {p.brands?.name && <div style={{ fontSize: 12, color: '#F07316', marginBottom: 4 }}>{p.brands.name}</div>}
+                      {p.description && <div style={{ fontSize: 12.5, color: '#6B7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 480 }}>{p.description}</div>}
+                    </div>
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.4rem', color: '#F07316' }}>₹{p.price?.toLocaleString('en-IN')}</div>
+                      {p.unit && <div style={{ fontSize: 11, color: '#6B7280' }}>/ {p.unit}</div>}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )
           ) : (
             <div style={{ textAlign: 'center', padding: '80px 0', color: '#6B7280' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🪵</div>
@@ -251,6 +280,14 @@ export default async function ProductsPage({
         .sb-clear-btn:hover { border-color: #F07316; color: #F07316; }
 
         .sort-select { font-size: 12px; border: 1px solid #E5E1DC; border-radius: 6px; padding: 6px 10px; color: #0B2447; background: #FFFFFF; font-family: 'Syne',sans-serif; }
+        .view-toggle { display: flex; border: 1px solid #E5E1DC; border-radius: 6px; overflow: hidden; }
+        .view-toggle-btn { width: 30px; height: 28px; display: flex; align-items: center; justify-content: center; color: #6B7280; text-decoration: none; font-size: 13px; background: #FFFFFF; }
+        .view-toggle-btn--active { background: #0B2447; color: #FFFFFF; }
+        .cp-list { display: flex; flex-direction: column; gap: 10px; }
+        .cp-list-row { display: flex; align-items: center; gap: 16px; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 12px 16px; text-decoration: none; transition: all .15s; }
+        .cp-list-row:hover { border-color: rgba(240,115,22,0.4); box-shadow: 0 4px 14px rgba(11,36,71,0.08); }
+        .cp-list-img { width: 64px; height: 64px; border-radius: 8px; overflow: hidden; background: #F2EDE5; flex-shrink: 0; }
+        .cp-list-img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 
         .cp-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
         @media(max-width:1100px){ .cp-grid { grid-template-columns:repeat(3,1fr) !important; } .prod-sidebar { display: none; } }

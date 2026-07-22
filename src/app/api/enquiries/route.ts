@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
-      name, phone, location, product, message,
+      name, phone, email, location, product, subject, message,
       // tracking fields
       tracking_id, source, wa_source,
       product_name, category, quantity, total_value,
@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
         name,
         phone,
         location: location || '',
-        product: product || '',
-        message: message || '',
+        product: product || subject || '',
+        message: [email ? `Email: ${email}` : null, message].filter(Boolean).join(' — '),
         status: 'new',
         // tracking
         tracking_id: tracking_id || undefined,

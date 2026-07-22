@@ -34,9 +34,14 @@ export async function PATCH(req: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { full_name, phone } = await req.json();
+  const { full_name, phone, account_type, business_type } = await req.json();
+  const updates: Record<string, any> = {};
+  if (full_name !== undefined) updates.full_name = full_name;
+  if (phone !== undefined) updates.phone = phone;
+  if (account_type !== undefined) updates.account_type = account_type;
+  if (business_type !== undefined) updates.business_type = business_type;
   const { error } = await supabaseAdmin
-    .from('customers').update({ full_name, phone }).eq('id', session.user.id);
+    .from('customers').update(updates).eq('id', session.user.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
 }

@@ -1,204 +1,112 @@
-// src/app/contact/page.tsx — FIXED: clickable phone/email, real address
+// src/app/contact/page.tsx
 import { Metadata } from 'next';
+import Image from 'next/image';
 import EnquiryForm from '@/components/EnquiryForm';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
-  title: 'Contact Us — Call or WhatsApp',
-  description: 'Contact Karur Plywood & Company. Call +91 91596 66538, WhatsApp, or visit our showroom at Covai Main Road, Reddipalayam, Karur. Get a free quote today.',
+  title: 'Contact Us — Call or WhatsApp | Karur Plywood & Company',
+  description: 'Contact Karur Plywood & Company. Call, WhatsApp, or visit our showroom in Karur. Get a free quote today.',
   alternates: { canonical: `${CONTACT.siteUrl}/contact` },
-  openGraph: {
-    title: 'Contact Us',
-    description: 'Call, WhatsApp, or visit Karur Plywood & Company in Karur.',
-    url: `${CONTACT.siteUrl}/contact`,
-  },
 };
 
 const WA = CONTACT.wa;
 
-const HOURS = [
-  ['Monday', '9:30 AM – 7:30 PM'],
-  ['Tuesday', '9:30 AM – 7:30 PM'],
-  ['Wednesday', '9:30 AM – 7:30 PM'],
-  ['Thursday', '9:30 AM – 7:30 PM'],
-  ['Friday', '9:30 AM – 7:30 PM'],
-  ['Saturday', '9:30 AM – 7:30 PM'],
-  ['Sunday', 'Closed'],
-];
-
 export default function ContactPage() {
   return (
-    <>
-      {/* Hero */}
-      <section style={{
-        background: 'linear-gradient(160deg,#0a1d3a,#070F1F)',
-        borderBottom: '1px solid rgba(249,115,22,0.15)',
-        padding: 'calc(58px + 64px) 0 56px',
-        textAlign: 'center',
-      }}>
-        <div style={{ maxWidth: 640, margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:8, fontSize:11, fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', marginBottom:16, fontFamily:"'Syne',sans-serif" }}>
-            <span style={{ width:20, height:1, background:'#F97316', display:'inline-block' }}/>
-            Get In Touch
-            <span style={{ width:20, height:1, background:'#F97316', display:'inline-block' }}/>
-          </div>
-          <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(3rem,6vw,5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:16 }}>
-            CONTACT <span style={{ color:'#F97316' }}>US</span>
-          </h1>
-          <p style={{ fontSize:15, color:'#7A8EA8', lineHeight:1.8, fontWeight:300 }}>
-            We&apos;re here to help. Reach us on WhatsApp, phone, or visit our showroom in Karur.
-          </p>
+    <div style={{ background: '#FAF8F5', paddingTop: 58, minHeight: '100vh' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 48px 60px' }} className="ct-pad">
+        <div style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 16 }}>
+          <a href="/" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Home</a> › <span style={{ color: '#F07316', fontWeight: 600 }}>Contact Us</span>
         </div>
-      </section>
 
-      <section style={{ padding:'72px 0' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 48px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:60, alignItems:'start' }} className="contact-grid">
-
-          {/* Left: contact details */}
-          <div>
-            {/* WhatsApp — primary CTA */}
-            <a
-              href={`https://wa.me/${WA}?text=Hi%2C+I+need+help+with+a+product+enquiry.`}
-              target="_blank" rel="noopener"
-              style={{ display:'flex', alignItems:'center', gap:14, background:'linear-gradient(135deg,rgba(13,43,23,0.9),rgba(9,24,16,0.9))', border:'1px solid rgba(37,211,102,0.25)', borderRadius:12, padding:'18px 20px', marginBottom:16, textDecoration:'none', transition:'all 0.2s' }}
-              className="wa-hover-card"
-            >
-              <div style={{ width:50, height:50, background:'#25D366', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:24 }}>💬</div>
-              <div>
-                <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:'#F8F9FB', marginBottom:3 }}>WhatsApp — Fastest Response</div>
-                <div style={{ fontSize:13, color:'rgba(255,255,255,0.45)', lineHeight:1.6 }}>Send your requirements and get a reply within minutes</div>
-              </div>
-            </a>
-
-            <a
-              href={`https://wa.me/${WA}?text=Hi%2C+I+need+help+with+a+product+enquiry.`}
-              target="_blank" rel="noopener"
-              style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, width:'100%', padding:'13px 0', borderRadius:8, background:'#25D366', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:14, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', marginBottom:32, transition:'background 0.2s' }}
-            >
-              💬 Open WhatsApp Chat
-            </a>
-
-            <div style={{ display:'flex', flexDirection:'column', gap:22 }}>
-              {/* Phone — FIXED: real number + clickable */}
-              <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>📞</div>
-                <div>
-                  <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:4 }}>Phone</div>
-                  {/* FIXED: real number, clickable tel: link */}
-                  <a href={`tel:${CONTACT.phoneRaw}`} style={{ fontSize:17, color:'#F8F9FB', fontWeight:600, textDecoration:'none', fontFamily:"'Syne',sans-serif", display:'block', marginBottom:2, transition:'color 0.2s' }} className="contact-link">
-                    {CONTACT.phone}
-                  </a>
-                  <div style={{ fontSize:12, color:'#7A8EA8' }}>Tap to call directly</div>
-                </div>
-              </div>
-
-              {/* Address — FIXED: real address */}
-              <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>📍</div>
-                <div>
-                  <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:4 }}>Address</div>
-                  <div style={{ fontSize:15, color:'#F8F9FB', fontWeight:500, lineHeight:1.6 }}>
-                    Covai Main Road, Reddipalayam<br />
-                    Karur, Tamil Nadu – 639 008
-                  </div>
-                  <a
-                    href="https://maps.google.com/?q=Karur+Plywood+Company+Karur+Tamil+Nadu"
-                    target="_blank" rel="noopener"
-                    style={{ fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.06em', textDecoration:'none', display:'inline-block', marginTop:6 }}
-                  >
-                    🗺️ Get Directions →
-                  </a>
-                </div>
-              </div>
-
-              {/* Email — FIXED: real email + clickable */}
-              <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>✉️</div>
-                <div>
-                  <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:4 }}>Email</div>
-                  {/* FIXED: real email, clickable mailto: link */}
-                  <a href={`mailto:${CONTACT.email}`} style={{ fontSize:15, color:'#F8F9FB', fontWeight:500, textDecoration:'none', transition:'color 0.2s' }} className="contact-link">
-                    {CONTACT.email}
-                  </a>
-                  <div style={{ fontSize:12, color:'#7A8EA8', marginTop:2 }}>We reply within a few hours</div>
-                </div>
-              </div>
-
-              {/* Hours */}
-              <div style={{ display:'flex', gap:18, alignItems:'flex-start' }}>
-                <div style={{ width:48, height:48, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>⏰</div>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:10 }}>Business Hours</div>
-                  <div style={{ background:'rgba(25,55,109,0.3)', border:'1px solid rgba(249,115,22,0.1)', borderRadius:8, overflow:'hidden' }}>
-                    {HOURS.map(([day, time]) => (
-                      <div key={day} style={{ display:'flex', justifyContent:'space-between', padding:'8px 14px', borderBottom:'1px solid rgba(249,115,22,0.06)', fontSize:13 }}>
-                        <span style={{ color:'#7A8EA8' }}>{day}</span>
-                        <span style={{
-                          color: day === 'Sunday' ? '#7A8EA8' : '#F8F9FB',
-                          fontWeight: day === 'Sunday' ? 400 : 500,
-                          opacity: day === 'Sunday' ? 0.5 : 1,
-                          fontFamily: day !== 'Sunday' ? "'Syne',sans-serif" : 'inherit',
-                        }}>{time}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ fontSize:12, color:'#7A8EA8', marginTop:8 }}>
-                    💡 For urgent orders after hours, <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" style={{ color:'#25D366', textDecoration:'none' }}>WhatsApp us anytime</a>
-                  </div>
-                </div>
-              </div>
+        {/* Hero */}
+        <div className="ct-hero">
+          <Image src="/images/about-showroom.jpg" alt="Karur Plywood showroom" fill style={{ objectFit: 'cover' }} priority />
+          <div className="ct-hero-overlay" />
+          <div className="ct-hero-copy">
+            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.8rem,3.4vw,2.4rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: 12 }}>Contact Us</h1>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', maxWidth: 420, lineHeight: 1.7, marginBottom: 18 }}>
+              We&apos;re here to help you build better. Reach out for enquiries, quotes, bulk orders or any assistance.
+            </p>
+            <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+              <a href={`tel:${CONTACT.phoneRaw}`} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#FFFFFF', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>📞 {CONTACT.phone}</a>
+              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#FFFFFF', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>💬 WhatsApp Us</a>
             </div>
           </div>
+        </div>
 
-          {/* Right: enquiry form */}
-          <div style={{ background:'rgba(25,55,109,0.25)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:20, padding:36 }}>
+        {/* Info cards */}
+        <div className="ct-info-grid">
+          {[
+            { icon: '📍', t: 'Visit Our Showroom', body: <>{CONTACT.address}</>, link: { href: 'https://maps.google.com/?q=Karur+Plywood+Company', label: 'Get Directions →' } },
+            { icon: '📞', t: 'Call Us', body: <>{CONTACT.phone}</>, sub: CONTACT.hours },
+            { icon: '✉️', t: 'Email Us', body: <>{CONTACT.email}</>, sub: 'We typically reply within 30 minutes' },
+            { icon: '🎧', t: 'WhatsApp Support', body: 'Chat with our team for quick updates, quotes and orders.', link: { href: `https://wa.me/${WA}`, label: 'Chat on WhatsApp →' } },
+          ].map(c => (
+            <div key={c.t} className="ct-info-card">
+              <div className="ct-info-icon">{c.icon}</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 8 }}>{c.t}</div>
+              <div style={{ fontSize: 13, color: '#4B5563', lineHeight: 1.6, marginBottom: 4 }}>{c.body}</div>
+              {c.sub && <div style={{ fontSize: 12, color: '#9CA3AF' }}>{c.sub}</div>}
+              {c.link && <a href={c.link.href} target="_blank" rel="noopener" style={{ display: 'inline-block', marginTop: 8, fontSize: 12.5, color: '#F07316', fontWeight: 700, textDecoration: 'none' }}>{c.link.label}</a>}
+            </div>
+          ))}
+        </div>
+
+        {/* Form + Map */}
+        <div className="ct-form-map-grid">
+          <div className="ct-card">
             <EnquiryForm />
           </div>
-        </div>
-      </section>
-
-      {/* Map section */}
-      <section style={{ padding:'0 0 72px' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 48px' }} className="contact-map-pad">
-          <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'0.62rem', letterSpacing:'0.22em', textTransform:'uppercase', color:'#F97316', marginBottom:16, display:'flex', alignItems:'center', gap:8 }}>
-            <span style={{ width:20, height:1, background:'#F97316' }}/>
-            Visit Our Store
-          </div>
-          <div style={{ background:'rgba(25,55,109,0.25)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:16, overflow:'hidden', height:360 }}>
+          <div className="ct-map-wrap">
             {process.env.NEXT_PUBLIC_GMAPS_EMBED_URL ? (
-              <iframe
-                src={process.env.NEXT_PUBLIC_GMAPS_EMBED_URL}
-                width="100%" height="360"
-                style={{ border:0, display:'block' }}
-                allowFullScreen loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+              <iframe src={process.env.NEXT_PUBLIC_GMAPS_EMBED_URL} width="100%" height="100%" style={{ border: 0, display: 'block' }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
             ) : (
-              <div style={{ height:'100%', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:16, background:'linear-gradient(135deg,#0d1f3a,#19376D)', position:'relative' }}>
-                <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(249,115,22,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.04) 1px,transparent 1px)', backgroundSize:'40px 40px' }}/>
-                <div style={{ fontSize:52, position:'relative' }}>📍</div>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:'0.04em', color:'#F8F9FB', position:'relative', textAlign:'center' }}>Karur Plywood &amp; Company</div>
-                <div style={{ fontSize:14, color:'#7A8EA8', position:'relative', textAlign:'center' }}>Covai Main Road, Reddipalayam, Karur – 639 008</div>
-                <a
-                  href="https://maps.google.com/?q=Karur+Plywood+Company+Covai+Main+Road+Reddipalayam+Karur"
-                  target="_blank" rel="noopener"
-                  style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'11px 22px', borderRadius:6, background:'#F97316', color:'#0B2447', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', position:'relative' }}>
-                  🗺️ Open Google Maps
-                </a>
+              <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: '#F2EDE5' }}>
+                <div style={{ fontSize: 46 }}>📍</div>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', textAlign: 'center' }}>Karur Plywood &amp; Company</div>
+                <div style={{ fontSize: 13, color: '#6B7280', textAlign: 'center', maxWidth: 280 }}>{CONTACT.address}</div>
+                <a href="https://maps.google.com/?q=Karur+Plywood+Company" target="_blank" rel="noopener" style={{ padding: '10px 20px', borderRadius: 6, background: '#F07316', color: '#FFFFFF', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, textDecoration: 'none' }}>Get Directions →</a>
               </div>
             )}
           </div>
         </div>
-      </section>
+
+        {/* Feature strip */}
+        <div className="ct-feature-strip">
+          {[
+            { i: '🎧', t: 'Expert Support', d: 'Get expert advice for the right materials' },
+            { i: '📦', t: 'Bulk Orders', d: 'Special pricing for bulk and recurring orders' },
+            { i: '🚚', t: 'Fast Delivery', d: 'Pan India delivery with safe packaging' },
+            { i: '🛡️', t: 'Secure Payments', d: '100% safe & secure payment options' },
+            { i: '✓', t: 'Trusted Quality', d: 'Branded products you can rely on' },
+          ].map(f => (
+            <div key={f.t} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: 18 }}>{f.i}</span>
+              <div>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{f.t}</div>
+                <div style={{ fontSize: 11, color: '#6B7280' }}>{f.d}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <style>{`
-        .contact-link:hover { color: #F97316 !important; }
-        .wa-hover-card:hover { border-color: rgba(37,211,102,0.45) !important; transform: translateY(-2px); }
-        @media(max-width:900px){
-          .contact-grid { grid-template-columns: 1fr !important; }
-          .contact-grid > div, .contact-map-pad { padding: 0 20px !important; }
-        }
+        .ct-hero { position: relative; border-radius: 14px; overflow: hidden; height: 260px; display: flex; align-items: flex-end; margin-bottom: 28px; }
+        .ct-hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,36,71,0.88) 0%, rgba(11,36,71,0.4) 60%, transparent 100%); z-index: 1; }
+        .ct-hero-copy { position: relative; z-index: 2; padding: 28px 32px; }
+        .ct-info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+        .ct-info-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
+        .ct-info-icon { width: 38px; height: 38px; border-radius: 8px; background: #FFF4ED; display: flex; align-items: center; justify-content: center; font-size: 17px; margin-bottom: 12px; }
+        .ct-form-map-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+        .ct-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 12px; padding: 28px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
+        .ct-map-wrap { border-radius: 12px; overflow: hidden; border: 1px solid #E5E1DC; min-height: 400px; }
+        .ct-feature-strip { display: flex; flex-wrap: wrap; gap: 24px; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 18px 24px; }
+        @media(max-width:1100px){ .ct-info-grid { grid-template-columns: repeat(2,1fr); } .ct-form-map-grid { grid-template-columns: 1fr; } }
+        @media(max-width:640px){ .ct-pad { padding-left:16px !important; padding-right:16px !important; } .ct-info-grid { grid-template-columns: 1fr; } .ct-hero-copy { padding: 20px; } }
       `}</style>
-    </>
+    </div>
   );
 }

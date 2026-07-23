@@ -683,7 +683,7 @@ function CouponsPanel() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <div style={{ fontSize: 13, color: '#9A8070' }}>{coupons.filter(c => c.is_active).length} active · {coupons.length} total</div>
-        <button onClick={() => setShowForm(true)} style={{ padding: '9px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12 }}>+ New Coupon</button>
+        <button onClick={() => setShowForm(true)} style={{ padding: '9px 18px', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12 }}>+ New Coupon</button>
       </div>
 
       {loading ? <div style={{ textAlign: 'center', padding: 40, color: '#9A8070' }}>Loading…</div> : (
@@ -742,7 +742,7 @@ function CouponsPanel() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
               <button onClick={() => setShowForm(false)} style={{ padding: 12, borderRadius: 8, background: 'transparent', border: '1px solid rgba(200,136,74,0.2)', color: '#9A8070', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>Cancel</button>
-              <button onClick={handleSave} disabled={saving} style={{ padding: 12, borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', border: 'none', color: '#fff', cursor: saving ? 'default' : 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12 }}>
+              <button onClick={handleSave} disabled={saving} style={{ padding: 12, borderRadius: 8, background: saving ? '#5c4a2e' : 'linear-gradient(135deg,#C8884A,#8B5E2A)', border: 'none', color: '#fff', cursor: saving ? 'default' : 'pointer', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12 }}>
                 {saving ? 'Saving…' : '+ Create Coupon'}
               </button>
             </div>

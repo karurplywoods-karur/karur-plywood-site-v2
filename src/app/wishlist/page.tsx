@@ -17,7 +17,7 @@ export default function WishlistPage() {
         {/* Header */}
         <div style={{ marginBottom: 32, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 8 }}>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 8 }}>
               Saved Products
             </div>
             <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(1.8rem,4vw,2.4rem)', fontWeight: 700, color: '#F8F9FB', margin: 0 }}>
@@ -25,7 +25,7 @@ export default function WishlistPage() {
             </h1>
           </div>
           {items.length > 0 && (
-            <button onClick={clear} style={{ fontSize: 12, color: '#7A8EA8', background: 'none', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6, padding: '6px 14px', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>
+            <button onClick={clear} style={{ fontSize: 12, color: '#7A8EA8', background: 'none', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6, padding: '6px 14px', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontWeight: 600 }}>
               Clear All
             </button>
           )}
@@ -41,7 +41,7 @@ export default function WishlistPage() {
             <p style={{ color: '#7A8EA8', fontSize: 14, marginBottom: 28 }}>
               Browse products and tap the heart icon to save items for later.
             </p>
-            <Link href="/products" style={{ display: 'inline-block', padding: '12px 28px', borderRadius: 10, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.78rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
+            <Link href="/products" style={{ display: 'inline-block', padding: '12px 28px', borderRadius: 10, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '0.78rem', letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
               Browse Products
             </Link>
           </div>
@@ -77,7 +77,7 @@ export default function WishlistPage() {
                       />
                     )}
                     {discount && discount > 0 && (
-                      <div style={{ position: 'absolute', top: 10, left: 10, background: '#25D366', color: '#fff', borderRadius: 4, padding: '3px 8px', fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif" }}>
+                      <div style={{ position: 'absolute', top: 10, left: 10, background: '#25D366', color: '#fff', borderRadius: 4, padding: '3px 8px', fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>
                         {discount}% OFF
                       </div>
                     )}
@@ -86,7 +86,7 @@ export default function WishlistPage() {
                   {/* Body */}
                   <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     {product.categories && (
-                      <div style={{ fontSize: '0.58rem', fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#F97316', marginBottom: 4 }}>
+                      <div style={{ fontSize: '0.58rem', fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#F97316', marginBottom: 4 }}>
                         {product.categories.icon} {product.categories.name}
                       </div>
                     )}
@@ -117,7 +117,7 @@ export default function WishlistPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8, marginTop: 'auto' }}>
                       <button
                         onClick={() => { add(product); remove(product.id); }}
-                        style={{ padding: '10px 0', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.7rem', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                        style={{ padding: '10px 0', borderRadius: 8, background: 'linear-gradient(135deg,#C8884A,#8B5E2A)', color: '#fff', border: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '0.7rem', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                         Add to Cart
                       </button>
                       <button
@@ -137,7 +137,7 @@ export default function WishlistPage() {
         {/* Continue shopping */}
         {items.length > 0 && (
           <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <Link href="/products" style={{ fontSize: 13, color: '#7A8EA8', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>
+            <Link href="/products" style={{ fontSize: 13, color: '#7A8EA8', textDecoration: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 600 }}>
               ← Continue Browsing Products
             </Link>
           </div>

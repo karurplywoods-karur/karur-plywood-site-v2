@@ -96,7 +96,7 @@ export default function OrdersPage() {
 
           <div>
             <div style={{ marginBottom: 20 }}>
-              <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 4px' }}>My Orders</h1>
+              <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 4px' }}>My Orders</h1>
               <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>View and track all your orders in one place</p>
             </div>
 
@@ -119,7 +119,7 @@ export default function OrdersPage() {
             {paged.length === 0 ? (
               <div className="ord-card" style={{ textAlign: 'center', padding: '60px 20px' }}>
                 <div style={{ fontSize: 44, marginBottom: 12 }}>📦</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', marginBottom: 8 }}>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', marginBottom: 8 }}>
                   {tab === 'all' ? 'No orders yet' : `No ${TABS.find(t => t.key === tab)?.label} orders`}
                 </div>
                 <Link href="/products" style={{ color: '#F07316', fontSize: 13, textDecoration: 'none', fontWeight: 700 }}>Start shopping →</Link>
@@ -133,7 +133,7 @@ export default function OrdersPage() {
                       <div className="ord-row-icon">📦</div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 2 }}>Order ID</div>
-                        <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 14 }}>{order.order_number}</div>
+                        <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 14 }}>{order.order_number}</div>
                       </div>
                       <div>
                         <div style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 2 }}>Order Date</div>
@@ -141,14 +141,14 @@ export default function OrdersPage() {
                       </div>
                       <div>
                         <div style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 2 }}>{order.order_items?.length || 0} Items</div>
-                        <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 14 }}>₹{order.total?.toLocaleString('en-IN')}</div>
+                        <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 14 }}>₹{order.total?.toLocaleString('en-IN')}</div>
                       </div>
                       <div>
-                        <span style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}`, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif" }}>{s.label}</span>
+                        <span style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}`, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>{s.label}</span>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
                         <Link href={`/account/orders/${order.id}`} className="ord-view-btn">View Details</Link>
-                        <a href={`/account/orders/${order.id}/invoice`} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#F07316', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>↓ Download Invoice</a>
+                        <a href={`/account/orders/${order.id}/invoice`} target="_blank" rel="noopener" style={{ fontSize: 11, color: '#F07316', textDecoration: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 700 }}>↓ Download Invoice</a>
                       </div>
                     </div>
                   );
@@ -170,17 +170,17 @@ export default function OrdersPage() {
 
           <aside>
             <div className="ord-card" style={{ marginBottom: 16 }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Account Overview</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Account Overview</div>
               {[['Total Orders', orders.length], ['Total Spent', `₹${totalSpent.toLocaleString('en-IN')}`]].map(([k, v]) => (
                 <div key={k as string} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, padding: '8px 0', borderBottom: '1px solid #F1EEE9' }}>
                   <span style={{ color: '#6B7280' }}>{k}</span><span style={{ fontWeight: 700, color: '#0B2447' }}>{v}</span>
                 </div>
               ))}
-              <Link href="/account" style={{ display: 'block', textAlign: 'center', marginTop: 14, padding: '10px 0', border: '1px solid #E5E1DC', borderRadius: 6, color: '#0B2447', fontSize: 12, fontWeight: 700, fontFamily: "'Syne',sans-serif", textDecoration: 'none' }}>View Dashboard →</Link>
+              <Link href="/account" style={{ display: 'block', textAlign: 'center', marginTop: 14, padding: '10px 0', border: '1px solid #E5E1DC', borderRadius: 6, color: '#0B2447', fontSize: 12, fontWeight: 700, fontFamily: "'Inter',sans-serif", textDecoration: 'none' }}>View Dashboard →</Link>
             </div>
 
             <div className="ord-card" style={{ marginBottom: 16 }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Need Something?</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Need Something?</div>
               {[
                 { icon: '📍', t: 'Track Your Order', d: 'Real-time updates', href: '/orders/track' },
                 { icon: '↺', t: 'Easy Returns', d: 'Hassle-free returns', href: '/contact' },
@@ -197,9 +197,9 @@ export default function OrdersPage() {
             </div>
 
             <div className="ord-bom-card">
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>Upload BOM & Get Best Price</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>Upload BOM & Get Best Price</div>
               <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 12 }}>Upload your carpenter list and get fastest quote</div>
-              <Link href="/bom-quote" style={{ display: 'inline-flex', alignItems: 'center', padding: '9px 16px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, textDecoration: 'none' }}>📤 Upload BOM</Link>
+              <Link href="/bom-quote" style={{ display: 'inline-flex', alignItems: 'center', padding: '9px 16px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, textDecoration: 'none' }}>📤 Upload BOM</Link>
             </div>
           </aside>
         </div>
@@ -209,13 +209,13 @@ export default function OrdersPage() {
         .ord-layout { display: grid; grid-template-columns: 240px 1fr 260px; gap: 24px; align-items: start; }
         .ord-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 18px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .ord-tabs { display: flex; gap: 4px; border-bottom: 1px solid #E5E1DC; margin-bottom: 16px; overflow-x: auto; }
-        .ord-tab { background: none; border: none; padding: 10px 14px; font-family: 'Syne',sans-serif; font-size: 0.72rem; font-weight: 700; color: #6B7280; white-space: nowrap; cursor: pointer; border-bottom: 2px solid transparent; }
+        .ord-tab { background: none; border: none; padding: 10px 14px; font-family: 'Inter',sans-serif; font-size: 0.72rem; font-weight: 700; color: #6B7280; white-space: nowrap; cursor: pointer; border-bottom: 2px solid transparent; }
         .ord-tab--active { color: #F07316; border-bottom-color: #F07316; }
         .ord-search { flex: 1; min-width: 200px; padding: 9px 14px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 13px; background: #FFFFFF; }
         .ord-sort { padding: 9px 12px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 12px; background: #FFFFFF; color: #0B2447; }
         .ord-row { display: grid; grid-template-columns: 40px 1.6fr 1fr 1fr auto auto; gap: 14px; align-items: center; }
         .ord-row-icon { width: 40px; height: 40px; border-radius: 8px; background: #FFF4ED; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .ord-view-btn { padding: 7px 14px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-size: 11.5px; font-weight: 700; font-family: 'Syne',sans-serif; text-decoration: none; white-space: nowrap; }
+        .ord-view-btn { padding: 7px 14px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-size: 11.5px; font-weight: 700; font-family: 'Inter',sans-serif; text-decoration: none; white-space: nowrap; }
         .ord-view-btn:hover { border-color: #F07316; color: #F07316; }
         .ord-page-btn { min-width: 28px; height: 28px; border: 1px solid #E5E1DC; border-radius: 6px; background: #FFFFFF; color: #6B7280; font-size: 12px; cursor: pointer; }
         .ord-page-btn--active { background: #F07316; border-color: #F07316; color: #FFFFFF; }

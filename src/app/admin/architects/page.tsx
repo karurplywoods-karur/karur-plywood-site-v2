@@ -12,10 +12,10 @@ const EMPTY_PROJ: Partial<Project>  = { title:'', description:'', location:'', p
 function slugify(s:string){ return s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-'); }
 
 const S = {
-  page: { minHeight:'100vh', background:'#070F1F', color:'#F8F9FB', fontFamily:"'DM Sans',sans-serif" },
+  page: { minHeight:'100vh', background:'#070F1F', color:'#F8F9FB', fontFamily:"'Inter',sans-serif" },
   topbar: { background:'rgba(11,36,71,0.8)', borderBottom:'1px solid rgba(249,115,22,0.15)', padding:'0 28px', height:60, display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky' as const, top:0, zIndex:100, backdropFilter:'blur(10px)' },
-  inp: { width:'100%', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(249,115,22,0.18)', borderRadius:4, padding:'9px 13px', fontSize:13, color:'#F8F9FB', fontFamily:"'DM Sans',sans-serif", outline:'none' },
-  lbl: { display:'block' as const, fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700 as const, letterSpacing:'.15em', textTransform:'uppercase' as const, color:'#7A8EA8', marginBottom:5 },
+  inp: { width:'100%', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(249,115,22,0.18)', borderRadius:4, padding:'9px 13px', fontSize:13, color:'#F8F9FB', fontFamily:"'Inter',sans-serif", outline:'none' },
+  lbl: { display:'block' as const, fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700 as const, letterSpacing:'.15em', textTransform:'uppercase' as const, color:'#7A8EA8', marginBottom:5 },
   fg: { marginBottom:14 },
   card: { background:'rgba(25,55,109,0.35)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:8, padding:'18px 20px' },
 };
@@ -118,7 +118,7 @@ export default function AdminArchitectsPage() {
 
   const btnRow: React.CSSProperties = { display:'flex', gap:8, alignItems:'center' };
   const secBtn = (label:string,onClick:()=>void,col='#F97316') => (
-    <button onClick={onClick} style={{ padding:'7px 14px', borderRadius:4, border:`1px solid ${col}40`, background:`${col}12`, color:col, fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer' }}>{label}</button>
+    <button onClick={onClick} style={{ padding:'7px 14px', borderRadius:4, border:`1px solid ${col}40`, background:`${col}12`, color:col, fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer' }}>{label}</button>
   );
 
   return (
@@ -127,16 +127,16 @@ export default function AdminArchitectsPage() {
       <div style={S.topbar}>
         <div style={{ display:'flex', alignItems:'center', gap:14 }}>
           <button onClick={()=>{ if(view!=='list') setView('list'); else router.push('/admin/dashboard'); }}
-            style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'5px 11px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:11, letterSpacing:'.08em', textTransform:'uppercase' }}>
+            style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'5px 11px', cursor:'pointer', fontFamily:"'Inter',sans-serif", fontSize:11, letterSpacing:'.08em', textTransform:'uppercase' }}>
             ← {view==='list'?'Dashboard':'Back'}
           </button>
-          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:20, letterSpacing:'.06em', color:'#F8F9FB' }}>
+          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:20, letterSpacing:'.06em', color:'#F8F9FB' }}>
             🏛️ Architect Partners {view==='projects'&&selectedArch&&`— ${selectedArch.name}`}
           </div>
         </div>
         <div style={{ display:'flex', gap:10, alignItems:'center' }}>
           {msg&&<div style={{ fontSize:12, padding:'5px 12px', borderRadius:4, background:msg.ok?'rgba(37,211,102,0.1)':'rgba(249,115,22,0.1)', color:msg.ok?'#4ADE80':'#F97316', border:`1px solid ${msg.ok?'rgba(37,211,102,0.2)':'rgba(249,115,22,0.2)'}` }}>{msg.text}</div>}
-          {view==='list'&&<button onClick={openNew} style={{ background:'#F97316', color:'#0B2447', border:'none', borderRadius:4, padding:'7px 18px', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:12, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer' }}>+ New Architect</button>}
+          {view==='list'&&<button onClick={openNew} style={{ background:'#F97316', color:'#0B2447', border:'none', borderRadius:4, padding:'7px 18px', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:12, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer' }}>+ New Architect</button>}
         </div>
       </div>
 
@@ -148,7 +148,7 @@ export default function AdminArchitectsPage() {
           : architects.length===0 ? (
             <div style={{ textAlign:'center',padding:'80px 0' }}>
               <div style={{ fontSize:48,marginBottom:12 }}>🏛️</div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'2rem',letterSpacing:'.05em',color:'#F8F9FB',marginBottom:8 }}>NO ARCHITECTS YET</div>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontSize:'2rem',letterSpacing:'.05em',color:'#F8F9FB',marginBottom:8 }}>NO ARCHITECTS YET</div>
               <p style={{ color:'#7A8EA8',marginBottom:20 }}>Add your first architect partner to showcase their portfolio.</p>
               <button onClick={openNew} className="btn-p" style={{ border:'none',cursor:'pointer' }}>+ Add First Architect</button>
             </div>
@@ -158,10 +158,10 @@ export default function AdminArchitectsPage() {
                 <div key={a.id} style={{ ...S.card, display:'grid', gridTemplateColumns:'1fr auto', gap:16, alignItems:'center' }}>
                   <div>
                     <div style={{ display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',marginBottom:4 }}>
-                      <span style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:16,color:'#F8F9FB' }}>{a.name}</span>
+                      <span style={{ fontFamily:"'Inter',sans-serif",fontWeight:700,fontSize:16,color:'#F8F9FB' }}>{a.name}</span>
                       {a.firm&&<span style={{ fontSize:12,color:'#F97316' }}>{a.firm}</span>}
-                      {a.verified&&<span style={{ fontSize:9,fontFamily:"'Syne',sans-serif",fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',background:'rgba(37,211,102,0.12)',color:'#4ADE80',border:'1px solid rgba(37,211,102,0.2)',padding:'2px 8px',borderRadius:3 }}>✓ Live</span>}
-                      {a.featured&&<span style={{ fontSize:9,fontFamily:"'Syne',sans-serif",fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',background:'rgba(249,115,22,0.12)',color:'#F97316',border:'1px solid rgba(249,115,22,0.2)',padding:'2px 8px',borderRadius:3 }}>⭐ Featured</span>}
+                      {a.verified&&<span style={{ fontSize:9,fontFamily:"'Inter',sans-serif",fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',background:'rgba(37,211,102,0.12)',color:'#4ADE80',border:'1px solid rgba(37,211,102,0.2)',padding:'2px 8px',borderRadius:3 }}>✓ Live</span>}
+                      {a.featured&&<span style={{ fontSize:9,fontFamily:"'Inter',sans-serif",fontWeight:700,letterSpacing:'.12em',textTransform:'uppercase',background:'rgba(249,115,22,0.12)',color:'#F97316',border:'1px solid rgba(249,115,22,0.2)',padding:'2px 8px',borderRadius:3 }}>⭐ Featured</span>}
                     </div>
                     <div style={{ fontSize:12,color:'#7A8EA8' }}>📍 {a.city} · /architects/{a.slug} · {a.years_exp} yrs exp</div>
                   </div>
@@ -181,7 +181,7 @@ export default function AdminArchitectsPage() {
         {/* ── EDIT ARCHITECT ── */}
         {view==='edit'&&(
           <div style={{ maxWidth:680 }}>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.8rem',letterSpacing:'.05em',color:'#F8F9FB',marginBottom:24 }}>
+            <div style={{ fontFamily:"'Syne',sans-serif",fontSize:'1.8rem',letterSpacing:'.05em',color:'#F8F9FB',marginBottom:24 }}>
               {editing?'EDIT ARCHITECT':'NEW ARCHITECT PARTNER'}
             </div>
             <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginBottom:14 }}>
@@ -221,7 +221,7 @@ export default function AdminArchitectsPage() {
           <div>
             {/* Project form */}
             <div style={{ ...S.card, marginBottom:28 }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.4rem',letterSpacing:'.05em',color:'#F8F9FB',marginBottom:20 }}>
+              <div style={{ fontFamily:"'Syne',sans-serif",fontSize:'1.4rem',letterSpacing:'.05em',color:'#F8F9FB',marginBottom:20 }}>
                 {editingProj?'EDIT PROJECT':'ADD NEW PROJECT'}
               </div>
               <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginBottom:14 }}>
@@ -251,7 +251,7 @@ export default function AdminArchitectsPage() {
             </div>
 
             {/* Existing projects */}
-            <div style={{ fontFamily:"'Syne',sans-serif",fontSize:'.68rem',fontWeight:700,letterSpacing:'.2em',textTransform:'uppercase',color:'#7A8EA8',marginBottom:14 }}>
+            <div style={{ fontFamily:"'Inter',sans-serif",fontSize:'.68rem',fontWeight:700,letterSpacing:'.2em',textTransform:'uppercase',color:'#7A8EA8',marginBottom:14 }}>
               {selectedArch.architect_projects?.length||0} Project{(selectedArch.architect_projects?.length||0)!==1?'s':''}
             </div>
             {(selectedArch.architect_projects||[]).length===0 ? (
@@ -261,7 +261,7 @@ export default function AdminArchitectsPage() {
                 {(selectedArch.architect_projects||[]).map((p:Project)=>(
                   <div key={p.id} style={{ ...S.card, display:'grid', gridTemplateColumns:'1fr auto', gap:14, alignItems:'center' }}>
                     <div>
-                      <div style={{ fontFamily:"'Syne',sans-serif",fontWeight:700,color:'#F8F9FB',marginBottom:4 }}>{p.title}</div>
+                      <div style={{ fontFamily:"'Inter',sans-serif",fontWeight:700,color:'#F8F9FB',marginBottom:4 }}>{p.title}</div>
                       <div style={{ fontSize:12,color:'#7A8EA8' }}>{p.project_type} · {p.location} · {p.year} {!p.published&&'· 🚫 Draft'}</div>
                       {p.materials_used?.length>0&&<div style={{ fontSize:11,color:'#F97316',marginTop:4 }}>{p.materials_used.join(' · ')}</div>}
                     </div>

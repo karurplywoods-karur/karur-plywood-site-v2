@@ -40,7 +40,7 @@ export default function RecentlyViewed({ excludeId }: { excludeId?: string | num
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 6 }}>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 6 }}>
               Your Browsing History
             </div>
             <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: '1.6rem', fontWeight: 700, color: '#F8F9FB', margin: 0 }}>
@@ -49,7 +49,7 @@ export default function RecentlyViewed({ excludeId }: { excludeId?: string | num
           </div>
           <button
             onClick={() => { localStorage.removeItem(KEY); setItems([]); }}
-            style={{ fontSize: 11, color: '#5A6E80', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}
+            style={{ fontSize: 11, color: '#5A6E80', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}
           >
             Clear history
           </button>
@@ -88,7 +88,7 @@ export default function RecentlyViewed({ excludeId }: { excludeId?: string | num
                       />
                     )}
                     {discount && discount > 0 && (
-                      <div style={{ position: 'absolute', top: 8, left: 8, background: '#25D366', color: '#fff', borderRadius: 4, padding: '2px 8px', fontSize: 10, fontWeight: 700, fontFamily: "'Syne',sans-serif" }}>
+                      <div style={{ position: 'absolute', top: 8, left: 8, background: '#25D366', color: '#fff', borderRadius: 4, padding: '2px 8px', fontSize: 10, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>
                         {discount}% OFF
                       </div>
                     )}
@@ -97,7 +97,7 @@ export default function RecentlyViewed({ excludeId }: { excludeId?: string | num
                   {/* Info */}
                   <div style={{ padding: '10px 12px 12px' }}>
                     {product.categories && (
-                      <div style={{ fontSize: '0.55rem', fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#F97316', marginBottom: 3 }}>
+                      <div style={{ fontSize: '0.55rem', fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#F97316', marginBottom: 3 }}>
                         {product.categories.icon} {product.categories.name}
                       </div>
                     )}

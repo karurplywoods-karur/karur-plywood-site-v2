@@ -91,7 +91,7 @@ export default function ProductImageGallery({
             position: 'absolute', bottom: 12, right: 12,
             background: 'rgba(11,36,71,0.75)', backdropFilter: 'blur(4px)',
             color: '#FFFFFF', fontSize: 11, fontWeight: 700,
-            fontFamily: "'Syne',sans-serif", letterSpacing: '.06em',
+            fontFamily: "'Inter',sans-serif", letterSpacing: '.06em',
             padding: '4px 10px', borderRadius: 20,
           }}>
             {active + 1} / {validImages.length}
@@ -102,7 +102,7 @@ export default function ProductImageGallery({
           position: 'absolute', bottom: 12, left: 12,
           background: 'rgba(255,255,255,0.9)',
           color: '#6B7280', fontSize: 10, fontWeight: 600,
-          fontFamily: "'Syne',sans-serif", letterSpacing: '.04em',
+          fontFamily: "'Inter',sans-serif", letterSpacing: '.04em',
           padding: '4px 10px', borderRadius: 20,
         }}>
           🔍 Hover to zoom

@@ -113,7 +113,7 @@ function ProjectCard({ p, waHire }: { p: Project; waHire: string }) {
         <div style={{ position: 'absolute', top: 12, left: 12,
           background: 'rgba(7,15,31,0.85)', backdropFilter: 'blur(6px)',
           border: '1px solid rgba(249,115,22,0.28)', borderRadius: 3,
-          padding: '3px 10px', fontSize: 10, fontFamily: "'Syne',sans-serif",
+          padding: '3px 10px', fontSize: 10, fontFamily: "'Inter',sans-serif",
           fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#F97316' }}>
           {TYPE_LABEL[p.project_type] || p.project_type}
         </div>
@@ -122,7 +122,7 @@ function ProjectCard({ p, waHire }: { p: Project; waHire: string }) {
           <div style={{ position: 'absolute', top: 12, right: 12,
             background: 'rgba(7,15,31,0.85)', backdropFilter: 'blur(6px)',
             border: '1px solid rgba(255,255,255,0.1)', borderRadius: 3,
-            padding: '3px 10px', fontSize: 10, fontFamily: "'Syne',sans-serif",
+            padding: '3px 10px', fontSize: 10, fontFamily: "'Inter',sans-serif",
             fontWeight: 700, color: '#7A8EA8' }}>
             {p.year}
           </div>
@@ -133,7 +133,7 @@ function ProjectCard({ p, waHire }: { p: Project; waHire: string }) {
           <div style={{ position: 'absolute', bottom: 12, right: 12,
             background: 'rgba(7,15,31,0.85)', backdropFilter: 'blur(6px)',
             border: '1px solid rgba(249,115,22,0.25)', borderRadius: 3,
-            padding: '3px 10px', fontSize: 10, fontFamily: "'Syne',sans-serif",
+            padding: '3px 10px', fontSize: 10, fontFamily: "'Inter',sans-serif",
             fontWeight: 700, color: '#F97316', display: 'flex', alignItems: 'center', gap: 5 }}>
             📷 {allPhotos.length} photos
           </div>
@@ -142,7 +142,7 @@ function ProjectCard({ p, waHire }: { p: Project; waHire: string }) {
         {/* View overlay on hover */}
         {allPhotos.length > 0 && (
           <div className="port-card-overlay">
-            <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: 'white' }}>
+            <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: 'white' }}>
               View Gallery ↗
             </span>
           </div>
@@ -166,7 +166,7 @@ function ProjectCard({ p, waHire }: { p: Project; waHire: string }) {
 
       {/* Body */}
       <div style={{ padding: '18px 20px 20px' }}>
-        <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem',
+        <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '1rem',
           color: '#F8F9FB', marginBottom: 6, lineHeight: 1.3 }}>{p.title}</div>
         {p.location && (
           <div style={{ fontSize: 12, color: '#7A8EA8', marginBottom: 10 }}>📍 {p.location}</div>
@@ -178,13 +178,13 @@ function ProjectCard({ p, waHire }: { p: Project; waHire: string }) {
         {/* Materials */}
         {p.materials_used?.length > 0 && (
           <div>
-            <div style={{ fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+            <div style={{ fontSize: 10, fontFamily: "'Inter',sans-serif", fontWeight: 700,
               letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 8 }}>
               Materials from Karur Plywood:
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {p.materials_used.map((m: string) => (
-                <span key={m} style={{ fontSize: 11, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+                <span key={m} style={{ fontSize: 11, fontFamily: "'Inter',sans-serif", fontWeight: 700,
                   letterSpacing: '.06em', background: 'rgba(249,115,22,0.08)',
                   border: '1px solid rgba(249,115,22,0.2)', color: '#F97316',
                   padding: '3px 8px', borderRadius: 3 }}>{m}</span>
@@ -228,7 +228,7 @@ export default function ArchitectPortfolioPage() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center',
       justifyContent: 'center', background: '#070F1F', flexDirection: 'column', gap: 16 }}>
       <div style={{ fontSize: 48 }}>🏛️</div>
-      <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '2rem', color: '#F8F9FB' }}>NOT FOUND</div>
+      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '2rem', color: '#F8F9FB' }}>NOT FOUND</div>
       <Link href="/architects" className="btn-s">← Back to Architects</Link>
     </div>
   );
@@ -273,14 +273,14 @@ export default function ArchitectPortfolioPage() {
             <div style={{ flex: 1 }}>
               {/* Badges */}
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
-                <span style={{ fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+                <span style={{ fontSize: 10, fontFamily: "'Inter',sans-serif", fontWeight: 700,
                   letterSpacing: '.12em', textTransform: 'uppercase',
                   background: 'rgba(37,211,102,0.12)', color: '#4ADE80',
                   border: '1px solid rgba(37,211,102,0.2)', padding: '3px 10px', borderRadius: 2 }}>
                   ✓ Verified Partner
                 </span>
                 {arch.featured && (
-                  <span style={{ fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+                  <span style={{ fontSize: 10, fontFamily: "'Inter',sans-serif", fontWeight: 700,
                     letterSpacing: '.12em', textTransform: 'uppercase',
                     background: 'rgba(249,115,22,0.15)', color: '#F97316',
                     border: '1px solid rgba(249,115,22,0.3)', padding: '3px 10px', borderRadius: 2 }}>
@@ -289,13 +289,13 @@ export default function ArchitectPortfolioPage() {
                 )}
               </div>
 
-              <h1 style={{ fontFamily: "'Bebas Neue',sans-serif",
+              <h1 style={{ fontFamily: "'Syne',sans-serif",
                 fontSize: 'clamp(2rem,4vw,3.2rem)', letterSpacing: '.04em',
                 color: '#F8F9FB', lineHeight: 1, marginBottom: 6 }}>
                 {arch.name}
               </h1>
               {arch.firm && (
-                <div style={{ fontSize: 14, color: '#F97316', fontFamily: "'Syne',sans-serif",
+                <div style={{ fontSize: 14, color: '#F97316', fontFamily: "'Inter',sans-serif",
                   fontWeight: 700, marginBottom: 6 }}>{arch.firm}</div>
               )}
               <div style={{ fontSize: 13, color: '#7A8EA8', marginBottom: 14 }}>
@@ -309,7 +309,7 @@ export default function ArchitectPortfolioPage() {
               {arch.specialities?.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 22 }}>
                   {arch.specialities.map((s: string) => (
-                    <span key={s} style={{ fontSize: 11, fontFamily: "'Syne',sans-serif",
+                    <span key={s} style={{ fontSize: 11, fontFamily: "'Inter',sans-serif",
                       fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase',
                       background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)',
                       color: '#F97316', padding: '3px 9px', borderRadius: 2 }}>{s}</span>
@@ -334,11 +334,11 @@ export default function ArchitectPortfolioPage() {
             {/* Stats */}
             <div style={{ background: 'rgba(25,55,109,0.4)', border: '1px solid rgba(249,115,22,0.15)',
               borderRadius: 8, padding: '20px 28px', textAlign: 'center', flexShrink: 0 }}>
-              <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '2.8rem',
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '2.8rem',
                 letterSpacing: '.04em', color: '#F97316', lineHeight: 1 }}>
                 {projects.length}
               </div>
-              <div style={{ fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+              <div style={{ fontSize: 10, fontFamily: "'Inter',sans-serif", fontWeight: 700,
                 letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginTop: 4 }}>
                 Projects
               </div>
@@ -353,7 +353,7 @@ export default function ArchitectPortfolioPage() {
           {projects.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 0' }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>🏗️</div>
-              <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.8rem',
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.8rem',
                 letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 8 }}>
                 PROJECTS COMING SOON
               </div>
@@ -364,7 +364,7 @@ export default function ArchitectPortfolioPage() {
           ) : (
             <>
               <div className="eyebrow">Portfolio</div>
-              <h2 style={{ fontFamily: "'Bebas Neue',sans-serif",
+              <h2 style={{ fontFamily: "'Syne',sans-serif",
                 fontSize: 'clamp(1.8rem,3vw,2.8rem)', letterSpacing: '.04em',
                 color: '#F8F9FB', marginBottom: 32 }}>
                 COMPLETED PROJECTS
@@ -383,7 +383,7 @@ export default function ArchitectPortfolioPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             gap: 28, flexWrap: 'wrap' }}>
             <div>
-              <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.8rem',
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.8rem',
                 letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 6 }}>
                 INTERESTED IN THIS WORK?
               </div>
@@ -403,7 +403,7 @@ export default function ArchitectPortfolioPage() {
 
           <div style={{ marginTop: 32, textAlign: 'center' }}>
             <Link href="/architects" style={{ fontSize: 13, color: '#7A8EA8',
-              fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.08em' }}>
+              fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '.08em' }}>
               ← Back to All Architects
             </Link>
           </div>
@@ -450,7 +450,7 @@ export default function ArchitectPortfolioPage() {
           position: absolute; inset: 0;
           background: rgba(7,15,31,0.75);
           display: flex; align-items: center; justify-content: center;
-          font-family: 'Syne', sans-serif; font-weight: 700;
+          font-family: 'Inter', sans-serif; font-weight: 700;
           font-size: 14px; color: #F97316;
         }
 
@@ -469,13 +469,13 @@ export default function ArchitectPortfolioPage() {
           position: absolute; top: -44px; right: 0;
           background: none; border: 1px solid rgba(249,115,22,0.3);
           border-radius: 4px; color: #F97316; padding: 6px 14px;
-          cursor: pointer; font-size: 14px; font-family: 'Syne',sans-serif;
+          cursor: pointer; font-size: 14px; font-family: 'Inter',sans-serif;
           font-weight: 700; transition: background .15s;
         }
         .lb-close:hover { background: rgba(249,115,22,0.1); }
         .lb-counter {
           position: absolute; top: -44px; left: 0;
-          font-family: 'Syne',sans-serif; font-size: 12px;
+          font-family: 'Inter',sans-serif; font-size: 12px;
           font-weight: 700; color: #7A8EA8; letter-spacing: .1em;
           padding-top: 8px;
         }

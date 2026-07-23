@@ -84,7 +84,7 @@ export default function NotFoundPage() {
           display: 'inline-flex', alignItems: 'center', gap: 8,
           padding: '13px 32px', borderRadius: 10,
           background: 'linear-gradient(135deg,#C8884A,#8B5E2A)',
-          color: '#fff', fontFamily: "'Syne', sans-serif",
+          color: '#fff', fontFamily: "'Inter', sans-serif",
           fontWeight: 700, fontSize: '0.78rem',
           letterSpacing: '0.1em', textTransform: 'uppercase',
           textDecoration: 'none', transition: 'opacity 0.2s',

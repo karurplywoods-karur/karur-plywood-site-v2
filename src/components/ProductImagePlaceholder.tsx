@@ -95,7 +95,7 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
       <text
         x="200" y={isDetail ? 168 : 163}
         textAnchor="middle"
-        fontFamily="'Syne', 'Arial Narrow', sans-serif"
+        fontFamily="'Inter', 'Arial Narrow', sans-serif"
         fontSize={fontSize}
         fontWeight="700"
         fill="#F8F9FB"
@@ -110,7 +110,7 @@ export default function ProductImagePlaceholder({ name, categoryName, categoryIc
         <text
           x="200" y={isDetail ? 186 : 179}
           textAnchor="middle"
-          fontFamily="'Syne', Arial, sans-serif"
+          fontFamily="'Inter', Arial, sans-serif"
           fontSize={brandSize + 1}
           fontWeight="600"
           fill={accent}

@@ -267,7 +267,7 @@ export default function CheckoutPage() {
         <div className="os-hero">
           <div className="os-hero-icon">✅</div>
           <div style={{ flex: 1, minWidth: 220 }}>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Thank You!</h1>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Thank You!</h1>
             <div style={{ fontSize: 15, color: '#16a34a', fontWeight: 700, marginBottom: 6 }}>Your Order Has Been Placed Successfully</div>
             <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>Your order has been received and is being processed. We&apos;ve sent the order details to your email and WhatsApp.</p>
             <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
             </div>
           </div>
           <div className="os-hero-confirm">
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#16a34a', fontSize: 13, marginBottom: 10 }}>Order Confirmed!</div>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#16a34a', fontSize: 13, marginBottom: 10 }}>Order Confirmed!</div>
             <div className="os-label">Order ID</div>
             <div className="os-val" style={{ marginBottom: 8 }}>{orderDone.order_number}</div>
             {fullOrder && (
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', margin: '28px 0 16px' }}>Order Summary</h2>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', margin: '28px 0 16px' }}>Order Summary</h2>
 
         <div className="os-grid">
           <div>
@@ -308,7 +308,7 @@ export default function CheckoutPage() {
 
             {fullOrder && (
               <div className="os-card" style={{ marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Order Details</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Order Details</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 10, fontSize: 13 }}>
                   <div><span style={{ color: '#9CA3AF' }}>Order ID: </span><span style={{ fontWeight: 700, color: '#0B2447' }}>{fullOrder.order_number}</span></div>
                   <div><span style={{ color: '#9CA3AF' }}>Payment Status: </span><span style={{ fontWeight: 700, color: fullOrder.payment_status === 'paid' ? '#16a34a' : '#F07316' }}>{fullOrder.payment_status === 'paid' ? 'Paid' : 'Pending'}</span></div>
@@ -320,7 +320,7 @@ export default function CheckoutPage() {
 
             {/* What happens next */}
             <div className="os-card">
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 18 }}>What Happens Next?</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 18 }}>What Happens Next?</div>
               <div className="os-next-grid">
                 {[
                   { icon: '✓', t: 'Order Confirmed', d: "We've received your order" },
@@ -330,7 +330,7 @@ export default function CheckoutPage() {
                 ].map((s, i) => (
                   <div key={s.t} className="os-next-item">
                     <div className="os-next-icon" style={{ opacity: i === 0 ? 1 : 0.5 }}>{s.icon}</div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{s.t}</div>
+                    <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{s.t}</div>
                     <div style={{ fontSize: 11, color: '#6B7280' }}>{s.d}</div>
                   </div>
                 ))}
@@ -342,7 +342,7 @@ export default function CheckoutPage() {
           <aside>
             <div className="os-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>Order Items {fullOrder ? `(${fullOrder.order_items?.length || 0})` : ''}</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>Order Items {fullOrder ? `(${fullOrder.order_items?.length || 0})` : ''}</div>
                 <Link href={`/account/orders/${orderDone.order_id}`} style={{ fontSize: 11.5, color: '#F07316', fontWeight: 700, textDecoration: 'none' }}>Edit Cart</Link>
               </div>
               {fullOrder ? (
@@ -362,7 +362,7 @@ export default function CheckoutPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Subtotal ({fullOrder.order_items?.length || 0} Items)</span><span>₹{fullOrder.subtotal?.toLocaleString('en-IN')}</span></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Shipping</span><span style={{ color: fullOrder.delivery_charge ? '#0B2447' : '#16a34a' }}>{fullOrder.delivery_charge ? `₹${fullOrder.delivery_charge}` : 'Free'}</span></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>GST (18%)</span><span>Included</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 15, color: '#0B2447', borderTop: '1px solid #E5E1DC', paddingTop: 8 }}><span>Total Amount</span><span>₹{fullOrder.total?.toLocaleString('en-IN')}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: '#0B2447', borderTop: '1px solid #E5E1DC', paddingTop: 8 }}><span>Total Amount</span><span>₹{fullOrder.total?.toLocaleString('en-IN')}</span></div>
                   </div>
                 </>
               ) : (
@@ -375,7 +375,7 @@ export default function CheckoutPage() {
         {/* You may also like */}
         {related.length > 0 && (
           <div style={{ marginTop: 40 }}>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 16 }}>You May Also Like</h2>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 16 }}>You May Also Like</h2>
             <div className="os-related-grid">
               {related.map((p: any) => <ProductCard key={p.id} product={p} />)}
             </div>
@@ -386,11 +386,11 @@ export default function CheckoutPage() {
       <style>{`
         .os-hero { display: flex; gap: 24px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 14px; padding: 28px; flex-wrap: wrap; }
         .os-hero-icon { width: 56px; height: 56px; border-radius: 50%; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-        .os-btn-primary { display: inline-flex; align-items: center; padding: 11px 22px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
-        .os-btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
+        .os-btn-primary { display: inline-flex; align-items: center; padding: 11px 22px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
+        .os-btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
         .os-hero-confirm { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 18px 20px; min-width: 220px; }
         .os-label { font-size: 10.5px; color: #9CA3AF; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
-        .os-val { font-size: 15px; color: #0B2447; font-weight: 700; font-family: 'Syne',sans-serif; }
+        .os-val { font-size: 15px; color: #0B2447; font-weight: 700; font-family: 'Inter',sans-serif; }
         .os-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
         .os-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .os-next-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; text-align: center; }
@@ -561,7 +561,7 @@ export default function CheckoutPage() {
                         <div className="payment-name">{m.label}</div>
                         <div className="payment-sub">{m.sub}{m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : m.key === 'pickup' ? ' · Collect from our Karur store' : ' · Faster delivery to your location'}</div>
                       </div>
-                      <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: m.cost ? '#0B2447' : '#16a34a' }}>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: m.cost ? '#0B2447' : '#16a34a' }}>
                         {m.cost ? `₹${m.cost}` : 'FREE'}
                       </div>
                     </div>
@@ -717,10 +717,10 @@ export default function CheckoutPage() {
                       onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponError(''); }}
                       onKeyDown={e => e.key === 'Enter' && applyCoupon()}
                       placeholder="Promo code"
-                      style={{ flex: 1, background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0B2447', fontFamily: 'DM Sans,sans-serif', outline: 'none' }}
+                      style={{ flex: 1, background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, padding: '8px 12px', fontSize: 13, color: '#0B2447', fontFamily: 'Inter,sans-serif', outline: 'none' }}
                     />
                     <button onClick={applyCoupon} disabled={couponLoading || !couponCode.trim()}
-                      style={{ padding: '8px 16px', borderRadius: 8, background: '#FFF4ED', border: '1px solid rgba(240,115,22,0.3)', color: '#F07316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                      style={{ padding: '8px 16px', borderRadius: 8, background: '#FFF4ED', border: '1px solid rgba(240,115,22,0.3)', color: '#F07316', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
                       {couponLoading ? '…' : 'Apply'}
                     </button>
                   </div>
@@ -784,42 +784,42 @@ function CheckoutStyles() {
     .checkout-success { max-width:500px; margin:80px auto; text-align:center; background:#FFFFFF; border:1px solid #E5E1DC; border-radius:14px; padding:48px 36px; box-shadow:0 4px 20px rgba(11,36,71,0.06); }
     .checkout-empty { max-width:400px; margin:100px auto; text-align:center; }
     .success-icon { font-size:56px; margin-bottom:16px; }
-    .success-title { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.05em; color:#0B2447; margin-bottom:8px; }
-    .success-order-num { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:#F07316; margin-bottom:14px; }
+    .success-title { font-family:'Syne',sans-serif; font-size:2rem; letter-spacing:.05em; color:#0B2447; margin-bottom:8px; }
+    .success-order-num { font-family:'Space Grotesk',sans-serif; font-size:1.6rem; color:#F07316; margin-bottom:14px; }
     .success-msg { font-size:14px; color:#6B7280; line-height:1.7; margin-bottom:28px; }
     .success-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
-    .success-btn-primary { padding:12px 24px; background:#F07316; color:#FFFFFF; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
-    .success-btn-secondary { padding:12px 24px; border:1px solid rgba(240,115,22,0.35); color:#F07316; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
+    .success-btn-primary { padding:12px 24px; background:#F07316; color:#FFFFFF; border-radius:6px; font-family:'Inter',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
+    .success-btn-secondary { padding:12px 24px; border:1px solid rgba(240,115,22,0.35); color:#F07316; border-radius:6px; font-family:'Inter',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
     .success-wa-note { font-size:12px; color:#166534; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; }
 
     .co-steps { display:flex; align-items:center; justify-content:center; margin-bottom:36px; gap:0; }
     .co-step { display:flex; align-items:center; gap:8px; }
-    .co-step-num { width:28px; height:28px; border-radius:50%; background:#F2EDE5; border:1px solid #E5E1DC; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:11px; font-weight:700; color:#6B7280; }
+    .co-step-num { width:28px; height:28px; border-radius:50%; background:#F2EDE5; border:1px solid #E5E1DC; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; font-size:11px; font-weight:700; color:#6B7280; }
     .co-step--active .co-step-num { background:#F07316; border-color:#F07316; color:#FFFFFF; }
     .co-step--done .co-step-num { background:#dcfce7; border-color:#16a34a; color:#16a34a; }
-    .co-step-label { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6B7280; }
+    .co-step-label { font-family:'Inter',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6B7280; }
     .co-step--active .co-step-label { color:#0B2447; }
     .co-step--done .co-step-label { color:#16a34a; }
     .co-step-line { width:40px; height:1px; background:#E5E1DC; margin:0 12px; }
 
     .co-layout { display:grid; grid-template-columns:1fr 340px; gap:28px; align-items:start; }
     .co-section { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:24px; margin-bottom:16px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
-    .co-section-title { font-family:'Syne',sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:18px; }
+    .co-section-title { font-family:'Inter',sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:18px; }
     .co-form { display:flex; flex-direction:column; gap:14px; }
     .co-form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .co-field { display:flex; flex-direction:column; gap:5px; }
-    .co-label { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#6B7280; }
-    .co-inp { background:#FAF8F5; border:1px solid #E5E1DC; border-radius:6px; padding:10px 13px; font-size:14px; color:#0B2447; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s; width:100%; }
+    .co-label { font-family:'Inter',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#6B7280; }
+    .co-inp { background:#FAF8F5; border:1px solid #E5E1DC; border-radius:6px; padding:10px 13px; font-size:14px; color:#0B2447; font-family:'Inter',sans-serif; outline:none; transition:border-color .2s; width:100%; }
     .co-inp:focus { border-color:#F07316; background:#FFFFFF; }
     .co-inp::placeholder { color:#9CA3AF; }
-    .co-back-link { background:none; border:none; color:#F07316; font-size:12px; font-family:'Syne',sans-serif; cursor:pointer; margin-bottom:12px; padding:0; }
+    .co-back-link { background:none; border:none; color:#F07316; font-size:12px; font-family:'Inter',sans-serif; cursor:pointer; margin-bottom:12px; padding:0; }
     .co-info { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; font-size:13px; color:#166534; }
-    .map-preview-link, .review-map-link { display:inline-flex; align-items:center; width:max-content; color:#16a34a; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
+    .map-preview-link, .review-map-link { display:inline-flex; align-items:center; width:max-content; color:#16a34a; font-family:'Inter',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; }
     .map-preview-link:hover, .review-map-link:hover { color:#15803d; text-decoration:underline; }
 
     .addr-list { display:flex; flex-direction:column; gap:10px; }
     .addr-empty-box { background:#FAF8F5; border:1px dashed #D1CBC2; border-radius:8px; padding:22px; text-align:center; }
-    .addr-empty-title { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#0B2447; margin-bottom:8px; }
+    .addr-empty-title { font-family:'Inter',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#0B2447; margin-bottom:8px; }
     .addr-empty-box p { font-size:13px; color:#6B7280; line-height:1.6; }
     .addr-actions-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:stretch; }
     .addr-card { display:flex; gap:14px; align-items:flex-start; padding:16px; border:1px solid #E5E1DC; border-radius:8px; cursor:pointer; transition:border-color .2s; background:#FFFFFF; }
@@ -829,20 +829,20 @@ function CheckoutStyles() {
     .addr-radio-dot.active { background:#F07316; }
     .addr-info { flex:1; }
     .addr-label-row { display:flex; gap:6px; margin-bottom:4px; }
-    .addr-label-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:#FFF4ED; color:#F07316; border:1px solid rgba(240,115,22,0.25); padding:2px 7px; border-radius:2px; }
-    .addr-default-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; padding:2px 7px; border-radius:2px; }
+    .addr-label-badge { font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:#FFF4ED; color:#F07316; border:1px solid rgba(240,115,22,0.25); padding:2px 7px; border-radius:2px; }
+    .addr-default-badge { font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0; padding:2px 7px; border-radius:2px; }
     .addr-name { font-weight:700; color:#0B2447; font-size:14px; margin-bottom:3px; }
     .addr-text { font-size:13px; color:#6B7280; line-height:1.6; margin-bottom:3px; }
     .addr-phone { font-size:12px; color:#6B7280; }
-    .addr-add-btn { padding:10px 0; background:transparent; border:1px dashed rgba(240,115,22,0.35); border-radius:6px; color:#F07316; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
+    .addr-add-btn { padding:10px 0; background:transparent; border:1px dashed rgba(240,115,22,0.35); border-radius:6px; color:#F07316; font-family:'Inter',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
     .addr-add-btn:hover { background:#FFF4ED; border-style:solid; }
-    .addr-manage-link { display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid #E5E1DC; border-radius:6px; color:#6B7280; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; white-space:nowrap; }
+    .addr-manage-link { display:flex; align-items:center; justify-content:center; padding:10px 16px; border:1px solid #E5E1DC; border-radius:6px; color:#6B7280; font-family:'Inter',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; white-space:nowrap; }
     .addr-manage-link:hover { border-color:#F07316; color:#F07316; }
 
     .location-card { display:flex; align-items:center; justify-content:space-between; gap:16px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px 16px; }
-    .location-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#16a34a; margin-bottom:4px; }
+    .location-title { font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#16a34a; margin-bottom:4px; }
     .location-card p { font-size:12px; color:#4B5563; line-height:1.5; }
-    .location-btn { flex-shrink:0; padding:9px 14px; border:none; border-radius:6px; background:#25D366; color:white; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+    .location-btn { flex-shrink:0; padding:9px 14px; border:none; border-radius:6px; background:#25D366; color:white; font-family:'Inter',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
     .location-btn:disabled { opacity:.65; cursor:not-allowed; }
 
     .payment-options { display:flex; flex-direction:column; gap:10px; }
@@ -850,31 +850,31 @@ function CheckoutStyles() {
     .payment-card--selected { border-color:#F07316; background:#FFF9F4; }
     .payment-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(240,115,22,0.35); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .payment-icon { font-size:24px; flex-shrink:0; }
-    .payment-name { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:#0B2447; margin-bottom:3px; }
+    .payment-name { font-family:'Inter',sans-serif; font-size:.82rem; font-weight:700; color:#0B2447; margin-bottom:3px; }
     .payment-sub { font-size:12px; color:#6B7280; line-height:1.5; }
 
     .review-block { background:#FAF8F5; border:1px solid #E5E1DC; border-radius:6px; padding:14px 16px; margin-bottom:10px; position:relative; }
-    .review-block-label { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:8px; }
+    .review-block-label { font-family:'Inter',sans-serif; font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:8px; }
     .review-addr { font-size:13px; color:#374151; line-height:1.75; }
     .review-payment { font-size:14px; color:#0B2447; }
-    .review-edit-btn { position:absolute; top:12px; right:12px; background:none; border:1px solid rgba(240,115,22,0.3); border-radius:4px; color:#F07316; font-size:11px; font-family:'Syne',sans-serif; font-weight:700; padding:4px 10px; cursor:pointer; }
+    .review-edit-btn { position:absolute; top:12px; right:12px; background:none; border:1px solid rgba(240,115,22,0.3); border-radius:4px; color:#F07316; font-size:11px; font-family:'Inter',sans-serif; font-weight:700; padding:4px 10px; cursor:pointer; }
     .review-item { display:flex; align-items:center; padding:7px 0; border-bottom:1px solid #F1EEE9; font-size:13px; }
     .review-item:last-child { border-bottom:none; }
     .review-item-name { flex:1; color:#374151; }
-    .review-item-variant, .co-summary-item-variant { display:block; margin-top:2px; font-size:11px; color:#6B7280; font-family:'DM Sans',sans-serif; font-weight:500; }
+    .review-item-variant, .co-summary-item-variant { display:block; margin-top:2px; font-size:11px; color:#6B7280; font-family:'Inter',sans-serif; font-weight:500; }
     .review-item-qty { color:#6B7280; margin-right:12px; font-size:12px; }
-    .review-item-price { color:#F07316; font-weight:700; font-family:'Syne',sans-serif; min-width:80px; text-align:right; }
+    .review-item-price { color:#F07316; font-weight:700; font-family:'Inter',sans-serif; min-width:80px; text-align:right; }
 
     .co-error { background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:10px 14px; font-size:13px; color:#dc2626; margin-bottom:14px; }
     .co-nav { display:flex; gap:12px; }
-    .co-btn-back { padding:12px 20px; background:transparent; border:1px solid #E5E1DC; border-radius:6px; color:#6B7280; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+    .co-btn-back { padding:12px 20px; background:transparent; border:1px solid #E5E1DC; border-radius:6px; color:#6B7280; font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
     .co-btn-back:hover { border-color:#F07316; color:#F07316; }
-    .co-btn-primary { flex:1; padding:13px 0; background:#F07316; color:#FFFFFF; border:none; border-radius:6px; font-family:'Syne',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; text-decoration:none; text-align:center; display:block; }
+    .co-btn-primary { flex:1; padding:13px 0; background:#F07316; color:#FFFFFF; border:none; border-radius:6px; font-family:'Inter',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; text-decoration:none; text-align:center; display:block; }
     .co-btn-primary:hover:not(:disabled) { background:#D9640F; transform:translateY(-1px); }
     .co-btn-primary:disabled { opacity:.6; cursor:not-allowed; }
 
     .co-summary { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:22px; position:sticky; top:80px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
-    .co-summary-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:16px; }
+    .co-summary-title { font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:16px; }
     .co-summary-items { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
     .co-summary-item { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
     .co-summary-item-name { font-size:13px; color:#374151; flex:1; line-height:1.4; }
@@ -882,14 +882,14 @@ function CheckoutStyles() {
     .co-summary-item-price { font-size:13px; font-weight:700; color:#0B2447; white-space:nowrap; }
     .co-summary-totals { border-top:1px solid #E5E1DC; padding-top:14px; display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
     .co-summary-row { display:flex; justify-content:space-between; font-size:13px; color:#6B7280; }
-    .co-summary-total { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:#0B2447; border-top:1px solid #E5E1DC; padding-top:12px; margin-top:4px; }
-    .co-summary-note { font-size:11px; color:#9CA3AF; text-align:center; font-family:'Syne',sans-serif; }
+    .co-summary-total { display:flex; justify-content:space-between; font-family:'Inter',sans-serif; font-weight:700; font-size:1rem; color:#0B2447; border-top:1px solid #E5E1DC; padding-top:12px; margin-top:4px; }
+    .co-summary-note { font-size:11px; color:#9CA3AF; text-align:center; font-family:'Inter',sans-serif; }
     .co-help-card { margin-top:16px; background:#0B2447; border-radius:10px; padding:18px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
-    .co-help-title { font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; color:#FFFFFF; margin-bottom:3px; }
+    .co-help-title { font-family:'Inter',sans-serif; font-size:.8rem; font-weight:700; color:#FFFFFF; margin-bottom:3px; }
     .co-help-sub { font-size:11px; color:#93A3BC; margin-bottom:10px; }
     .co-help-link { display:block; font-size:12px; color:#FF9A45; text-decoration:none; margin-bottom:4px; }
     .co-help-link:hover { text-decoration:underline; }
-    .co-help-avatar { width:44px; height:44px; border-radius:50%; background:#F07316; color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:16px; flex-shrink:0; border:2px solid rgba(240,115,22,0.4); }
+    .co-help-avatar { width:44px; height:44px; border-radius:50%; background:#F07316; color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; font-weight:800; font-size:16px; flex-shrink:0; border:2px solid rgba(240,115,22,0.4); }
 
     @media(max-width:900px){
       .checkout-inner { padding:24px 20px !important; }

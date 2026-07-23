@@ -108,10 +108,10 @@ function QuickOrderInner() {
         <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 48px' }}>
           <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:20 }}>
             <div>
-              <div style={{ display:'inline-flex', alignItems:'center', gap:10, background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:20, padding:'5px 14px', fontSize:12, color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:16 }}>
+              <div style={{ display:'inline-flex', alignItems:'center', gap:10, background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:20, padding:'5px 14px', fontSize:12, color:'#25D366', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:16 }}>
                 ⚡ Quick Order — Fast Moving Items
               </div>
-              <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'0.75rem' }}>
+              <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'0.75rem' }}>
                 ADD TO CART,<br />
                 <span style={{ color:'#25D366' }}>ORDER ON WHATSAPP</span>
               </h1>
@@ -122,11 +122,11 @@ function QuickOrderInner() {
 
             {count > 0 && (
               <div style={{ background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.25)', borderRadius:14, padding:'20px 24px', minWidth:200 }}>
-                <div style={{ fontSize:11, color:'#7A8EA8', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>Cart Summary</div>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:32, letterSpacing:'0.04em', color:'#25D366', lineHeight:1 }}>{count} items</div>
+                <div style={{ fontSize:11, color:'#7A8EA8', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>Cart Summary</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:32, letterSpacing:'0.04em', color:'#25D366', lineHeight:1 }}>{count} items</div>
                 {total > 0 && <div style={{ fontSize:14, color:'#7A8EA8', marginTop:4 }}>≈ ₹{total.toLocaleString('en-IN')}</div>}
                 <button onClick={() => setShowCart(true)}
-                  style={{ marginTop:14, width:'100%', padding:'10px 0', borderRadius:6, background:'#25D366', color:'white', border:'none', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', cursor:'pointer' }}>
+                  style={{ marginTop:14, width:'100%', padding:'10px 0', borderRadius:6, background:'#25D366', color:'white', border:'none', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.08em', cursor:'pointer' }}>
                   View Cart →
                 </button>
               </div>
@@ -178,7 +178,7 @@ function QuickOrderInner() {
                   padding: '13px 42px 13px 42px',
                   fontSize: 14,
                   color: '#F8F9FB',
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   outline: 'none',
                   transition: 'border-color 0.2s, box-shadow 0.2s',
                   boxSizing: 'border-box',
@@ -208,7 +208,7 @@ function QuickOrderInner() {
 
             {/* Category pills + result count */}
             <div style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
-              <span style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'#7A8EA8', flexShrink:0, marginRight:4 }}>
+              <span style={{ fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'#7A8EA8', flexShrink:0, marginRight:4 }}>
                 Filter:
               </span>
               {['all', ...cats].map(c => (
@@ -217,7 +217,7 @@ function QuickOrderInner() {
                   onClick={() => setActiveFilter(c)}
                   style={{
                     padding: '5px 14px', borderRadius: 20, border: '1px solid', fontSize: 12,
-                    fontWeight: 600, cursor: 'pointer', fontFamily: "'Syne',sans-serif",
+                    fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif",
                     transition: 'all 0.18s', letterSpacing: '0.04em',
                     borderColor: activeFilter===c ? '#25D366' : 'rgba(37,211,102,0.15)',
                     background:  activeFilter===c ? 'rgba(37,211,102,0.15)' : 'transparent',
@@ -230,7 +230,7 @@ function QuickOrderInner() {
 
               {/* Live count badge — only when filtering/searching + debounce settled */}
               {(isSearching || activeFilter !== 'all') && !isDebouncing && (
-                <span style={{ marginLeft:'auto', fontSize:12, color: filtered.length > 0 ? '#7A8EA8' : '#FCA5A5', fontFamily:"'Syne',sans-serif", fontWeight:600, flexShrink:0 }}>
+                <span style={{ marginLeft:'auto', fontSize:12, color: filtered.length > 0 ? '#7A8EA8' : '#FCA5A5', fontFamily:"'Inter',sans-serif", fontWeight:600, flexShrink:0 }}>
                   {filtered.length === 0 ? 'No results' : `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`}
                 </span>
               )}
@@ -251,12 +251,12 @@ function QuickOrderInner() {
         {!loading && fetchError && (
           <div style={{ textAlign:'center', padding:'80px 0' }}>
             <div style={{ fontSize:48, marginBottom:12 }}>⚠️</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>UNABLE TO LOAD PRODUCTS</div>
+            <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>UNABLE TO LOAD PRODUCTS</div>
             <p style={{ color:'#7A8EA8', marginBottom:24 }}>Connection problem. Refresh or order via WhatsApp.</p>
             <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-              <button onClick={() => window.location.reload()} style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>🔄 Refresh</button>
+              <button onClick={() => window.location.reload()} style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>🔄 Refresh</button>
               <a href={`https://wa.me/${WA}?text=Hi%2C+I+want+to+place+a+quick+order.+Can+you+help%3F`} target="_blank" rel="noopener"
-                style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
+                style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
                 Proceed to Checkout
               </a>
             </div>
@@ -267,12 +267,12 @@ function QuickOrderInner() {
         {!loading && !fetchError && products.length === 0 && (
           <div style={{ textAlign:'center', padding:'80px 0' }}>
             <div style={{ fontSize:48, marginBottom:16 }}>📦</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>PRODUCTS COMING SOON</div>
+            <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>PRODUCTS COMING SOON</div>
             <p style={{ color:'#7A8EA8', marginBottom:24 }}>Browse the full catalogue or order on WhatsApp.</p>
             <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
-              <a href="/products" style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none' }}>Browse All Products →</a>
+              <a href="/products" style={{ padding:'12px 24px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:6, color:'#F97316', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none' }}>Browse All Products →</a>
               <a href={`https://wa.me/${WA}?text=Hi%2C+I+want+to+place+a+quick+order.+Can+you+send+me+a+price+list%3F`} target="_blank" rel="noopener"
-                style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
+                style={{ padding:'12px 24px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
                 Proceed to Checkout
               </a>
             </div>
@@ -283,7 +283,7 @@ function QuickOrderInner() {
         {!loading && !fetchError && products.length > 0 && filtered.length === 0 && (
           <div style={{ textAlign:'center', padding:'60px 0' }}>
             <div style={{ fontSize:44, marginBottom:14 }}>🔍</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>
+            <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>
               NO RESULTS FOR &ldquo;{searchQuery || activeFilter}&rdquo;
             </div>
             <p style={{ color:'#7A8EA8', marginBottom:24, fontSize:14 }}>
@@ -292,19 +292,19 @@ function QuickOrderInner() {
             <div style={{ display:'flex', gap:10, justifyContent:'center', flexWrap:'wrap' }}>
               {searchRaw && (
                 <button onClick={clearSearch}
-                  style={{ padding:'10px 22px', background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:6, color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
+                  style={{ padding:'10px 22px', background:'rgba(37,211,102,0.1)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:6, color:'#25D366', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
                   ✕ Clear Search
                 </button>
               )}
               {activeFilter !== 'all' && (
                 <button onClick={() => setActiveFilter('all')}
-                  style={{ padding:'10px 22px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
+                  style={{ padding:'10px 22px', background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#F97316', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
                   Show All Categories
                 </button>
               )}
               <a href={`https://wa.me/${WA}?text=Hi%2C+I%27m+looking+for+${encodeURIComponent(searchQuery || activeFilter)}+—+do+you+have+it+in+stock%3F`}
                 target="_blank" rel="noopener"
-                style={{ padding:'10px 22px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:6 }}>
+                style={{ padding:'10px 22px', background:'#25D366', borderRadius:6, color:'white', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:6 }}>
                 💬 Ask on WhatsApp
               </a>
             </div>
@@ -327,7 +327,7 @@ function QuickOrderInner() {
           <div style={{ marginTop:36, padding:'14px 20px', background:'rgba(37,211,102,0.06)', border:'1px solid rgba(37,211,102,0.15)', borderRadius:8, display:'flex', alignItems:'center', gap:12 }}>
             <span style={{ fontSize:20, flexShrink:0 }}>🚚</span>
             <div>
-              <span style={{ fontSize:13, fontWeight:600, color:'#4ADE80', fontFamily:"'Syne',sans-serif" }}>Free delivery within Karur</span>
+              <span style={{ fontSize:13, fontWeight:600, color:'#4ADE80', fontFamily:"'Inter',sans-serif" }}>Free delivery within Karur</span>
               <span style={{ fontSize:13, color:'#7A8EA8' }}> on orders above ₹5,000 · Same-day dispatch available</span>
             </div>
           </div>
@@ -338,19 +338,19 @@ function QuickOrderInner() {
       {count > 0 && (
         <div style={{ position:'fixed', bottom:0, left:0, right:0, background:'rgba(13,28,16,0.97)', backdropFilter:'blur(12px)', borderTop:'1px solid rgba(37,211,102,0.25)', padding:'14px 24px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, zIndex:500, flexWrap:'wrap' }}>
           <div style={{ display:'flex', alignItems:'center', gap:14 }}>
-            <div style={{ width:38, height:38, background:'#25D366', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Bebas Neue',sans-serif", fontSize:18, color:'white' }}>{count}</div>
+            <div style={{ width:38, height:38, background:'#25D366', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Syne',sans-serif", fontSize:18, color:'white' }}>{count}</div>
             <div>
-              <div style={{ fontSize:13, fontWeight:600, color:'#F8F9FB', fontFamily:"'Syne',sans-serif" }}>{count} item{count>1?'s':''} in cart</div>
+              <div style={{ fontSize:13, fontWeight:600, color:'#F8F9FB', fontFamily:"'Inter',sans-serif" }}>{count} item{count>1?'s':''} in cart</div>
               {total > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>Est. ₹{total.toLocaleString('en-IN')}</div>}
             </div>
           </div>
           <div style={{ display:'flex', gap:10 }}>
             <button onClick={() => setShowCart(true)}
-              style={{ padding:'10px 20px', borderRadius:6, background:'transparent', border:'1px solid rgba(37,211,102,0.3)', color:'#25D366', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
+              style={{ padding:'10px 20px', borderRadius:6, background:'transparent', border:'1px solid rgba(37,211,102,0.3)', color:'#25D366', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer' }}>
               View Cart
             </button>
             <Link href="/checkout"
-              style={{ padding:'10px 24px', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:8, textDecoration:'none' }}>
+              style={{ padding:'10px 24px', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, cursor:'pointer', display:'flex', alignItems:'center', gap:8, textDecoration:'none' }}>
               Proceed to Checkout
             </Link>
           </div>
@@ -363,8 +363,8 @@ function QuickOrderInner() {
           <div onClick={e => e.stopPropagation()}
             style={{ width:'100%', maxWidth:520, background:'#0d1f3a', borderRadius:'20px 20px 0 0', padding:'28px 24px', maxHeight:'80vh', overflow:'auto', border:'1px solid rgba(37,211,102,0.2)', borderBottom:'none' }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:26, letterSpacing:'0.04em', color:'#F8F9FB' }}>YOUR CART ({count})</div>
-              <button onClick={() => setShowCart(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#7A8EA8', padding:'6px 12px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕ Close</button>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontSize:26, letterSpacing:'0.04em', color:'#F8F9FB' }}>YOUR CART ({count})</div>
+              <button onClick={() => setShowCart(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:6, color:'#7A8EA8', padding:'6px 12px', cursor:'pointer', fontFamily:"'Inter',sans-serif", fontSize:12 }}>✕ Close</button>
             </div>
 
             {items.length === 0 ? (
@@ -374,7 +374,7 @@ function QuickOrderInner() {
                 {items.map(item => (
                   <div key={cartItemKey(item)} style={{ display:'flex', alignItems:'center', gap:14, padding:'14px 0', borderBottom:'1px solid rgba(249,115,22,0.08)' }}>
                     <div style={{ flex:1 }}>
-                      <div style={{ fontSize:14, fontWeight:600, color:'#F8F9FB', fontFamily:"'Syne',sans-serif" }}>{item.product.name}</div>
+                      <div style={{ fontSize:14, fontWeight:600, color:'#F8F9FB', fontFamily:"'Inter',sans-serif" }}>{item.product.name}</div>
                       {cartItemVariantLabel(item) && <div style={{ fontSize:11, color:'#7A8EA8', marginTop:3 }}>{cartItemVariantLabel(item)}</div>}
                       {cartItemPrice(item) > 0 && <div style={{ fontSize:12, color:'#7A8EA8' }}>₹{cartItemPrice(item).toLocaleString('en-IN')} × {item.quantity} = ₹{(cartItemPrice(item) * item.quantity).toLocaleString('en-IN')}</div>}
                     </div>
@@ -383,7 +383,7 @@ function QuickOrderInner() {
                       <input type="number" min="1" max="9999" value={item.quantity}
                         onChange={e => { const v = parseInt(e.target.value); if (!isNaN(v) && v >= 1) setQty(item.product, v, item.variant); }}
                         onFocus={e => e.target.select()}
-                        style={{ width:60, textAlign:'center', fontWeight:700, fontSize:14, color:'#F8F9FB', background:'transparent', border:'none', borderLeft:'1px solid rgba(249,115,22,0.2)', borderRight:'1px solid rgba(249,115,22,0.2)', padding:'0 4px', height:34, MozAppearance:'textfield', fontFamily:"'Syne',sans-serif" } as React.CSSProperties}
+                        style={{ width:60, textAlign:'center', fontWeight:700, fontSize:14, color:'#F8F9FB', background:'transparent', border:'none', borderLeft:'1px solid rgba(249,115,22,0.2)', borderRight:'1px solid rgba(249,115,22,0.2)', padding:'0 4px', height:34, MozAppearance:'textfield', fontFamily:"'Inter',sans-serif" } as React.CSSProperties}
                       />
                       <button onClick={() => inc(item.product, item.variant)} style={{ width:34, height:34, background:'rgba(249,115,22,0.08)', border:'none', color:'#F97316', fontSize:18, fontWeight:700, cursor:'pointer' }}>+</button>
                     </div>
@@ -392,17 +392,17 @@ function QuickOrderInner() {
 
                 {total > 0 && (
                   <div style={{ display:'flex', justifyContent:'space-between', padding:'16px 0', borderTop:'1px solid rgba(249,115,22,0.12)', marginTop:8 }}>
-                    <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, color:'#F8F9FB' }}>Estimated Total</div>
-                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:24, letterSpacing:'0.04em', color:'#25D366' }}>₹{total.toLocaleString('en-IN')}</div>
+                    <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:15, color:'#F8F9FB' }}>Estimated Total</div>
+                    <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:24, letterSpacing:'0.04em', color:'#25D366' }}>₹{total.toLocaleString('en-IN')}</div>
                   </div>
                 )}
 
                 <Link href="/checkout" onClick={() => setShowCart(false)}
-                  style={{ width:'100%', marginTop:16, padding:'14px 0', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, cursor:'pointer', letterSpacing:'0.06em', display:'flex', alignItems:'center', justifyContent:'center', gap:10, textDecoration:'none' }}>
+                  style={{ width:'100%', marginTop:16, padding:'14px 0', borderRadius:6, background:'#25D366', border:'none', color:'white', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:15, cursor:'pointer', letterSpacing:'0.06em', display:'flex', alignItems:'center', justifyContent:'center', gap:10, textDecoration:'none' }}>
                   Proceed to Checkout
                 </Link>
                 <button onClick={() => { clear(); setShowCart(false); }}
-                  style={{ width:'100%', marginTop:10, padding:'11px 0', borderRadius:6, background:'transparent', border:'1px solid rgba(248,113,113,0.2)', color:'#F87171', fontSize:13, cursor:'pointer', fontFamily:"'Syne',sans-serif" }}>
+                  style={{ width:'100%', marginTop:10, padding:'11px 0', borderRadius:6, background:'transparent', border:'1px solid rgba(248,113,113,0.2)', color:'#F87171', fontSize:13, cursor:'pointer', fontFamily:"'Inter',sans-serif" }}>
                   🗑️ Clear Cart
                 </button>
                 <p style={{ fontSize:12, color:'#7A8EA8', textAlign:'center', marginTop:12 }}>

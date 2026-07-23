@@ -43,7 +43,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
     <div style={{ marginBottom: 24 }}>
       {/* ── Section header ── */}
       <div style={{
-        fontSize: 11, fontFamily: "'Syne',sans-serif",
+        fontSize: 11, fontFamily: "'Inter',sans-serif",
         fontWeight: 700, letterSpacing: '.12em',
         textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 12,
       }}>
@@ -75,7 +75,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
                   : isActive
                     ? '#F97316'
                     : '#A8BCCC',
-                fontFamily: "'Syne',sans-serif",
+                fontFamily: "'Inter',sans-serif",
                 fontWeight: 600,
                 fontSize: '0.78rem',
                 letterSpacing: '.04em',
@@ -132,7 +132,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
                   borderRadius: 6, padding: '8px 12px',
                 }}>
                   <div style={{
-                    fontSize: 10, fontFamily: "'Syne',sans-serif",
+                    fontSize: 10, fontFamily: "'Inter',sans-serif",
                     fontWeight: 700, letterSpacing: '.1em',
                     textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 2,
                   }}>{k}</div>
@@ -153,7 +153,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
               </span>
               {discount && (
                 <span style={{
-                  fontSize: 11, fontFamily: "'Syne',sans-serif",
+                  fontSize: 11, fontFamily: "'Inter',sans-serif",
                   fontWeight: 700,
                   background: 'rgba(37,211,102,0.15)',
                   color: '#4ADE80',
@@ -170,7 +170,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
           {displayPrice ? (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
               <span style={{
-                fontFamily: "'Bebas Neue',sans-serif",
+                fontFamily: "'Syne',sans-serif",
                 fontSize: '2.2rem',
                 color: '#F97316',
                 letterSpacing: '.03em', lineHeight: 1,
@@ -178,14 +178,14 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
                 ₹{displayPrice.toLocaleString('en-IN')}
               </span>
               {unit && (
-                <span style={{ fontSize: 13, color: '#7A8EA8', fontFamily: "'Syne',sans-serif" }}>
+                <span style={{ fontSize: 13, color: '#7A8EA8', fontFamily: "'Inter',sans-serif" }}>
                   / {unit}
                 </span>
               )}
             </div>
           ) : (
             <div style={{
-              fontFamily: "'Bebas Neue',sans-serif",
+              fontFamily: "'Syne',sans-serif",
               fontSize: '1.4rem', color: '#F97316', letterSpacing: '.04em',
             }}>
               CONTACT FOR PRICE
@@ -194,7 +194,7 @@ export default function ProductVariantSelector({ variants, basePrice, baseMrp, u
 
           {/* Stock badge */}
           <span style={{
-            fontSize: 11, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+            fontSize: 11, fontFamily: "'Inter',sans-serif", fontWeight: 700,
             color: stockInfo.color,
             background: `${stockInfo.color}18`,
             border: `1px solid ${stockInfo.color}40`,

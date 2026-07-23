@@ -124,7 +124,7 @@ export default function WhatsAppWidget() {
           border-radius: 10px; overflow: hidden;
           box-shadow: 0 20px 60px rgba(0,0,0,0.7);
           animation: waSlideUp 0.25s ease;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
         }
         @keyframes waSlideUp {
           from { opacity: 0; transform: translateY(12px); }
@@ -144,7 +144,7 @@ export default function WhatsAppWidget() {
         }
         .wa-panel-info { flex: 1; }
         .wa-panel-name {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 700; color: white; font-size: 13px; letter-spacing: 0.04em;
         }
         .wa-panel-status {
@@ -186,7 +186,7 @@ export default function WhatsAppWidget() {
           border-radius: 4px; padding: 8px 13px;
           font-size: 12px; color: #FF9A45;
           cursor: pointer;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 600; letter-spacing: 0.04em;
           transition: background 0.15s, border-color 0.15s;
         }
@@ -206,7 +206,7 @@ export default function WhatsAppWidget() {
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 4px; padding: 9px 12px;
           font-size: 13px; color: #F8F9FB;
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Inter', sans-serif;
           outline: none; transition: border-color 0.2s;
         }
         .wa-input:focus { border-color: #F97316; }

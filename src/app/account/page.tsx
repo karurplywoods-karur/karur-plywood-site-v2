@@ -140,39 +140,39 @@ function AccStyles() {
     .account-header { display:flex; align-items:center; gap:20px; background:rgba(25,55,109,0.25); border:1px solid rgba(249,115,22,0.15); border-radius:12px; padding:24px 28px; margin-bottom:24px; flex-wrap:wrap; }
     .account-avatar { width:72px; height:72px; border-radius:50%; background:rgba(249,115,22,0.1); border:2px solid rgba(249,115,22,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; }
     .account-header-info { flex:1; min-width:0; }
-    .account-name { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; color:#F8F9FB; margin-bottom:4px; }
+    .account-name { font-family:'Inter',sans-serif; font-size:1.3rem; font-weight:700; color:#F8F9FB; margin-bottom:4px; }
     .account-email { font-size:13px; color:#7A8EA8; margin-bottom:2px; }
     .account-phone { font-size:13px; color:#7A8EA8; margin-bottom:2px; }
-    .account-since { font-size:11px; color:#7A8EA8; margin-top:4px; font-family:'Syne',sans-serif; letter-spacing:.08em; }
-    .account-logout-btn { padding:9px 18px; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.2); border-radius:6px; color:#F87171; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .account-since { font-size:11px; color:#7A8EA8; margin-top:4px; font-family:'Inter',sans-serif; letter-spacing:.08em; }
+    .account-logout-btn { padding:9px 18px; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.2); border-radius:6px; color:#F87171; font-family:'Inter',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .account-logout-btn:hover { background:rgba(248,113,113,0.15); }
 
     .account-nav-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
     .account-nav-card { background:rgba(25,55,109,0.25); border:1px solid rgba(249,115,22,0.12); border-radius:10px; padding:18px 16px; text-decoration:none; display:flex; flex-direction:column; gap:4px; transition:all .2s; position:relative; }
     .account-nav-card:hover { border-color:#F97316; transform:translateY(-3px); }
     .account-nav-icon { font-size:24px; margin-bottom:6px; }
-    .account-nav-label { font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; color:#F8F9FB; }
+    .account-nav-label { font-family:'Inter',sans-serif; font-size:.8rem; font-weight:700; color:#F8F9FB; }
     .account-nav-sub { font-size:11px; color:#7A8EA8; }
     .account-nav-arrow { position:absolute; top:16px; right:16px; color:#F97316; font-size:14px; opacity:0; transition:opacity .2s; }
     .account-nav-card:hover .account-nav-arrow { opacity:1; }
 
     .account-section { background:rgba(25,55,109,0.2); border:1px solid rgba(249,115,22,0.1); border-radius:10px; padding:20px 24px; }
     .account-section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .account-section-title { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F97316; }
-    .account-section-link { font-size:12px; color:#F97316; text-decoration:none; font-family:'Syne',sans-serif; font-weight:700; }
+    .account-section-title { font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F97316; }
+    .account-section-link { font-size:12px; color:#F97316; text-decoration:none; font-family:'Inter',sans-serif; font-weight:700; }
 
     .account-empty { text-align:center; padding:32px 0; }
-    .account-shop-btn { display:inline-block; margin-top:14px; padding:9px 20px; background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.25); border-radius:6px; color:#F97316; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
+    .account-shop-btn { display:inline-block; margin-top:14px; padding:9px 20px; background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.25); border-radius:6px; color:#F97316; font-family:'Inter',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
 
     .orders-list { display:flex; flex-direction:column; gap:8px; }
     .order-card { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:rgba(7,15,31,0.4); border:1px solid rgba(249,115,22,0.08); border-radius:8px; text-decoration:none; transition:border-color .2s; }
     .order-card:hover { border-color:rgba(249,115,22,0.3); }
-    .order-number { font-family:'Syne',sans-serif; font-size:.82rem; font-weight:700; color:#F8F9FB; margin-bottom:3px; }
+    .order-number { font-family:'Inter',sans-serif; font-size:.82rem; font-weight:700; color:#F8F9FB; margin-bottom:3px; }
     .order-date { font-size:11px; color:#7A8EA8; margin-bottom:2px; }
     .order-items-preview { font-size:11px; color:#7A8EA8; }
     .order-card-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
-    .order-total { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:#F97316; letter-spacing:.03em; }
-    .order-status-badge { font-family:'Syne',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:3px 9px; border-radius:2px; }
+    .order-total { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; color:#F97316; letter-spacing:.03em; }
+    .order-status-badge { font-family:'Inter',sans-serif; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:3px 9px; border-radius:2px; }
 
     @media(max-width:768px){
       .account-inner { padding:20px !important; }

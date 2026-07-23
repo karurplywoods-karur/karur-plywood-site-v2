@@ -25,13 +25,13 @@ export default function ContactPage() {
           <Image src="/images/about-showroom.jpg" alt="Karur Plywood showroom" fill style={{ objectFit: 'cover' }} priority />
           <div className="ct-hero-overlay" />
           <div className="ct-hero-copy">
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.8rem,3.4vw,2.4rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: 12 }}>Contact Us</h1>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.8rem,3.4vw,2.4rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: 12 }}>Contact Us</h1>
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', maxWidth: 420, lineHeight: 1.7, marginBottom: 18 }}>
               We&apos;re here to help you build better. Reach out for enquiries, quotes, bulk orders or any assistance.
             </p>
             <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-              <a href={`tel:${CONTACT.phoneRaw}`} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#FFFFFF', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>📞 {CONTACT.phone}</a>
-              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#FFFFFF', textDecoration: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14 }}>💬 WhatsApp Us</a>
+              <a href={`tel:${CONTACT.phoneRaw}`} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#FFFFFF', textDecoration: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14 }}>📞 {CONTACT.phone}</a>
+              <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#FFFFFF', textDecoration: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14 }}>💬 WhatsApp Us</a>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function ContactPage() {
           ].map(c => (
             <div key={c.t} className="ct-info-card">
               <div className="ct-info-icon">{c.icon}</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 8 }}>{c.t}</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 8 }}>{c.t}</div>
               <div style={{ fontSize: 13, color: '#4B5563', lineHeight: 1.6, marginBottom: 4 }}>{c.body}</div>
               {c.sub && <div style={{ fontSize: 12, color: '#9CA3AF' }}>{c.sub}</div>}
               {c.link && <a href={c.link.href} target="_blank" rel="noopener" style={{ display: 'inline-block', marginTop: 8, fontSize: 12.5, color: '#F07316', fontWeight: 700, textDecoration: 'none' }}>{c.link.label}</a>}
@@ -65,9 +65,9 @@ export default function ContactPage() {
             ) : (
               <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: '#F2EDE5' }}>
                 <div style={{ fontSize: 46 }}>📍</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', textAlign: 'center' }}>Karur Plywood &amp; Company</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', textAlign: 'center' }}>Karur Plywood &amp; Company</div>
                 <div style={{ fontSize: 13, color: '#6B7280', textAlign: 'center', maxWidth: 280 }}>{CONTACT.address}</div>
-                <a href="https://maps.google.com/?q=Karur+Plywood+Company" target="_blank" rel="noopener" style={{ padding: '10px 20px', borderRadius: 6, background: '#F07316', color: '#FFFFFF', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, textDecoration: 'none' }}>Get Directions →</a>
+                <a href="https://maps.google.com/?q=Karur+Plywood+Company" target="_blank" rel="noopener" style={{ padding: '10px 20px', borderRadius: 6, background: '#F07316', color: '#FFFFFF', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12.5, textDecoration: 'none' }}>Get Directions →</a>
               </div>
             )}
           </div>
@@ -85,7 +85,7 @@ export default function ContactPage() {
             <div key={f.t} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 18 }}>{f.i}</span>
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{f.t}</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{f.t}</div>
                 <div style={{ fontSize: 11, color: '#6B7280' }}>{f.d}</div>
               </div>
             </div>

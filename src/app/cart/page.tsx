@@ -48,9 +48,9 @@ export default function CartPage() {
       <div style={{ background: '#FAF8F5', minHeight: '70vh', paddingTop: 58 }}>
         <div style={{ maxWidth: 560, margin: '0 auto', padding: '90px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 52, marginBottom: 16 }}>🛒</div>
-          <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 10 }}>Your cart is empty</h1>
+          <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 10 }}>Your cart is empty</h1>
           <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 26 }}>Browse our products and add items to get started.</p>
-          <Link href="/products" style={{ display: 'inline-flex', padding: '13px 28px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', textDecoration: 'none' }}>
+          <Link href="/products" style={{ display: 'inline-flex', padding: '13px 28px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: '.06em', textTransform: 'uppercase', textDecoration: 'none' }}>
             Browse Products
           </Link>
         </div>
@@ -75,10 +75,10 @@ export default function CartPage() {
 
         {/* Title row */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 22 }}>
-          <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: 0 }}>
+          <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: 0 }}>
             Your Cart <span style={{ fontWeight: 400, fontSize: '0.9rem', color: '#6B7280' }}>({items.reduce((s, i) => s + i.quantity, 0)} Items)</span>
           </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#16a34a', fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#16a34a', fontFamily: "'Inter',sans-serif", fontWeight: 600 }}>
             🛡️ 100% Secure Shopping <span style={{ color: '#9CA3AF', fontWeight: 400 }}>— Your data is safe and protected</span>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function CartPage() {
                 <div key={f.t} className="cart-delivery-row" style={{ marginBottom: i === 3 ? 0 : 14 }}>
                   <span style={{ fontSize: 18 }}>{f.i}</span>
                   <div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.76rem', fontWeight: 700, color: '#0B2447' }}>{f.t}</div>
+                    <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.76rem', fontWeight: 700, color: '#0B2447' }}>{f.t}</div>
                     <div style={{ fontSize: '0.68rem', color: '#6B7280' }}>{f.d}</div>
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default function CartPage() {
         {/* You may also like */}
         {related.length > 0 && (
           <div style={{ marginTop: 48 }}>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 18 }}>You May Also Like</h2>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 18 }}>You May Also Like</h2>
             <div className="cart-related-grid">
               {related.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
@@ -206,7 +206,7 @@ export default function CartPage() {
             <div key={f.t} className="cart-feature-item">
               <span style={{ fontSize: 20 }}>{f.i}</span>
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF' }}>{f.t}</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.74rem', fontWeight: 700, color: '#FFFFFF' }}>{f.t}</div>
                 <div style={{ fontSize: '0.64rem', color: '#93A3BC' }}>{f.d}</div>
               </div>
             </div>
@@ -217,42 +217,42 @@ export default function CartPage() {
       <style>{`
         .cart-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start; }
         .cart-table-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; overflow: hidden; }
-        .cart-table-head { display: grid; grid-template-columns: 2.3fr 1fr 1fr 0.8fr; padding: 12px 20px; background: #FAF8F5; border-bottom: 1px solid #E5E1DC; font-family: 'Syne',sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7280; }
+        .cart-table-head { display: grid; grid-template-columns: 2.3fr 1fr 1fr 0.8fr; padding: 12px 20px; background: #FAF8F5; border-bottom: 1px solid #E5E1DC; font-family: 'Inter',sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7280; }
         .cart-row { display: grid; grid-template-columns: 2.3fr 1fr 1fr 0.8fr; padding: 18px 20px; border-bottom: 1px solid #F1EEE9; align-items: center; }
         .cart-row:last-child { border-bottom: none; }
         .cart-row-product { display: flex; gap: 14px; align-items: flex-start; }
         .cart-row-img { position: relative; width: 68px; height: 68px; border-radius: 8px; overflow: hidden; background: #F2EDE5; flex-shrink: 0; }
         .cart-row-img-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .cart-row-name { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 0.86rem; color: #0B2447; margin-bottom: 3px; }
+        .cart-row-name { font-family: 'Inter',sans-serif; font-weight: 700; font-size: 0.86rem; color: #0B2447; margin-bottom: 3px; }
         .cart-row-variant { font-size: 0.72rem; color: #6B7280; margin-bottom: 3px; }
         .cart-row-stock { font-size: 0.68rem; color: #16a34a; font-weight: 600; margin-bottom: 6px; }
         .cart-row-links { display: flex; gap: 8px; font-size: 0.7rem; }
         .cart-row-links button { background: none; border: none; padding: 0; cursor: pointer; color: #6B7280; text-decoration: underline; font-family: inherit; }
         .cart-row-links button:hover { color: #F07316; }
         .cart-row-links span { color: #D1CBC2; }
-        .cart-row-price-now { font-family: 'Syne',sans-serif; font-weight: 700; color: #0B2447; font-size: 0.86rem; }
+        .cart-row-price-now { font-family: 'Inter',sans-serif; font-weight: 700; color: #0B2447; font-size: 0.86rem; }
         .cart-row-mrp { font-size: 0.72rem; color: #9CA3AF; text-decoration: line-through; }
         .cart-row-unit { font-size: 0.68rem; color: #6B7280; }
         .cart-row-qty { display: inline-grid; grid-template-columns: 30px 34px 30px; border: 1px solid #E5E1DC; border-radius: 6px; overflow: hidden; }
         .cart-row-qty button { border: none; background: #FAF8F5; color: #F07316; font-size: 15px; font-weight: 700; cursor: pointer; height: 30px; }
-        .cart-row-qty span { display: flex; align-items: center; justify-content: center; font-family: 'Syne',sans-serif; font-weight: 700; color: #0B2447; border-left: 1px solid #E5E1DC; border-right: 1px solid #E5E1DC; font-size: 13px; }
+        .cart-row-qty span { display: flex; align-items: center; justify-content: center; font-family: 'Inter',sans-serif; font-weight: 700; color: #0B2447; border-left: 1px solid #E5E1DC; border-right: 1px solid #E5E1DC; font-size: 13px; }
         .cart-row-qty-unit { font-size: 0.62rem; color: #6B7280; margin-top: 4px; }
-        .cart-row-total { font-family: 'Syne',sans-serif; font-weight: 700; color: #0B2447; font-size: 0.9rem; text-align: right; }
+        .cart-row-total { font-family: 'Inter',sans-serif; font-weight: 700; color: #0B2447; font-size: 0.9rem; text-align: right; }
 
-        .cart-continue-btn { display: inline-flex; align-items: center; padding: 11px 20px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 0.74rem; letter-spacing: 0.05em; text-decoration: none; background: #FFFFFF; }
+        .cart-continue-btn { display: inline-flex; align-items: center; padding: 11px 20px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 0.74rem; letter-spacing: 0.05em; text-decoration: none; background: #FFFFFF; }
         .cart-continue-btn:hover { border-color: #F07316; color: #F07316; }
-        .cart-clear-btn-page { display: inline-flex; align-items: center; gap: 6px; padding: 11px 20px; border: 1px solid #fecaca; border-radius: 6px; color: #dc2626; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 0.74rem; letter-spacing: 0.05em; background: #FFFFFF; cursor: pointer; }
+        .cart-clear-btn-page { display: inline-flex; align-items: center; gap: 6px; padding: 11px 20px; border: 1px solid #fecaca; border-radius: 6px; color: #dc2626; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 0.74rem; letter-spacing: 0.05em; background: #FFFFFF; cursor: pointer; }
         .cart-clear-btn-page:hover { background: #fef2f2; }
 
         .cart-summary-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
-        .cart-summary-title { font-family: 'Syne',sans-serif; font-size: 1rem; font-weight: 700; color: #0B2447; margin-bottom: 16px; }
+        .cart-summary-title { font-family: 'Inter',sans-serif; font-size: 1rem; font-weight: 700; color: #0B2447; margin-bottom: 16px; }
         .cart-summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #4B5563; margin-bottom: 10px; }
-        .cart-summary-total-row { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid #E5E1DC; padding-top: 14px; margin-top: 6px; font-family: 'Syne',sans-serif; font-weight: 700; color: #0B2447; }
-        .cart-summary-total-val { font-family: 'Bebas Neue',sans-serif; font-size: 1.6rem; color: #F07316; }
-        .cart-checkout-cta { display: flex; align-items: center; justify-content: center; padding: 13px 0; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; margin-top: 6px; }
+        .cart-summary-total-row { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid #E5E1DC; padding-top: 14px; margin-top: 6px; font-family: 'Inter',sans-serif; font-weight: 700; color: #0B2447; }
+        .cart-summary-total-val { font-family: 'Space Grotesk',sans-serif; font-size: 1.6rem; color: #F07316; }
+        .cart-checkout-cta { display: flex; align-items: center; justify-content: center; padding: 13px 0; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; margin-top: 6px; }
         .cart-checkout-cta:hover { background: #D9640F; }
         .cart-coupon-input { flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 12.5px; background: #FAF8F5; }
-        .cart-coupon-btn { padding: 9px 16px; background: #0B2447; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
+        .cart-coupon-btn { padding: 9px 16px; background: #0B2447; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Inter',sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
         .cart-delivery-row { display: flex; gap: 12px; align-items: flex-start; }
 
         .cart-related-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }

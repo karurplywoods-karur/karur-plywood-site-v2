@@ -51,7 +51,7 @@ export default function BulkUpload({ onSuccess }: Props) {
   };
 
   const inp: React.CSSProperties = {
-    fontFamily: "'Syne',sans-serif",
+    fontFamily: "'Inter',sans-serif",
     fontSize: '0.7rem',
     fontWeight: 700,
     letterSpacing: '0.1em',
@@ -64,7 +64,7 @@ export default function BulkUpload({ onSuccess }: Props) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 22, letterSpacing: '0.06em', color: 'var(--white)', marginBottom: 4 }}>
+          <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 22, letterSpacing: '0.06em', color: 'var(--white)', marginBottom: 4 }}>
             Bulk Product Upload
           </div>
           <div style={{ fontSize: 12, color: 'var(--grey)' }}>Upload a CSV file to add multiple products at once.</div>
@@ -77,7 +77,7 @@ export default function BulkUpload({ onSuccess }: Props) {
 
       {/* CSV format guide */}
       <div style={{ background: 'rgba(7,15,31,0.6)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 6, padding: '14px 16px', marginBottom: 20 }}>
-        <div style={{ fontSize: 11, color: 'var(--orange)', fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 8 }}>
+        <div style={{ fontSize: 11, color: 'var(--orange)', fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 8 }}>
           Required CSV Columns
         </div>
         <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--grey)', lineHeight: 1.8 }}>
@@ -120,13 +120,13 @@ export default function BulkUpload({ onSuccess }: Props) {
         ) : file ? (
           <div>
             <div style={{ fontSize: 32, marginBottom: 8 }}>📄</div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: 'var(--white)', fontSize: 14, marginBottom: 4 }}>{file.name}</div>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: 'var(--white)', fontSize: 14, marginBottom: 4 }}>{file.name}</div>
             <div style={{ fontSize: 12, color: 'var(--grey)' }}>{(file.size / 1024).toFixed(1)} KB · Click to change</div>
           </div>
         ) : (
           <div>
             <div style={{ fontSize: 32, marginBottom: 10 }}>📁</div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: 'var(--grey-light)', fontSize: 13, marginBottom: 4 }}>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: 'var(--grey-light)', fontSize: 13, marginBottom: 4 }}>
               Click to select or drag &amp; drop your CSV file
             </div>
             <div style={{ fontSize: 11, color: 'var(--grey)' }}>Max 2MB · .csv only</div>
@@ -153,7 +153,7 @@ export default function BulkUpload({ onSuccess }: Props) {
         }}>
           {result.success ? (
             <div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#4ADE80', fontSize: 14, marginBottom: 6 }}>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#4ADE80', fontSize: 14, marginBottom: 6 }}>
                 ✅ Import successful!
               </div>
               <div style={{ fontSize: 13, color: 'var(--grey)' }}>
@@ -163,14 +163,14 @@ export default function BulkUpload({ onSuccess }: Props) {
             </div>
           ) : (
             <div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: 'var(--orange)', fontSize: 14, marginBottom: 6 }}>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: 'var(--orange)', fontSize: 14, marginBottom: 6 }}>
                 ⚠️ {result.error || 'Import failed'}
               </div>
             </div>
           )}
           {result.row_errors && result.row_errors.length > 0 && (
             <div style={{ marginTop: 12 }}>
-              <div style={{ fontSize: 11, color: 'var(--grey)', fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>
+              <div style={{ fontSize: 11, color: 'var(--grey)', fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>
                 Skipped Rows:
               </div>
               <div style={{ maxHeight: 120, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>

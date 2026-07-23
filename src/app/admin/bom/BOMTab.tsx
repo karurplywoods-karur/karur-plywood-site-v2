@@ -84,23 +84,23 @@ function BOMModal({ bom, onClose, onStatusChange }: {
         {/* Header */}
         <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(249,115,22,0.12)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.4rem', letterSpacing: '.05em', color: '#F8F9FB' }}>
+            <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.4rem', letterSpacing: '.05em', color: '#F8F9FB' }}>
               BOM REQUEST #{bom.id}
             </div>
             <div style={{ fontSize: 12, color: '#7A8EA8', marginTop: 2 }}>{timeAgo(bom.created_at)}</div>
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <span style={{ fontSize: 11, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: 20, background: cfg.bg, color: cfg.color }}>
+            <span style={{ fontSize: 11, fontWeight: 700, fontFamily: "'Inter', sans-serif", letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: 20, background: cfg.bg, color: cfg.color }}>
               {cfg.label}
             </span>
-            <button onClick={onClose} style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '5px 11px', cursor: 'pointer', fontFamily: "'Syne', sans-serif", fontSize: 12 }}>✕</button>
+            <button onClick={onClose} style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '5px 11px', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontSize: 12 }}>✕</button>
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
           {/* Image */}
           <div style={{ padding: 20, borderRight: '1px solid rgba(249,115,22,0.1)' }}>
-            <div style={{ fontSize: 11, fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 12 }}>
+            <div style={{ fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 12 }}>
               Material List Image
             </div>
             <div style={{ borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(249,115,22,0.15)', background: '#0d1f3a', aspectRatio: '4/3' }}>
@@ -114,7 +114,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
               href={bom.image_url}
               target="_blank"
               rel="noopener"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 10, padding: '8px 0', borderRadius: 4, border: '1px solid rgba(249,115,22,0.2)', color: '#F97316', fontSize: 12, fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background .2s' }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 10, padding: '8px 0', borderRadius: 4, border: '1px solid rgba(249,115,22,0.2)', color: '#F97316', fontSize: 12, fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background .2s' }}
             >
               🔍 Open Full Size ↗
             </a>
@@ -122,7 +122,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
 
           {/* Customer details */}
           <div style={{ padding: 20 }}>
-            <div style={{ fontSize: 11, fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 14 }}>
               Customer Details
             </div>
 
@@ -132,14 +132,14 @@ function BOMModal({ bom, onClose, onStatusChange }: {
               { icon: '📍', label: 'Location', value: bom.location || '—' },
             ].map(row => (
               <div key={row.label} style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>{row.label}</div>
+                <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>{row.label}</div>
                 <div style={{ fontSize: 15, color: '#F8F9FB', fontWeight: 500 }}>{row.icon} {row.value}</div>
               </div>
             ))}
 
             {bom.notes && (
               <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Notes</div>
+                <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Notes</div>
                 <div style={{ fontSize: 13, color: '#A8BCCC', lineHeight: 1.65, background: 'rgba(249,115,22,0.05)', border: '1px solid rgba(249,115,22,0.1)', borderRadius: 6, padding: '10px 12px' }}>
                   "{bom.notes}"
                 </div>
@@ -147,7 +147,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
             )}
 
             <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Received</div>
+              <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Received</div>
               <div style={{ fontSize: 13, color: '#7A8EA8' }}>
                 {new Date(bom.created_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </div>
@@ -155,7 +155,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
 
             {bom.quoted_at && (
               <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Quoted At</div>
+                <div style={{ fontSize: 10, color: '#7A8EA8', fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Quoted At</div>
                 <div style={{ fontSize: 13, color: '#93C5FD' }}>
                   {new Date(bom.quoted_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                 </div>
@@ -170,7 +170,7 @@ function BOMModal({ bom, onClose, onStatusChange }: {
           <button
             onClick={sendQuoteOnWA}
             disabled={updating}
-            style={{ width: '100%', padding: '14px 0', borderRadius: 4, background: '#25D366', border: 'none', color: 'white', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: '.06em', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background .2s' }}
+            style={{ width: '100%', padding: '14px 0', borderRadius: 4, background: '#25D366', border: 'none', color: 'white', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: '.06em', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'background .2s' }}
           >
             💬 Send Quote on WhatsApp
           </button>
@@ -179,19 +179,19 @@ function BOMModal({ bom, onClose, onStatusChange }: {
           <div style={{ display: 'flex', gap: 8 }}>
             {bom.status !== 'quoted' && (
               <button onClick={() => updateStatus('quoted')} disabled={updating}
-                style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(59,130,246,0.1)', color: '#93C5FD', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(59,130,246,0.3)', background: 'rgba(59,130,246,0.1)', color: '#93C5FD', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                 💬 Mark Quoted
               </button>
             )}
             {bom.status !== 'converted' && (
               <button onClick={() => updateStatus('converted')} disabled={updating}
-                style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(37,211,102,0.3)', background: 'rgba(37,211,102,0.1)', color: '#4ADE80', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(37,211,102,0.3)', background: 'rgba(37,211,102,0.1)', color: '#4ADE80', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                 ✅ Mark Converted
               </button>
             )}
             {bom.status !== 'rejected' && (
               <button onClick={() => updateStatus('rejected')} disabled={updating}
-                style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(248,113,113,0.25)', background: 'rgba(248,113,113,0.06)', color: '#FCA5A5', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                style={{ flex: 1, padding: '10px 0', borderRadius: 4, border: '1px solid rgba(248,113,113,0.25)', background: 'rgba(248,113,113,0.06)', color: '#FCA5A5', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                 ✗ Reject
               </button>
             )}
@@ -305,8 +305,8 @@ export default function BOMTab() {
           { label: 'Converted',   value: stats.converted, color: '#4ADE80' },
         ].map(s => (
           <div key={s.label} style={{ background: 'rgba(25,55,109,0.35)', border: '1px solid rgba(249,115,22,0.15)', borderRadius: 8, padding: '16px 18px' }}>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.2rem', letterSpacing: '.04em', color: s.color, lineHeight: 1 }}>{s.value}</div>
-            <div style={{ fontSize: 11, fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginTop: 5 }}>{s.label}</div>
+            <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '2.2rem', letterSpacing: '.04em', color: s.color, lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginTop: 5 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -316,7 +316,7 @@ export default function BOMTab() {
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {(['all', 'pending', 'quoted', 'converted', 'rejected'] as const).map(s => (
             <button key={s} onClick={() => { setStatusFilter(s); fetchBOMs(s); }}
-              style={{ padding: '6px 14px', borderRadius: 3, border: '1px solid', fontSize: 11, fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s',
+              style={{ padding: '6px 14px', borderRadius: 3, border: '1px solid', fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all .2s',
                 borderColor: statusFilter === s ? '#F97316' : 'rgba(255,255,255,0.1)',
                 background: statusFilter === s ? 'rgba(249,115,22,0.12)' : 'transparent',
                 color: statusFilter === s ? '#F97316' : '#7A8EA8',
@@ -334,16 +334,16 @@ export default function BOMTab() {
           )}
           {!notifEnabled ? (
             <button onClick={enableNotifications}
-              style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid rgba(249,115,22,0.3)', background: 'rgba(249,115,22,0.08)', color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
+              style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid rgba(249,115,22,0.3)', background: 'rgba(249,115,22,0.08)', color: '#F97316', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
               🔔 Enable Notifications
             </button>
           ) : (
-            <div style={{ fontSize: 12, color: '#4ADE80', fontFamily: "'Syne', sans-serif", fontWeight: 700, letterSpacing: '.08em' }}>
+            <div style={{ fontSize: 12, color: '#4ADE80', fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: '.08em' }}>
               🔔 Notifications ON
             </div>
           )}
           <button onClick={() => fetchBOMs()}
-            style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid rgba(249,115,22,0.2)', background: 'transparent', color: '#7A8EA8', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
+            style={{ padding: '7px 14px', borderRadius: 3, border: '1px solid rgba(249,115,22,0.2)', background: 'transparent', color: '#7A8EA8', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
             🔄 Refresh
           </button>
         </div>
@@ -355,7 +355,7 @@ export default function BOMTab() {
       ) : filtered.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0' }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>📋</div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.6rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 6 }}>
+          <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.6rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 6 }}>
             {statusFilter === 'all' ? 'NO BOM REQUESTS YET' : `NO ${statusFilter.toUpperCase()} REQUESTS`}
           </div>
           <p style={{ color: '#7A8EA8', fontSize: 13 }}>
@@ -381,12 +381,12 @@ export default function BOMTab() {
                 {/* Info */}
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
-                    <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 15, color: '#F8F9FB' }}>{bom.name}</span>
-                    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: "'Syne', sans-serif", letterSpacing: '.1em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 20, background: cfg.bg, color: cfg.color }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, color: '#F8F9FB' }}>{bom.name}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, fontFamily: "'Inter', sans-serif", letterSpacing: '.1em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 20, background: cfg.bg, color: cfg.color }}>
                       {cfg.label}
                     </span>
                     {bom.status === 'pending' && (
-                      <span style={{ fontSize: 10, color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, animation: 'bomPulse 1.5s ease infinite' }}>● NEW</span>
+                      <span style={{ fontSize: 10, color: '#F97316', fontFamily: "'Inter', sans-serif", fontWeight: 700, animation: 'bomPulse 1.5s ease infinite' }}>● NEW</span>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: '#7A8EA8' }}>
@@ -405,7 +405,7 @@ export default function BOMTab() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 7, minWidth: 130 }}>
                   <button
                     onClick={() => setSelected(bom)}
-                    style={{ padding: '8px 0', borderRadius: 3, border: '1px solid rgba(249,115,22,0.3)', background: 'rgba(249,115,22,0.08)', color: '#F97316', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                    style={{ padding: '8px 0', borderRadius: 3, border: '1px solid rgba(249,115,22,0.3)', background: 'rgba(249,115,22,0.08)', color: '#F97316', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
                     👁 View Details
                   </button>
                   <button
@@ -418,12 +418,12 @@ export default function BOMTab() {
                           .then(() => handleStatusChange(bom.id, 'quoted'));
                       }
                     }}
-                    style={{ padding: '8px 0', borderRadius: 3, background: '#25D366', border: 'none', color: 'white', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                    style={{ padding: '8px 0', borderRadius: 3, background: '#25D366', border: 'none', color: 'white', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                     💬 Send Quote
                   </button>
                   <button
                     onClick={() => handleDelete(bom.id)}
-                    style={{ padding: '6px 0', borderRadius: 3, background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.15)', color: '#FCA5A5', fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                    style={{ padding: '6px 0', borderRadius: 3, background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.15)', color: '#FCA5A5', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                     🗑️ Delete
                   </button>
                 </div>

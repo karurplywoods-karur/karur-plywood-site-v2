@@ -81,7 +81,7 @@ export default function BOMUploader() {
     borderRadius: 3,
     padding: '10px 14px',
     color: '#0B2447',
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontSize: 14,
     outline: 'none',
     transition: 'border-color 0.2s',
@@ -89,7 +89,7 @@ export default function BOMUploader() {
   const lbl: React.CSSProperties = {
     display: 'block',
     fontSize: 11,
-    fontFamily: "'Syne', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     fontWeight: 700,
     letterSpacing: '0.15em',
     textTransform: 'uppercase',
@@ -105,7 +105,7 @@ export default function BOMUploader() {
         <div>
           <div className="bom-header">
             <div style={{ fontSize: 40, marginBottom: 12 }}>📋</div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', letterSpacing: '0.05em', color: '#0B2447', marginBottom: 6 }}>
+            <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.8rem', letterSpacing: '0.05em', color: '#0B2447', marginBottom: 6 }}>
               UPLOAD YOUR MATERIAL LIST
             </div>
             <p style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.7, maxWidth: 400, margin: '0 auto' }}>
@@ -122,7 +122,7 @@ export default function BOMUploader() {
             onClick={() => inputRef.current?.click()}
           >
             <div style={{ fontSize: 40, marginBottom: 10 }}>📁</div>
-            <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: '#A8BCCC', marginBottom: 4 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, color: '#A8BCCC', marginBottom: 4 }}>
               Drag &amp; drop your material list here
             </div>
             <div style={{ fontSize: 12, color: '#6B7280' }}>JPG, PNG, WebP · Max 10 MB</div>
@@ -236,7 +236,7 @@ export default function BOMUploader() {
       {step === 'submitting' && (
         <div style={{ textAlign: 'center', padding: '48px 20px' }}>
           <div style={{ fontSize: 48, marginBottom: 16, animation: 'bomSpin 1s linear infinite', display: 'inline-block' }}>⏳</div>
-          <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: '#0B2447', marginBottom: 6 }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 16, color: '#0B2447', marginBottom: 6 }}>
             Uploading your material list...
           </div>
           <div style={{ fontSize: 13, color: '#6B7280' }}>Please don&apos;t close this page.</div>
@@ -247,7 +247,7 @@ export default function BOMUploader() {
       {step === 'done' && (
         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
           <div style={{ fontSize: 64, marginBottom: 20 }}>✅</div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2rem', letterSpacing: '0.05em', color: '#0B2447', marginBottom: 10 }}>
+          <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '2rem', letterSpacing: '0.05em', color: '#0B2447', marginBottom: 10 }}>
             REQUEST RECEIVED!
           </div>
           <p style={{ color: '#6B7280', fontSize: 15, lineHeight: 1.8, marginBottom: 6 }}>
@@ -275,7 +275,7 @@ export default function BOMUploader() {
         }
         .bom-header { text-align: center; margin-bottom: 24px; }
         .bom-step-label {
-          font-family: 'Syne', sans-serif; font-size: 0.68rem;
+          font-family: 'Inter', sans-serif; font-size: 0.68rem;
           font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
           color: #F07316; margin-bottom: 16px;
         }
@@ -295,7 +295,7 @@ export default function BOMUploader() {
           padding: 10px 20px; border-radius: 3px;
           border: 1px solid rgba(255,255,255,0.15);
           background: transparent; color: #A8BCCC;
-          font-family: 'Syne', sans-serif; font-weight: 700;
+          font-family: 'Inter', sans-serif; font-weight: 700;
           font-size: 0.75rem; letter-spacing: 0.08em;
           text-transform: uppercase; cursor: pointer; transition: all 0.2s;
         }
@@ -307,7 +307,7 @@ export default function BOMUploader() {
         .bom-pick-btn--orange:hover { background: rgba(240,115,22,0.2); }
         .bom-action-btn {
           padding: 12px 20px; border-radius: 3px; cursor: pointer;
-          font-family: 'Syne', sans-serif; font-weight: 700;
+          font-family: 'Inter', sans-serif; font-weight: 700;
           font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
           transition: all 0.2s; border: none; display: inline-block;
         }

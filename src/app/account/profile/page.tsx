@@ -59,13 +59,13 @@ export default function ProfilePage() {
     <div style={{ minHeight: '100vh', background: '#070F1F', padding: '80px 0 60px' }}>
       <div style={{ maxWidth: 600, margin: '0 auto', padding: '32px 48px' }} className="profile-pad">
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, fontSize: 12, color: '#7A8EA8', fontFamily: "'Syne',sans-serif" }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28, fontSize: 12, color: '#7A8EA8', fontFamily: "'Inter',sans-serif" }}>
           <Link href="/account" style={{ color: '#7A8EA8', textDecoration: 'none' }}>← My Account</Link>
           <span>›</span>
           <span style={{ color: '#F8F9FB', fontWeight: 700 }}>Edit Profile</span>
         </div>
 
-        <h1 style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '2rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 24 }}>
+        <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: '2rem', letterSpacing: '.05em', color: '#F8F9FB', marginBottom: 24 }}>
           EDIT PROFILE
         </h1>
 
@@ -77,12 +77,12 @@ export default function ProfilePage() {
 
         <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div style={{ background: 'rgba(25,55,109,0.25)', border: '1px solid rgba(249,115,22,0.12)', borderRadius: 10, padding: '24px' }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 18 }}>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '.65rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 18 }}>
               Personal Information
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <label style={{ display: 'block', fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontFamily: "'Inter',sans-serif", fontSize: '.6rem', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 6 }}>
                   Full Name
                 </label>
                 <input
@@ -93,7 +93,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 6 }}>
+                <label style={{ display: 'block', fontFamily: "'Inter',sans-serif", fontSize: '.6rem', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: '#7A8EA8', marginBottom: 6 }}>
                   Phone Number
                 </label>
                 <input
@@ -107,21 +107,21 @@ export default function ProfilePage() {
           </div>
 
           <button type="submit" disabled={saving}
-            style={{ padding: '13px 0', background: '#F97316', color: '#0B2447', border: 'none', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.82rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.6 : 1 }}>
+            style={{ padding: '13px 0', background: '#F97316', color: '#0B2447', border: 'none', borderRadius: 6, fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '.82rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.6 : 1 }}>
             {saving ? '⏳ Saving...' : '✓ Save Changes'}
           </button>
         </form>
 
         {/* Password reset */}
         <div style={{ background: 'rgba(25,55,109,0.2)', border: '1px solid rgba(249,115,22,0.1)', borderRadius: 10, padding: '20px 24px', marginTop: 20 }}>
-          <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 8 }}>
+          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '.65rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F97316', marginBottom: 8 }}>
             Password
           </div>
           <p style={{ fontSize: 13, color: '#7A8EA8', marginBottom: 14, lineHeight: 1.6 }}>
             We'll send a reset link to your registered email address.
           </p>
           <button onClick={handlePasswordReset}
-            style={{ padding: '10px 20px', background: 'transparent', border: '1px solid rgba(249,115,22,0.3)', borderRadius: 6, color: '#F97316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
+            style={{ padding: '10px 20px', background: 'transparent', border: '1px solid rgba(249,115,22,0.3)', borderRadius: 6, color: '#F97316', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
             Send Password Reset Email
           </button>
         </div>
@@ -129,7 +129,7 @@ export default function ProfilePage() {
       </div>
       <style>{`
         .profile-pad { padding: 32px 48px; }
-        .profile-inp { width: 100%; background: rgba(7,15,31,0.6); border: 1px solid rgba(249,115,22,0.15); border-radius: 6px; padding: 10px 13px; font-size: 14px; color: #F8F9FB; font-family: 'DM Sans',sans-serif; outline: none; transition: border-color .2s; }
+        .profile-inp { width: 100%; background: rgba(7,15,31,0.6); border: 1px solid rgba(249,115,22,0.15); border-radius: 6px; padding: 10px 13px; font-size: 14px; color: #F8F9FB; font-family: 'Inter',sans-serif; outline: none; transition: border-color .2s; }
         .profile-inp:focus { border-color: #F97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
         .profile-inp::placeholder { color: #7A8EA8; }
         @media(max-width:640px){ .profile-pad { padding: 20px !important; } }

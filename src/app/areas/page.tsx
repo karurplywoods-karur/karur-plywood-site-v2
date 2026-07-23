@@ -30,7 +30,7 @@ export default function AreasPage() {
       <section style={{ background:'linear-gradient(160deg,#0a1d3a,#070F1F)', borderBottom:'1px solid rgba(249,115,22,0.15)', padding:'80px 0 60px' }}>
         <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem' }} className="areas-pad">
           <div className="eyebrow">Service Areas</div>
-          <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'1rem' }}>
+          <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'1rem' }}>
             WE DELIVER ACROSS<br/><span style={{ color:'#F97316' }}>TAMIL NADU</span>
           </h1>
           <p className="s-desc">Select your city below to see delivery details, pricing and what we supply to your area.</p>
@@ -43,10 +43,10 @@ export default function AreasPage() {
             {CITIES.map(c => (
               <Link key={c.slug} href={`/areas/${c.slug}`} className="area-card">
                 <div style={{ fontSize:36, marginBottom:12 }}>{c.emoji}</div>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.04em', color:'#F8F9FB', marginBottom:4 }}>{c.name}</div>
-                <div style={{ fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.1em', marginBottom:8 }}>{c.dist} from Karur</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.6rem', letterSpacing:'0.04em', color:'#F8F9FB', marginBottom:4 }}>{c.name}</div>
+                <div style={{ fontSize:12, color:'#F97316', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.1em', marginBottom:8 }}>{c.dist} from Karur</div>
                 <div style={{ fontSize:13, color:'#7A8EA8', lineHeight:1.6 }}>{c.desc}</div>
-                <div style={{ marginTop:16, fontSize:12, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.08em' }}>View Details →</div>
+                <div style={{ marginTop:16, fontSize:12, color:'#F97316', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.08em' }}>View Details →</div>
               </Link>
             ))}
           </div>

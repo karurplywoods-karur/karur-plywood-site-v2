@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 const SPECIALITIES = ['Residential','Commercial','Interior Design','Modular Kitchens','Landscape','Hospitality'];
-const inp: React.CSSProperties = { width:'100%', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(249,115,22,0.18)', borderRadius:3, padding:'10px 14px', color:'#F8F9FB', fontFamily:"'DM Sans',sans-serif", fontSize:14, outline:'none' };
-const lbl: React.CSSProperties = { display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 };
+const inp: React.CSSProperties = { width:'100%', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(249,115,22,0.18)', borderRadius:3, padding:'10px 14px', color:'#F8F9FB', fontFamily:"'Inter',sans-serif", fontSize:14, outline:'none' };
+const lbl: React.CSSProperties = { display:'block', fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:6 };
 
 export default function ArchitectApplyModal() {
   const [open, setOpen] = useState(false);
@@ -36,15 +36,15 @@ export default function ArchitectApplyModal() {
             {done ? (
               <div style={{ textAlign:'center', padding:'28px 0' }}>
                 <div style={{ fontSize:48, marginBottom:12 }}>✅</div>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>APPLICATION RECEIVED!</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'2rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>APPLICATION RECEIVED!</div>
                 <p style={{ color:'#7A8EA8', fontSize:14, lineHeight:1.7, marginBottom:20 }}>We&apos;ll review your portfolio and contact you within 24 hours to set up your listing.</p>
                 <button onClick={()=>{setOpen(false);setDone(false);}} className="btn-p" style={{border:'none',cursor:'pointer'}}>Close</button>
               </div>
             ) : (
               <>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
-                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB' }}>JOIN AS AN ARCHITECT</div>
-                  <button onClick={()=>setOpen(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:12 }}>✕</button>
+                  <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.6rem', letterSpacing:'0.05em', color:'#F8F9FB' }}>JOIN AS AN ARCHITECT</div>
+                  <button onClick={()=>setOpen(false)} style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'4px 10px', cursor:'pointer', fontFamily:"'Inter',sans-serif", fontSize:12 }}>✕</button>
                 </div>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
                   <div><label style={lbl}>Full Name *</label><input style={inp} value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Ar. Ramesh Iyer" /></div>
@@ -63,7 +63,7 @@ export default function ArchitectApplyModal() {
                   <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                     {SPECIALITIES.map(s => (
                       <button key={s} type="button" onClick={()=>toggleSpec(s)}
-                        style={{ padding:'6px 14px', borderRadius:2, border:'1px solid', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', cursor:'pointer',
+                        style={{ padding:'6px 14px', borderRadius:2, border:'1px solid', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', cursor:'pointer',
                           borderColor: form.specialities.includes(s) ? '#F97316' : 'rgba(255,255,255,0.12)',
                           background: form.specialities.includes(s) ? 'rgba(249,115,22,0.12)' : 'transparent',
                           color: form.specialities.includes(s) ? '#F97316' : '#7A8EA8',

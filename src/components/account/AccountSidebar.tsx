@@ -53,10 +53,10 @@ export default function AccountSidebar({ customer, active }: { customer: Custome
       <style>{`
         .acc-sidebar { width: 240px; flex-shrink: 0; }
         .acc-sidebar-user { display: flex; gap: 12px; align-items: center; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 16px; margin-bottom: 8px; }
-        .acc-avatar { width: 42px; height: 42px; border-radius: 50%; background: #0B2447; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Syne',sans-serif; font-weight: 800; font-size: 15px; flex-shrink: 0; }
-        .acc-user-name { font-family: 'Syne',sans-serif; font-weight: 700; font-size: 13.5px; color: #0B2447; }
+        .acc-avatar { width: 42px; height: 42px; border-radius: 50%; background: #0B2447; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Inter',sans-serif; font-weight: 800; font-size: 15px; flex-shrink: 0; }
+        .acc-user-name { font-family: 'Inter',sans-serif; font-weight: 700; font-size: 13.5px; color: #0B2447; }
         .acc-user-sub { font-size: 11px; color: #6B7280; }
-        .acc-edit-link { display: block; font-size: 11.5px; color: #F07316; text-decoration: none; font-family: 'Syne',sans-serif; font-weight: 700; margin: 8px 2px 16px; }
+        .acc-edit-link { display: block; font-size: 11.5px; color: #F07316; text-decoration: none; font-family: 'Inter',sans-serif; font-weight: 700; margin: 8px 2px 16px; }
         .acc-nav { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
         .acc-nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-size: 13px; color: #4B5563; text-decoration: none; border-bottom: 1px solid #F5F2ED; background: none; border-left: none; border-right: none; border-top: none; text-align: left; width: 100%; cursor: pointer; font-family: inherit; }
         .acc-nav-item:last-child { border-bottom: none; }

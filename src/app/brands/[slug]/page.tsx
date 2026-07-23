@@ -36,15 +36,15 @@ export default async function BrandDetailPage({ params }: { params: { slug: stri
           <div className="bd-logo-wrap">
             {brand.logo_url
               ? <Image src={brand.logo_url} alt={brand.name} fill style={{ objectFit: 'contain', padding: 20 }} sizes="220px" />
-              : <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 22, color: '#0B2447' }}>{brand.name}</span>}
+              : <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: 22, color: '#0B2447' }}>{brand.name}</span>}
           </div>
           <div style={{ flex: 1, minWidth: 220 }}>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.5rem,2.8vw,2rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 10px' }}>{brand.name}</h1>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.5rem,2.8vw,2rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 10px' }}>{brand.name}</h1>
             <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.75, maxWidth: 640, margin: '0 0 14px' }}>
               {brand.description || `Explore ${brand.name}'s range of products, stocked and sold at Karur Plywood & Company.`}
             </p>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-              <span style={{ fontSize: 13, fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#F07316' }}>{products.length}+ Products Available</span>
+              <span style={{ fontSize: 13, fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#F07316' }}>{products.length}+ Products Available</span>
               {brand.website && (
                 <a href={brand.website} target="_blank" rel="noopener" style={{ fontSize: 12.5, color: '#6B7280', textDecoration: 'none' }}>↗ {brand.website.replace(/^https?:\/\//, '')}</a>
               )}
@@ -53,7 +53,7 @@ export default async function BrandDetailPage({ params }: { params: { slug: stri
         </div>
 
         {/* Products */}
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', margin: '32px 0 16px' }}>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', margin: '32px 0 16px' }}>
           {brand.name} Products
         </h2>
         {products.length > 0 ? (

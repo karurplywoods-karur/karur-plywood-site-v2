@@ -56,7 +56,7 @@ export default function ProductReviews({ productName }: { productName: string })
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 36 }}>
           <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F07316', marginBottom: 8 }}>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#F07316', marginBottom: 8 }}>
               Customer Reviews
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
@@ -76,7 +76,7 @@ export default function ProductReviews({ productName }: { productName: string })
           {!done && (
             <button
               onClick={() => setShowForm(s => !s)}
-              style={{ padding: '10px 22px', borderRadius: 8, background: showForm ? '#FFE8D6' : '#FFF4ED', border: '1px solid rgba(240,115,22,0.3)', color: '#F07316', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}>
+              style={{ padding: '10px 22px', borderRadius: 8, background: showForm ? '#FFE8D6' : '#FFF4ED', border: '1px solid rgba(240,115,22,0.3)', color: '#F07316', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '0.72rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}>
               {showForm ? '✕ Close' : '✏️ Write a Review'}
             </button>
           )}
@@ -92,7 +92,7 @@ export default function ProductReviews({ productName }: { productName: string })
         {/* Review form */}
         {showForm && !done && (
           <div style={{ background: '#FAF8F5', border: '1px solid #E5E1DC', borderRadius: 14, padding: '28px 24px', marginBottom: 36 }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 20 }}>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 20 }}>
               Your Review for {productName}
             </div>
 
@@ -142,7 +142,7 @@ export default function ProductReviews({ productName }: { productName: string })
             {error && <div style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
             <button onClick={handleSubmit} disabled={submitting}
-              style={{ padding: '12px 28px', borderRadius: 8, background: submitting ? '#D9640F' : '#F07316', color: 'white', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: submitting ? 'default' : 'pointer' }}>
+              style={{ padding: '12px 28px', borderRadius: 8, background: submitting ? '#D9640F' : '#F07316', color: 'white', border: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '.1em', textTransform: 'uppercase', cursor: submitting ? 'default' : 'pointer' }}>
               {submitting ? 'Submitting...' : 'Submit Review'}
             </button>
           </div>
@@ -161,12 +161,12 @@ export default function ProductReviews({ productName }: { productName: string })
               <div key={r.id} style={{ background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 12, padding: '20px 22px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#F07316,#FF9A45)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#fff', flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg,#F07316,#FF9A45)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#fff', flexShrink: 0 }}>
                       {r.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
                       <div style={{ fontWeight: 600, color: '#0B2447', fontSize: 14 }}>{r.name}</div>
-                      {r.role && <div style={{ fontSize: 11, color: '#6B7280', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{r.role}</div>}
+                      {r.role && <div style={{ fontSize: 11, color: '#6B7280', fontFamily: "'Inter',sans-serif", fontWeight: 600, letterSpacing: '.06em' }}>{r.role}</div>}
                     </div>
                   </div>
                   <span style={{ color: '#F07316', fontSize: 14, letterSpacing: 2 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>

@@ -63,7 +63,7 @@ export default function OrderDetailPage() {
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
           <div>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 4px' }}>Order Details</h1>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 4px' }}>Order Details</h1>
             <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>Detailed information about your order</p>
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
@@ -76,9 +76,9 @@ export default function OrderDetailPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <div>
               <div className="od-label">Order ID</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 15 }}>{order.order_number}</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 15 }}>{order.order_number}</div>
             </div>
-            <span style={{ background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`, borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700, fontFamily: "'Syne',sans-serif" }}>{badge.label}</span>
+            <span style={{ background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`, borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>{badge.label}</span>
           </div>
           <div><div className="od-label">Order Date</div><div className="od-val">{new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div></div>
           <div><div className="od-label">Payment Method</div><div className="od-val">{order.payment_method === 'cod' ? 'Cash on Delivery' : 'Online Payment'}</div></div>
@@ -94,7 +94,7 @@ export default function OrderDetailPage() {
             {/* Timeline card */}
             {!isCancelled && (
               <div className="od-card" style={{ marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 20 }}>Order Tracking</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 20 }}>Order Tracking</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                   {STATUS_STEPS.map((step, i) => {
                     const done = currentStep >= i;
@@ -109,7 +109,7 @@ export default function OrderDetailPage() {
                           {!isLast && <div style={{ width: 2, flex: 1, minHeight: 30, background: currentStep > i ? '#16a34a' : '#E5E1DC' }} />}
                         </div>
                         <div style={{ paddingBottom: isLast ? 0 : 22 }}>
-                          <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: done ? '#0B2447' : '#9CA3AF' }}>{STEP_LABELS[step]}</div>
+                          <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: done ? '#0B2447' : '#9CA3AF' }}>{STEP_LABELS[step]}</div>
                           <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{done ? STEP_DESC[step] : 'Pending'}</div>
                         </div>
                       </div>
@@ -122,7 +122,7 @@ export default function OrderDetailPage() {
             {/* Delivery details */}
             <div className="od-card" style={{ marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>Delivery Details</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>Delivery Details</div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16, marginBottom: order.delivery_google_map_link ? 16 : 0 }}>
                 {order.tracking_number && (
@@ -149,7 +149,7 @@ export default function OrderDetailPage() {
             <div className="od-card" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
               <div style={{ fontSize: 24 }}>🎧</div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447' }}>Need Help?</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447' }}>Need Help?</div>
                 <div style={{ fontSize: 12, color: '#6B7280' }}>Our support team is here to help you with any queries.</div>
               </div>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -163,7 +163,7 @@ export default function OrderDetailPage() {
           {/* Right — order items summary */}
           <aside>
             <div className="od-card">
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Order Items ({order.order_items?.length || 0})</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Order Items ({order.order_items?.length || 0})</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 14 }}>
                 {(order.order_items || []).map((item: any) => (
                   <div key={item.id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -186,7 +186,7 @@ export default function OrderDetailPage() {
                 {order.discount > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', color: '#16a34a' }}><span>Discount</span><span>−₹{order.discount.toLocaleString('en-IN')}</span></div>
                 )}
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 15, borderTop: '1px solid #E5E1DC', paddingTop: 8, marginTop: 2 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', fontSize: 15, borderTop: '1px solid #E5E1DC', paddingTop: 8, marginTop: 2 }}>
                   <span>Total Amount</span><span style={{ color: order.payment_status === 'paid' ? '#0B2447' : '#0B2447' }}>₹{order.total?.toLocaleString('en-IN')}</span>
                 </div>
                 <div style={{ textAlign: 'right', fontSize: 11, color: order.payment_status === 'paid' ? '#16a34a' : '#F07316', fontWeight: 700 }}>{order.payment_status === 'paid' ? 'Paid' : 'Pending'}</div>
@@ -199,8 +199,8 @@ export default function OrderDetailPage() {
       <style>{`
         .od-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .od-label { font-size: 10px; color: #9CA3AF; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
-        .od-val { font-size: 13px; color: #0B2447; font-weight: 700; font-family: 'Syne',sans-serif; }
-        .od-btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-size: 12px; font-weight: 700; font-family: 'Syne',sans-serif; text-decoration: none; white-space: nowrap; background: #FFFFFF; }
+        .od-val { font-size: 13px; color: #0B2447; font-weight: 700; font-family: 'Inter',sans-serif; }
+        .od-btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-size: 12px; font-weight: 700; font-family: 'Inter',sans-serif; text-decoration: none; white-space: nowrap; background: #FFFFFF; }
         .od-btn-outline:hover { border-color: #F07316; color: #F07316; }
         .od-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
         @media(max-width:900px){ .od-grid { grid-template-columns: 1fr !important; } }

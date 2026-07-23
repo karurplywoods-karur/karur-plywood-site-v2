@@ -63,7 +63,7 @@ const styles = `
     border: 1.5px solid #0B2447;
     background: #FFFFFF;
     color: #0B2447;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -95,7 +95,7 @@ const styles = `
     align-items: center;
     justify-content: center;
     color: #0B2447;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 800;
     border-left: 1px solid #E5E1DC;
     border-right: 1px solid #E5E1DC;

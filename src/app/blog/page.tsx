@@ -71,13 +71,13 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
           <div>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Karur Plywood Blog</h1>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Karur Plywood Blog</h1>
             <p style={{ fontSize: 14, color: '#6B7280', margin: 0 }}>Expert tips, product insights and ideas to help you build better.</p>
           </div>
           <a href={`https://wa.me/${WA}?text=Hi%2C+I+have+a+question+about+plywood.`} target="_blank" rel="noopener" className="blog-ask-card">
             <span style={{ fontSize: 20 }}>💬</span>
             <div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447' }}>Have a question?</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447' }}>Have a question?</div>
               <div style={{ fontSize: 11.5, color: '#6B7280' }}>Ask our experts on WhatsApp</div>
             </div>
           </a>
@@ -96,7 +96,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
               <span style={{ fontSize: 12.5, color: '#6B7280' }}>{total} article{total === 1 ? '' : 's'}</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <label style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Syne',sans-serif" }}>Sort by:</label>
+                <label style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Inter',sans-serif" }}>Sort by:</label>
                 <Link href={buildHref({ sort: sort === 'latest' ? 'oldest' : 'latest' })} className="blog-sort-btn">{sort === 'latest' ? 'Latest' : 'Oldest'} ⇅</Link>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
             {posts.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '80px 0' }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#0B2447', marginBottom: 8, fontSize: 18 }}>Coming soon</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#0B2447', marginBottom: 8, fontSize: 18 }}>Coming soon</div>
                 <p style={{ color: '#6B7280', marginBottom: 24 }}>Expert guides coming soon. Ask us on WhatsApp in the meantime.</p>
                 <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="blog-ask-btn">💬 Ask on WhatsApp</a>
               </div>
@@ -146,7 +146,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
           {/* Sidebar */}
           <aside>
             <div className="blog-sb-card" style={{ marginBottom: 16 }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Categories</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Categories</div>
               <Link href="/blog" style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', fontSize: 13, color: category === 'all' ? '#F07316' : '#4B5563', textDecoration: 'none', fontWeight: category === 'all' ? 700 : 400, borderBottom: '1px solid #F1EEE9' }}>
                 <span>All Categories</span><span>{totalAll}</span>
               </Link>
@@ -159,7 +159,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
 
             {recent.length > 0 && (
               <div className="blog-sb-card" style={{ marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Recent Posts</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Recent Posts</div>
                 {recent.map((p: any) => (
                   <Link key={p.id} href={`/blog/${p.slug}`} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F1EEE9', textDecoration: 'none' }}>
                     <div style={{ width: 44, height: 44, borderRadius: 6, overflow: 'hidden', background: '#F2EDE5', flexShrink: 0, position: 'relative' }}>
@@ -175,7 +175,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
             )}
 
             <div className="blog-expert-card">
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#FFFFFF', marginBottom: 4 }}>Need Expert Advice?</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#FFFFFF', marginBottom: 4 }}>Need Expert Advice?</div>
               <div style={{ fontSize: 12, color: '#93A3BC', marginBottom: 14 }}>Our experts are here to help you choose the right materials.</div>
               <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="blog-expert-btn">Contact Our Experts →</a>
             </div>
@@ -187,7 +187,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
         .blog-ask-card { display: flex; gap: 10px; align-items: center; background: #FFF4ED; border: 1px solid rgba(240,115,22,0.25); border-radius: 10px; padding: 12px 18px; text-decoration: none; }
         .blog-layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
         .blog-tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid #E5E1DC; margin-bottom: 18px; }
-        .blog-tab { padding: 10px 14px; font-family: 'Syne',sans-serif; font-size: 0.72rem; font-weight: 700; color: #6B7280; text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; }
+        .blog-tab { padding: 10px 14px; font-family: 'Inter',sans-serif; font-size: 0.72rem; font-weight: 700; color: #6B7280; text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; }
         .blog-tab--active { color: #F07316; border-bottom-color: #F07316; }
         .blog-sort-btn { font-size: 12px; color: #0B2447; border: 1px solid #E5E1DC; border-radius: 6px; padding: 6px 12px; text-decoration: none; background: #FFFFFF; }
         .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -196,20 +196,20 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
         .blog-card-img { position: relative; height: 170px; background: #F2EDE5; }
         .blog-card-img-fallback { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 36px; background: linear-gradient(135deg,#EDE6DB,#DCD0BE); }
         .blog-card-body { padding: 16px 18px 20px; flex: 1; display: flex; flex-direction: column; }
-        .blog-card-cat { font-family: 'Syne',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #F07316; margin-bottom: 8px; }
-        .blog-card-title { font-family: 'Syne',sans-serif; font-size: .92rem; font-weight: 700; color: #0B2447; margin-bottom: 8px; line-height: 1.35; }
+        .blog-card-cat { font-family: 'Inter',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #F07316; margin-bottom: 8px; }
+        .blog-card-title { font-family: 'Inter',sans-serif; font-size: .92rem; font-weight: 700; color: #0B2447; margin-bottom: 8px; line-height: 1.35; }
         .blog-card-exc { font-size: .78rem; color: #6B7280; line-height: 1.6; flex: 1; margin-bottom: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .blog-card-meta { font-size: .68rem; color: #9CA3AF; margin-bottom: 10px; }
-        .blog-card-read { font-size: .72rem; color: #F07316; font-family: 'Syne',sans-serif; font-weight: 700; letter-spacing: .06em; }
+        .blog-card-read { font-size: .72rem; color: #F07316; font-family: 'Inter',sans-serif; font-weight: 700; letter-spacing: .06em; }
         .blog-pages { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 36px; flex-wrap: wrap; }
-        .blog-page-btn { font-family: 'Syne',sans-serif; font-size: .7rem; font-weight: 700; color: #0B2447; border: 1px solid #E5E1DC; border-radius: 6px; padding: 8px 14px; text-decoration: none; }
+        .blog-page-btn { font-family: 'Inter',sans-serif; font-size: .7rem; font-weight: 700; color: #0B2447; border: 1px solid #E5E1DC; border-radius: 6px; padding: 8px 14px; text-decoration: none; }
         .blog-page-btn:hover { border-color: #F07316; color: #F07316; }
-        .blog-page-num { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-family: 'Syne',sans-serif; font-size: .78rem; font-weight: 700; border: 1px solid #E5E1DC; border-radius: 6px; text-decoration: none; color: #6B7280; }
+        .blog-page-num { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-family: 'Inter',sans-serif; font-size: .78rem; font-weight: 700; border: 1px solid #E5E1DC; border-radius: 6px; text-decoration: none; color: #6B7280; }
         .blog-page-num--active { background: #F07316; border-color: #F07316; color: #FFFFFF; }
         .blog-sb-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 18px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .blog-expert-card { background: #0B2447; border-radius: 10px; padding: 20px; }
-        .blog-expert-btn { display: inline-flex; align-items: center; padding: 10px 18px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12px; text-decoration: none; }
-        .blog-ask-btn { display: inline-flex; align-items: center; padding: 11px 22px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 13px; text-decoration: none; }
+        .blog-expert-btn { display: inline-flex; align-items: center; padding: 10px 18px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 12px; text-decoration: none; }
+        .blog-ask-btn { display: inline-flex; align-items: center; padding: 11px 22px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 13px; text-decoration: none; }
         @media(max-width:1000px){ .blog-layout { grid-template-columns: 1fr !important; } .blog-grid { grid-template-columns: repeat(2,1fr) !important; } }
         @media(max-width:640px){ .blog-pad { padding-left:16px !important; padding-right:16px !important; } .blog-grid { grid-template-columns: 1fr !important; } }
       `}</style>

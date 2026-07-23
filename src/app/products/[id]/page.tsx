@@ -121,7 +121,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
               {/* Gallery */}
               <div style={{ position: 'relative' }}>
                 {badge && (
-                  <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 3, background: 'rgba(11,36,71,0.92)', color: '#FFFFFF', fontFamily: "'Syne',sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 3 }}>
+                  <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 3, background: 'rgba(11,36,71,0.92)', color: '#FFFFFF', fontFamily: "'Inter',sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 3 }}>
                     {badge.emoji} {badge.label}
                   </div>
                 )}
@@ -136,20 +136,20 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
 
               {/* Info */}
               <div>
-                <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.3rem,2.4vw,1.7rem)', fontWeight: 700, color: '#0B2447', lineHeight: 1.25, marginBottom: 6 }}>
+                <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.3rem,2.4vw,1.7rem)', fontWeight: 700, color: '#0B2447', lineHeight: 1.25, marginBottom: 6 }}>
                   {product.name}
                 </h1>
                 {brandName && (
-                  <Link href={`/products?brand=${(product as any).brands?.slug || ''}`} style={{ fontFamily: "'Syne',sans-serif", fontSize: 13, fontWeight: 700, color: '#F07316', textDecoration: 'none' }}>
+                  <Link href={`/products?brand=${(product as any).brands?.slug || ''}`} style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, fontWeight: 700, color: '#F07316', textDecoration: 'none' }}>
                     {brandName}
                   </Link>
                 )}
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, marginBottom: 18 }}>
                   {product.in_stock !== false
-                    ? <span style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif", letterSpacing: '.06em' }}>✓ In Stock</span>
-                    : <span style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif", letterSpacing: '.06em' }}>Out of Stock</span>}
-                  {discount && discount > 0 && <span style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: '#F07316', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Syne',sans-serif" }}>{discount}% OFF</span>}
+                    ? <span style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif", letterSpacing: '.06em' }}>✓ In Stock</span>
+                    : <span style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif", letterSpacing: '.06em' }}>Out of Stock</span>}
+                  {discount && discount > 0 && <span style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: '#F07316', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>{discount}% OFF</span>}
                 </div>
 
                 {descSentences.length > 0 && (
@@ -171,7 +171,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   </div>
                   <a href={`https://wa.me/?text=${encodeURIComponent(`Check this: ${product.name}${product.price ? ` at ₹${product.price.toLocaleString('en-IN')}` : ''} — ${CONTACT.siteUrl}/products/${product.id}`)}`}
                     target="_blank" rel="noopener"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, textDecoration: 'none' }}>
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 6, background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, textDecoration: 'none' }}>
                     💬 Share
                   </a>
                 </div>
@@ -235,14 +235,14 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   key: 'description', label: 'Description', content: (
                     <div className="pd-desc-grid">
                       <div>
-                        <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 14 }}>Product Description</h3>
+                        <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 14 }}>Product Description</h3>
                         <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.85, marginBottom: 26 }}>
                           {product.description || `${product.name} is available at Karur Plywood & Company. Contact us for detailed specifications and bulk pricing.`}
                         </p>
 
                         {descSentences.length > 0 && (
                           <>
-                            <h4 style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.95rem', fontWeight: 700, color: '#0B2447', marginBottom: 12 }}>Features</h4>
+                            <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.95rem', fontWeight: 700, color: '#0B2447', marginBottom: 12 }}>Features</h4>
                             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 26px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                               {descSentences.slice(0, 6).map((s, i) => (
                                 <li key={i} style={{ display: 'flex', gap: 8, fontSize: 13.5, color: '#374151' }}>
@@ -253,14 +253,14 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                           </>
                         )}
 
-                        <h4 style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.95rem', fontWeight: 700, color: '#0B2447', marginBottom: 14 }}>Ideal For</h4>
+                        <h4 style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.95rem', fontWeight: 700, color: '#0B2447', marginBottom: 14 }}>Ideal For</h4>
                         <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap' }}>
                           {['🍽️ Kitchen', '🛁 Bathroom', '🪑 Furniture', '🏠 Interior Work', '🏢 Commercial'].map(item => {
                             const [icon, ...rest] = item.split(' ');
                             return (
                               <div key={item} style={{ textAlign: 'center', width: 72 }}>
                                 <div style={{ fontSize: 22, marginBottom: 6 }}>{icon}</div>
-                                <div style={{ fontSize: 11, color: '#6B7280', fontFamily: "'Syne',sans-serif", fontWeight: 600 }}>{rest.join(' ')}</div>
+                                <div style={{ fontSize: 11, color: '#6B7280', fontFamily: "'Inter',sans-serif", fontWeight: 600 }}>{rest.join(' ')}</div>
                               </div>
                             );
                           })}
@@ -310,7 +310,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                         ['Is GST invoice available?', 'Yes, GST invoices are provided for all orders on request.'],
                       ].map(([q, a]) => (
                         <details key={q} style={{ background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, padding: '12px 16px' }}>
-                          <summary style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13.5, color: '#0B2447', cursor: 'pointer' }}>{q}</summary>
+                          <summary style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13.5, color: '#0B2447', cursor: 'pointer' }}>{q}</summary>
                           <p style={{ fontSize: 13, color: '#6B7280', marginTop: 8, lineHeight: 1.6 }}>{a}</p>
                         </details>
                       ))}
@@ -326,7 +326,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         {related.length > 0 && (
           <section style={{ padding: '40px 0', background: '#FFFFFF', borderTop: '1px solid #E5E1DC' }}>
             <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }} className="pd-pad">
-              <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.2rem', fontWeight: 700, color: '#0B2447', marginBottom: 20 }}>You May Also Like</h2>
+              <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.2rem', fontWeight: 700, color: '#0B2447', marginBottom: 20 }}>You May Also Like</h2>
               <div className="pd-related-grid">
                 {related.map((rp: any) => <ProductCard key={rp.id} product={rp} />)}
               </div>
@@ -338,14 +338,14 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         <section style={{ padding: '32px 0', background: '#0B2447' }}>
           <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }} className="pd-pad">
             <div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#FF9A45', marginBottom: 6 }}>Have a project in mind?</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.1rem,2vw,1.4rem)', fontWeight: 700, color: '#FFFFFF' }}>Upload your BOM and get the best quote in minutes.</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#FF9A45', marginBottom: 6 }}>Have a project in mind?</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.1rem,2vw,1.4rem)', fontWeight: 700, color: '#FFFFFF' }}>Upload your BOM and get the best quote in minutes.</div>
             </div>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
               {['Best Prices Guaranteed', 'Accurate Estimation', 'Quick Response', 'Save Time & Money'].map(t => (
-                <span key={t} style={{ fontSize: 12, color: '#C7D2E0', fontFamily: "'Syne',sans-serif", fontWeight: 600, whiteSpace: 'nowrap' }}>◈ {t}</span>
+                <span key={t} style={{ fontSize: 12, color: '#C7D2E0', fontFamily: "'Inter',sans-serif", fontWeight: 600, whiteSpace: 'nowrap' }}>◈ {t}</span>
               ))}
-              <Link href="/bom-quote" style={{ display: 'inline-flex', alignItems: 'center', padding: '12px 24px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.06em', textTransform: 'uppercase', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              <Link href="/bom-quote" style={{ display: 'inline-flex', alignItems: 'center', padding: '12px 24px', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.06em', textTransform: 'uppercase', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 📤 Upload BOM Now
               </Link>
             </div>
@@ -357,19 +357,19 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         .pd-pad { padding-left:48px; padding-right:48px; }
         .pd-grid { display: grid; grid-template-columns: 1fr 1fr 260px; gap: 40px; align-items: start; }
         .pd-delivery-block { background: #FAF8F5; border: 1px solid #E5E1DC; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
-        .pd-delivery-title { font-family: 'Syne',sans-serif; font-size: 0.78rem; font-weight: 700; color: #0B2447; margin-bottom: 8px; }
+        .pd-delivery-title { font-family: 'Inter',sans-serif; font-size: 0.78rem; font-weight: 700; color: #0B2447; margin-bottom: 8px; }
         .pd-pincode-input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 12px; background: #FFFFFF; }
-        .pd-pincode-btn { padding: 8px 14px; background: #0B2447; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .pd-pincode-btn { padding: 8px 14px; background: #0B2447; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Inter',sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
         .pd-delivery-row { display: flex; gap: 12px; align-items: flex-start; }
         .pd-delivery-icon { font-size: 20px; flex-shrink: 0; }
-        .pd-delivery-t { font-family: 'Syne',sans-serif; font-size: 0.76rem; font-weight: 700; color: #0B2447; margin-bottom: 2px; }
+        .pd-delivery-t { font-family: 'Inter',sans-serif; font-size: 0.76rem; font-weight: 700; color: #0B2447; margin-bottom: 2px; }
         .pd-delivery-d { font-size: 0.68rem; color: #6B7280; }
 
         .pd-feature-strip { background: #FAF8F5; border-top: 1px solid #E5E1DC; border-bottom: 1px solid #E5E1DC; padding: 22px 0; }
         .pd-feature-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
         .pd-feature-item { display: flex; align-items: center; gap: 12px; }
         .pd-feature-icon { font-size: 22px; flex-shrink: 0; }
-        .pd-feature-t { font-family: 'Syne',sans-serif; font-size: 0.76rem; font-weight: 700; color: #0B2447; }
+        .pd-feature-t { font-family: 'Inter',sans-serif; font-size: 0.76rem; font-weight: 700; color: #0B2447; }
         .pd-feature-d { font-size: 0.66rem; color: #6B7280; margin-top: 2px; }
 
         .pd-desc-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start; }

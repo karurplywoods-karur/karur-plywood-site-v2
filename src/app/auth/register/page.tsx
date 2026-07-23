@@ -59,9 +59,9 @@ export default function RegisterPage() {
     <div style={{ minHeight: '100vh', background: '#FAF8F5', paddingTop: 58, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
       <div style={{ maxWidth: 440, width: '100%', background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 14, padding: '40px 32px', textAlign: 'center' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>📧</div>
-        <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 10 }}>Check your email</h2>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 10 }}>Check your email</h2>
         <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6 }}>We sent a confirmation link to <strong style={{ color: '#F07316' }}>{form.email}</strong>. Click it to activate your account.</p>
-        <Link href="/auth/login" style={{ display: 'block', marginTop: 20, padding: '13px 0', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>Back to Login</Link>
+        <Link href="/auth/login" style={{ display: 'block', marginTop: 20, padding: '13px 0', background: '#F07316', color: '#FFFFFF', borderRadius: 6, fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>Back to Login</Link>
       </div>
     </div>
   );
@@ -76,7 +76,7 @@ export default function RegisterPage() {
         <div className="reg-layout">
           {/* Left copy */}
           <div>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.5rem,2.8vw,2rem)', fontWeight: 700, color: '#0B2447', marginBottom: 12 }}>Create Your Karur Plywood Account</h1>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.5rem,2.8vw,2rem)', fontWeight: 700, color: '#0B2447', marginBottom: 12 }}>Create Your Karur Plywood Account</h1>
             <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.7, marginBottom: 28, maxWidth: 340 }}>Join thousands of professionals who trust us for their material needs.</p>
             {[
               { icon: '🏷️', t: 'Exclusive Benefits', d: 'Access special pricing, offers and member-only deals' },
@@ -87,7 +87,7 @@ export default function RegisterPage() {
               <div key={b.t} style={{ display: 'flex', gap: 14, marginBottom: 22 }}>
                 <div style={{ width: 42, height: 42, borderRadius: 10, background: '#FFF4ED', border: '1px solid rgba(240,115,22,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{b.icon}</div>
                 <div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 2 }}>{b.t}</div>
+                  <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 2 }}>{b.t}</div>
                   <div style={{ fontSize: 12.5, color: '#6B7280', lineHeight: 1.5 }}>{b.d}</div>
                 </div>
               </div>
@@ -96,7 +96,7 @@ export default function RegisterPage() {
 
           {/* Form */}
           <div className="reg-card">
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 4 }}>Register</h2>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 4 }}>Register</h2>
             <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 22 }}>Fill in your details to create your account</p>
             {error && <div style={{ padding: '10px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 6, color: '#dc2626', fontSize: 13, marginBottom: 16 }}>{error}</div>}
 
@@ -140,12 +140,12 @@ export default function RegisterPage() {
             </form>
 
             <div style={{ textAlign: 'center', fontSize: 12.5, color: '#9CA3AF', margin: '18px 0' }}>Already have an account?</div>
-            <Link href="/auth/login" style={{ display: 'block', textAlign: 'center', padding: '12px 0', border: '1px solid #E5E1DC', borderRadius: 6, color: '#0B2447', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>Sign In to Your Account</Link>
+            <Link href="/auth/login" style={{ display: 'block', textAlign: 'center', padding: '12px 0', border: '1px solid #E5E1DC', borderRadius: 6, color: '#0B2447', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>Sign In to Your Account</Link>
           </div>
 
           {/* Right — why register */}
           <aside className="reg-why-card">
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 16 }}>Why Register With Us?</div>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 16 }}>Why Register With Us?</div>
             {[
               { icon: '💰', t: 'Best Prices Guaranteed', d: 'Get the best market prices on all products' },
               { icon: '📦', t: 'Wide Product Range', d: '10,000+ products from trusted brands' },
@@ -156,7 +156,7 @@ export default function RegisterPage() {
               <div key={w.t} style={{ display: 'flex', gap: 12, marginBottom: 18 }}>
                 <span style={{ fontSize: 18 }}>{w.icon}</span>
                 <div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{w.t}</div>
+                  <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{w.t}</div>
                   <div style={{ fontSize: 11.5, color: '#6B7280' }}>{w.d}</div>
                 </div>
               </div>
@@ -170,10 +170,10 @@ export default function RegisterPage() {
         .reg-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 14px; padding: 32px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .reg-why-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 14px; padding: 24px; }
         .reg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-        .reg-lbl { display: block; font-family: 'Syne',sans-serif; font-size: .68rem; font-weight: 700; color: #0B2447; margin-bottom: 6px; }
+        .reg-lbl { display: block; font-family: 'Inter',sans-serif; font-size: .68rem; font-weight: 700; color: #0B2447; margin-bottom: 6px; }
         .reg-inp { width: 100%; padding: 11px 13px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 14px; color: #0B2447; background: #FAF8F5; outline: none; box-sizing: border-box; }
         .reg-inp:focus { border-color: #F07316; background: #FFFFFF; }
-        .reg-submit-btn { width: 100%; padding: 13px 0; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: .04em; cursor: pointer; }
+        .reg-submit-btn { width: 100%; padding: 13px 0; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: .04em; cursor: pointer; }
         .reg-submit-btn:hover:not(:disabled) { background: #D9640F; }
         .reg-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
         @media(max-width:1100px){ .reg-layout { grid-template-columns: 1fr; } .reg-layout > div:first-child { display: none; } }

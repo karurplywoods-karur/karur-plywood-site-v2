@@ -23,7 +23,7 @@ export default async function BrandsPage() {
           <Link href="/" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Home</Link> › <span style={{ color: '#F07316', fontWeight: 600 }}>Brands</span>
         </div>
 
-        <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Top Brands. Trusted Quality.</h1>
+        <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Top Brands. Trusted Quality.</h1>
         <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 28 }}>We partner with India&apos;s most trusted brands to bring you premium materials and hardware for every project.</p>
 
         {withCounts.length === 0 ? (
@@ -35,10 +35,10 @@ export default async function BrandsPage() {
                 <div className="brand-tile-logo">
                   {b.logo_url
                     ? <Image src={b.logo_url} alt={b.name} fill style={{ objectFit: 'contain', padding: 16 }} sizes="200px" />
-                    : <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 18, color: '#0B2447' }}>{b.name}</span>}
+                    : <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: 18, color: '#0B2447' }}>{b.name}</span>}
                 </div>
                 <div style={{ padding: '12px 16px 16px' }}>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 2 }}>{b.name}</div>
+                  <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 2 }}>{b.name}</div>
                   <div style={{ fontSize: 12, color: '#F07316', fontWeight: 600 }}>{b.count}+ Products</div>
                 </div>
               </Link>

@@ -69,7 +69,7 @@ export default async function ProductsPage({
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', marginBottom: 20 }}>
           <div>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: 0 }}>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 700, color: '#0B2447', margin: 0 }}>
               All Products
             </h1>
             <p style={{ fontSize: 13, color: '#6B7280', marginTop: 4 }}>Premium materials. Trusted brands.</p>
@@ -163,7 +163,7 @@ export default async function ProductsPage({
               <span style={{ fontSize: 14, color: '#0B2447', fontWeight: 600 }}>
                 🔍 Results for <strong>&ldquo;{searchQuery}&rdquo;</strong> — {total} found
               </span>
-              <Link href="/products" style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Syne',sans-serif", fontWeight: 600, letterSpacing: '.08em' }}>
+              <Link href="/products" style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Inter',sans-serif", fontWeight: 600, letterSpacing: '.08em' }}>
                 ✕ Clear
               </Link>
             </div>
@@ -175,7 +175,7 @@ export default async function ProductsPage({
               Showing <strong style={{ color: '#0B2447' }}>{products.length ? (page - 1) * PER_PAGE + 1 : 0}-{Math.min(page * PER_PAGE, total)}</strong> of <strong style={{ color: '#0B2447' }}>{total}</strong> products
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <label style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Syne',sans-serif" }}>Sort by:</label>
+              <label style={{ fontSize: 12, color: '#6B7280', fontFamily: "'Inter',sans-serif" }}>Sort by:</label>
               <SortSelect current={sort} />
               <div className="view-toggle">
                 <Link href={buildHref({ view: 'grid' })} className={`view-toggle-btn${view === 'grid' ? ' view-toggle-btn--active' : ''}`} aria-label="Grid view">▦</Link>
@@ -198,12 +198,12 @@ export default async function ProductsPage({
                       {p.image_url ? <img src={p.image_url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className="cp-list-img-fallback">🪵</div>}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>{p.name}</div>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>{p.name}</div>
                       {p.brands?.name && <div style={{ fontSize: 12, color: '#F07316', marginBottom: 4 }}>{p.brands.name}</div>}
                       {p.description && <div style={{ fontSize: 12.5, color: '#6B7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 480 }}>{p.description}</div>}
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '1.4rem', color: '#F07316' }}>₹{p.price?.toLocaleString('en-IN')}</div>
+                      <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '1.4rem', color: '#F07316' }}>₹{p.price?.toLocaleString('en-IN')}</div>
                       {p.unit && <div style={{ fontSize: 11, color: '#6B7280' }}>/ {p.unit}</div>}
                     </div>
                   </Link>
@@ -213,7 +213,7 @@ export default async function ProductsPage({
           ) : (
             <div style={{ textAlign: 'center', padding: '80px 0', color: '#6B7280' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🪵</div>
-              <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', color: '#0B2447', marginBottom: 8 }}>No products found</h3>
+              <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', color: '#0B2447', marginBottom: 8 }}>No products found</h3>
               <p style={{ fontSize: 14 }}>Try a different category or <Link href="/products" style={{ color: '#F07316' }}>view all products</Link>.</p>
             </div>
           )}
@@ -256,14 +256,14 @@ export default async function ProductsPage({
 
       <style>{`
         .cat-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 0; border-bottom: 1px solid #E5E1DC; }
-        .cat-tab { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 18px; font-family: 'Syne',sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; color: #6B7280; text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: all .15s; }
+        .cat-tab { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 18px; font-family: 'Inter',sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; color: #6B7280; text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; transition: all .15s; }
         .cat-tab-icon { font-size: 18px; }
         .cat-tab:hover { color: #0B2447; }
         .cat-tab--active { color: #F07316; border-bottom-color: #F07316; }
 
         .prod-sidebar { width: 240px; flex-shrink: 0; }
         .sb-block { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 18px; margin-bottom: 16px; }
-        .sb-title { font-family: 'Syne',sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B2447; margin-bottom: 12px; }
+        .sb-title { font-family: 'Inter',sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B2447; margin-bottom: 12px; }
         .sb-cat-list { display: flex; flex-direction: column; }
         .sb-cat-link { display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; color: #374151; text-decoration: none; border-bottom: 1px solid #F5F2ED; }
         .sb-cat-link:last-child { border-bottom: none; }
@@ -276,10 +276,10 @@ export default async function ProductsPage({
         .sb-check-row:hover { color: #0B2447; }
         .sb-checkbox { width: 15px; height: 15px; border: 1.5px solid #D1CBC2; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #FFFFFF; }
         .sb-checkbox--on { background: #F07316; border-color: #F07316; }
-        .sb-clear-btn { display: block; text-align: center; padding: 9px 0; border: 1px solid #E5E1DC; border-radius: 6px; color: #6B7280; font-family: 'Syne',sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; margin-top: 8px; }
+        .sb-clear-btn { display: block; text-align: center; padding: 9px 0; border: 1px solid #E5E1DC; border-radius: 6px; color: #6B7280; font-family: 'Inter',sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; margin-top: 8px; }
         .sb-clear-btn:hover { border-color: #F07316; color: #F07316; }
 
-        .sort-select { font-size: 12px; border: 1px solid #E5E1DC; border-radius: 6px; padding: 6px 10px; color: #0B2447; background: #FFFFFF; font-family: 'Syne',sans-serif; }
+        .sort-select { font-size: 12px; border: 1px solid #E5E1DC; border-radius: 6px; padding: 6px 10px; color: #0B2447; background: #FFFFFF; font-family: 'Inter',sans-serif; }
         .view-toggle { display: flex; border: 1px solid #E5E1DC; border-radius: 6px; overflow: hidden; }
         .view-toggle-btn { width: 30px; height: 28px; display: flex; align-items: center; justify-content: center; color: #6B7280; text-decoration: none; font-size: 13px; background: #FFFFFF; }
         .view-toggle-btn--active { background: #0B2447; color: #FFFFFF; }
@@ -295,7 +295,7 @@ export default async function ProductsPage({
         @media(max-width:380px) { .cp-grid { grid-template-columns:1fr !important; } }
 
         .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 40px; }
-        .page-btn, .page-num { display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; border-radius: 6px; border: 1px solid #E5E1DC; color: #6B7280; text-decoration: none; font-size: 13px; font-family: 'Syne',sans-serif; }
+        .page-btn, .page-num { display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; border-radius: 6px; border: 1px solid #E5E1DC; color: #6B7280; text-decoration: none; font-size: 13px; font-family: 'Inter',sans-serif; }
         .page-btn:hover, .page-num:hover { border-color: #F07316; color: #F07316; }
         .page-btn--disabled { opacity: 0.4; pointer-events: none; }
         .page-num--active { background: #F07316; border-color: #F07316; color: #FFFFFF; }
@@ -305,7 +305,7 @@ export default async function ProductsPage({
         .feature-strip-inner { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
         .feature-item { display: flex; align-items: center; gap: 12px; }
         .feature-item-icon { font-size: 22px; flex-shrink: 0; }
-        .feature-item-t { font-family: 'Syne',sans-serif; font-size: 0.76rem; font-weight: 700; color: #FFFFFF; }
+        .feature-item-t { font-family: 'Inter',sans-serif; font-size: 0.76rem; font-weight: 700; color: #FFFFFF; }
         .feature-item-d { font-size: 0.66rem; color: #93A3BC; margin-top: 2px; }
         @media(max-width:900px){ .feature-strip-inner { grid-template-columns: repeat(2, 1fr); } }
       `}</style>

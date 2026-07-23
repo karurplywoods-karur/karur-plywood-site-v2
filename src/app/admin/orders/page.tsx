@@ -82,20 +82,20 @@ export default function AdminOrdersPage() {
   const inp: React.CSSProperties = {
     background:'rgba(255,255,255,0.05)', border:'1px solid rgba(249,115,22,0.2)',
     borderRadius:4, padding:'7px 10px', color:'#F8F9FB',
-    fontFamily:"'DM Sans',sans-serif", fontSize:12, outline:'none',
+    fontFamily:"'Inter',sans-serif", fontSize:12, outline:'none',
   };
 
   return (
-    <div style={{ minHeight:'100vh', background:'#070F1F', color:'#F8F9FB', fontFamily:"'DM Sans',sans-serif" }}>
+    <div style={{ minHeight:'100vh', background:'#070F1F', color:'#F8F9FB', fontFamily:"'Inter',sans-serif" }}>
 
       {/* Topbar */}
       <div style={{ background:'rgba(11,36,71,0.9)', borderBottom:'1px solid rgba(249,115,22,0.15)', padding:'0 28px', height:60, display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:100, backdropFilter:'blur(10px)' }}>
         <div style={{ display:'flex', alignItems:'center', gap:14 }}>
           <button onClick={() => router.push('/admin/dashboard')}
-            style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'5px 11px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:11, letterSpacing:'.08em', textTransform:'uppercase' }}>
+            style={{ background:'none', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#7A8EA8', padding:'5px 11px', cursor:'pointer', fontFamily:"'Inter',sans-serif", fontSize:11, letterSpacing:'.08em', textTransform:'uppercase' }}>
             ← Dashboard
           </button>
-          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:20, letterSpacing:'.06em' }}>
+          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:20, letterSpacing:'.06em' }}>
             🛒 Order Management
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function AdminOrdersPage() {
               {msg.text}
             </div>
           )}
-          <button onClick={fetchOrders} style={{ background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#F97316', padding:'6px 14px', cursor:'pointer', fontFamily:"'Syne',sans-serif", fontSize:11, letterSpacing:'.12em', textTransform:'uppercase' }}>
+          <button onClick={fetchOrders} style={{ background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:4, color:'#F97316', padding:'6px 14px', cursor:'pointer', fontFamily:"'Inter',sans-serif", fontSize:11, letterSpacing:'.12em', textTransform:'uppercase' }}>
             🔄 Refresh
           </button>
         </div>
@@ -123,8 +123,8 @@ export default function AdminOrdersPage() {
             { label:'Revenue (Delivered)', val:`₹${stats.revenue.toLocaleString('en-IN')}`, color:'#FDE047' },
           ].map(s => (
             <div key={s.label} style={{ background:'rgba(25,55,109,0.35)', border:'1px solid rgba(249,115,22,0.12)', borderRadius:8, padding:'16px 18px' }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'.04em', color:s.color, lineHeight:1 }}>{s.val}</div>
-              <div style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.15em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>{s.label}</div>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', letterSpacing:'.04em', color:s.color, lineHeight:1 }}>{s.val}</div>
+              <div style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.15em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -133,7 +133,7 @@ export default function AdminOrdersPage() {
         <div style={{ display:'flex', gap:6, marginBottom:20, flexWrap:'wrap' }}>
           {['all', ...Object.keys(STATUS_CONFIG)].map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={{ padding:'7px 14px', borderRadius:3, border:'1px solid', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer',
+              style={{ padding:'7px 14px', borderRadius:3, border:'1px solid', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer',
                 borderColor: filter===f ? '#F97316' : 'rgba(255,255,255,0.1)',
                 background:  filter===f ? 'rgba(249,115,22,0.12)' : 'transparent',
                 color:       filter===f ? '#F97316' : '#7A8EA8',
@@ -149,7 +149,7 @@ export default function AdminOrdersPage() {
         ) : orders.length === 0 ? (
           <div style={{ textAlign:'center', padding:'60px 0' }}>
             <div style={{ fontSize:48, marginBottom:12 }}>🛒</div>
-            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', color:'#F8F9FB' }}>NO ORDERS</div>
+            <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.6rem', color:'#F8F9FB' }}>NO ORDERS</div>
             <p style={{ color:'#7A8EA8', marginTop:8 }}>Orders placed by customers will appear here.</p>
           </div>
         ) : (
@@ -164,7 +164,7 @@ export default function AdminOrdersPage() {
                   <div style={{ padding:'16px 20px', display:'grid', gridTemplateColumns:'auto 1fr auto auto', gap:16, alignItems:'center', cursor:'pointer' }}
                     onClick={() => setExpanded(isOpen ? null : order.id)}>
                     <div>
-                      <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'.88rem', color:'#F8F9FB', marginBottom:3 }}>
+                      <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:'.88rem', color:'#F8F9FB', marginBottom:3 }}>
                         {order.order_number}
                       </div>
                       <div style={{ fontSize:11, color:'#7A8EA8' }}>
@@ -185,16 +185,16 @@ export default function AdminOrdersPage() {
                     </div>
 
                     <div style={{ textAlign:'center' }}>
-                      <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.3rem', color:'#F97316', letterSpacing:'.03em' }}>
+                      <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.3rem', color:'#F97316', letterSpacing:'.03em' }}>
                         ₹{order.total.toLocaleString('en-IN')}
                       </div>
-                      <div style={{ fontSize:9, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color: order.payment_status === 'paid' ? '#4ADE80' : '#F97316' }}>
+                      <div style={{ fontSize:9, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', color: order.payment_status === 'paid' ? '#4ADE80' : '#F97316' }}>
                         {order.payment_status === 'paid' ? '✅ Paid' : '⏳ Pending'}
                       </div>
                     </div>
 
                     <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                      <span style={{ fontSize:9, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', background:s.bg, color:s.color, padding:'4px 10px', borderRadius:2 }}>
+                      <span style={{ fontSize:9, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', background:s.bg, color:s.color, padding:'4px 10px', borderRadius:2 }}>
                         {s.icon} {s.label}
                       </span>
                       <span style={{ color:'#7A8EA8', fontSize:14 }}>{isOpen ? '▲' : '▼'}</span>
@@ -208,7 +208,7 @@ export default function AdminOrdersPage() {
 
                         {/* Customer */}
                         <div style={{ background:'rgba(7,15,31,0.5)', borderRadius:6, padding:'14px 16px' }}>
-                          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Customer</div>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Customer</div>
                           <div style={{ fontSize:13, color:'#F8F9FB', fontWeight:600, marginBottom:3 }}>{order.customers?.full_name}</div>
                           <div style={{ fontSize:12, color:'#7A8EA8', lineHeight:1.7 }}>
                             {order.customers?.email}<br/>
@@ -216,14 +216,14 @@ export default function AdminOrdersPage() {
                           </div>
                           <a href={`https://wa.me/${(order.customers?.phone || order.delivery_phone).replace(/\D/g,'')}?text=Hi%2C+this+is+Karur+Plywood+regarding+order+${order.order_number}`}
                             target="_blank" rel="noopener"
-                            style={{ display:'inline-flex', alignItems:'center', gap:5, marginTop:10, padding:'6px 12px', background:'#25D366', color:'white', borderRadius:4, fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', textDecoration:'none' }}>
+                            style={{ display:'inline-flex', alignItems:'center', gap:5, marginTop:10, padding:'6px 12px', background:'#25D366', color:'white', borderRadius:4, fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', textDecoration:'none' }}>
                             💬 WhatsApp
                           </a>
                         </div>
 
                         {/* Delivery */}
                         <div style={{ background:'rgba(7,15,31,0.5)', borderRadius:6, padding:'14px 16px' }}>
-                          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Delivery Address</div>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Delivery Address</div>
                           <div style={{ fontSize:12, color:'#A8BCCC', lineHeight:1.8 }}>
                             <strong style={{ color:'#F8F9FB' }}>{order.delivery_name}</strong><br/>
                             {order.delivery_line1}{order.delivery_line2 ? `, ${order.delivery_line2}` : ''}<br/>
@@ -240,7 +240,7 @@ export default function AdminOrdersPage() {
 
                         {/* Payment */}
                         <div style={{ background:'rgba(7,15,31,0.5)', borderRadius:6, padding:'14px 16px' }}>
-                          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Payment</div>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Payment</div>
                           <div style={{ fontSize:12, color:'#7A8EA8', display:'flex', flexDirection:'column', gap:5 }}>
                             <div style={{ display:'flex', justifyContent:'space-between' }}><span>Subtotal</span><span style={{ color:'#F8F9FB' }}>₹{order.subtotal.toLocaleString('en-IN')}</span></div>
                             <div style={{ display:'flex', justifyContent:'space-between' }}><span>Delivery</span><span style={{ color:'#F8F9FB' }}>₹{order.delivery_charge.toLocaleString('en-IN')}</span></div>
@@ -257,7 +257,7 @@ export default function AdminOrdersPage() {
 
                       {/* Items */}
                       <div style={{ background:'rgba(7,15,31,0.4)', borderRadius:6, padding:'14px 16px', marginBottom:16 }}>
-                        <div style={{ fontFamily:"'Syne',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:12 }}>Order Items</div>
+                        <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:12 }}>Order Items</div>
                         {(order.order_items || []).map((item: any) => (
                           <div key={item.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid rgba(249,115,22,0.06)', fontSize:13 }}>
                             <div>
@@ -269,7 +269,7 @@ export default function AdminOrdersPage() {
                             </div>
                             <div style={{ display:'flex', gap:20, alignItems:'center' }}>
                               <span style={{ color:'#7A8EA8' }}>× {item.quantity}</span>
-                              <span style={{ color:'#F97316', fontWeight:700, fontFamily:"'Syne',sans-serif" }}>₹{item.line_total.toLocaleString('en-IN')}</span>
+                              <span style={{ color:'#F97316', fontWeight:700, fontFamily:"'Inter',sans-serif" }}>₹{item.line_total.toLocaleString('en-IN')}</span>
                             </div>
                           </div>
                         ))}
@@ -280,14 +280,14 @@ export default function AdminOrdersPage() {
 
                         {/* Status update */}
                         <div style={{ background:'rgba(7,15,31,0.4)', borderRadius:6, padding:'14px 16px' }}>
-                          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Update Status</div>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Update Status</div>
                           <div style={{ display:'flex', gap:6, flexWrap:'wrap', marginBottom:10 }}>
                             {[...STATUS_STEPS, 'cancelled'].map(st => {
                               const sc = STATUS_CONFIG[st];
                               return (
                                 <button key={st} onClick={() => updateOrder(order.id, { status: st, admin_notes: editNote[order.id] || order.admin_notes, tracking_number: editTrack[order.id] || order.tracking_number })}
                                   disabled={order.status === st || saving === order.id}
-                                  style={{ padding:'6px 10px', borderRadius:3, border:'1px solid', cursor: order.status === st ? 'default' : 'pointer', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:10, letterSpacing:'.08em', textTransform:'uppercase', opacity: order.status === st ? 1 : 0.8,
+                                  style={{ padding:'6px 10px', borderRadius:3, border:'1px solid', cursor: order.status === st ? 'default' : 'pointer', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:10, letterSpacing:'.08em', textTransform:'uppercase', opacity: order.status === st ? 1 : 0.8,
                                     borderColor: order.status === st ? sc.color : 'rgba(255,255,255,0.1)',
                                     background:  order.status === st ? sc.bg : 'transparent',
                                     color:       order.status === st ? sc.color : '#7A8EA8',
@@ -297,16 +297,16 @@ export default function AdminOrdersPage() {
                               );
                             })}
                           </div>
-                          <div style={{ fontSize:11, color:'#7A8EA8', fontFamily:"'Syne',sans-serif" }}>
+                          <div style={{ fontSize:11, color:'#7A8EA8', fontFamily:"'Inter',sans-serif" }}>
                             📧 Status email will be sent to customer automatically.
                           </div>
                         </div>
 
                         {/* Notes + Tracking */}
                         <div style={{ background:'rgba(7,15,31,0.4)', borderRadius:6, padding:'14px 16px', display:'flex', flexDirection:'column', gap:10 }}>
-                          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:2 }}>Tracking & Notes</div>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:2 }}>Tracking & Notes</div>
                           <div>
-                            <label style={{ display:'block', fontSize:10, color:'#7A8EA8', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', marginBottom:4 }}>Tracking Number</label>
+                            <label style={{ display:'block', fontSize:10, color:'#7A8EA8', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', marginBottom:4 }}>Tracking Number</label>
                             <input style={{ ...inp, width:'100%' }}
                               placeholder="Enter tracking number"
                               value={editTrack[order.id] ?? order.tracking_number}
@@ -314,7 +314,7 @@ export default function AdminOrdersPage() {
                             />
                           </div>
                           <div>
-                            <label style={{ display:'block', fontSize:10, color:'#7A8EA8', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', marginBottom:4 }}>Admin Notes (internal)</label>
+                            <label style={{ display:'block', fontSize:10, color:'#7A8EA8', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', marginBottom:4 }}>Admin Notes (internal)</label>
                             <textarea style={{ ...inp, width:'100%', resize:'none' }} rows={2}
                               placeholder="Internal notes for this order"
                               value={editNote[order.id] ?? order.admin_notes}
@@ -323,7 +323,7 @@ export default function AdminOrdersPage() {
                           </div>
                           <button onClick={() => updateOrder(order.id, { status: order.status, admin_notes: editNote[order.id] ?? order.admin_notes, tracking_number: editTrack[order.id] ?? order.tracking_number })}
                             disabled={saving === order.id}
-                            style={{ padding:'8px 0', background:'rgba(249,115,22,0.12)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:4, color:'#F97316', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer' }}>
+                            style={{ padding:'8px 0', background:'rgba(249,115,22,0.12)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:4, color:'#F97316', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', cursor:'pointer' }}>
                             {saving === order.id ? '⏳ Saving...' : '✓ Save Notes & Tracking'}
                           </button>
                         </div>

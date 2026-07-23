@@ -112,7 +112,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           margin-bottom: 24px;
         }
         .panel-label {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 11px;
           font-weight: 800;
           letter-spacing: 0.15em;
@@ -134,7 +134,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           text-align: center;
           padding: 8px 16px;
           cursor: pointer;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 12px;
           font-weight: 700;
         }
@@ -161,7 +161,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
         }
         .save {
           font-size: 12px;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 700;
           background: #f0fdf4;
           color: #16a34a;
@@ -171,7 +171,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           letter-spacing: .06em;
         }
         .price {
-          font-family: 'Bebas Neue', sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
           font-size: 2.8rem;
           color: #F07316;
           letter-spacing: .03em;
@@ -180,12 +180,12 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
         .unit {
           font-size: 14px;
           color: #6B7280;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
         }
         .stock {
           margin-top: 8px;
           font-size: 12px;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-weight: 700;
           letter-spacing: .08em;
           text-transform: uppercase;
@@ -205,13 +205,13 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
         .qty-row { display: flex; align-items: center; gap: 12px; }
         .qty-stepper { display: grid; grid-template-columns: 38px 44px 38px; border: 1.5px solid #E5E1DC; border-radius: 6px; overflow: hidden; }
         .qty-stepper button { border: none; background: #FAF8F5; color: #0B2447; font-size: 16px; font-weight: 700; cursor: pointer; height: 38px; }
-        .qty-stepper span { display: flex; align-items: center; justify-content: center; color: #0B2447; font-family: 'Syne', sans-serif; font-weight: 800; border-left: 1px solid #E5E1DC; border-right: 1px solid #E5E1DC; }
+        .qty-stepper span { display: flex; align-items: center; justify-content: center; color: #0B2447; font-family: 'Inter', sans-serif; font-weight: 800; border-left: 1px solid #E5E1DC; border-right: 1px solid #E5E1DC; }
         .qty-unit { font-size: 13px; color: #6B7280; }
         .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn-add-to-cart, .btn-buy-now {
           min-height: 46px;
           border-radius: 8px;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 0.78rem;
           font-weight: 700;
           letter-spacing: 0.06em;

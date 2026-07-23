@@ -20,14 +20,14 @@ const inp: React.CSSProperties = {
   borderRadius: 4,
   padding: '9px 12px',
   color: '#F8F9FB',
-  fontFamily: "'DM Sans',sans-serif",
+  fontFamily: "'Inter',sans-serif",
   fontSize: 13,
   outline: 'none',
 };
 const lbl: React.CSSProperties = {
   display: 'block',
   fontSize: 10,
-  fontFamily: "'Syne',sans-serif",
+  fontFamily: "'Inter',sans-serif",
   fontWeight: 700,
   letterSpacing: '.14em',
   textTransform: 'uppercase',
@@ -159,7 +159,7 @@ export default function AdminCarpentersPage() {
       onClick={onClick}
       style={{
         padding: '7px 12px', borderRadius: 3, border: `1px solid ${color}40`,
-        background: bg, color, fontFamily: "'Syne',sans-serif", fontWeight: 700,
+        background: bg, color, fontFamily: "'Inter',sans-serif", fontWeight: 700,
         fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer',
         transition: 'opacity 0.15s', whiteSpace: 'nowrap',
       }}
@@ -169,17 +169,17 @@ export default function AdminCarpentersPage() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#070F1F', color: '#F8F9FB', fontFamily: "'DM Sans',sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#070F1F', color: '#F8F9FB', fontFamily: "'Inter',sans-serif" }}>
 
       {/* Topbar */}
       <div style={{ background: 'rgba(11,36,71,0.8)', borderBottom: '1px solid rgba(249,115,22,0.15)', padding: '0 28px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(10px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button
             onClick={() => router.push('/admin/dashboard')}
-            style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '6px 12px', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase' }}>
+            style={{ background: 'none', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#7A8EA8', padding: '6px 12px', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontSize: 11, letterSpacing: '.08em', textTransform: 'uppercase' }}>
             ← Dashboard
           </button>
-          <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 20, letterSpacing: '.06em', color: '#F8F9FB' }}>
+          <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, letterSpacing: '.06em', color: '#F8F9FB' }}>
             🔨 Carpenter Directory
           </div>
         </div>
@@ -192,7 +192,7 @@ export default function AdminCarpentersPage() {
             }}>{msg.text}</div>
           )}
           <button onClick={fetchAll}
-            style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#F97316', padding: '6px 14px', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+            style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 4, color: '#F97316', padding: '6px 14px', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontSize: 11, letterSpacing: '.12em', textTransform: 'uppercase' }}>
             🔄 Refresh
           </button>
         </div>
@@ -208,8 +208,8 @@ export default function AdminCarpentersPage() {
             { label: 'Pending Verification',val: carpenters.filter(c => !c.verified).length, color: '#FDE047' },
           ].map(s => (
             <div key={s.label} style={{ background: 'rgba(25,55,109,0.35)', border: '1px solid rgba(249,115,22,0.15)', borderRadius: 8, padding: '18px 20px' }}>
-              <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '2.5rem', letterSpacing: '.04em', color: s.color, lineHeight: 1 }}>{s.val}</div>
-              <div style={{ fontSize: 11, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginTop: 6 }}>{s.label}</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '2.5rem', letterSpacing: '.04em', color: s.color, lineHeight: 1 }}>{s.val}</div>
+              <div style={{ fontSize: 11, fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: '#7A8EA8', marginTop: 6 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -223,7 +223,7 @@ export default function AdminCarpentersPage() {
                 borderColor: filter === f ? '#F97316' : 'rgba(255,255,255,0.12)',
                 background:  filter === f ? 'rgba(249,115,22,0.12)' : 'transparent',
                 color:       filter === f ? '#F97316' : '#7A8EA8',
-                fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11,
+                fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 11,
                 letterSpacing: '.12em', textTransform: 'uppercase', cursor: 'pointer',
               }}>
               {f === 'all' ? 'All' : f === 'pending' ? '⏳ Pending' : '✅ Verified'}
@@ -250,10 +250,10 @@ export default function AdminCarpentersPage() {
                 }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 5 }}>
-                      <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 15, color: '#F8F9FB' }}>{c.name}</span>
+                      <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: '#F8F9FB' }}>{c.name}</span>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 2,
-                        fontFamily: "'Syne',sans-serif", letterSpacing: '.12em', textTransform: 'uppercase',
+                        fontFamily: "'Inter',sans-serif", letterSpacing: '.12em', textTransform: 'uppercase',
                         background: c.verified ? 'rgba(37,211,102,0.12)' : 'rgba(249,115,22,0.1)',
                         color: c.verified ? '#4ADE80' : '#F97316',
                       }}>
@@ -273,7 +273,7 @@ export default function AdminCarpentersPage() {
                     {c.speciality?.length > 0 && (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginTop: 8 }}>
                         {c.speciality.map(s => (
-                          <span key={s} style={{ fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)', color: '#F97316', padding: '2px 7px', borderRadius: 2 }}>{s}</span>
+                          <span key={s} style={{ fontSize: 10, fontFamily: "'Inter',sans-serif", fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)', color: '#F97316', padding: '2px 7px', borderRadius: 2 }}>{s}</span>
                         ))}
                       </div>
                     )}
@@ -284,7 +284,7 @@ export default function AdminCarpentersPage() {
                     <a
                       href={`https://wa.me/${(c.wa_number || c.phone).replace(/\D/g,'')}?text=Hi+${encodeURIComponent(c.name)}%2C+this+is+Karur+Plywood.+Regarding+your+carpenter+directory+listing...`}
                       target="_blank" rel="noopener"
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '7px 0', borderRadius: 3, background: '#25D366', color: 'white', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '7px 0', borderRadius: 3, background: '#25D366', color: 'white', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
                       💬 WhatsApp
                     </a>
 
@@ -315,7 +315,7 @@ export default function AdminCarpentersPage() {
                     borderRadius: '0 0 8px 8px',
                     padding: '24px 20px',
                   }}>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.18em', textTransform: 'uppercase', color: '#F97316', marginBottom: 18 }}>
+                    <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: '.18em', textTransform: 'uppercase', color: '#F97316', marginBottom: 18 }}>
                       ✏️ Editing: {c.name}
                     </div>
 
@@ -386,12 +386,12 @@ export default function AdminCarpentersPage() {
                       <button
                         onClick={saveEdit}
                         disabled={saving}
-                        style={{ flex: 1, padding: '10px 0', borderRadius: 4, background: saving ? 'rgba(249,115,22,0.4)' : '#F97316', color: '#0B2447', border: 'none', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', cursor: saving ? 'default' : 'pointer' }}>
+                        style={{ flex: 1, padding: '10px 0', borderRadius: 4, background: saving ? 'rgba(249,115,22,0.4)' : '#F97316', color: '#0B2447', border: 'none', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', cursor: saving ? 'default' : 'pointer' }}>
                         {saving ? '⏳ Saving...' : '✓ Save Changes'}
                       </button>
                       <button
                         onClick={closeEdit}
-                        style={{ padding: '10px 20px', borderRadius: 4, background: 'transparent', border: '1px solid rgba(249,115,22,0.2)', color: '#7A8EA8', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                        style={{ padding: '10px 20px', borderRadius: 4, background: 'transparent', border: '1px solid rgba(249,115,22,0.2)', color: '#7A8EA8', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' }}>
                         Cancel
                       </button>
                     </div>

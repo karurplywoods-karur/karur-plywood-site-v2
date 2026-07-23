@@ -108,7 +108,7 @@ export default function AddressesPage() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
               <div>
-                <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 4px' }}>Saved Addresses</h1>
+                <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 4px' }}>Saved Addresses</h1>
                 <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>Manage your delivery addresses</p>
               </div>
               {!showForm && (
@@ -121,7 +121,7 @@ export default function AddressesPage() {
             {/* Form */}
             {showForm && (
               <div className="addr-card" style={{ marginBottom: 20 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#F07316', marginBottom: 18 }}>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '.75rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#F07316', marginBottom: 18 }}>
                   {editing ? 'Edit Address' : 'New Address'}
                 </div>
                 {error && <div style={{ padding: '10px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 6, color: '#dc2626', fontSize: 13, marginBottom: 16 }}>{error}</div>}
@@ -182,7 +182,7 @@ export default function AddressesPage() {
                     <div style={{ fontSize: 30 }}>{LABEL_ICON[addr.label] || '📍'}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', gap: 8, marginBottom: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                        <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>{addr.label}</span>
+                        <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447' }}>{addr.label}</span>
                         {addr.is_default && <span className="addr-badge addr-badge--default">Default</span>}
                       </div>
                       <div style={{ fontWeight: 700, color: '#0B2447', fontSize: 13.5, marginBottom: 3 }}>{addr.full_name}</div>
@@ -207,12 +207,12 @@ export default function AddressesPage() {
           <aside>
             <div className="addr-info-card" style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 26, marginBottom: 8 }}>📍</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>Deliver to the right place</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 4 }}>Deliver to the right place</div>
               <div style={{ fontSize: 12.5, color: '#4B5563' }}>Add multiple addresses and choose the right one during checkout.</div>
             </div>
 
             <div className="addr-card" style={{ marginBottom: 16 }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Address Tips</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Address Tips</div>
               {['Set a default address for faster checkout', 'Add Work / Site / Warehouse addresses', 'You can edit or delete anytime'].map(t => (
                 <div key={t} style={{ display: 'flex', gap: 8, fontSize: 12.5, color: '#4B5563', marginBottom: 8, alignItems: 'flex-start' }}>
                   <span style={{ color: '#16a34a', flexShrink: 0 }}>✓</span>{t}
@@ -222,7 +222,7 @@ export default function AddressesPage() {
 
             {recent.length > 0 && (
               <div className="addr-card">
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Recent Deliveries</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#0B2447', marginBottom: 12 }}>Recent Deliveries</div>
                 {recent.map(o => (
                   <Link key={o.id} href={`/account/orders/${o.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, padding: '9px 0', borderBottom: '1px solid #F1EEE9', textDecoration: 'none' }}>
                     <div>
@@ -243,18 +243,18 @@ export default function AddressesPage() {
         .addr-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 10px; padding: 18px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .addr-row { display: flex; gap: 16px; align-items: flex-start; }
         .addr-row--default { border-color: rgba(240,115,22,0.4); background: #FFF9F4; }
-        .addr-badge { font-family: 'Syne',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 9px; border-radius: 12px; }
+        .addr-badge { font-family: 'Inter',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 9px; border-radius: 12px; }
         .addr-badge--default { background: #FFF4ED; color: #F07316; border: 1px solid rgba(240,115,22,0.3); }
-        .addr-action-btn { padding: 7px 14px; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 11px; cursor: pointer; letter-spacing: .04em; white-space: nowrap; }
+        .addr-action-btn { padding: 7px 14px; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 6px; color: #0B2447; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 11px; cursor: pointer; letter-spacing: .04em; white-space: nowrap; }
         .addr-action-btn:hover { border-color: #F07316; color: #F07316; }
         .addr-action-btn--green { color: #16a34a; border-color: #bbf7d0; }
         .addr-action-btn--red { color: #dc2626; border-color: #fecaca; }
-        .addr-add-btn { padding: 10px 18px; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
-        .addr-lbl { display: block; font-family: 'Syne',sans-serif; font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #6B7280; margin-bottom: 5px; }
+        .addr-add-btn { padding: 10px 18px; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+        .addr-lbl { display: block; font-family: 'Inter',sans-serif; font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #6B7280; margin-bottom: 5px; }
         .addr-inp { width: 100%; background: #FAF8F5; border: 1px solid #E5E1DC; border-radius: 6px; padding: 10px 13px; font-size: 14px; color: #0B2447; outline: none; box-sizing: border-box; }
         .addr-inp:focus { border-color: #F07316; background: #FFFFFF; }
-        .addr-save-btn { flex: 1; padding: 12px 0; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
-        .addr-cancel-btn { padding: 12px 20px; background: transparent; border: 1px solid #E5E1DC; border-radius: 6px; color: #6B7280; font-family: 'Syne',sans-serif; font-weight: 700; font-size: .72rem; cursor: pointer; }
+        .addr-save-btn { flex: 1; padding: 12px 0; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+        .addr-cancel-btn { padding: 12px 20px; background: transparent; border: 1px solid #E5E1DC; border-radius: 6px; color: #6B7280; font-family: 'Inter',sans-serif; font-weight: 700; font-size: .72rem; cursor: pointer; }
         .addr-info-card { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 10px; padding: 18px; }
         @media(max-width:1150px){ .addr-layout { grid-template-columns: 200px 1fr; } .addr-layout > aside { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; } }
         @media(max-width:768px){ .addr-layout { grid-template-columns: 1fr; } .addr-layout > aside { grid-template-columns: 1fr; } .addr-layout > :first-child { display: none; } .addr-row { flex-direction: column; } }

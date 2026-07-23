@@ -166,7 +166,7 @@ export default function Footer() {
           display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.1rem;
         }
         .logo-type { display: flex; flex-direction: column; }
-        .l1 { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.18em; color: #F8F9FB; }
+        .l1 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.18em; color: #F8F9FB; }
         .l2 { font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; color: #C8884A; letter-spacing: 0.1em; }
         .kp-footer-desc {
           font-size: 0.8rem; color: #7A8EA8; line-height: 1.8;
@@ -206,7 +206,7 @@ export default function Footer() {
         }
         .kp-footer-col { display: flex; flex-direction: column; }
         .kp-footer-heading {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 0.6rem; font-weight: 700;
           letter-spacing: 0.22em; text-transform: uppercase;
           color: #F97316; margin-bottom: 1.1rem;
@@ -226,7 +226,7 @@ export default function Footer() {
           border-top: 1px solid rgba(249,115,22,0.06);
         }
         .kp-gst-label {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 0.58rem; font-weight: 700;
           letter-spacing: 0.2em; text-transform: uppercase; color: #F97316;
         }
@@ -246,13 +246,13 @@ export default function Footer() {
           display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
         }
         .kp-footer-areas-label {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 0.58rem; font-weight: 700;
           letter-spacing: 0.2em; text-transform: uppercase; color: #F97316;
         }
         .kp-footer-area-link {
           font-size: 0.7rem; color: #7A8EA8; text-decoration: none;
-          font-family: 'Syne', sans-serif; font-weight: 600;
+          font-family: 'Inter', sans-serif; font-weight: 600;
           letter-spacing: 0.06em; transition: color 0.2s;
           padding: 0 10px;
           border-left: 1px solid rgba(249,115,22,0.1);

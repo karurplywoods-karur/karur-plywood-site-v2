@@ -116,12 +116,12 @@ export default function CityLandingPage({ params }: { params: { city: string } }
             <span style={{ color:'#F97316' }}>{city.name}</span>
           </div>
 
-          <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:100, padding:'4px 16px', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.18em', textTransform:'uppercase', color:'#F97316', marginBottom:24 }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:100, padding:'4px 16px', fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.18em', textTransform:'uppercase', color:'#F97316', marginBottom:24 }}>
             <span style={{ width:6, height:6, background:'#F97316', borderRadius:'50%', animation:'blink 1.4s infinite', display:'inline-block' }}/>
             Serving {city.name}, {city.state}
           </div>
 
-          <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5.5vw,5rem)', letterSpacing:'0.03em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'1.2rem' }}>
+          <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(2.8rem,5.5vw,5rem)', letterSpacing:'0.03em', color:'#F8F9FB', lineHeight:0.95, marginBottom:'1.2rem' }}>
             PLYWOOD &amp; HARDWARE<br/>
             <span style={{ color:'#F97316' }}>IN {city.name.toUpperCase()}</span>
           </h1>
@@ -140,8 +140,8 @@ export default function CityLandingPage({ params }: { params: { city: string } }
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:0, border:'1px solid rgba(249,115,22,0.15)', borderRadius:8, overflow:'hidden' }} className="city-stats">
             {city.stats.map((s, i) => (
               <div key={i} style={{ padding:'1.2rem 1.5rem', borderRight: i < city.stats.length - 1 ? '1px solid rgba(249,115,22,0.15)' : 'none', background:'rgba(25,55,109,0.25)' }}>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.04em', color:'#F97316', lineHeight:1 }}>{s.value}</div>
-                <div style={{ fontSize:'0.68rem', fontFamily:"'Syne',sans-serif", fontWeight:600, letterSpacing:'0.18em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>{s.label}</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', letterSpacing:'0.04em', color:'#F97316', lineHeight:1 }}>{s.value}</div>
+                <div style={{ fontSize:'0.68rem', fontFamily:"'Inter',sans-serif", fontWeight:600, letterSpacing:'0.18em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -158,7 +158,7 @@ export default function CityLandingPage({ params }: { params: { city: string } }
             {PRODUCTS.map(p => (
               <Link key={p.name} href={p.link} style={{ background:'rgba(25,55,109,0.35)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:8, padding:'1.5rem 1.25rem', textDecoration:'none', display:'block', transition:'border-color 0.25s,transform 0.25s' }} className="city-prod-card">
                 <div style={{ fontSize:36, marginBottom:12 }}>{p.emoji}</div>
-                <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'0.95rem', color:'#F8F9FB', marginBottom:6 }}>{p.name}</div>
+                <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:'0.95rem', color:'#F8F9FB', marginBottom:6 }}>{p.name}</div>
                 <div style={{ fontSize:'0.75rem', color:'#7A8EA8', lineHeight:1.6 }}>{p.desc}</div>
               </Link>
             ))}
@@ -166,12 +166,12 @@ export default function CityLandingPage({ params }: { params: { city: string } }
 
           {/* Landmarks served */}
           <div style={{ background:'rgba(25,55,109,0.25)', border:'1px solid rgba(249,115,22,0.12)', borderRadius:8, padding:'1.5rem 2rem', marginBottom:48 }}>
-            <div style={{ fontSize:'0.68rem', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', marginBottom:12 }}>
+            <div style={{ fontSize:'0.68rem', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', marginBottom:12 }}>
               Areas in {city.name} We Serve
             </div>
             <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
               {city.landmarks.map(l => (
-                <span key={l} style={{ background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:2, padding:'4px 12px', fontSize:'0.75rem', fontFamily:"'Syne',sans-serif", fontWeight:600, color:'#F97316', letterSpacing:'0.06em' }}>{l}</span>
+                <span key={l} style={{ background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:2, padding:'4px 12px', fontSize:'0.75rem', fontFamily:"'Inter',sans-serif", fontWeight:600, color:'#F97316', letterSpacing:'0.06em' }}>{l}</span>
               ))}
             </div>
           </div>
@@ -179,14 +179,14 @@ export default function CityLandingPage({ params }: { params: { city: string } }
           {/* CTA */}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }} className="city-cta-grid">
             <div style={{ background:'linear-gradient(135deg,#0D2B17,#091810)', border:'1px solid rgba(37,211,102,0.2)', borderRadius:8, padding:'2rem' }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.5rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>ORDER ON WHATSAPP</div>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.5rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>ORDER ON WHATSAPP</div>
               <p style={{ fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:16 }}>
                 Send us your material list. We&apos;ll quote, confirm and arrange delivery to {city.name}.
               </p>
               <a href={`https://wa.me/${WA}?text=${waText}`} target="_blank" rel="noopener" className="btn-wa">💬 Chat on WhatsApp</a>
             </div>
             <div style={{ background:'rgba(25,55,109,0.35)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:8, padding:'2rem' }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.5rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>VISIT OUR SHOWROOM</div>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.5rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:8 }}>VISIT OUR SHOWROOM</div>
               <p style={{ fontSize:13, color:'#7A8EA8', lineHeight:1.7, marginBottom:16 }}>
                 We&apos;re located in Karur ({city.distance} from {city.name}). See and touch the products before buying.
               </p>
@@ -199,13 +199,13 @@ export default function CityLandingPage({ params }: { params: { city: string } }
       {/* Nearby cities */}
       <section style={{ padding:'48px 0', background:'rgba(11,36,71,0.3)', borderTop:'1px solid rgba(249,115,22,0.1)' }}>
         <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem' }} className="city-pad">
-          <div style={{ fontSize:'0.68rem', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:16 }}>Also serving nearby areas</div>
+          <div style={{ fontSize:'0.68rem', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#7A8EA8', marginBottom:16 }}>Also serving nearby areas</div>
           <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
             {Object.entries(CITIES)
               .filter(([key]) => key !== cityKey)
               .map(([key, c]) => (
                 <Link key={key} href={`/areas/${key}`}
-                  style={{ fontSize:'0.78rem', fontFamily:"'Syne',sans-serif", fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', color:'#7A8EA8', border:'1px solid rgba(255,255,255,0.1)', borderRadius:2, padding:'6px 14px', textDecoration:'none', transition:'color 0.2s,border-color 0.2s' }}
+                  style={{ fontSize:'0.78rem', fontFamily:"'Inter',sans-serif", fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', color:'#7A8EA8', border:'1px solid rgba(255,255,255,0.1)', borderRadius:2, padding:'6px 14px', textDecoration:'none', transition:'color 0.2s,border-color 0.2s' }}
                   className="city-nearby-link">
                   {c.name}
                 </Link>

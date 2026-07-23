@@ -1,5 +1,5 @@
 /* ── BRAND FONTS ── */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -51,10 +51,20 @@
   --surface-dark:  rgba(11,36,71,0.50);
   --surface-dark2: rgba(25,55,109,0.40);
 
-  /* Fonts */
-  --f-display:  'Bebas Neue', Impact, sans-serif;
-  --f-ui:       'Syne', system-ui, sans-serif;
-  --f-body:     'DM Sans', system-ui, sans-serif;
+  /* Fonts — Typography & Spacing System */
+  --f-display:  'Syne', system-ui, sans-serif;         /* Headings */
+  --f-ui:       'Inter', system-ui, sans-serif;         /* Body & UI */
+  --f-body:     'Inter', system-ui, sans-serif;         /* Body & UI */
+  --f-num:      'Space Grotesk', system-ui, sans-serif; /* Numbers & Prices */
+
+  /* Spacing — 8px grid */
+  --space-xs:  8px;
+  --space-s:   16px;
+  --space-m:   24px;
+  --space-l:   32px;
+  --space-xl:  48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
 
   /* Shape */
   --r:     6px;
@@ -270,7 +280,7 @@ select option { background: var(--bg-white); color: var(--text-body); }
 .pc-name { font-family:var(--f-ui); font-size:.88rem; font-weight:700; color:var(--text-h); margin-bottom:.3rem; line-height:1.35; }
 .pc-desc { font-size:.74rem; color:var(--text-meta); line-height:1.6; margin-bottom:.85rem; flex:1; }
 .pc-price-row { display:flex; align-items:baseline; gap:6px; margin-bottom:.85rem; }
-.pc-price { font-family:var(--f-display); font-size:1.5rem; color:var(--orange); line-height:1; letter-spacing:.03em; }
+.pc-price { font-family:var(--f-num); font-size:1.5rem; color:var(--orange); line-height:1; letter-spacing:.03em; }
 .pc-unit { font-size:.7rem; color:var(--text-muted); }
 .pc-mrp { font-size:.78rem; color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--orange); }
 .pc-add-btn { width:100%; padding:.72rem 0; border-radius:var(--r); background:var(--orange); color:#fff; border:none; font-family:var(--f-ui); font-weight:700; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }

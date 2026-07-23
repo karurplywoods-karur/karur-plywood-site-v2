@@ -45,8 +45,8 @@ export default async function InspirationDetailPage({ params }: { params: { slug
 
         <div className="isd-top">
           <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 10.5, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#F07316', marginBottom: 10 }}>{item.space_type}</div>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.4rem,2.8vw,1.9rem)', fontWeight: 700, color: '#0B2447', lineHeight: 1.2, marginBottom: 12 }}>{item.title}</h1>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 10.5, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#F07316', marginBottom: 10 }}>{item.space_type}</div>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.8vw,1.9rem)', fontWeight: 700, color: '#0B2447', lineHeight: 1.2, marginBottom: 12 }}>{item.title}</h1>
             {item.description && <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.75, marginBottom: 18 }}>{item.description}</p>}
             <div className="isd-meta-grid">
               {item.space_type && <div><div className="isd-label">Space Type</div><div className="isd-val">{item.space_type}</div></div>}
@@ -81,7 +81,7 @@ export default async function InspirationDetailPage({ params }: { params: { slug
           <div>
             {materials.length > 0 && (
               <div className="isd-card" style={{ marginBottom: 16 }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Materials Used</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 14 }}>Materials Used</div>
                 <div className="isd-materials-grid">
                   {materials.map((m, i) => (
                     <div key={i} style={{ textAlign: 'center' }}>
@@ -95,7 +95,7 @@ export default async function InspirationDetailPage({ params }: { params: { slug
             )}
             {item.color_palette?.length > 0 && (
               <div className="isd-card">
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 12 }}>Color Palette</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 12 }}>Color Palette</div>
                 <div style={{ display: 'flex', gap: 10 }}>
                   {item.color_palette.map((c: string, i: number) => (
                     <div key={i} style={{ width: 36, height: 36, borderRadius: '50%', background: c, border: '1px solid #E5E1DC' }} title={c} />
@@ -107,7 +107,7 @@ export default async function InspirationDetailPage({ params }: { params: { slug
 
           <aside>
             <div className="isd-cta-card">
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 6 }}>Work With Our Experts</div>
+              <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 6 }}>Work With Our Experts</div>
               <div style={{ fontSize: 12.5, color: '#4B5563', marginBottom: 14 }}>Get a customized design and quote for your dream space.</div>
               <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener" className="isd-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Request a Quote →</a>
             </div>
@@ -116,7 +116,7 @@ export default async function InspirationDetailPage({ params }: { params: { slug
 
         {similar.length > 0 && (
           <div style={{ marginTop: 40 }}>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 16 }}>Similar Inspirations</h2>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0B2447', marginBottom: 16 }}>Similar Inspirations</h2>
             <div className="isd-related-grid">
               {similar.map((s: any) => (
                 <Link key={s.id} href={`/inspiration/${s.slug}`} className="insp-card-like">
@@ -124,7 +124,7 @@ export default async function InspirationDetailPage({ params }: { params: { slug
                     {s.cover_image && <Image src={s.cover_image} alt={s.title} fill style={{ objectFit: 'cover' }} sizes="240px" />}
                   </div>
                   <div style={{ padding: '10px 12px' }}>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{s.title}</div>
+                    <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12.5, color: '#0B2447' }}>{s.title}</div>
                     {s.items_used && <div style={{ fontSize: 11, color: '#9CA3AF' }}>{s.items_used} Items Used</div>}
                   </div>
                 </Link>
@@ -138,9 +138,9 @@ export default async function InspirationDetailPage({ params }: { params: { slug
         .isd-top { margin-bottom: 20px; max-width: 640px; }
         .isd-meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 20px; }
         .isd-label { font-size: 10px; color: #9CA3AF; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
-        .isd-val { font-size: 13px; color: #0B2447; font-weight: 700; font-family: 'Syne',sans-serif; }
-        .isd-btn-primary { display: inline-flex; align-items: center; padding: 11px 22px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
-        .isd-btn-outline { display: inline-flex; align-items: center; padding: 11px 22px; border: 1px solid #E5E1DC; background: #FFFFFF; color: #0B2447; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
+        .isd-val { font-size: 13px; color: #0B2447; font-weight: 700; font-family: 'Inter',sans-serif; }
+        .isd-btn-primary { display: inline-flex; align-items: center; padding: 11px 22px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
+        .isd-btn-outline { display: inline-flex; align-items: center; padding: 11px 22px; border: 1px solid #E5E1DC; background: #FFFFFF; color: #0B2447; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 12.5px; text-decoration: none; }
         .isd-gallery-main { position: relative; width: 100%; aspect-ratio: 16/7; border-radius: 12px; overflow: hidden; margin-bottom: 10px; background: #F2EDE5; }
         .isd-gallery-strip { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 24px; }
         .isd-gallery-thumb { position: relative; width: 140px; height: 100px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #F2EDE5; }

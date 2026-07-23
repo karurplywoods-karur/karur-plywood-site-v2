@@ -82,14 +82,14 @@ function ProjectCard({ p }: { p: Project }) {
           : <div style={{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:48, background:'linear-gradient(135deg,#FFFFFF,#19376D)' }}>🔨</div>
         }
         {p.year && (
-          <div style={{ position:'absolute', top:10, right:10, background:'#FAF8F5', backdropFilter:'blur(6px)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:3, padding:'3px 10px', fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, color:'#6B7280' }}>{p.year}</div>
+          <div style={{ position:'absolute', top:10, right:10, background:'#FAF8F5', backdropFilter:'blur(6px)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:3, padding:'3px 10px', fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, color:'#6B7280' }}>{p.year}</div>
         )}
         {allPhotos.length > 1 && (
-          <div style={{ position:'absolute', bottom:10, right:10, background:'#FAF8F5', backdropFilter:'blur(6px)', border:'1px solid rgba(240,115,22,0.25)', borderRadius:3, padding:'3px 10px', fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, color:'#F07316' }}>
+          <div style={{ position:'absolute', bottom:10, right:10, background:'#FAF8F5', backdropFilter:'blur(6px)', border:'1px solid rgba(240,115,22,0.25)', borderRadius:3, padding:'3px 10px', fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, color:'#F07316' }}>
             📷 {allPhotos.length} photos
           </div>
         )}
-        <div className="carp-proj-overlay"><span style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:12, color:'white' }}>View Gallery ↗</span></div>
+        <div className="carp-proj-overlay"><span style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:12, color:'white' }}>View Gallery ↗</span></div>
       </div>
       {allPhotos.length > 1 && (
         <div className="carp-thumb-strip">
@@ -102,13 +102,13 @@ function ProjectCard({ p }: { p: Project }) {
         </div>
       )}
       <div style={{ padding:'16px 18px 20px' }}>
-        <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'0.95rem', color:'#0B2447', marginBottom:5 }}>{p.title}</div>
+        <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:'0.95rem', color:'#0B2447', marginBottom:5 }}>{p.title}</div>
         {p.location && <div style={{ fontSize:12, color:'#6B7280', marginBottom:8 }}>📍 {p.location}</div>}
         {p.description && <p style={{ fontSize:13, color:'#6B7280', lineHeight:1.65, marginBottom:12 }}>{p.description}</p>}
         {p.materials_used?.length > 0 && (
           <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
             {p.materials_used.map(m => (
-              <span key={m} style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, background:'#FFF4ED', border:'1px solid rgba(240,115,22,0.2)', color:'#F07316', padding:'2px 8px', borderRadius:3, letterSpacing:'.06em' }}>{m}</span>
+              <span key={m} style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, background:'#FFF4ED', border:'1px solid rgba(240,115,22,0.2)', color:'#F07316', padding:'2px 8px', borderRadius:3, letterSpacing:'.06em' }}>{m}</span>
             ))}
           </div>
         )}
@@ -193,14 +193,14 @@ function ReviewForm({ carpenterId, carpenterName }: { carpenterId: string; carpe
     width: '100%', background: 'rgba(255,255,255,0.05)',
     border: '1px solid rgba(240,115,22,0.18)', borderRadius: 6,
     padding: '10px 14px', fontSize: 14, color: '#0B2447',
-    fontFamily: "'DM Sans', sans-serif", outline: 'none',
+    fontFamily: "'Inter', sans-serif", outline: 'none',
     transition: 'border-color 0.2s',
   };
 
   if (done) return (
     <div style={{ textAlign:'center', padding:'32px 0' }}>
       <div style={{ fontSize:44, marginBottom:12 }}>🙏</div>
-      <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#0B2447', marginBottom:8 }}>THANK YOU!</div>
+      <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#0B2447', marginBottom:8 }}>THANK YOU!</div>
       <p style={{ color:'#6B7280', fontSize:14, lineHeight:1.7 }}>
         Your review has been submitted and will appear after a quick verification.
       </p>
@@ -210,7 +210,7 @@ function ReviewForm({ carpenterId, carpenterName }: { carpenterId: string; carpe
   return (
     <div>
       <div style={{ marginBottom:18 }}>
-        <label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:8 }}>
+        <label style={{ display:'block', fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:8 }}>
           Your Rating *
         </label>
         <StarPicker value={form.rating} onChange={v => set('rating', v)} />
@@ -218,17 +218,17 @@ function ReviewForm({ carpenterId, carpenterName }: { carpenterId: string; carpe
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }} className="review-form-grid">
         <div>
-          <label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Your Name *</label>
+          <label style={{ display:'block', fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Your Name *</label>
           <input style={inp} placeholder="Rajan Kumar" value={form.name} onChange={e => set('name', e.target.value)} />
         </div>
         <div>
-          <label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Your Role / City</label>
+          <label style={{ display:'block', fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Your Role / City</label>
           <input style={inp} placeholder="e.g. Homeowner, Karur" value={form.role} onChange={e => set('role', e.target.value)} />
         </div>
       </div>
 
       <div style={{ marginBottom:18 }}>
-        <label style={{ display:'block', fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Your Review *</label>
+        <label style={{ display:'block', fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', color:'#6B7280', marginBottom:6 }}>Your Review *</label>
         <textarea
           style={{ ...inp, resize:'none' } as React.CSSProperties}
           rows={4}
@@ -243,7 +243,7 @@ function ReviewForm({ carpenterId, carpenterName }: { carpenterId: string; carpe
       <button
         onClick={handleSubmit}
         disabled={loading}
-        style={{ width:'100%', padding:'12px 0', borderRadius:6, background: loading ? 'rgba(240,115,22,0.4)' : '#F07316', color:'#0B2447', border:'none', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.1em', textTransform:'uppercase', cursor: loading ? 'default' : 'pointer', transition:'background 0.2s' }}
+        style={{ width:'100%', padding:'12px 0', borderRadius:6, background: loading ? 'rgba(240,115,22,0.4)' : '#F07316', color:'#0B2447', border:'none', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, letterSpacing:'0.1em', textTransform:'uppercase', cursor: loading ? 'default' : 'pointer', transition:'background 0.2s' }}
       >
         {loading ? '⏳ Submitting...' : '⭐ Submit Review'}
       </button>
@@ -269,11 +269,11 @@ function ReviewCard({ r }: { r: Review }) {
         &ldquo;{r.message}&rdquo;
       </p>
       <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-        <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#F07316,#FF9A45)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, color:'#0B2447', flexShrink:0 }}>
+        <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#F07316,#FF9A45)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, color:'#0B2447', flexShrink:0 }}>
           {r.name.charAt(0).toUpperCase()}
         </div>
         <div>
-          <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:13, color:'#0B2447' }}>{r.name}</div>
+          <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:13, color:'#0B2447' }}>{r.name}</div>
           {r.role && <div style={{ fontSize:11, color:'#6B7280' }}>{r.role}</div>}
         </div>
       </div>
@@ -314,8 +314,8 @@ export default function CarpenterPortfolioPage() {
   if (!carp) return (
     <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#FAF8F5', flexDirection:'column', gap:16 }}>
       <div style={{ fontSize:48 }}>🔨</div>
-      <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', color:'#0B2447' }}>NOT FOUND</div>
-      <Link href="/carpenters" style={{ fontSize:13, color:'#F07316', fontFamily:"'Syne',sans-serif", fontWeight:700 }}>← Back to Directory</Link>
+      <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'2rem', color:'#0B2447' }}>NOT FOUND</div>
+      <Link href="/carpenters" style={{ fontSize:13, color:'#F07316', fontFamily:"'Inter',sans-serif", fontWeight:700 }}>← Back to Directory</Link>
     </div>
   );
 
@@ -349,10 +349,10 @@ export default function CarpenterPortfolioPage() {
             <div style={{ flex:1 }}>
               <div style={{ display:'flex', gap:8, marginBottom:10, flexWrap:'wrap' }}>
                 {carp.verified && (
-                  <span style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.12em', textTransform:'uppercase', background:'rgba(37,211,102,0.12)', color:'#4ADE80', border:'1px solid rgba(37,211,102,0.2)', padding:'3px 10px', borderRadius:2 }}>✓ Verified</span>
+                  <span style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.12em', textTransform:'uppercase', background:'rgba(37,211,102,0.12)', color:'#4ADE80', border:'1px solid rgba(37,211,102,0.2)', padding:'3px 10px', borderRadius:2 }}>✓ Verified</span>
                 )}
               </div>
-              <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2rem,4vw,3rem)', letterSpacing:'.04em', color:'#0B2447', lineHeight:1, marginBottom:8 }}>{carp.name}</h1>
+              <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(2rem,4vw,3rem)', letterSpacing:'.04em', color:'#0B2447', lineHeight:1, marginBottom:8 }}>{carp.name}</h1>
               <div style={{ fontSize:13, color:'#6B7280', marginBottom:10 }}>📍 {carp.area} · {carp.experience}+ years experience</div>
               {avgRating > 0 && (
                 <div style={{ marginBottom:12, display:'flex', alignItems:'center', gap:10 }}>
@@ -364,7 +364,7 @@ export default function CarpenterPortfolioPage() {
               {carp.speciality?.length > 0 && (
                 <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:22 }}>
                   {carp.speciality.map((s: string) => (
-                    <span key={s} style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', background:'#FFF4ED', border:'1px solid rgba(240,115,22,0.2)', color:'#F07316', padding:'3px 9px', borderRadius:2 }}>{s}</span>
+                    <span key={s} style={{ fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', background:'#FFF4ED', border:'1px solid rgba(240,115,22,0.2)', color:'#F07316', padding:'3px 9px', borderRadius:2 }}>{s}</span>
                   ))}
                 </div>
               )}
@@ -376,8 +376,8 @@ export default function CarpenterPortfolioPage() {
 
             {projects.length > 0 && (
               <div style={{ background:'#FFFFFF', border:'1px solid rgba(240,115,22,0.15)', borderRadius:8, padding:'20px 28px', textAlign:'center', flexShrink:0 }}>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.8rem', letterSpacing:'.04em', color:'#F07316', lineHeight:1 }}>{projects.length}</div>
-                <div style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.15em', textTransform:'uppercase', color:'#6B7280', marginTop:4 }}>Projects</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'2.8rem', letterSpacing:'.04em', color:'#F07316', lineHeight:1 }}>{projects.length}</div>
+                <div style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.15em', textTransform:'uppercase', color:'#6B7280', marginTop:4 }}>Projects</div>
               </div>
             )}
           </div>
@@ -390,7 +390,7 @@ export default function CarpenterPortfolioPage() {
           {projects.length > 0 && (
             <>
               <div className="eyebrow">Work Portfolio</div>
-              <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.8rem,3vw,2.8rem)', letterSpacing:'.04em', color:'#0B2447', marginBottom:32 }}>COMPLETED WORK</h2>
+              <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(1.8rem,3vw,2.8rem)', letterSpacing:'.04em', color:'#0B2447', marginBottom:32 }}>COMPLETED WORK</h2>
               <div className="carp-proj-grid">
                 {projects.map(p => <ProjectCard key={p.id} p={p} />)}
               </div>
@@ -400,7 +400,7 @@ export default function CarpenterPortfolioPage() {
           {/* ── REVIEWS SECTION ── */}
           <div style={{ marginTop:projects.length > 0 ? 64 : 0 }}>
             <div className="eyebrow">Customer Reviews</div>
-            <h2 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.8rem,3vw,2.8rem)', letterSpacing:'.04em', color:'#0B2447', marginBottom:32 }}>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(1.8rem,3vw,2.8rem)', letterSpacing:'.04em', color:'#0B2447', marginBottom:32 }}>
               REVIEWS FOR {carp.name.toUpperCase()}
             </h2>
 
@@ -412,7 +412,7 @@ export default function CarpenterPortfolioPage() {
                 {reviews.length === 0 ? (
                   <div style={{ padding:'32px 24px', background:'#FFFFFF', border:'1px solid #FFF4ED', borderRadius:10, textAlign:'center', marginBottom:0 }}>
                     <div style={{ fontSize:36, marginBottom:10 }}>⭐</div>
-                    <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:14, color:'#0B2447', marginBottom:6 }}>No reviews yet</div>
+                    <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:14, color:'#0B2447', marginBottom:6 }}>No reviews yet</div>
                     <p style={{ fontSize:13, color:'#6B7280' }}>Be the first to share your experience!</p>
                   </div>
                 ) : (
@@ -424,7 +424,7 @@ export default function CarpenterPortfolioPage() {
 
               {/* Right: write a review */}
               <div style={{ background:'#FFFFFF', border:'1px solid rgba(240,115,22,0.15)', borderRadius:12, padding:'28px 24px' }}>
-                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.5rem', letterSpacing:'.05em', color:'#0B2447', marginBottom:6 }}>WRITE A REVIEW</div>
+                <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.5rem', letterSpacing:'.05em', color:'#0B2447', marginBottom:6 }}>WRITE A REVIEW</div>
                 <p style={{ fontSize:13, color:'#6B7280', marginBottom:22, lineHeight:1.6 }}>
                   Worked with {carp.name}? Share your experience to help other homeowners.
                 </p>
@@ -436,7 +436,7 @@ export default function CarpenterPortfolioPage() {
           {/* CTA */}
           <div style={{ marginTop:52, background:'linear-gradient(135deg,#FFFFFF,#19376D)', border:'1px solid rgba(240,115,22,0.2)', borderRadius:10, padding:'32px 44px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:24, flexWrap:'wrap' }}>
             <div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.6rem', letterSpacing:'.05em', color:'#0B2447', marginBottom:6 }}>NEED A SKILLED CARPENTER?</div>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.6rem', letterSpacing:'.05em', color:'#0B2447', marginBottom:6 }}>NEED A SKILLED CARPENTER?</div>
               <p style={{ fontSize:13, color:'#6B7280' }}>{carp.name} uses quality materials from Karur Plywood &amp; Company.</p>
             </div>
             <div style={{ display:'flex', gap:10, flexWrap:'wrap', flexShrink:0 }}>
@@ -446,7 +446,7 @@ export default function CarpenterPortfolioPage() {
           </div>
 
           <div style={{ marginTop:28, textAlign:'center' }}>
-            <Link href="/carpenters" style={{ fontSize:13, color:'#6B7280', fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'.08em' }}>
+            <Link href="/carpenters" style={{ fontSize:13, color:'#6B7280', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.08em' }}>
               ← Back to Carpenter Directory
             </Link>
           </div>
@@ -455,7 +455,7 @@ export default function CarpenterPortfolioPage() {
 
       <style>{`
         .carp-port-pad { padding: 0 5rem; }
-        .eyebrow { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:#F07316; display:flex; align-items:center; gap:.6rem; margin-bottom:.75rem; }
+        .eyebrow { font-family:'Inter',sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.25em; text-transform:uppercase; color:#F07316; display:flex; align-items:center; gap:.6rem; margin-bottom:.75rem; }
         .eyebrow::before { content:''; width:20px; height:2px; background:#F07316; flex-shrink:0; }
 
         .carp-proj-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
@@ -471,13 +471,13 @@ export default function CarpenterPortfolioPage() {
         .carp-thumb-strip { display:flex; gap:3px; height:68px; background:#FAF8F5; border-top:1px solid #FFF4ED; }
         .carp-thumb { flex:1; position:relative; overflow:hidden; cursor:pointer; opacity:0.65; transition:opacity .2s; }
         .carp-thumb:hover, .carp-thumb--active { opacity:1; }
-        .carp-thumb-more { position:absolute; inset:0; background:#FAF8F5; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; color:#F07316; }
+        .carp-thumb-more { position:absolute; inset:0; background:#FAF8F5; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; font-weight:700; font-size:13px; color:#F07316; }
 
         /* Lightbox */
         .lb-overlay { position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.95); display:flex; align-items:center; justify-content:center; padding:20px; }
         .lb-box { position:relative; width:100%; max-width:900px; display:flex; flex-direction:column; gap:12px; }
-        .lb-close { position:absolute; top:-44px; right:0; background:none; border:1px solid rgba(240,115,22,0.3); border-radius:4px; color:#F07316; padding:6px 14px; cursor:pointer; font-size:13px; font-family:'Syne',sans-serif; font-weight:700; }
-        .lb-counter { position:absolute; top:-44px; left:0; font-family:'Syne',sans-serif; font-size:12px; font-weight:700; color:#6B7280; letter-spacing:.1em; padding-top:8px; }
+        .lb-close { position:absolute; top:-44px; right:0; background:none; border:1px solid rgba(240,115,22,0.3); border-radius:4px; color:#F07316; padding:6px 14px; cursor:pointer; font-size:13px; font-family:'Inter',sans-serif; font-weight:700; }
+        .lb-counter { position:absolute; top:-44px; left:0; font-family:'Inter',sans-serif; font-size:12px; font-weight:700; color:#6B7280; letter-spacing:.1em; padding-top:8px; }
         .lb-main { position:relative; height:520px; border-radius:8px; overflow:hidden; background:#FFFFFF; }
         .lb-prev, .lb-next { position:absolute; top:50%; transform:translateY(-50%); background:#FAF8F5; border:1px solid rgba(240,115,22,0.25); border-radius:4px; color:#F07316; width:44px; height:44px; cursor:pointer; font-size:26px; display:flex; align-items:center; justify-content:center; z-index:2; }
         .lb-prev { left:12px; } .lb-next { right:12px; }

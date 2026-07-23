@@ -244,7 +244,7 @@ export default function InvoicePage() {
           margin: 20px auto;
           background: #fff;
           padding: 20mm 18mm 16mm;
-          font-family: 'DM Sans', Arial, sans-serif;
+          font-family: 'Inter', Arial, sans-serif;
           font-size: 11px;
           color: #1a1a1a;
           box-shadow: 0 2px 24px rgba(0,0,0,0.12);

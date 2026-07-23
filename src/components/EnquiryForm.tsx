@@ -51,7 +51,7 @@ export default function EnquiryForm({ compact }: Props) {
     width: '100%', background: '#FAF8F5',
     border: '1px solid #E5E1DC', borderRadius: 8,
     padding: '11px 14px', fontSize: 14, color: '#0B2447',
-    fontFamily: "'DM Sans', sans-serif", outline: 'none',
+    fontFamily: "'Inter', sans-serif", outline: 'none',
     marginBottom: 0, boxSizing: 'border-box',
   };
   const label: React.CSSProperties = {
@@ -62,14 +62,14 @@ export default function EnquiryForm({ compact }: Props) {
   if (done) return (
     <div style={{ textAlign: 'center', padding: compact ? '24px 0' : '40px 0' }}>
       <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
-      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: '#0B2447', marginBottom: 8 }}>
+      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 20, fontWeight: 700, color: '#0B2447', marginBottom: 8 }}>
         Message Sent!
       </div>
       <p style={{ color: '#6B7280', fontSize: 14, marginBottom: 20 }}>
         WhatsApp has opened with your message. We&apos;ll reply within minutes.
       </p>
       <button onClick={() => { setDone(false); setForm({ name: '', phone: '', email: '', subject: '', message: '' }); }}
-        style={{ background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, color: '#0B2447', padding: '10px 20px', cursor: 'pointer', fontSize: 13, fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
+        style={{ background: '#FFFFFF', border: '1px solid #E5E1DC', borderRadius: 8, color: '#0B2447', padding: '10px 20px', cursor: 'pointer', fontSize: 13, fontFamily: "'Inter',sans-serif", fontWeight: 700 }}>
         Send Another Message
       </button>
     </div>
@@ -79,7 +79,7 @@ export default function EnquiryForm({ compact }: Props) {
     <div>
       {!compact && (
         <>
-          <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 700, color: '#0B2447', marginBottom: 6 }}>
+          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 20, fontWeight: 700, color: '#0B2447', marginBottom: 6 }}>
             Send Us a Message
           </div>
           <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 22 }}>Fill in the form below and our team will get back to you shortly.</p>
@@ -120,7 +120,7 @@ export default function EnquiryForm({ compact }: Props) {
       {error && <div style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
       <button onClick={handleSubmit} disabled={loading}
-        style={{ width: '100%', background: loading ? '#D9640F' : '#F07316', color: '#FFFFFF', border: 'none', borderRadius: 8, padding: '13px 0', fontWeight: 700, fontSize: 14, cursor: loading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: "'Syne',sans-serif" }}>
+        style={{ width: '100%', background: loading ? '#D9640F' : '#F07316', color: '#FFFFFF', border: 'none', borderRadius: 8, padding: '13px 0', fontWeight: 700, fontSize: 14, cursor: loading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: "'Inter',sans-serif" }}>
         {loading ? '⏳ Sending...' : 'Send Message ➤'}
       </button>
       <p style={{ fontSize: 11.5, color: '#9CA3AF', textAlign: 'center', marginTop: 10 }}>

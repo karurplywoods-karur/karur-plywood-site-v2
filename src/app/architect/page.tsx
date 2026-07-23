@@ -47,13 +47,13 @@ export default async function ArchitectPage() {
           {arch ? (
             <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:60, alignItems:'center' }} className="arch-hero-grid">
               <div>
-                <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:2, padding:'4px 16px', fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', marginBottom:20 }}>
+                <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(249,115,22,0.1)', border:'1px solid rgba(249,115,22,0.3)', borderRadius:2, padding:'4px 16px', fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', marginBottom:20 }}>
                   Partner Architect · Karur Plywood &amp; Company
                 </div>
-                <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:10 }}>
+                <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(2.8rem,5vw,4.5rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:0.95, marginBottom:10 }}>
                   {arch.name.toUpperCase()}
                 </h1>
-                <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:600, fontSize:'1rem', color:'#F97316', letterSpacing:'0.08em', marginBottom:20 }}>
+                <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:600, fontSize:'1rem', color:'#F97316', letterSpacing:'0.08em', marginBottom:20 }}>
                   {arch.title}
                 </div>
                 <p style={{ fontSize:15, color:'#7A8EA8', lineHeight:1.85, maxWidth:540, marginBottom:28, fontWeight:300 }}>{arch.bio}</p>
@@ -62,7 +62,7 @@ export default async function ArchitectPage() {
                 {arch.specialities?.length > 0 && (
                   <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:28 }}>
                     {arch.specialities.map((s: string) => (
-                      <span key={s} style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', color:'#F97316', padding:'4px 12px', borderRadius:2 }}>{s}</span>
+                      <span key={s} style={{ fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', color:'#F97316', padding:'4px 12px', borderRadius:2 }}>{s}</span>
                     ))}
                   </div>
                 )}
@@ -83,19 +83,19 @@ export default async function ArchitectPage() {
                 </div>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, width:200 }}>
                   <div style={{ background:'rgba(25,55,109,0.5)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:6, padding:'14px 12px', textAlign:'center' }}>
-                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', color:'#F97316', lineHeight:1 }}>{arch.experience}+</div>
-                    <div style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>Years</div>
+                    <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', color:'#F97316', lineHeight:1 }}>{arch.experience}+</div>
+                    <div style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>Years</div>
                   </div>
                   <div style={{ background:'rgba(25,55,109,0.5)', border:'1px solid rgba(249,115,22,0.15)', borderRadius:6, padding:'14px 12px', textAlign:'center' }}>
-                    <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', color:'#F97316', lineHeight:1 }}>{arch.projects_done}+</div>
-                    <div style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>Projects</div>
+                    <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', color:'#F97316', lineHeight:1 }}>{arch.projects_done}+</div>
+                    <div style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#7A8EA8', marginTop:4 }}>Projects</div>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ textAlign:'center' }}>
-              <h1 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'3rem', letterSpacing:'0.04em', color:'#F8F9FB' }}>ARCHITECT PORTFOLIO</h1>
+              <h1 style={{ fontFamily:"'Syne',sans-serif", fontSize:'3rem', letterSpacing:'0.04em', color:'#F8F9FB' }}>ARCHITECT PORTFOLIO</h1>
               <p style={{ color:'#7A8EA8', marginTop:12 }}>Portfolio coming soon. Contact us for consultations.</p>
             </div>
           )}
@@ -106,7 +106,7 @@ export default async function ArchitectPage() {
       {arch?.awards?.length > 0 && (
         <div style={{ background:'rgba(249,115,22,0.04)', borderBottom:'1px solid rgba(249,115,22,0.1)', padding:'18px 0' }}>
           <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 5rem', display:'flex', gap:32, alignItems:'center', flexWrap:'wrap' }} className="arch-pad">
-            <span style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', flexShrink:0 }}>🏆 Awards</span>
+            <span style={{ fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', color:'#F97316', flexShrink:0 }}>🏆 Awards</span>
             {arch.awards.map((a: string) => (
               <span key={a} style={{ fontSize:13, color:'#A8BCCC' }}>· {a}</span>
             ))}
@@ -141,17 +141,17 @@ export default async function ArchitectPage() {
                       </div>
                       <div className="arch-project-info">
                         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12, flexWrap:'wrap' }}>
-                          <span style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', background:`${TYPE_COLOR[p.project_type] || '#F97316'}20`, color:TYPE_COLOR[p.project_type] || '#F97316', padding:'3px 10px', borderRadius:2 }}>{p.project_type}</span>
+                          <span style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', background:`${TYPE_COLOR[p.project_type] || '#F97316'}20`, color:TYPE_COLOR[p.project_type] || '#F97316', padding:'3px 10px', borderRadius:2 }}>{p.project_type}</span>
                           <span style={{ fontSize:11, color:'#7A8EA8' }}>⭐ Featured</span>
                           {p.year && <span style={{ fontSize:11, color:'#7A8EA8' }}>📅 {p.year}</span>}
                         </div>
-                        <h3 style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'clamp(1.6rem,2.5vw,2.2rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:1.05, marginBottom:10 }}>{p.title}</h3>
+                        <h3 style={{ fontFamily:"'Syne',sans-serif", fontSize:'clamp(1.6rem,2.5vw,2.2rem)', letterSpacing:'0.04em', color:'#F8F9FB', lineHeight:1.05, marginBottom:10 }}>{p.title}</h3>
                         <div style={{ fontSize:13, color:'#7A8EA8', marginBottom:12 }}>📍 {p.location}{p.area_sqft ? ` · ${p.area_sqft.toLocaleString()} sq.ft` : ''}{p.budget_range ? ` · ${p.budget_range}` : ''}</div>
                         <p style={{ fontSize:14, color:'#7A8EA8', lineHeight:1.75, marginBottom:16, fontWeight:300 }}>{p.description}</p>
                         {p.tags?.length > 0 && (
                           <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:20 }}>
                             {p.tags.map((t: string) => (
-                              <span key={t} style={{ fontSize:11, fontFamily:"'Syne',sans-serif", fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', color:'#F97316', padding:'3px 9px', borderRadius:2 }}>{t}</span>
+                              <span key={t} style={{ fontSize:11, fontFamily:"'Inter',sans-serif", fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', color:'#F97316', padding:'3px 9px', borderRadius:2 }}>{t}</span>
                             ))}
                           </div>
                         )}
@@ -177,13 +177,13 @@ export default async function ArchitectPage() {
                       </div>
                       <div style={{ padding:'18px 20px 22px' }}>
                         <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
-                          <span style={{ fontSize:10, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', background:`${TYPE_COLOR[p.project_type] || '#F97316'}18`, color:TYPE_COLOR[p.project_type] || '#F97316', padding:'2px 8px', borderRadius:2 }}>{p.project_type}</span>
+                          <span style={{ fontSize:10, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', background:`${TYPE_COLOR[p.project_type] || '#F97316'}18`, color:TYPE_COLOR[p.project_type] || '#F97316', padding:'2px 8px', borderRadius:2 }}>{p.project_type}</span>
                           {p.year && <span style={{ fontSize:11, color:'#7A8EA8' }}>{p.year}</span>}
                         </div>
-                        <div style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:'0.92rem', color:'#F8F9FB', marginBottom:6, lineHeight:1.3 }}>{p.title}</div>
+                        <div style={{ fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:'0.92rem', color:'#F8F9FB', marginBottom:6, lineHeight:1.3 }}>{p.title}</div>
                         <div style={{ fontSize:12, color:'#7A8EA8', marginBottom:10 }}>📍 {p.location}</div>
                         <p style={{ fontSize:12, color:'#7A8EA8', lineHeight:1.65, marginBottom:12 }}>{p.description.slice(0,120)}...</p>
-                        <a href={consultWA} target="_blank" rel="noopener" style={{ fontSize:12, fontFamily:"'Syne',sans-serif", fontWeight:700, letterSpacing:'0.08em', color:'#F97316', textDecoration:'none' }}>
+                        <a href={consultWA} target="_blank" rel="noopener" style={{ fontSize:12, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'0.08em', color:'#F97316', textDecoration:'none' }}>
                           Enquire About This →
                         </a>
                       </div>
@@ -197,7 +197,7 @@ export default async function ArchitectPage() {
           {/* Consultation CTA */}
           <div style={{ marginTop:56, background:'linear-gradient(135deg,#0d1f3a,#19376D)', border:'1px solid rgba(249,115,22,0.2)', borderRadius:10, padding:'40px 48px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:32, flexWrap:'wrap' }}>
             <div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:6 }}>
+              <div style={{ fontFamily:"'Syne',sans-serif", fontSize:'1.8rem', letterSpacing:'0.05em', color:'#F8F9FB', marginBottom:6 }}>
                 WANT A SIMILAR PROJECT?
               </div>
               <p style={{ fontSize:14, color:'#7A8EA8' }}>

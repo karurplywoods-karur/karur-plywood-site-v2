@@ -156,7 +156,7 @@ export default function Gallery({ items }: Props) {
           border-radius: 6px;
           color: #F97316; padding: 6px 14px;
           cursor: pointer; font-size: 13px;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Inter', sans-serif;
           transition: background 0.15s;
         }
         .gal-close-btn:hover { background: rgba(249,115,22,0.1); }

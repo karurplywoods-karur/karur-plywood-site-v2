@@ -42,7 +42,7 @@ export default function LoginPage() {
           <div className="log-hero">
             <Image src="/images/about-showroom.jpg" alt="" fill style={{ objectFit: 'cover' }} />
             <div className="log-hero-overlay">
-              <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.6rem,2.6vw,2rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: 10 }}>Welcome Back!</h1>
+              <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.6rem,2.6vw,2rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: 10 }}>Welcome Back!</h1>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', marginBottom: 8, fontWeight: 600 }}>Sign in to your Karur Plywood account</p>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>Access your orders, wishlist, exclusive offers and more.</p>
             </div>
@@ -50,7 +50,7 @@ export default function LoginPage() {
 
           {/* Form */}
           <div className="log-card">
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 4 }}>Login</h2>
+            <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: '1.3rem', fontWeight: 700, color: '#0B2447', marginBottom: 4 }}>Login</h2>
             <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 22 }}>Enter your details to continue</p>
             {error && <div style={{ padding: '10px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 6, color: '#dc2626', fontSize: 13, marginBottom: 16 }}>{error}</div>}
 
@@ -62,7 +62,7 @@ export default function LoginPage() {
               <div style={{ marginBottom: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <label className="log-lbl" style={{ marginBottom: 0 }}>Password</label>
-                  <Link href="/auth/forgot-password" style={{ fontSize: 11.5, color: '#F07316', fontFamily: "'Syne',sans-serif", fontWeight: 700, textDecoration: 'none' }}>Forgot Password?</Link>
+                  <Link href="/auth/forgot-password" style={{ fontSize: 11.5, color: '#F07316', fontFamily: "'Inter',sans-serif", fontWeight: 700, textDecoration: 'none' }}>Forgot Password?</Link>
                 </div>
                 <input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" className="log-inp" />
               </div>
@@ -74,12 +74,12 @@ export default function LoginPage() {
             </form>
 
             <div style={{ textAlign: 'center', fontSize: 12.5, color: '#9CA3AF', margin: '18px 0' }}>New to Karur Plywood?</div>
-            <Link href="/auth/register" style={{ display: 'block', textAlign: 'center', padding: '12px 0', border: '1px solid #E5E1DC', borderRadius: 6, color: '#0B2447', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>Create New Account</Link>
+            <Link href="/auth/register" style={{ display: 'block', textAlign: 'center', padding: '12px 0', border: '1px solid #E5E1DC', borderRadius: 6, color: '#0B2447', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>Create New Account</Link>
           </div>
 
           {/* Right — social login */}
           <aside className="log-social-card">
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 16 }}>Login With</div>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 16 }}>Login With</div>
             <button onClick={handleGoogle} disabled={loading} className="log-social-btn">
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -92,7 +92,7 @@ export default function LoginPage() {
             <div style={{ marginTop: 20, display: 'flex', gap: 10, padding: '12px 14px', background: '#FAF8F5', borderRadius: 8 }}>
               <span style={{ fontSize: 16 }}>🛡️</span>
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, color: '#0B2447' }}>Your data is safe with us</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, color: '#0B2447' }}>Your data is safe with us</div>
                 <div style={{ fontSize: 11, color: '#6B7280', marginTop: 2 }}>We use industry-standard security measures to protect your information.</div>
               </div>
             </div>
@@ -106,13 +106,13 @@ export default function LoginPage() {
         .log-hero-overlay { position: relative; z-index: 2; padding: 28px; background: linear-gradient(0deg, rgba(11,36,71,0.75) 0%, rgba(11,36,71,0.1) 70%); width: 100%; }
         .log-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 14px; padding: 32px; box-shadow: 0 1px 4px rgba(11,36,71,0.05); }
         .log-social-card { background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 14px; padding: 24px; height: max-content; }
-        .log-lbl { display: block; font-family: 'Syne',sans-serif; font-size: .68rem; font-weight: 700; color: #0B2447; margin-bottom: 6px; }
+        .log-lbl { display: block; font-family: 'Inter',sans-serif; font-size: .68rem; font-weight: 700; color: #0B2447; margin-bottom: 6px; }
         .log-inp { width: 100%; padding: 11px 13px; border: 1px solid #E5E1DC; border-radius: 6px; font-size: 14px; color: #0B2447; background: #FAF8F5; outline: none; box-sizing: border-box; }
         .log-inp:focus { border-color: #F07316; background: #FFFFFF; }
-        .log-submit-btn { width: 100%; padding: 13px 0; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: .04em; cursor: pointer; }
+        .log-submit-btn { width: 100%; padding: 13px 0; background: #F07316; color: #FFFFFF; border: none; border-radius: 6px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: .04em; cursor: pointer; }
         .log-submit-btn:hover:not(:disabled) { background: #D9640F; }
         .log-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
-        .log-social-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 11px 0; border: 1px solid #E5E1DC; border-radius: 6px; background: #FFFFFF; color: #0B2447; font-family: 'Syne',sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; }
+        .log-social-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 11px 0; border: 1px solid #E5E1DC; border-radius: 6px; background: #FFFFFF; color: #0B2447; font-family: 'Inter',sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; }
         .log-social-btn:hover:not(:disabled) { border-color: #0B2447; }
         @media(max-width:1100px){ .log-layout { grid-template-columns: 1fr; } .log-hero { display: none; } }
         @media(max-width:640px){ .log-pad { padding-left:16px !important; padding-right:16px !important; } .log-card { padding: 22px; } }

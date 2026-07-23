@@ -191,8 +191,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         .cat-sub-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.68rem; color: #6B7280; }
         .cat-sub-arrow { color: #F07316; font-weight: 700; }
 
-        .cat-brand-row { display: flex; gap: 12px; flex-wrap: wrap; }
-        .cat-brand-chip { flex: 1; min-width: 120px; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 8px; padding: 18px 12px; font-family: 'Syne',sans-serif; font-weight: 800; font-size: 0.82rem; color: #0B2447; text-align: center; }
+        .cat-brand-row { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 10px; }
+        .cat-brand-chip { flex: 0 0 150px; height: 74px; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 8px; font-family: 'Syne',sans-serif; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.03em; text-transform: uppercase; color: #0B2447; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+        .cat-brand-chip:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 12px 24px rgba(11,36,71,0.12); border-color: rgba(240,115,22,0.4); }
 
         .cat-why-band { background: #0B2447; padding: 52px 0; }
         .cat-why-title { text-align: center; font-family: 'Syne',sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.1em; color: #FFFFFF; border-bottom: 2px solid #F07316; display: block; padding-bottom: 14px; margin: 0 auto 36px; width: max-content; }

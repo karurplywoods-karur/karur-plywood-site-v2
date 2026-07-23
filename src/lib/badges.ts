@@ -95,6 +95,8 @@ export function getProductBadge(product: Product): ProductBadge | null {
     return makeBadge('fast_moving');
   }
 
-  // Default in_stock badge for remaining items
-  return makeBadge('in_stock');
+  // Plain in-stock items get no overlay badge — the card already shows a
+  // small in-stock indicator in the body, so a redundant ribbon over the
+  // image is just noise.
+  return null;
 }

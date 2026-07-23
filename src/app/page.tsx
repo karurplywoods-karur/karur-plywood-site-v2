@@ -5,12 +5,33 @@ import { supabase } from '@/lib/db';
 import { LocalBusinessSchema } from '@/components/JsonLd';
 import RecentlyViewed from '@/components/RecentlyViewed';
 import { CONTACT } from '@/lib/contact';
+import { getBrands } from '@/lib/products';
 
 const WA = CONTACT.wa;
 const PHONE = CONTACT.phone;
 const PHONE_RAW = CONTACT.phoneRaw;
 
 // Fetch featured project products (top 4 by sort_order)
+
+// Fallback photos for categories that don't have a real image_url uploaded yet.
+// Keeps the grid looking like a photo grid instead of showing raw icon glyphs.
+const CATEGORY_FALLBACK_IMG: Record<string, string> = {
+  'waterproof-plywood': '/images/cat-waterproof-plywood.jpg',
+  'commercial-plywood': '/images/cat-commercial-plywood.jpg',
+  'mdf-board': '/images/cat-mdf-board.jpg',
+  'hdhmr-board': '/images/cat-hdhmr-board.jpg',
+  'block-board': '/images/cat-block-board.jpg',
+  'flush-door': '/images/cat-flush-door.jpg',
+  'plywood': '/images/cat-plywood.jpg',
+  'laminates': '/images/cat-laminates.jpg',
+  'laminate': '/images/cat-laminate.jpg',
+  'hardware': '/images/cat-hardware.jpg',
+  'doors': '/images/cat-doors.jpg',
+  'adhesives': '/images/cat-adhesives.jpg',
+  'accessories': '/images/cat-accessories.jpg',
+  'veneer': '/images/cat-veneer.jpg',
+};
+
 async function getFeaturedProducts() {
   const { data } = await supabase
     .from('products')
@@ -63,11 +84,12 @@ const FAQS = [
 ];
 
 export default async function HomePage() {
-  const [products, reviews, categories, posts] = await Promise.all([
+  const [products, reviews, categories, posts, brands] = await Promise.all([
     getFeaturedProducts(),
     getReviews(),
     getCategories(),
     getLatestPosts(),
+    getBrands(),
   ]);
 
   const waUrl = `https://wa.me/${WA}?text=Hi%2C+I%27m+interested+in+plywood+for+my+project.+Can+you+help+with+pricing%3F`;
@@ -149,20 +171,22 @@ export default async function HomePage() {
 
           <div className="cat-grid">
             {(categories.length > 0 ? categories : [
-              { slug: 'plywood', name: 'Plywood', icon: '🪵', id: '1' },
-              { slug: 'laminates', name: 'Laminates', icon: '🎨', id: '2' },
-              { slug: 'hardware', name: 'Hardware', icon: '🔩', id: '3' },
-              { slug: 'doors', name: 'Doors', icon: '🚪', id: '4' },
-              { slug: 'adhesives', name: 'Adhesives', icon: '🧴', id: '5' },
-              { slug: 'accessories', name: 'Accessories', icon: '🗄️', id: '6' },
+              { slug: 'plywood', name: 'Plywood', id: '1' },
+              { slug: 'laminates', name: 'Laminates', id: '2' },
+              { slug: 'hardware', name: 'Hardware', id: '3' },
+              { slug: 'doors', name: 'Doors', id: '4' },
+              { slug: 'adhesives', name: 'Adhesives', id: '5' },
+              { slug: 'accessories', name: 'Accessories', id: '6' },
             ]).map((cat: any) => (
               <Link key={cat.id} href={`/category/${cat.slug}`} className="cat-card">
                 <div className="cat-card-img">
-                  {cat.image_url ? (
-                    <Image src={cat.image_url} alt={cat.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 50vw, 16vw" />
-                  ) : (
-                    <div className="cat-card-img-fallback"><span>{cat.icon || '📦'}</span></div>
-                  )}
+                  <Image
+                    src={cat.image_url || CATEGORY_FALLBACK_IMG[cat.slug] || '/images/cat-generic.jpg'}
+                    alt={cat.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width:768px) 50vw, 16vw"
+                  />
                   <span className="cat-arrow">↗</span>
                 </div>
                 <div className="cat-name">{cat.name}</div>
@@ -182,8 +206,17 @@ export default async function HomePage() {
             <Link href="/brands" className="section-view-all">View All Brands →</Link>
           </div>
           <div className="brand-row">
-            {['CENTURYPLY', 'Greenlam', 'HÄFELE', 'Hettich', 'ebco', 'SLEEK', 'FEVICOL', 'VIRGO'].map(b => (
-              <div key={b} className="brand-chip">{b}</div>
+            {(brands.length > 0 ? brands : [
+              { slug: 'centuryply', name: 'CenturyPly' }, { slug: 'greenlam', name: 'Greenlam' },
+              { slug: 'hafele', name: 'Häfele' }, { slug: 'hettich', name: 'Hettich' },
+              { slug: 'ebco', name: 'Ebco' }, { slug: 'sleek', name: 'Sleek' },
+              { slug: 'fevicol', name: 'Fevicol' }, { slug: 'virgo', name: 'Virgo' },
+            ]).map((b: any) => (
+              <Link key={b.slug} href={`/brands/${b.slug}`} className="brand-chip">
+                {b.logo_url
+                  ? <Image src={b.logo_url} alt={b.name} fill style={{ objectFit: 'contain', padding: 14 }} sizes="150px" />
+                  : <span>{b.name}</span>}
+              </Link>
             ))}
           </div>
         </div>
@@ -547,8 +580,11 @@ export default async function HomePage() {
         .cat-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; color: #0B2447; }
 
         /* ── BRANDS ── */
-        .brand-row { display: flex; gap: 12px; flex-wrap: wrap; }
-        .brand-chip { flex: 1; min-width: 110px; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 8px; padding: 18px 10px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.02em; color: #0B2447; text-align: center; }
+        .brand-row { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 10px; scroll-behavior: smooth; }
+        .brand-chip { position: relative; flex: 0 0 150px; height: 74px; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 1px solid #E5E1DC; border-radius: 8px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.03em; text-transform: uppercase; color: #0B2447; text-align: center; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+        .brand-chip:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 12px 24px rgba(11,36,71,0.12); border-color: rgba(240,115,22,0.4); }
+        .brand-row::-webkit-scrollbar { height: 6px; }
+        .brand-row::-webkit-scrollbar-thumb { background: rgba(240,115,22,0.25); border-radius: 3px; }
 
         /* ── ABOUT ── */
         .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }

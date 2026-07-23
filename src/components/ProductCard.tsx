@@ -71,13 +71,8 @@ export default function ProductCard({ product, cartItem: cartItemProp, onAdd, on
 
       {/* Body */}
       <div className="pc-body">
-        {/* Category row */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:4 }}>
-          {product.categories && (
-            <span style={{ fontSize:'0.58rem', fontFamily:'var(--f-ui)', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', color:'var(--orange)' }}>
-              {product.categories.icon} {product.categories.name}
-            </span>
-          )}
+        {/* Stock status */}
+        <div style={{ marginBottom: 4 }}>
           {product.in_stock !== false ? (
             <span style={{ fontSize:'0.55rem', fontFamily:'var(--f-ui)', fontWeight:700, color:'#16a34a', letterSpacing:'.08em' }}>● In Stock</span>
           ) : (

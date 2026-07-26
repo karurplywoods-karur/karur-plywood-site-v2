@@ -34,6 +34,7 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
   const discount = hasMrp ? Math.round(((mrp! - price!) / mrp!) * 100) : null;
   const stockStatus = selected?.stock_status || (product.in_stock ? 'in_stock' : 'out_of_stock');
   const inStock = stockStatus !== 'out_of_stock';
+  const needsVerification = product.fulfillment_type === 'DISTRIBUTOR' || product.fulfillment_type === 'SPECIAL_ORDER' || !!product.verification_required;
 
   const addToCart = () => {
     for (let i = 0; i < qty; i++) add(product, selected);
@@ -98,10 +99,13 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
           <button type="button" onClick={addToCart} disabled={!inStock} className="btn-add-to-cart">
             {added ? '✓ Added' : '🛒 Add to Cart'}
           </button>
-          <button type="button" onClick={buyNow} disabled={!inStock} className="btn-buy-now">
-            Buy Now
+          <button type="button" onClick={buyNow} disabled={!inStock} className={`btn-buy-now${needsVerification ? ' btn-buy-now--reserve' : ''}`}>
+            {needsVerification ? 'Reserve Order' : 'Buy Now'}
           </button>
         </div>
+        {needsVerification && (
+          <div className="verify-note">We'll confirm stock before requesting payment — usually within 15 minutes.</div>
+        )}
       </div>
 
       <style jsx>{`
@@ -222,6 +226,15 @@ export default function ProductPurchasePanel({ product }: { product: Product }) 
         .btn-add-to-cart:hover { background: #F7F4F0; }
         .btn-buy-now { background: #F07316; border: none; color: #FFFFFF; }
         .btn-buy-now:hover { background: #D9640F; }
+        .btn-buy-now--reserve { background: #0B2447; }
+        .btn-buy-now--reserve:hover { background: #143a6b; }
+        .verify-note {
+          font-family: 'Inter', sans-serif;
+          font-size: 11.5px;
+          color: #6B7280;
+          text-align: center;
+          margin-top: -2px;
+        }
         .btn-add-to-cart:disabled, .btn-buy-now:disabled { opacity: 0.5; cursor: not-allowed; }
         @media(max-width: 560px) {
           .variant-grid { grid-template-columns: 1fr; }

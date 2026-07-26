@@ -146,7 +146,9 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                 )}
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, marginBottom: 18 }}>
-                  {product.in_stock !== false
+                  {(product.fulfillment_type === 'DISTRIBUTOR' || product.fulfillment_type === 'SPECIAL_ORDER' || product.verification_required)
+                    ? <span style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: '#F07316', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif", letterSpacing: '.06em' }}>✓ Usually Available — Verified Before Delivery</span>
+                    : product.in_stock !== false
                     ? <span style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif", letterSpacing: '.06em' }}>✓ In Stock</span>
                     : <span style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif", letterSpacing: '.06em' }}>Out of Stock</span>}
                   {discount && discount > 0 && <span style={{ background: '#fff7ed', border: '1px solid #fed7aa', color: '#F07316', padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>{discount}% OFF</span>}
@@ -280,7 +282,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                         ['Brand', brandName || '—'],
                         ['Unit', product.unit || '—'],
                         ['Supply Type', product.type === 'quick' ? 'Quick' : 'Project'],
-                        ['Availability', product.in_stock ? 'In Stock' : 'Out of Stock'],
+                        ['Availability', (product.fulfillment_type === 'DISTRIBUTOR' || product.fulfillment_type === 'SPECIAL_ORDER' || product.verification_required) ? 'Usually Available (Verified Before Delivery)' : (product.in_stock ? 'In Stock' : 'Out of Stock')],
                       ].map(([k, v]) => (
                         <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #E5E1DC', fontSize: 13.5 }}>
                           <span style={{ color: '#6B7280' }}>{k}</span>

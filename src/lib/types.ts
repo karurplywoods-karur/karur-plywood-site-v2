@@ -71,6 +71,12 @@ export interface Product {
   in_stock: boolean;
   is_active?: boolean;          // original DB column — kept alongside in_stock
 
+  // Added by supabase-order-fulfillment-v1.sql (Phase 1 delivery system)
+  fulfillment_type?: 'READY_STOCK' | 'DISTRIBUTOR' | 'SPECIAL_ORDER';
+  verification_required?: boolean;
+  shipping_method?: string;
+  preferred_distributor_id?: string | null;
+
   // Joined relations
   categories?: Category;
   brands?: Brand | null;

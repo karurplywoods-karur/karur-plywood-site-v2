@@ -24,6 +24,32 @@ const STATUS_BADGE: Record<string, { color: string; bg: string; border: string; 
   cancelled:  { color: '#dc2626', bg: '#fef2f2', border: '#fecaca', label: 'Cancelled' },
 };
 
+// Reserve Order pipeline (Phase 1 — verification before payment)
+const FULFILLMENT_STEPS = ['RESERVED', 'CONFIRMED', 'AWAITING_PAYMENT', 'PAYMENT_RECEIVED', 'PREPARING_ORDER', 'OUT_FOR_DELIVERY', 'DELIVERED'];
+const FULFILLMENT_LABELS: Record<string, string> = {
+  RESERVED: 'Reservation Received',
+  CONFIRMED: 'Availability Confirmed',
+  AWAITING_PAYMENT: 'Payment Requested',
+  PAYMENT_RECEIVED: 'Payment Received',
+  PREPARING_ORDER: 'Packed',
+  OUT_FOR_DELIVERY: 'Shipped',
+  DELIVERED: 'Delivered',
+};
+const FULFILLMENT_DESC: Record<string, string> = {
+  RESERVED: "We're verifying availability — usually within 15 minutes during business hours.",
+  CONFIRMED: 'Stock confirmed. A secure payment link is on its way.',
+  AWAITING_PAYMENT: 'Complete payment using the link sent to you — valid for 30 minutes.',
+  PAYMENT_RECEIVED: 'Payment received. Your order is queued for packing.',
+  PREPARING_ORDER: 'Your order has been carefully packed.',
+  OUT_FOR_DELIVERY: 'Your order has been shipped.',
+  DELIVERED: 'Your order has been delivered.',
+};
+const FULFILLMENT_TERMINAL_BADGE: Record<string, { color: string; bg: string; border: string; label: string; note: string }> = {
+  UNAVAILABLE:         { color: '#dc2626', bg: '#fef2f2', border: '#fecaca', label: 'Unavailable', note: "We couldn't confirm stock for this reservation. No payment was collected — our team will reach out with alternatives." },
+  RESERVATION_EXPIRED: { color: '#dc2626', bg: '#fef2f2', border: '#fecaca', label: 'Reservation Expired', note: 'The payment window closed before payment was completed. Reply on WhatsApp if you still want this order.' },
+  CANCELLED:            { color: '#dc2626', bg: '#fef2f2', border: '#fecaca', label: 'Cancelled', note: 'This reservation was cancelled. No payment was collected.' },
+};
+
 export default function OrderDetailPage() {
   const router = useRouter();
   const params = useParams();
@@ -49,9 +75,18 @@ export default function OrderDetailPage() {
     </div>
   );
 
-  const badge = STATUS_BADGE[order.status] || STATUS_BADGE.pending;
-  const isCancelled = order.status === 'cancelled';
+  const isReservation = !!order.is_reservation;
+  const fStatus = order.fulfillment_status || 'CONFIRMED';
+  const isTerminalFulfillment = !!FULFILLMENT_TERMINAL_BADGE[fStatus];
+
+  const badge = isReservation
+    ? (isTerminalFulfillment
+        ? FULFILLMENT_TERMINAL_BADGE[fStatus]
+        : { color: '#F07316', bg: '#FFF4ED', border: '#fed7aa', label: FULFILLMENT_LABELS[fStatus] || fStatus })
+    : (STATUS_BADGE[order.status] || STATUS_BADGE.pending);
+  const isCancelled = isReservation ? isTerminalFulfillment : order.status === 'cancelled';
   const currentStep = STATUS_STEPS.indexOf(order.status);
+  const currentFulfillmentStep = FULFILLMENT_STEPS.indexOf(fStatus);
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF8F5', paddingTop: 58 }}>
@@ -81,7 +116,7 @@ export default function OrderDetailPage() {
             <span style={{ background: badge.bg, color: badge.color, border: `1px solid ${badge.border}`, borderRadius: 20, padding: '4px 14px', fontSize: 12, fontWeight: 700, fontFamily: "'Inter',sans-serif" }}>{badge.label}</span>
           </div>
           <div><div className="od-label">Order Date</div><div className="od-val">{new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div></div>
-          <div><div className="od-label">Payment Method</div><div className="od-val">{order.payment_method === 'cod' ? 'Cash on Delivery' : 'Online Payment'}</div></div>
+          <div><div className="od-label">{isReservation ? 'Payment' : 'Payment Method'}</div><div className="od-val">{isReservation ? (fStatus === 'PAYMENT_RECEIVED' || fStatus === 'PREPARING_ORDER' || fStatus === 'OUT_FOR_DELIVERY' || fStatus === 'DELIVERED' ? 'Paid Online' : 'Requested after confirmation') : (order.payment_method === 'cod' ? 'Cash on Delivery' : 'Online Payment')}</div></div>
           <div><div className="od-label">Total Amount</div><div className="od-val" style={{ color: '#F07316' }}>₹{order.total?.toLocaleString('en-IN')} <span style={{ fontSize: 11, color: order.payment_status === 'paid' ? '#16a34a' : '#F07316', fontWeight: 700 }}>{order.payment_status === 'paid' ? 'Paid' : 'Pending'}</span></div></div>
           <div>
             <div className="od-label">Delivery Address</div>
@@ -92,7 +127,7 @@ export default function OrderDetailPage() {
         <div className="od-grid">
           <div>
             {/* Timeline card */}
-            {!isCancelled && (
+            {!isCancelled && !isReservation && (
               <div className="od-card" style={{ marginBottom: 16 }}>
                 <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 20 }}>Order Tracking</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -116,6 +151,50 @@ export default function OrderDetailPage() {
                     );
                   })}
                 </div>
+              </div>
+            )}
+
+            {/* Reserve Order pipeline — verification before payment */}
+            {isReservation && !isTerminalFulfillment && (
+              <div className="od-card" style={{ marginBottom: 16 }}>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: '#0B2447', marginBottom: 6 }}>Order Tracking</div>
+                <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 20 }}>Payment is only requested after we confirm availability.</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {FULFILLMENT_STEPS.map((step, i) => {
+                    const done = currentFulfillmentStep >= i;
+                    const active = currentFulfillmentStep === i;
+                    const isLast = i === FULFILLMENT_STEPS.length - 1;
+                    return (
+                      <div key={step} style={{ display: 'flex', gap: 14 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <div style={{ width: 26, height: 26, borderRadius: '50%', background: done ? (active ? '#FFF4ED' : '#f0fdf4') : '#FFFFFF', border: `2px solid ${done ? (active ? '#F07316' : '#16a34a') : '#E5E1DC'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: active ? '#F07316' : '#16a34a', flexShrink: 0 }}>
+                            {done ? '✓' : ''}
+                          </div>
+                          {!isLast && <div style={{ width: 2, flex: 1, minHeight: 30, background: currentFulfillmentStep > i ? '#16a34a' : '#E5E1DC' }} />}
+                        </div>
+                        <div style={{ paddingBottom: isLast ? 0 : 22 }}>
+                          <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: done ? '#0B2447' : '#9CA3AF' }}>{FULFILLMENT_LABELS[step]}</div>
+                          <div style={{ fontSize: 12, color: '#6B7280', marginTop: 2 }}>{done ? FULFILLMENT_DESC[step] : 'Pending'}</div>
+                          {step === 'AWAITING_PAYMENT' && active && order.reservation_expires_at && (
+                            <div style={{ fontSize: 11, color: '#F07316', fontWeight: 700, marginTop: 4 }}>
+                              ⏰ Link expires {new Date(order.reservation_expires_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Terminal reservation states — unavailable / expired / cancelled */}
+            {isReservation && isTerminalFulfillment && (
+              <div className="od-card" style={{ marginBottom: 16, borderColor: '#fecaca' }}>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: badge.color, marginBottom: 8 }}>
+                  {badge.label}
+                </div>
+                <p style={{ fontSize: 13, color: '#4B5563', margin: 0 }}>{FULFILLMENT_TERMINAL_BADGE[fStatus].note}</p>
               </div>
             )}
 

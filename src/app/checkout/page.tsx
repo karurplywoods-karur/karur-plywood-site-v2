@@ -16,7 +16,7 @@ interface Address {
   longitude: number | null; is_default: boolean;
 }
 
-const STEPS = ['Shipping Address', 'Shipping Method', 'Payment', 'Review & Place Order'];
+const STEPS = ['Shipping Address', 'Shipping Method', 'Payment', 'Review & Confirm'];
 const SHIPPING_METHODS = [
   { key: 'standard', label: 'Standard Delivery', sub: '3-5 Business Days', cost: 0, icon: '🚚' },
   { key: 'express',  label: 'Express Delivery',  sub: '1-2 Business Days', cost: 299, icon: '⚡' },
@@ -199,6 +199,12 @@ export default function CheckoutPage() {
   const grandTotal = (couponResult ? total - couponResult.discount_amount : total) + shippingCost;
   const orderTotalDisplay = fullOrder?.total ?? grandTotal;
 
+  // Any item sourced from a distributor / special order must go through the
+  // Reserve Order flow — verification before payment, never Buy Now.
+  const cartNeedsReserve = items.some(i =>
+    i.product.fulfillment_type === 'DISTRIBUTOR' || i.product.fulfillment_type === 'SPECIAL_ORDER' || i.product.verification_required
+  );
+
   const handlePlaceOrder = async () => {
     setLoading(true); setError('');
     const addr = selectedAddress;
@@ -217,10 +223,15 @@ export default function CheckoutPage() {
       quantity:      i.quantity,
     }));
 
-    const res = await fetch('/api/checkout', {
+    const endpoint = cartNeedsReserve ? '/api/orders/reserve' : '/api/checkout';
+    const body = cartNeedsReserve
+      ? { address: addr, items: orderItems, notes }
+      : { address: addr, items: orderItems, payment_method: payment, shipping_method: shippingMethod, shipping_cost: shippingCost, notes, coupon_code: couponResult?.coupon_code || null };
+
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address: addr, items: orderItems, payment_method: payment, shipping_method: shippingMethod, shipping_cost: shippingCost, notes, coupon_code: couponResult?.coupon_code || null }),
+      body: JSON.stringify(body),
     });
 
     const data = await res.json();
@@ -232,21 +243,24 @@ export default function CheckoutPage() {
     fetch(`/api/orders/${data.order_id}`).then(r => r.json()).then(o => !o.error && setFullOrder(o));
     fetch('/api/products?limit=5').then(r => r.json()).then(p => setRelated(Array.isArray(p) ? p.slice(0, 5) : []));
 
-    // Fire GA4 purchase event — imported into Google Ads as a conversion.
-    // Fires once per order right after creation succeeds, regardless of
-    // payment_method (COD orders are still real, confirmed orders).
-    trackPurchase({
-      order_number: data.order_number,
-      value: grandTotal,
-      payment_method: payment,
-      items: items.map((i) => ({
-        product_id: i.product.id,
-        product_name: i.product.name,
-        category: i.product.categories?.name,
-        price: cartItemPrice(i),
-        quantity: i.quantity,
-      })),
-    });
+    // Fire GA4 purchase event only for real, paid-or-COD-confirmed orders.
+    // A reservation isn't a completed purchase yet — no payment has been
+    // taken — so it's tracked separately (not as a conversion) to keep GA4
+    // revenue numbers accurate.
+    if (!cartNeedsReserve) {
+      trackPurchase({
+        order_number: data.order_number,
+        value: grandTotal,
+        payment_method: payment,
+        items: items.map((i) => ({
+          product_id: i.product.id,
+          product_name: i.product.name,
+          category: i.product.categories?.name,
+          price: cartItemPrice(i),
+          quantity: i.quantity,
+        })),
+      });
+    }
 
     // Open WhatsApp for owner notification
     if (data.wa_url) {
@@ -265,26 +279,38 @@ export default function CheckoutPage() {
 
         {/* Hero banner */}
         <div className="os-hero">
-          <div className="os-hero-icon">✅</div>
+          <div className="os-hero-icon">{cartNeedsReserve ? '🙏' : '✅'}</div>
           <div style={{ flex: 1, minWidth: 220 }}>
-            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>Thank You!</h1>
-            <div style={{ fontSize: 15, color: '#16a34a', fontWeight: 700, marginBottom: 6 }}>Your Order Has Been Placed Successfully</div>
-            <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>Your order has been received and is being processed. We&apos;ve sent the order details to your email and WhatsApp.</p>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 'clamp(1.4rem,2.6vw,1.8rem)', fontWeight: 700, color: '#0B2447', margin: '0 0 6px' }}>
+              {cartNeedsReserve ? 'Thank You For Reserving!' : 'Thank You!'}
+            </h1>
+            <div style={{ fontSize: 15, color: cartNeedsReserve ? '#F07316' : '#16a34a', fontWeight: 700, marginBottom: 6 }}>
+              {cartNeedsReserve ? "We're Verifying Availability" : 'Your Order Has Been Placed Successfully'}
+            </div>
+            <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>
+              {cartNeedsReserve
+                ? "You'll receive confirmation within 15 minutes during business hours. No payment has been taken yet — we'll send a secure payment link only after confirming stock."
+                : "Your order has been received and is being processed. We've sent the order details to your email and WhatsApp."}
+            </p>
             <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
               <Link href="/products" className="os-btn-primary">Continue Shopping →</Link>
               <Link href={`/account/orders/${orderDone.order_id}`} className="os-btn-outline">📦 Track Your Order</Link>
             </div>
           </div>
           <div className="os-hero-confirm">
-            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: '#16a34a', fontSize: 13, marginBottom: 10 }}>Order Confirmed!</div>
+            <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, color: cartNeedsReserve ? '#F07316' : '#16a34a', fontSize: 13, marginBottom: 10 }}>
+              {cartNeedsReserve ? 'Reservation Received!' : 'Order Confirmed!'}
+            </div>
             <div className="os-label">Order ID</div>
             <div className="os-val" style={{ marginBottom: 8 }}>{orderDone.order_number}</div>
             {fullOrder && (
               <>
                 <div className="os-label">Order Date</div>
                 <div className="os-val" style={{ marginBottom: 8, fontWeight: 600 }}>{new Date(fullOrder.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-                <div className="os-label">Payment Method</div>
-                <div className="os-val" style={{ fontWeight: 600 }}>{fullOrder.payment_method === 'cod' ? 'Cash on Delivery' : 'Paid Online'}</div>
+                <div className="os-label">{cartNeedsReserve ? 'Payment' : 'Payment Method'}</div>
+                <div className="os-val" style={{ fontWeight: 600 }}>
+                  {cartNeedsReserve ? 'Requested after confirmation' : (fullOrder.payment_method === 'cod' ? 'Cash on Delivery' : 'Paid Online')}
+                </div>
               </>
             )}
             <div style={{ fontSize: 11, color: '#16a34a', marginTop: 12, display: 'flex', gap: 6, alignItems: 'center' }}>🔒 Secured with 256-bit encryption</div>
@@ -573,25 +599,41 @@ export default function CheckoutPage() {
             {/* STEP 2 — PAYMENT */}
             {step === 2 && (
               <div className="co-section">
-                <div className="co-section-title">Payment Method</div>
-                <div className="payment-options">
-                  {[
-                    { key: 'upi', icon: '📱', name: 'UPI / QR Code', sub: 'Pay instantly using any UPI app' },
-                    { key: 'card', icon: '💳', name: 'Credit / Debit Card', sub: 'Visa, Mastercard, RuPay accepted' },
-                    { key: 'netbanking', icon: '🏦', name: 'Net Banking', sub: 'All major banks supported' },
-                    { key: 'cod', icon: '💵', name: 'Cash on Delivery (COD)', sub: 'Available for orders below ₹50,000' },
-                  ].map(opt => (
-                    <div key={opt.key} onClick={() => { setPayDisplay(opt.key as any); setPayment(PAY_DISPLAY_TO_METHOD[opt.key]); }}
-                      className={`payment-card${payDisplay === opt.key ? ' payment-card--selected' : ''}`}>
-                      <div className="payment-radio"><div className={`addr-radio-dot${payDisplay === opt.key ? ' active' : ''}`} /></div>
-                      <div className="payment-icon">{opt.icon}</div>
-                      <div>
-                        <div className="payment-name">{opt.name}</div>
-                        <div className="payment-sub">{opt.sub}</div>
-                      </div>
+                {cartNeedsReserve ? (
+                  <>
+                    <div className="co-section-title">Payment</div>
+                    <div className="reserve-note">
+                      <p><strong>No payment needed yet.</strong></p>
+                      <p>
+                        Your cart includes item(s) we source from a distributor. We'll verify availability
+                        first (usually within 15 minutes during business hours) and only send you a secure
+                        payment link once your order is confirmed.
+                      </p>
                     </div>
-                  ))}
-                </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="co-section-title">Payment Method</div>
+                    <div className="payment-options">
+                      {[
+                        { key: 'upi', icon: '📱', name: 'UPI / QR Code', sub: 'Pay instantly using any UPI app' },
+                        { key: 'card', icon: '💳', name: 'Credit / Debit Card', sub: 'Visa, Mastercard, RuPay accepted' },
+                        { key: 'netbanking', icon: '🏦', name: 'Net Banking', sub: 'All major banks supported' },
+                        { key: 'cod', icon: '💵', name: 'Cash on Delivery (COD)', sub: 'Available for orders below ₹50,000' },
+                      ].map(opt => (
+                        <div key={opt.key} onClick={() => { setPayDisplay(opt.key as any); setPayment(PAY_DISPLAY_TO_METHOD[opt.key]); }}
+                          className={`payment-card${payDisplay === opt.key ? ' payment-card--selected' : ''}`}>
+                          <div className="payment-radio"><div className={`addr-radio-dot${payDisplay === opt.key ? ' active' : ''}`} /></div>
+                          <div className="payment-icon">{opt.icon}</div>
+                          <div>
+                            <div className="payment-name">{opt.name}</div>
+                            <div className="payment-sub">{opt.sub}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
                 <div className="co-field" style={{ marginTop: 20 }}>
                   <label className="co-label">Order Notes (optional)</label>
                   <textarea className="co-inp" rows={3} style={{ resize: 'none' }}
@@ -678,7 +720,8 @@ export default function CheckoutPage() {
                 {loading ? '⏳ Placing order...' :
                   step === 0 ? 'Continue to Shipping →' :
                   step === 1 ? 'Continue to Payment →' :
-                  step === 2 ? 'Continue to Review →' : '✓ Place Order'}
+                  step === 2 ? 'Continue to Review →' :
+                  cartNeedsReserve ? '✓ Reserve Order' : '✓ Place Order'}
               </button>
             </div>
           </div>
@@ -872,6 +915,10 @@ function CheckoutStyles() {
     .co-btn-primary { flex:1; padding:13px 0; background:#F07316; color:#FFFFFF; border:none; border-radius:6px; font-family:'Inter',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; text-decoration:none; text-align:center; display:block; }
     .co-btn-primary:hover:not(:disabled) { background:#D9640F; transform:translateY(-1px); }
     .co-btn-primary:disabled { opacity:.6; cursor:not-allowed; }
+    .reserve-note { background:#FAF8F5; border:1.5px solid #E5E1DC; border-radius:10px; padding:14px 16px; }
+    .reserve-note p { margin:0 0 8px; font-family:'Inter',sans-serif; font-size:.85rem; color:#374151; line-height:1.5; }
+    .reserve-note p:last-child { margin-bottom:0; }
+    .reserve-note strong { color:#0B2447; }
 
     .co-summary { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:22px; position:sticky; top:80px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
     .co-summary-title { font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:16px; }

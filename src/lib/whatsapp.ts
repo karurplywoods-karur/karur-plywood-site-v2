@@ -147,3 +147,125 @@ export async function sendCustomerWhatsAppStatus(
   console.log(`[whatsapp] STATUS UPDATE for ${data.customerPhone} (${status}):\n${message}`);
   return { ok: true, method: 'skipped' };
 }
+
+// ── Reserve / Verify flow messages (fulfillment_status, not legacy status) ──
+
+interface FulfillmentMessageData {
+  orderNumber: string;
+  customerName: string;
+  customerPhone: string;
+  total: number;
+  estimatedDeliveryDate?: string | null;
+  verificationSlaMinutes?: number;
+  note?: string;
+  paymentLinkUrl?: string;
+}
+
+function formatDeliveryDate(iso?: string | null): string {
+  if (!iso) return 'shortly';
+  return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', weekday: 'long' });
+}
+
+const FULFILLMENT_MESSAGES: Record<string, (d: FulfillmentMessageData) => string> = {
+  RESERVED: (d) =>
+    `🙏 *Order Reserved — ${d.orderNumber}*\n\n` +
+    `Thank you ${d.customerName} for reserving your order with Karur Plywood & Company.\n\n` +
+    `We're verifying availability now. You'll receive confirmation within ${d.verificationSlaMinutes ?? 15} minutes during business hours.\n\n` +
+    `No payment is needed yet — we'll only ask for payment after confirming your order.`,
+
+  CONFIRMED: (d) =>
+    `✅ *Order Confirmed — ${d.orderNumber}*\n\n` +
+    `Great news! Your order has been confirmed.\n\n` +
+    `Estimated delivery: ${formatDeliveryDate(d.estimatedDeliveryDate)}\n\n` +
+    `A secure payment link will be sent shortly. It will be valid for 30 minutes.`,
+
+  AWAITING_PAYMENT: (d) =>
+    `💳 *Payment Link Ready — ${d.orderNumber}*\n\n` +
+    `Please complete payment using the secure link below.\n\n` +
+    `${d.paymentLinkUrl || ''}\n\n` +
+    `Estimated delivery: ${formatDeliveryDate(d.estimatedDeliveryDate)}\n\n` +
+    `⏰ This link expires in 30 minutes.`,
+
+  UNAVAILABLE: (d) =>
+    `⚠️ *Availability Update — ${d.orderNumber}*\n\n` +
+    `Hi ${d.customerName}, we're sorry — we couldn't confirm stock for this order right now.\n\n` +
+    `${d.note ? `${d.note}\n\n` : ''}` +
+    `Reply here and we'll offer an alternative product, a revised delivery date, or cancel the reservation — whichever works best for you. No payment was collected.`,
+
+  PAYMENT_RECEIVED: (d) =>
+    `💳 *Payment Received — ${d.orderNumber}*\n\n` +
+    `Payment received successfully. Your order is now being prepared.\n\n` +
+    `Estimated delivery: ${formatDeliveryDate(d.estimatedDeliveryDate)}\n\n` +
+    `We'll notify you when your order is out for delivery.`,
+
+  RESERVATION_EXPIRED: (d) =>
+    `⏰ *Payment Link Expired — ${d.orderNumber}*\n\n` +
+    `Hi ${d.customerName}, the payment window for your confirmed order has expired and the reservation was released.\n\n` +
+    `Still want it? Reply here and we'll generate a fresh payment link.`,
+
+  PREPARING_ORDER: (d) =>
+    `📦 *Preparing Your Order — ${d.orderNumber}*\n\n` +
+    `Your order is being packed now.\n\n` +
+    `Estimated delivery: ${formatDeliveryDate(d.estimatedDeliveryDate)}`,
+
+  OUT_FOR_DELIVERY: (d) =>
+    `🚚 *Out for Delivery — ${d.orderNumber}*\n\n` +
+    `Your order has left our store and is on its way to you.\n\n` +
+    `${d.note ? d.note : `Expected today${d.estimatedDeliveryDate ? ` (${formatDeliveryDate(d.estimatedDeliveryDate)})` : ''}.`}`,
+
+  DELIVERED: (d) =>
+    `✅ *Delivered — ${d.orderNumber}*\n\n` +
+    `Your order has been delivered. Thank you for choosing Karur Plywood & Company!\n\n` +
+    `Questions or issues? Just reply here.`,
+
+  CANCELLED: (d) =>
+    `❌ *Order Cancelled — ${d.orderNumber}*\n\n` +
+    `Hi ${d.customerName}, your order has been cancelled.` +
+    `${d.note ? ` ${d.note}` : ''}\n\n` +
+    `No payment was collected on this order. Reach out anytime if you'd like to reorder.`,
+};
+
+export function buildCustomerFulfillmentMessage(status: string, data: FulfillmentMessageData): string | null {
+  const fn = FULFILLMENT_MESSAGES[status];
+  return fn ? fn(data) : null;
+}
+
+/**
+ * Sends a fulfillment-status WhatsApp message (Reserve/Verify/Payment flow).
+ * Same delivery mechanism as sendCustomerWhatsAppStatus: Meta API if
+ * configured, otherwise logs the message for manual send.
+ */
+export async function sendCustomerFulfillmentWhatsApp(
+  status: string,
+  data: FulfillmentMessageData
+): Promise<{ ok: boolean; method: 'api' | 'skipped' }> {
+  const message = buildCustomerFulfillmentMessage(status, data);
+  if (!message) return { ok: true, method: 'skipped' };
+
+  const token   = process.env.WHATSAPP_API_TOKEN;
+  const phoneId = process.env.WHATSAPP_PHONE_ID;
+
+  if (token && phoneId && data.customerPhone) {
+    try {
+      const phone = data.customerPhone.replace(/\D/g, '');
+      const res = await fetch(`https://graph.facebook.com/v19.0/${phoneId}/messages`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messaging_product: 'whatsapp', to: phone, type: 'text', text: { body: message } }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text().catch(() => '');
+        console.error(`[whatsapp] fulfillment send failed (${res.status}):`, err);
+        return { ok: false, method: 'api' };
+      }
+      return { ok: true, method: 'api' };
+    } catch (err) {
+      console.error('[whatsapp] fulfillment send exception:', err);
+      return { ok: false, method: 'api' };
+    }
+  }
+
+  console.log(`[whatsapp] FULFILLMENT UPDATE for ${data.customerPhone} (${status}):\n${message}`);
+  return { ok: true, method: 'skipped' };
+}

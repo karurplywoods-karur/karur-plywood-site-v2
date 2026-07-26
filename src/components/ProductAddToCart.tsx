@@ -16,6 +16,17 @@ export default function ProductAddToCart({ product, variant, layout = 'stack' }:
   const [flash, setFlash] = useState(false);
   const qty = items.find(i => i.product.id === product.id && (i.variant?.id || '') === (variant?.id || ''))?.quantity || 0;
 
+  const needsVerification = product.fulfillment_type === 'DISTRIBUTOR' || product.fulfillment_type === 'SPECIAL_ORDER' || !!product.verification_required;
+  const primaryLabel = needsVerification ? 'Reserve Order' : 'Buy Now';
+  const flashLabel = needsVerification ? 'Reserved' : 'Added';
+
+  // If the cart (as a whole) contains any verification-required item, checkout
+  // must go through the Reserve Order flow instead of immediate payment —
+  // the checkout page itself branches on this, this is just the label hint.
+  const cartNeedsReserve = items.some(i =>
+    i.product.fulfillment_type === 'DISTRIBUTOR' || i.product.fulfillment_type === 'SPECIAL_ORDER' || i.product.verification_required
+  );
+
   const handleAdd = () => {
     add(product, variant);
     setFlash(true);
@@ -32,8 +43,11 @@ export default function ProductAddToCart({ product, variant, layout = 'stack' }:
         </div>
         {layout === 'stack' && (
           <Link href="/checkout" className="patc-checkout">
-            Checkout
+            {cartNeedsReserve ? 'Reserve Order' : 'Checkout'}
           </Link>
+        )}
+        {needsVerification && (
+          <p className="patc-note">Availability verified before payment — usually within 15 minutes.</p>
         )}
         <style jsx>{styles}</style>
       </div>
@@ -42,9 +56,12 @@ export default function ProductAddToCart({ product, variant, layout = 'stack' }:
 
   return (
     <div className={`patc-wrap patc-wrap--${layout}`}>
-      <button type="button" onClick={handleAdd} className={`patc-add${flash ? ' patc-add--flash' : ''}`}>
-        {flash ? 'Added' : 'Add to Cart'}
+      <button type="button" onClick={handleAdd} className={`patc-add${flash ? ' patc-add--flash' : ''}${needsVerification ? ' patc-add--reserve' : ''}`}>
+        {flash ? flashLabel : primaryLabel}
       </button>
+      {needsVerification && layout === 'stack' && (
+        <p className="patc-note">We'll confirm stock before requesting payment.</p>
+      )}
       <style jsx>{styles}</style>
     </div>
   );
@@ -102,4 +119,7 @@ const styles = `
   }
   .patc-checkout { margin-top: 10px; background: #F07316; border-color: #F07316; color: #FFFFFF; }
   .patc-checkout:hover { background: #D9640F; }
+  .patc-add--reserve { border-color: #0B2447; background: #0B2447; color: #FFFFFF; }
+  .patc-add--reserve:hover { background: #143a6b; }
+  .patc-note { margin: 6px 0 0; font-size: 0.7rem; color: #6B7280; font-family: 'Inter', sans-serif; text-align: center; }
 `;

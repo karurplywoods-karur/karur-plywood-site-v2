@@ -15,6 +15,17 @@ interface Order {
   admin_notes: string; notes: string; created_at: string;
   order_items: any[];
   customers: { full_name: string; email: string; phone: string };
+  // Phase 1 — order fulfillment / delivery system
+  fulfillment_status?: string;
+  verification_status?: 'pending' | 'verified' | 'unavailable';
+  delivery_zone_code?: string | null;
+  estimated_delivery_date?: string | null;
+  verified_by?: string;
+  verified_at?: string;
+  assigned_staff_name?: string;
+  distributor_id?: string | null;
+  reservation_expires_at?: string | null;
+  is_reservation?: boolean;
 }
 
 const STATUS_STEPS = ['pending','confirmed','processing','shipped','delivered'];
@@ -25,6 +36,23 @@ const STATUS_CONFIG: Record<string, { color: string; bg: string; label: string; 
   shipped:    { color:'#A855F7', bg:'rgba(168,85,247,0.12)', label:'Shipped',    icon:'🚚' },
   delivered:  { color:'#10B981', bg:'rgba(16,185,129,0.12)', label:'Delivered',  icon:'📦' },
   cancelled:  { color:'#EF4444', bg:'rgba(239,68,68,0.12)',  label:'Cancelled',  icon:'❌' },
+};
+
+// Fulfillment pipeline (Phase 1 — Reserve Order flow). Only meaningfully
+// shown for orders that went through /api/orders/reserve; READY_STOCK/Buy Now
+// orders sit at CONFIRMED and follow the legacy status pipeline above instead.
+const FULFILLMENT_CONFIG: Record<string, { color: string; bg: string; label: string; icon: string }> = {
+  RESERVED:            { color:'#F97316', bg:'rgba(249,115,22,0.12)', label:'Reserved — Verifying',  icon:'🙏' },
+  AVAILABILITY_CHECK:  { color:'#F97316', bg:'rgba(249,115,22,0.12)', label:'Checking Availability', icon:'🔍' },
+  CONFIRMED:           { color:'#25D366', bg:'rgba(37,211,102,0.12)', label:'Confirmed',             icon:'✅' },
+  AWAITING_PAYMENT:    { color:'#FDE047', bg:'rgba(253,224,71,0.14)', label:'Awaiting Payment',       icon:'💳' },
+  PAYMENT_RECEIVED:    { color:'#4ADE80', bg:'rgba(74,222,128,0.14)', label:'Payment Received',       icon:'💰' },
+  PREPARING_ORDER:     { color:'#3B82F6', bg:'rgba(59,130,246,0.12)', label:'Preparing Order',        icon:'📦' },
+  OUT_FOR_DELIVERY:    { color:'#A855F7', bg:'rgba(168,85,247,0.12)', label:'Out for Delivery',       icon:'🚚' },
+  DELIVERED:           { color:'#10B981', bg:'rgba(16,185,129,0.12)', label:'Delivered',              icon:'✅' },
+  RESERVATION_EXPIRED: { color:'#EF4444', bg:'rgba(239,68,68,0.12)',  label:'Reservation Expired',    icon:'⏰' },
+  UNAVAILABLE:         { color:'#EF4444', bg:'rgba(239,68,68,0.12)',  label:'Unavailable',            icon:'⚠️' },
+  CANCELLED:           { color:'#EF4444', bg:'rgba(239,68,68,0.12)',  label:'Cancelled',              icon:'❌' },
 };
 const WA = process.env.NEXT_PUBLIC_WA_NUMBER || '919159666538';
 
@@ -71,6 +99,38 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const setFulfillmentStatus = async (id: string, fulfillment_status: string, note?: string) => {
+    setSaving(id);
+    const res = await fetch('/api/orders/admin', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, fulfillment_status, note }),
+    });
+    setSaving(null);
+    if (res.ok) { showMsg('✅ Updated. Customer notified on WhatsApp.'); fetchOrders(); }
+    else { const d = await res.json().catch(() => ({})); showMsg(`❌ ${d.error || 'Update failed.'}`, false); }
+  };
+
+  const verifyAvailability = async (id: string, action: 'confirm' | 'unavailable', note?: string) => {
+    setSaving(id);
+    const res = await fetch(`/api/orders/${id}/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, note }),
+    });
+    setSaving(null);
+    if (res.ok) { showMsg(action === 'confirm' ? '✅ Availability confirmed.' : '⚠️ Marked unavailable.'); fetchOrders(); }
+    else { const d = await res.json().catch(() => ({})); showMsg(`❌ ${d.error || 'Action failed.'}`, false); }
+  };
+
+  const generatePaymentLink = async (id: string) => {
+    setSaving(id);
+    const res = await fetch(`/api/orders/${id}/payment-link`, { method: 'POST' });
+    setSaving(null);
+    if (res.ok) { showMsg('✅ Payment link sent to customer.'); fetchOrders(); }
+    else { const d = await res.json().catch(() => ({})); showMsg(`❌ ${d.error || 'Could not generate link.'}`, false); }
+  };
+
   const stats = {
     total:     orders.length,
     pending:   orders.filter(o => o.status === 'pending').length,
@@ -84,6 +144,12 @@ export default function AdminOrdersPage() {
     borderRadius:4, padding:'7px 10px', color:'#F8F9FB',
     fontFamily:"'Inter',sans-serif", fontSize:12, outline:'none',
   };
+
+  const actionBtn = (color: string): React.CSSProperties => ({
+    padding:'8px 14px', borderRadius:4, border:`1px solid ${color}55`, background:`${color}1F`,
+    color, fontFamily:"'Inter',sans-serif", fontWeight:700, fontSize:11, letterSpacing:'.06em',
+    textTransform:'uppercase', cursor:'pointer',
+  });
 
   return (
     <div style={{ minHeight:'100vh', background:'#070F1F', color:'#F8F9FB', fontFamily:"'Inter',sans-serif" }}>
@@ -156,6 +222,9 @@ export default function AdminOrdersPage() {
           <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
             {orders.map(order => {
               const s = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
+              const fStatus = order.fulfillment_status || 'CONFIRMED';
+              const fs = FULFILLMENT_CONFIG[fStatus] || FULFILLMENT_CONFIG.CONFIRMED;
+              const isReserveFlow = !!order.is_reservation;
               const isOpen = expanded === order.id;
               return (
                 <div key={order.id} style={{ background:'rgba(25,55,109,0.25)', border:`1px solid ${isOpen ? 'rgba(249,115,22,0.3)' : 'rgba(249,115,22,0.1)'}`, borderRadius:10, overflow:'hidden', transition:'border-color .2s' }}>
@@ -194,6 +263,11 @@ export default function AdminOrdersPage() {
                     </div>
 
                     <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                      {isReserveFlow && (
+                        <span style={{ fontSize:9, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', background:fs.bg, color:fs.color, padding:'4px 10px', borderRadius:2 }}>
+                          {fs.icon} {fs.label}
+                        </span>
+                      )}
                       <span style={{ fontSize:9, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', background:s.bg, color:s.color, padding:'4px 10px', borderRadius:2 }}>
                         {s.icon} {s.label}
                       </span>
@@ -255,7 +329,51 @@ export default function AdminOrdersPage() {
                         </div>
                       </div>
 
-                      {/* Items */}
+                      {/* Fulfillment & Delivery (Phase 1 — Reserve Order flow only) */}
+                      {isReserveFlow && (
+                        <div style={{ background:'rgba(7,15,31,0.5)', borderRadius:6, padding:'14px 16px', marginBottom:20 }}>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:12 }}>
+                            Fulfillment & Delivery
+                          </div>
+                          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14, fontSize:12 }} className="fulfillment-grid">
+                            <div>
+                              <div style={{ color:'#7A8EA8', fontSize:10, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:3 }}>Delivery Zone</div>
+                              <div style={{ color:'#F8F9FB', fontWeight:600 }}>{order.delivery_zone_code ? `Zone ${order.delivery_zone_code}` : '—'}</div>
+                            </div>
+                            <div>
+                              <div style={{ color:'#7A8EA8', fontSize:10, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:3 }}>Estimated Delivery</div>
+                              <div style={{ color:'#F8F9FB', fontWeight:600 }}>
+                                {order.estimated_delivery_date ? new Date(order.estimated_delivery_date).toLocaleDateString('en-IN', { day:'numeric', month:'short' }) : '—'}
+                              </div>
+                            </div>
+                            <div>
+                              <div style={{ color:'#7A8EA8', fontSize:10, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:3 }}>Verification</div>
+                              <div style={{ color: order.verification_status === 'verified' ? '#4ADE80' : order.verification_status === 'unavailable' ? '#F87171' : '#F97316', fontWeight:700 }}>
+                                {order.verification_status === 'verified' ? '✅ Verified' : order.verification_status === 'unavailable' ? '⚠️ Unavailable' : '⏳ Pending'}
+                                {order.verified_by ? ` · ${order.verified_by}` : ''}
+                              </div>
+                            </div>
+                            <div>
+                              <div style={{ color:'#7A8EA8', fontSize:10, textTransform:'uppercase', letterSpacing:'.08em', marginBottom:3 }}>Payment Window</div>
+                              <div style={{ color:'#F8F9FB', fontWeight:600 }}>
+                                {order.reservation_expires_at && fStatus === 'AWAITING_PAYMENT'
+                                  ? `Expires ${new Date(order.reservation_expires_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}`
+                                  : '—'}
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{ marginTop:12 }}>
+                            <label style={{ display:'block', fontSize:10, color:'#7A8EA8', fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.1em', textTransform:'uppercase', marginBottom:4 }}>Assigned Staff</label>
+                            <input style={{ ...inp, width:'100%', maxWidth:260 }}
+                              placeholder="Staff name handling this order"
+                              defaultValue={order.assigned_staff_name || ''}
+                              onBlur={e => e.target.value !== (order.assigned_staff_name || '') && updateOrder(order.id, { assigned_staff_name: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+
                       <div style={{ background:'rgba(7,15,31,0.4)', borderRadius:6, padding:'14px 16px', marginBottom:16 }}>
                         <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:12 }}>Order Items</div>
                         {(order.order_items || []).map((item: any) => (
@@ -329,6 +447,51 @@ export default function AdminOrdersPage() {
                         </div>
                       </div>
 
+                      {isReserveFlow && (
+                        <div style={{ background:'rgba(7,15,31,0.4)', borderRadius:6, padding:'14px 16px', marginTop:16 }}>
+                          <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>
+                            Fulfillment Actions
+                          </div>
+                          <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                            {(fStatus === 'RESERVED' || fStatus === 'AVAILABILITY_CHECK') && (
+                              <>
+                                <button onClick={() => verifyAvailability(order.id, 'confirm')} disabled={saving === order.id}
+                                  style={actionBtn('#25D366')}>✅ Verify Availability</button>
+                                <button onClick={() => { const note = window.prompt('Reason (shown to customer, optional):') || undefined; verifyAvailability(order.id, 'unavailable', note); }}
+                                  disabled={saving === order.id} style={actionBtn('#F87171')}>⚠️ Mark Unavailable</button>
+                              </>
+                            )}
+                            {fStatus === 'CONFIRMED' && (
+                              <button onClick={() => generatePaymentLink(order.id)} disabled={saving === order.id}
+                                style={actionBtn('#FDE047')}>💳 Generate Payment Link</button>
+                            )}
+                            {fStatus === 'AWAITING_PAYMENT' && (
+                              <button onClick={() => setFulfillmentStatus(order.id, 'PAYMENT_RECEIVED')} disabled={saving === order.id}
+                                style={actionBtn('#4ADE80')}>💰 Mark Paid (manual)</button>
+                            )}
+                            {fStatus === 'PAYMENT_RECEIVED' && (
+                              <button onClick={() => setFulfillmentStatus(order.id, 'PREPARING_ORDER')} disabled={saving === order.id}
+                                style={actionBtn('#3B82F6')}>📦 Prepare Order</button>
+                            )}
+                            {fStatus === 'PREPARING_ORDER' && (
+                              <button onClick={() => setFulfillmentStatus(order.id, 'OUT_FOR_DELIVERY')} disabled={saving === order.id}
+                                style={actionBtn('#A855F7')}>🚚 Dispatch</button>
+                            )}
+                            {fStatus === 'OUT_FOR_DELIVERY' && (
+                              <button onClick={() => setFulfillmentStatus(order.id, 'DELIVERED')} disabled={saving === order.id}
+                                style={actionBtn('#10B981')}>✅ Mark Delivered</button>
+                            )}
+                            {!['DELIVERED','CANCELLED','PAYMENT_RECEIVED','PREPARING_ORDER','OUT_FOR_DELIVERY'].includes(fStatus) && (
+                              <button onClick={() => { if (window.confirm('Cancel this reservation? The customer will be notified. No payment has been collected.')) setFulfillmentStatus(order.id, 'CANCELLED'); }}
+                                disabled={saving === order.id} style={actionBtn('#EF4444')}>❌ Cancel</button>
+                            )}
+                          </div>
+                          <div style={{ fontSize:11, color:'#7A8EA8', fontFamily:"'Inter',sans-serif", marginTop:10 }}>
+                            💬 Each action sends the matching WhatsApp update to the customer automatically — no manual copy-paste needed.
+                          </div>
+                        </div>
+                      )}
+
                       {order.notes && (
                         <div style={{ marginTop:12, padding:'10px 14px', background:'rgba(249,115,22,0.04)', border:'1px solid rgba(249,115,22,0.08)', borderRadius:6, fontSize:13, color:'#7A8EA8', fontStyle:'italic' }}>
                           💬 Customer note: "{order.notes}"
@@ -347,12 +510,14 @@ export default function AdminOrdersPage() {
         .admin-stats { grid-template-columns:repeat(5,1fr); }
         .order-detail-grid { grid-template-columns:1fr 1fr 1fr; }
         .order-actions-grid { grid-template-columns:1fr 1fr; }
+        .fulfillment-grid { grid-template-columns:repeat(4,1fr); }
         select option, textarea { background:#0d1f3a; }
         input:focus, textarea:focus, select:focus { border-color:#F97316 !important; }
         @media(max-width:900px){
           .admin-stats { grid-template-columns:repeat(2,1fr) !important; }
           .order-detail-grid { grid-template-columns:1fr !important; }
           .order-actions-grid { grid-template-columns:1fr !important; }
+          .fulfillment-grid { grid-template-columns:1fr 1fr !important; }
         }
       `}</style>
     </div>

@@ -120,6 +120,9 @@ export default async function HomePage() {
               Plywood | Laminates | Hardware | Doors | Adhesives<br />
               For architects, interior designers &amp; builders. All major brands, wholesale &amp; retail prices.
             </p>
+            <p className="hero-sub-promise">
+              Reserve Online. Pay After Confirmation. Delivered Across Karur District.
+            </p>
 
             <div className="hero-ctas">
               <Link href="/products" className="cta-solid">Explore Products</Link>
@@ -128,7 +131,7 @@ export default async function HomePage() {
 
             {/* Trust badges */}
             <div className="hero-trust">
-              {['ISI Certified', 'Free Del. ₹5K+', 'Same-Day Dispatch', 'GST Billing'].map(t => (
+              {['Delivery Promise', 'Availability Verified', 'Pay After Confirmation', 'WhatsApp Order Updates'].map(t => (
                 <div key={t} className="trust-chip">
                   <span className="trust-check">✓</span> {t}
                 </div>
@@ -541,7 +544,8 @@ export default async function HomePage() {
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
         .hero-h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.6rem, 5.2vw, 4.4rem); letter-spacing: 0.03em; line-height: 1.02; color: #FFFFFF; margin-bottom: 22px; }
         .hero-h1-orange { color: #F07316; }
-        .hero-sub { font-size: 15px; color: #E5E1DC; line-height: 1.85; max-width: 480px; margin-bottom: 32px; font-weight: 300; }
+        .hero-sub { font-size: 15px; color: #E5E1DC; line-height: 1.85; max-width: 480px; margin-bottom: 10px; font-weight: 300; }
+        .hero-sub-promise { font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .02em; color: #F07316; margin-bottom: 26px; }
         .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
         .cta-solid { display: inline-flex; align-items: center; padding: 14px 28px; background: #F07316; color: #FFFFFF; border-radius: 6px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
         .cta-solid:hover { background: #D9640F; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,115,22,0.4); }

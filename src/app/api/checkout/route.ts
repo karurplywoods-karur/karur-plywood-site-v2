@@ -110,6 +110,12 @@ export async function POST(req: NextRequest) {
         payment_method,
         payment_status:   payment_method === 'cod' ? 'pending' : 'pending',
         status:           'pending',
+        // These are READY_STOCK/Buy Now orders — no distributor verification
+        // needed, so they skip straight past RESERVED/AVAILABILITY_CHECK.
+        // Only Reserve Order (/api/orders/reserve) uses the RESERVED start state.
+        fulfillment_status: 'CONFIRMED',
+        verification_status: 'verified',
+        is_reservation: false,
         notes:            notes || '',
       }])
       .select()

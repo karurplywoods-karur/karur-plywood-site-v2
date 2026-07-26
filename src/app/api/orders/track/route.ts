@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
       coupon_code, payment_method, payment_status,
       delivery_name, delivery_city, delivery_pincode,
       tracking_number, admin_notes,
+      fulfillment_status, verification_status, is_reservation,
+      delivery_zone_code, estimated_delivery_date, reservation_expires_at,
       order_items (
         product_name, variant_label, quantity, unit_price, line_total
       )

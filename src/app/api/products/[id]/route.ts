@@ -94,6 +94,12 @@ export async function PATCH(
   }
   if ('sort_order' in body) payload.sort_order = toNullableNumber(body.sort_order) ?? 0;
 
+  // Phase 1 — order fulfillment / delivery system
+  if ('fulfillment_type' in body) payload.fulfillment_type = body.fulfillment_type;
+  if ('verification_required' in body) payload.verification_required = !!body.verification_required;
+  if ('shipping_method' in body) payload.shipping_method = body.shipping_method || '';
+  if ('preferred_distributor_id' in body) payload.preferred_distributor_id = body.preferred_distributor_id || null;
+
   if (Object.keys(payload).length === 0) {
     return NextResponse.json({ error: 'No product fields supplied.' }, { status: 400 });
   }

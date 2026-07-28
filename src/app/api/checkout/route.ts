@@ -5,6 +5,7 @@ import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
 import { sendOrderConfirmation, sendOwnerOrderAlert } from '@/lib/email';
 import { buildOwnerOrderMessage, getOwnerWhatsAppURL } from '@/lib/whatsapp';
+import { getDeliveryPromiseForCoords, getDeliveryPromiseForArea } from '@/lib/deliveryEngine';
 
 async function ensureCustomerExists(user: any, fallbackPhone = '') {
   const { error } = await supabaseAdmin
@@ -85,6 +86,19 @@ export async function POST(req: NextRequest) {
 
     const total = Math.max(0, subtotal + delivery_charge - discount_amount);
 
+    // Real zone-based delivery estimate — same engine the Reserve Order flow
+    // uses, so Buy Now orders get an accurate date too instead of the old
+    // generic "3-5 Business Days" placeholder.
+    let deliveryPromise = null;
+    if (address.latitude != null && address.longitude != null) {
+      deliveryPromise = await getDeliveryPromiseForCoords(address.latitude, address.longitude);
+    }
+    if (!deliveryPromise && address.city) {
+      deliveryPromise = await getDeliveryPromiseForArea(address.city);
+    }
+    // Not blocking checkout if the zone can't be auto-resolved — same
+    // trust-first principle as the reserve flow.
+
     // 5. Create order
     const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
@@ -116,6 +130,8 @@ export async function POST(req: NextRequest) {
         fulfillment_status: 'CONFIRMED',
         verification_status: 'verified',
         is_reservation: false,
+        delivery_zone_code: deliveryPromise?.zone.zone_code ?? null,
+        estimated_delivery_date: deliveryPromise?.estimatedDeliveryDate ?? null,
         notes:            notes || '',
       }])
       .select()

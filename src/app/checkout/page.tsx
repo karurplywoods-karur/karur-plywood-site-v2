@@ -113,6 +113,28 @@ export default function CheckoutPage() {
 
   const selectedAddress = addresses.find(a => a.id === selAddrId);
 
+  // Real, zone-based delivery estimate — replaces the generic static
+  // "3-5 Business Days" text with an actual date computed from the
+  // customer's address via the delivery engine.
+  const [deliveryEstimate, setDeliveryEstimate] = useState<null | {
+    available: boolean; zone?: { code: string; name: string }; promiseLabel?: string;
+    cutoffTimeLabel?: string; isBeforeCutoff?: boolean; estimatedDeliveryDate?: string; reason?: string;
+  }>(null);
+  const [deliveryEstimateLoading, setDeliveryEstimateLoading] = useState(false);
+
+  useEffect(() => {
+    if (!selectedAddress) { setDeliveryEstimate(null); return; }
+    setDeliveryEstimateLoading(true);
+    const params = (selectedAddress.latitude != null && selectedAddress.longitude != null)
+      ? `lat=${selectedAddress.latitude}&lng=${selectedAddress.longitude}`
+      : `city=${encodeURIComponent(selectedAddress.city)}`;
+    fetch(`/api/delivery/check?${params}`)
+      .then(r => r.json())
+      .then(data => setDeliveryEstimate(data))
+      .catch(() => setDeliveryEstimate({ available: false, reason: 'Could not check delivery right now.' }))
+      .finally(() => setDeliveryEstimateLoading(false));
+  }, [selectedAddress?.id, selectedAddress?.latitude, selectedAddress?.longitude, selectedAddress?.city]);
+
   const handleUseCurrentLocation = useCallback(() => {
     setError('');
     setLocationMsg('');
@@ -204,6 +226,10 @@ export default function CheckoutPage() {
   const cartNeedsReserve = items.some(i =>
     i.product.fulfillment_type === 'DISTRIBUTOR' || i.product.fulfillment_type === 'SPECIAL_ORDER' || i.product.verification_required
   );
+
+  useEffect(() => {
+    if (cartNeedsReserve && shippingMethod === 'express') setShippingMethod('standard');
+  }, [cartNeedsReserve, shippingMethod]);
 
   const handlePlaceOrder = async () => {
     setLoading(true); setError('');
@@ -577,15 +603,42 @@ export default function CheckoutPage() {
             {step === 1 && (
               <div className="co-section">
                 <div className="co-section-title">Shipping Method</div>
+
+                {/* Live delivery estimate for the selected address */}
+                <div className="delivery-estimate-box">
+                  {deliveryEstimateLoading && <p className="de-muted">Checking delivery time for your address…</p>}
+                  {!deliveryEstimateLoading && deliveryEstimate?.available && (
+                    <>
+                      <p className="de-zone">📍 {deliveryEstimate.zone?.name}</p>
+                      <p className="de-promise">
+                        {deliveryEstimate.isBeforeCutoff ? 'Order before' : 'Order after'} {deliveryEstimate.cutoffTimeLabel} → <strong>{deliveryEstimate.promiseLabel}</strong>
+                        {deliveryEstimate.estimatedDeliveryDate && (
+                          <> — expected {new Date(deliveryEstimate.estimatedDeliveryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', weekday: 'short' })}</>
+                        )}
+                      </p>
+                    </>
+                  )}
+                  {!deliveryEstimateLoading && deliveryEstimate && !deliveryEstimate.available && (
+                    <p className="de-fallback">{deliveryEstimate.reason || "We'll confirm exact delivery timing after checkout."}</p>
+                  )}
+                </div>
+
                 <div className="payment-options">
-                  {SHIPPING_METHODS.map(m => (
+                  {SHIPPING_METHODS
+                    .filter(m => !(m.key === 'express' && cartNeedsReserve)) // can't promise a rush date before stock is verified
+                    .map(m => (
                     <div key={m.key} onClick={() => setShippingMethod(m.key)}
                       className={`payment-card${shippingMethod === m.key ? ' payment-card--selected' : ''}`}>
                       <div className="payment-radio"><div className={`addr-radio-dot${shippingMethod === m.key ? ' active' : ''}`} /></div>
                       <div className="payment-icon">{m.icon}</div>
                       <div style={{ flex: 1 }}>
                         <div className="payment-name">{m.label}</div>
-                        <div className="payment-sub">{m.sub}{m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : m.key === 'pickup' ? ' · Collect from our Karur store' : ' · Faster delivery to your location'}</div>
+                        <div className="payment-sub">
+                          {m.key === 'standard' && deliveryEstimate?.available
+                            ? `${deliveryEstimate.promiseLabel}${deliveryEstimate.estimatedDeliveryDate ? ` · Expected ${new Date(deliveryEstimate.estimatedDeliveryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}`
+                            : m.sub}
+                          {m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : m.key === 'pickup' ? ' · Collect from our Karur store' : ' · Faster delivery to your location'}
+                        </div>
                       </div>
                       <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: m.cost ? '#0B2447' : '#16a34a' }}>
                         {m.cost ? `₹${m.cost}` : 'FREE'}
@@ -593,6 +646,11 @@ export default function CheckoutPage() {
                     </div>
                   ))}
                 </div>
+                {cartNeedsReserve && (
+                  <p className="de-muted" style={{ marginTop: 10 }}>
+                    Express delivery isn't available for items pending stock verification — we'll confirm the fastest possible date once your order is confirmed.
+                  </p>
+                )}
               </div>
             )}
 
@@ -919,6 +977,11 @@ function CheckoutStyles() {
     .reserve-note p { margin:0 0 8px; font-family:'Inter',sans-serif; font-size:.85rem; color:#374151; line-height:1.5; }
     .reserve-note p:last-child { margin-bottom:0; }
     .reserve-note strong { color:#0B2447; }
+    .delivery-estimate-box { background:#FAF8F5; border:1.5px solid #E5E1DC; border-radius:10px; padding:12px 16px; margin-bottom:14px; }
+    .de-muted { color:#6B7280; font-size:.82rem; margin:0; font-family:'Inter',sans-serif; }
+    .de-zone { color:#0B2447; font-weight:700; margin:0 0 4px; font-size:.85rem; font-family:'Inter',sans-serif; }
+    .de-promise { color:#16803D; font-size:.82rem; margin:0; font-family:'Inter',sans-serif; }
+    .de-fallback { color:#92400E; font-size:.82rem; margin:0; font-family:'Inter',sans-serif; }
 
     .co-summary { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:22px; position:sticky; top:80px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
     .co-summary-title { font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:16px; }

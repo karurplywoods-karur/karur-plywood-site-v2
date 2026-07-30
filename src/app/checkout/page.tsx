@@ -17,6 +17,17 @@ interface Address {
 }
 
 const STEPS = ['Shipping Address', 'Shipping Method', 'Payment', 'Review & Confirm'];
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if ((window as any).Razorpay) { resolve(true); return; }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 const SHIPPING_METHODS = [
   { key: 'standard', label: 'Standard Delivery', sub: '3-5 Business Days', cost: 0, icon: '🚚' },
   { key: 'express',  label: 'Express Delivery',  sub: '1-2 Business Days', cost: 299, icon: '⚡' },
@@ -231,6 +242,33 @@ export default function CheckoutPage() {
     if (cartNeedsReserve && shippingMethod === 'express') setShippingMethod('standard');
   }, [cartNeedsReserve, shippingMethod]);
 
+  const finalizeOrderSuccess = (data: { order_id: string; order_number: string; wa_url?: string }) => {
+    clear();
+    setOrderDone({ order_id: data.order_id, order_number: data.order_number, wa_url: data.wa_url });
+    setLoading(false);
+    fetch(`/api/orders/${data.order_id}`).then(r => r.json()).then(o => !o.error && setFullOrder(o));
+    fetch('/api/products?limit=5').then(r => r.json()).then(p => setRelated(Array.isArray(p) ? p.slice(0, 5) : []));
+
+    if (!cartNeedsReserve) {
+      trackPurchase({
+        order_number: data.order_number,
+        value: grandTotal,
+        payment_method: payment,
+        items: items.map((i) => ({
+          product_id: i.product.id,
+          product_name: i.product.name,
+          category: i.product.categories?.name,
+          price: cartItemPrice(i),
+          quantity: i.quantity,
+        })),
+      });
+    }
+
+    if (data.wa_url) {
+      setTimeout(() => window.open(data.wa_url, '_blank'), 800);
+    }
+  };
+
   const handlePlaceOrder = async () => {
     setLoading(true); setError('');
     const addr = selectedAddress;
@@ -263,35 +301,74 @@ export default function CheckoutPage() {
     const data = await res.json();
     if (!res.ok) { setError(data.error || 'Order failed. Please try again.'); setLoading(false); return; }
 
-    clear();
-    setOrderDone({ order_id: data.order_id, order_number: data.order_number, wa_url: data.wa_url });
-    setLoading(false);
-    fetch(`/api/orders/${data.order_id}`).then(r => r.json()).then(o => !o.error && setFullOrder(o));
-    fetch('/api/products?limit=5').then(r => r.json()).then(p => setRelated(Array.isArray(p) ? p.slice(0, 5) : []));
-
-    // Fire GA4 purchase event only for real, paid-or-COD-confirmed orders.
-    // A reservation isn't a completed purchase yet — no payment has been
-    // taken — so it's tracked separately (not as a conversion) to keep GA4
-    // revenue numbers accurate.
-    if (!cartNeedsReserve) {
-      trackPurchase({
-        order_number: data.order_number,
-        value: grandTotal,
-        payment_method: payment,
-        items: items.map((i) => ({
-          product_id: i.product.id,
-          product_name: i.product.name,
-          category: i.product.categories?.name,
-          price: cartItemPrice(i),
-          quantity: i.quantity,
-        })),
-      });
+    // Reserve Order or COD — nothing to charge right now, finalize immediately.
+    if (cartNeedsReserve || !data.razorpay) {
+      finalizeOrderSuccess(data);
+      return;
     }
 
-    // Open WhatsApp for owner notification
-    if (data.wa_url) {
-      setTimeout(() => window.open(data.wa_url, '_blank'), 800);
+    // Online payment — order exists in DB as payment_status:'pending'.
+    // Open the actual Razorpay Checkout popup; only finalize on a
+    // server-verified successful payment.
+    const scriptLoaded = await loadRazorpayScript();
+    if (!scriptLoaded) {
+      setError('Could not load the payment gateway. Please check your connection and try again, or choose Cash on Delivery.');
+      setLoading(false);
+      return;
     }
+
+    setLoading(false); // stop the button spinner while the Razorpay popup is up
+
+    const rzp = new (window as any).Razorpay({
+      key: data.razorpay.key_id,
+      amount: data.razorpay.amount,
+      currency: data.razorpay.currency,
+      order_id: data.razorpay.order_id,
+      name: 'Karur Plywood & Company',
+      description: `Order ${data.order_number}`,
+      prefill: {
+        name: addr.full_name,
+        email: session?.user?.email || '',
+        contact: addr.phone,
+      },
+      theme: { color: '#F07316' },
+      handler: async (response: any) => {
+        setLoading(true);
+        const verifyRes = await fetch('/api/checkout/verify-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_id: data.order_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyRes.ok) {
+          setError(verifyData.error || 'Payment could not be verified. Please contact support with your order number before retrying — do not pay again.');
+          setLoading(false);
+          return;
+        }
+        finalizeOrderSuccess({ order_id: data.order_id, order_number: verifyData.order_number, wa_url: verifyData.wa_url });
+      },
+      modal: {
+        ondismiss: () => {
+          // Payment window closed without completing — order still exists as
+          // 'pending', cart is untouched, customer can retry from the same step.
+          setError('Payment was not completed. Your order is saved — click "Reserve Order"/"Place Order" again to retry payment, or choose Cash on Delivery.');
+          setLoading(false);
+        },
+      },
+    });
+
+    rzp.on('payment.failed', (resp: any) => {
+      console.error('Razorpay payment failed:', resp?.error);
+      setError('Payment failed. Please try again or choose a different payment method.');
+      setLoading(false);
+    });
+
+    rzp.open();
   };
 
   // ── ORDER SUCCESS ──

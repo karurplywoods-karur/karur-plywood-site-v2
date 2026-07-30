@@ -6,6 +6,7 @@ import { supabaseAdmin } from '@/lib/db';
 import { sendOrderConfirmation, sendOwnerOrderAlert } from '@/lib/email';
 import { buildOwnerOrderMessage, getOwnerWhatsAppURL } from '@/lib/whatsapp';
 import { getDeliveryPromiseForCoords, getDeliveryPromiseForArea } from '@/lib/deliveryEngine';
+import { createRazorpayOrder } from '@/lib/razorpay';
 
 async function ensureCustomerExists(user: any, fallbackPhone = '') {
   const { error } = await supabaseAdmin
@@ -122,7 +123,7 @@ export async function POST(req: NextRequest) {
         coupon_id,
         coupon_code: applied_coupon_code,
         payment_method,
-        payment_status:   payment_method === 'cod' ? 'pending' : 'pending',
+        payment_status:   'pending', // set to 'paid' only after signature verification (razorpay) — never here
         status:           'pending',
         // These are READY_STOCK/Buy Now orders — no distributor verification
         // needed, so they skip straight past RESERVED/AVAILABILITY_CHECK.
@@ -173,7 +174,6 @@ export async function POST(req: NextRequest) {
 
     if (itemsError) throw itemsError;
 
-    // 7. Send confirmation email to customer (fire and forget)
     const deliveryAddress = [
       address.full_name,
       address.line1,
@@ -184,50 +184,81 @@ export async function POST(req: NextRequest) {
       address.google_map_link,
     ].filter(Boolean).join(', ');
 
-    sendOrderConfirmation({
-      customerName:    customer.full_name || customer.email,
-      customerEmail:   customer.email,
-      orderNumber:     order.order_number,
-      items:           orderItems,
-      subtotal,
-      deliveryCharge:  delivery_charge,
-      total,
-      paymentMethod:   payment_method,
-      deliveryAddress,
-    }).catch(console.error);
+    // ── COD: nothing to charge, confirm immediately (unchanged behavior) ──
+    if (payment_method === 'cod') {
+      sendOrderConfirmation({
+        customerName:    customer.full_name || customer.email,
+        customerEmail:   customer.email,
+        orderNumber:     order.order_number,
+        items:           orderItems,
+        subtotal,
+        deliveryCharge:  delivery_charge,
+        total,
+        paymentMethod:   payment_method,
+        deliveryAddress,
+      }).catch(console.error);
 
-    // 7b. Notify the owner by email too — independent of WhatsApp, so the
-    // order isn't missed if the WhatsApp tab is closed/not seen in time.
-    sendOwnerOrderAlert({
-      orderNumber:    order.order_number,
-      customerName:   customer.full_name || customer.email,
-      customerPhone:  customer.phone || address.phone,
-      items:          orderItems,
-      total,
-      paymentMethod:  payment_method,
-      deliveryAddress,
-    }).catch(console.error);
+      sendOwnerOrderAlert({
+        orderNumber:    order.order_number,
+        customerName:   customer.full_name || customer.email,
+        customerPhone:  customer.phone || address.phone,
+        items:          orderItems,
+        total,
+        paymentMethod:  payment_method,
+        deliveryAddress,
+      }).catch(console.error);
 
-    // 8. Build owner WhatsApp URL
-    const waMessage = buildOwnerOrderMessage({
-      orderNumber:     order.order_number,
-      customerName:    customer.full_name || customer.email,
-      customerPhone:   customer.phone || address.phone,
-      items:           orderItems,
-      total,
-      paymentMethod:   payment_method,
-      deliveryCity:    address.city,
-      deliveryPincode: address.pincode,
-    });
+      const waMessage = buildOwnerOrderMessage({
+        orderNumber:     order.order_number,
+        customerName:    customer.full_name || customer.email,
+        customerPhone:   customer.phone || address.phone,
+        items:           orderItems,
+        total,
+        paymentMethod:   payment_method,
+        deliveryCity:    address.city,
+        deliveryPincode: address.pincode,
+      });
 
-    const waURL = getOwnerWhatsAppURL(waMessage);
+      return NextResponse.json({
+        success:      true,
+        order_id:     order.id,
+        order_number: order.order_number,
+        wa_url:       getOwnerWhatsAppURL(waMessage),
+      }, { status: 201 });
+    }
+
+    // ── Online payment: create a real Razorpay order for the Checkout.js  ──
+    // ── popup. Confirmation notifications are NOT sent yet — the order   ──
+    // ── stays payment_status='pending' until /api/checkout/verify-payment ──
+    // ── confirms a signature-verified successful payment. This is the    ──
+    // ── fix for orders previously being labeled "Paid Online" without    ──
+    // ── ever actually being charged.                                     ──
+    let razorpayOrder;
+    try {
+      razorpayOrder = await createRazorpayOrder({ orderId: order.id, amountRupees: total });
+    } catch (rzpErr: any) {
+      console.error('Razorpay order creation failed:', rzpErr);
+      // Order already exists in DB as 'pending' — safe to leave it; the
+      // customer sees a clear error and can retry rather than losing the cart.
+      return NextResponse.json({
+        error: 'Could not start online payment right now. Please try again, or choose Cash on Delivery.',
+      }, { status: 502 });
+    }
+
+    await supabaseAdmin.from('orders')
+      .update({ razorpay_order_id: razorpayOrder.id })
+      .eq('id', order.id);
 
     return NextResponse.json({
       success:      true,
       order_id:     order.id,
       order_number: order.order_number,
-      wa_url:       waURL,
-      // For Razorpay: return razorpay_order_id after creating Razorpay order
+      razorpay: {
+        order_id: razorpayOrder.id,
+        amount:   razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        key_id:   process.env.RAZORPAY_KEY_ID, // publishable, safe client-side
+      },
     }, { status: 201 });
 
   } catch (err: any) {

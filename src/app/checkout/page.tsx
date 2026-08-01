@@ -29,8 +29,7 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 const SHIPPING_METHODS = [
-  { key: 'standard', label: 'Standard Delivery', sub: '3-5 Business Days', cost: 0, icon: '🚚' },
-  { key: 'express',  label: 'Express Delivery',  sub: '1-2 Business Days', cost: 299, icon: '⚡' },
+  { key: 'standard', label: 'Standard Delivery', sub: 'As per delivery promise', cost: 0, icon: '🚚' },
   { key: 'pickup',   label: 'Store Pickup',      sub: 'Same Day',          cost: 0, icon: '🏬' },
 ] as const;
 
@@ -59,7 +58,7 @@ function cartItemVariantLabel(item: any) {
 }
 
 const PAY_DISPLAY_TO_METHOD: Record<string, 'cod' | 'razorpay'> = {
-  upi: 'razorpay', card: 'razorpay', netbanking: 'razorpay', cod: 'cod',
+  online: 'razorpay', cod: 'cod',
 };
 
 export default function CheckoutPage() {
@@ -85,9 +84,9 @@ export default function CheckoutPage() {
     latitude: null as number | null,
     longitude: null as number | null,
   });
-  const [payment,    setPayment]    = useState<'cod' | 'razorpay'>('cod');
-  const [payDisplay, setPayDisplay] = useState<'upi' | 'card' | 'netbanking' | 'cod'>('upi');
-  const [shippingMethod, setShippingMethod] = useState<'standard' | 'express' | 'pickup'>('standard');
+  const [payment,    setPayment]    = useState<'cod' | 'razorpay'>('razorpay');
+  const [payDisplay, setPayDisplay] = useState<'online' | 'cod'>('online');
+  const [shippingMethod, setShippingMethod] = useState<'standard' | 'pickup'>('standard');
   const [notes,      setNotes]      = useState('');
   const [loading,    setLoading]    = useState(false);
   const [error,      setError]      = useState('');
@@ -237,10 +236,6 @@ export default function CheckoutPage() {
   const cartNeedsReserve = items.some(i =>
     i.product.fulfillment_type === 'DISTRIBUTOR' || i.product.fulfillment_type === 'SPECIAL_ORDER' || i.product.verification_required
   );
-
-  useEffect(() => {
-    if (cartNeedsReserve && shippingMethod === 'express') setShippingMethod('standard');
-  }, [cartNeedsReserve, shippingMethod]);
 
   const finalizeOrderSuccess = (data: { order_id: string; order_number: string; wa_url?: string }) => {
     clear();
@@ -701,9 +696,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="payment-options">
-                  {SHIPPING_METHODS
-                    .filter(m => !(m.key === 'express' && cartNeedsReserve)) // can't promise a rush date before stock is verified
-                    .map(m => (
+                  {SHIPPING_METHODS.map(m => (
                     <div key={m.key} onClick={() => setShippingMethod(m.key)}
                       className={`payment-card${shippingMethod === m.key ? ' payment-card--selected' : ''}`}>
                       <div className="payment-radio"><div className={`addr-radio-dot${shippingMethod === m.key ? ' active' : ''}`} /></div>
@@ -714,20 +707,15 @@ export default function CheckoutPage() {
                           {m.key === 'standard' && deliveryEstimate?.available
                             ? `${deliveryEstimate.promiseLabel}${deliveryEstimate.estimatedDeliveryDate ? ` · Expected ${new Date(deliveryEstimate.estimatedDeliveryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}`
                             : m.sub}
-                          {m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : m.key === 'pickup' ? ' · Collect from our Karur store' : ' · Faster delivery to your location'}
+                          {m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : ' · Collect from our Karur store'}
                         </div>
                       </div>
-                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: m.cost ? '#0B2447' : '#16a34a' }}>
-                        {m.cost ? `₹${m.cost}` : 'FREE'}
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#16a34a' }}>
+                        FREE
                       </div>
                     </div>
                   ))}
                 </div>
-                {cartNeedsReserve && (
-                  <p className="de-muted" style={{ marginTop: 10 }}>
-                    Express delivery isn't available for items pending stock verification — we'll confirm the fastest possible date once your order is confirmed.
-                  </p>
-                )}
               </div>
             )}
 
@@ -751,9 +739,7 @@ export default function CheckoutPage() {
                     <div className="co-section-title">Payment Method</div>
                     <div className="payment-options">
                       {[
-                        { key: 'upi', icon: '📱', name: 'UPI / QR Code', sub: 'Pay instantly using any UPI app' },
-                        { key: 'card', icon: '💳', name: 'Credit / Debit Card', sub: 'Visa, Mastercard, RuPay accepted' },
-                        { key: 'netbanking', icon: '🏦', name: 'Net Banking', sub: 'All major banks supported' },
+                        { key: 'online', icon: '💳', name: 'Pay Online', sub: 'UPI, Cards, Net Banking, Wallets — choose in the next step' },
                         { key: 'cod', icon: '💵', name: 'Cash on Delivery (COD)', sub: 'Available for orders below ₹50,000' },
                       ].map(opt => (
                         <div key={opt.key} onClick={() => { setPayDisplay(opt.key as any); setPayment(PAY_DISPLAY_TO_METHOD[opt.key]); }}
@@ -813,7 +799,7 @@ export default function CheckoutPage() {
                 <div className="review-block">
                   <div className="review-block-label">Payment</div>
                   <div className="review-payment">
-                    {payDisplay === 'cod' ? '💵 Cash on Delivery' : payDisplay === 'upi' ? '📱 UPI / QR Code' : payDisplay === 'card' ? '💳 Credit / Debit Card' : '🏦 Net Banking'}
+                    {payDisplay === 'cod' ? '💵 Cash on Delivery' : '💳 Pay Online (UPI / Card / Net Banking)'}
                   </div>
                   <button onClick={() => setStep(2)} className="review-edit-btn">Edit</button>
                 </div>

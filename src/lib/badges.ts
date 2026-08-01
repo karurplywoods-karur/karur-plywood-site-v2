@@ -53,7 +53,6 @@ export function makeBadge(type: BadgeType): ProductBadge {
  * Rules (no randomness — repeatable for same product):
  * - "new"            : created within last 14 days
  * - "best_seller"    : sort_order === 1 and type === 'project'
- * - "fast_moving"    : sort_order === 1 and type === 'quick'
  * - "used_in_projects": category is plywood/doors/laminates + sort_order <= 3
  * - "low_stock"      : product name contains keywords like "last", "limited"
  *                      OR we use a hash of the product ID (stable, not random)
@@ -79,20 +78,10 @@ export function getProductBadge(product: Product): ProductBadge | null {
     return makeBadge('best_seller');
   }
 
-  // Fast moving — top quick-order product
-  if (product.type === 'quick' && product.sort_order === 1) {
-    return makeBadge('fast_moving');
-  }
-
   // Used in projects — major construction categories, top items
   const constructionCats = ['plywood', 'doors', 'laminates'];
   if (constructionCats.includes(catSlug) && product.sort_order <= 3) {
     return makeBadge('used_in_projects');
-  }
-
-  // Fast moving — all quick items rank 2–4
-  if (product.type === 'quick' && product.sort_order <= 4) {
-    return makeBadge('fast_moving');
   }
 
   // Plain in-stock items get no overlay badge — the card already shows a

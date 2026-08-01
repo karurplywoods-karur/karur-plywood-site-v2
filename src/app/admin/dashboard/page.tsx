@@ -98,7 +98,7 @@ export default function AdminDashboard() {
     setForm({
       name: p.name, category_id: p.category_id || '',
       description: p.description, image_url: p.image_url, image_urls: (p as any).image_urls || [],
-      type: p.type,
+      type: 'project', // Quick Order type removed — all products are 'project' now
       price: p.price || '',
       mrp: p.mrp || '',          // ← NEW
       unit: p.unit, in_stock: p.in_stock,
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
             );
           })()}
           {[
-            { icon: '📦', num: products.length, label: 'Products', sub: `${products.filter(p => p.type === 'project').length} project · ${products.filter(p => p.type === 'quick').length} quick` },
+            { icon: '📦', num: products.length, label: 'Products', sub: `${products.filter(p => p.in_stock).length} in stock` },
             { icon: '📋', num: enquiries.length, label: 'Enquiries', sub: `${enquiries.filter(e => e.status === 'new').length} new` },
             { icon: '⭐', num: reviews.length, label: 'Reviews', sub: `${reviews.filter(r => r.approved).length} published` },
             { icon: '🏷️', num: categories.length, label: 'Categories', sub: 'Product categories' },
@@ -339,14 +339,14 @@ export default function AdminDashboard() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                   <thead>
                     <tr style={{ background: 'rgba(200,136,74,0.08)' }}>
-                      {['Product', 'Category', 'Type', 'MRP / Price', 'Stock', 'Actions'].map(h => (
+                      {['Product', 'Category', 'MRP / Price', 'Stock', 'Actions'].map(h => (
                         <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#9A8070', textTransform: 'uppercase', letterSpacing: 1, whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {products.length === 0 && (
-                      <tr><td colSpan={6} style={{ padding: '40px', textAlign: 'center', color: '#9A8070' }}>No products yet. Click "Add Product" to get started.</td></tr>
+                      <tr><td colSpan={5} style={{ padding: '40px', textAlign: 'center', color: '#9A8070' }}>No products yet. Click "Add Product" to get started.</td></tr>
                     )}
                     {products.map((p, i) => (
                       <tr key={p.id} style={{ borderTop: '1px solid rgba(200,136,74,0.08)', background: i % 2 === 0 ? 'transparent' : 'rgba(200,136,74,0.02)' }}>
@@ -355,11 +355,6 @@ export default function AdminDashboard() {
                           {p.description && <div style={{ fontSize: 11, color: '#9A8070', maxWidth: 240, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.description}</div>}
                         </td>
                         <td style={{ padding: '12px 16px', color: '#C8B8A0' }}>{p.categories ? `${p.categories.icon} ${p.categories.name}` : '—'}</td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: p.type === 'quick' ? 'rgba(37,211,102,0.12)' : 'rgba(200,136,74,0.12)', color: p.type === 'quick' ? '#25D366' : '#E0A86A' }}>
-                            {p.type === 'quick' ? '⚡ Quick' : '🏠 Project'}
-                          </span>
-                        </td>
                         {/* ── MRP / PRICE COLUMN ── */}
                         <td style={{ padding: '12px 16px' }}>
                           {p.mrp && (
@@ -510,22 +505,13 @@ export default function AdminDashboard() {
               <input style={inp} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="e.g. BWR Grade Plywood 18mm" />
             </div>
 
-            {/* Type + Category */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, ...fg }}>
-              <div>
-                <label style={lbl}>Type *</label>
-                <select style={inp} value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                  <option value="project">🏠 Project</option>
-                  <option value="quick">⚡ Quick Order</option>
-                </select>
-              </div>
-              <div>
-                <label style={lbl}>Category</label>
-                <select style={inp} value={form.category_id} onChange={e => setForm({ ...form, category_id: e.target.value })}>
-                  <option value="">Select category</option>
-                  {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
-                </select>
-              </div>
+            {/* Category (Quick Order type removed — all products are 'project' now) */}
+            <div style={fg}>
+              <label style={lbl}>Category</label>
+              <select style={inp} value={form.category_id} onChange={e => setForm({ ...form, category_id: e.target.value })}>
+                <option value="">Select category</option>
+                {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+              </select>
             </div>
 
             {/* Description */}

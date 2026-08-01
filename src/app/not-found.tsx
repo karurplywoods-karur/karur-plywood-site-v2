@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 const QUICK_LINKS = [
   { href: '/products',     label: '📦 Browse Products'    },
   { href: '/location',     label: '📍 Delivery Areas'     },
-  { href: '/quick-order',  label: '⚡ Quick Order'        },
   { href: '/contact',      label: '📞 Contact Us'         },
   { href: '/blog',         label: '📖 Blog'               },
 ];

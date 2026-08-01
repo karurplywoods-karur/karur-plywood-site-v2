@@ -31,7 +31,6 @@ const LEGAL_LINKS = [
 const RESOURCE_LINKS = [
   ['/location', 'Delivery Areas'],
   ['/products', 'Product Catalog'],
-  ['/quick-order', 'Quick Order'],
   ['/bom-quote', 'BOM / Project Quote'],
   ['/sitemap.xml', 'Sitemap'],
 ];

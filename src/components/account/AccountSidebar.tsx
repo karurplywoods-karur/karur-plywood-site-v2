@@ -12,7 +12,6 @@ const NAV_ITEMS = [
   { key: 'wishlist', label: 'Wishlist', icon: '♡', href: '/wishlist' },
   { key: 'addresses', label: 'Saved Addresses', icon: '📍', href: '/account/addresses' },
   { key: 'bom', label: 'BOM Uploads', icon: '📤', href: '/bom-quote' },
-  { key: 'quick-order', label: 'Quick Orders', icon: '✏️', href: '/quick-order' },
   { key: 'profile', label: 'Account Details', icon: '👤', href: '/account/profile' },
 ];
 

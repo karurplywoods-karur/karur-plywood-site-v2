@@ -11,7 +11,7 @@ import WishlistButton from '@/components/WishlistButton';
 
 interface Props {
   product: Product;
-  mode?: 'project' | 'quick';
+  mode?: 'project';
   cartItem?: CartItem;
   onAdd?: (p: Product) => void;
   onInc?: (p: Product) => void;

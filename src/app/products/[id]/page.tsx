@@ -281,7 +281,6 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                         ['Category', product.categories?.name || '—'],
                         ['Brand', brandName || '—'],
                         ['Unit', product.unit || '—'],
-                        ['Supply Type', product.type === 'quick' ? 'Quick' : 'Project'],
                         ['Availability', (product.fulfillment_type === 'DISTRIBUTOR' || product.fulfillment_type === 'SPECIAL_ORDER' || product.verification_required) ? 'Usually Available (Verified Before Delivery)' : (product.in_stock ? 'In Stock' : 'Out of Stock')],
                       ].map(([k, v]) => (
                         <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #E5E1DC', fontSize: 13.5 }}>

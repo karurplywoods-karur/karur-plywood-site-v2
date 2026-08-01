@@ -10,7 +10,7 @@ function toNullableNumber(value: unknown) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-// GET /api/products?type=project|quick&category=slug
+// GET /api/products?type=project&category=slug
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get('type');

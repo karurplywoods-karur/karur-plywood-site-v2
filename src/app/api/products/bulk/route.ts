@@ -8,7 +8,7 @@ interface BulkRow {
   category_id?: string;
   description?: string;
   image_url?: string;
-  type: 'project' | 'quick';
+  type: 'project';
   price?: number | null;
   mrp?: number | null;
   unit?: string;
@@ -20,7 +20,7 @@ export async function GET() {
   const template = [
     'name,type,category_name,description,price,mrp,unit,image_url,in_stock',
     'BWR Grade Plywood 18mm,project,Plywood,Boiling Water Resistant plywood for kitchens and bathrooms,2800,3200,per sheet,https://example.com/image.jpg,true',
-    'Fevicol SH 1kg,quick,Adhesives,Premium synthetic resin adhesive,180,220,per kg,,true',
+    'Fevicol SH 1kg,project,Adhesives,Premium synthetic resin adhesive,180,220,per kg,,true',
   ].join('\n');
 
   return new NextResponse(template, {
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     const stockIdx   = header.indexOf('in_stock');
 
     if (nameIdx === -1) return NextResponse.json({ error: 'CSV must have a "name" column.' }, { status: 400 });
-    if (typeIdx === -1) return NextResponse.json({ error: 'CSV must have a "type" column (project or quick).' }, { status: 400 });
+    if (typeIdx === -1) return NextResponse.json({ error: 'CSV must have a "type" column (must be "project").' }, { status: 400 });
 
     // Fetch all categories for name→id mapping
     const { data: categories } = await supabaseAdmin.from('categories').select('id, name');
@@ -79,8 +79,8 @@ export async function POST(req: NextRequest) {
       const type = cols[typeIdx]?.trim().toLowerCase();
 
       if (!name) { errors.push(`Row ${i + 1}: missing name`); continue; }
-      if (type !== 'project' && type !== 'quick') {
-        errors.push(`Row ${i + 1}: type must be "project" or "quick", got "${type}"`);
+      if (type !== 'project') {
+        errors.push(`Row ${i + 1}: type must be "project", got "${type}"`);
         continue;
       }
 
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
 
       products.push({
         name,
-        type: type as 'project' | 'quick',
+        type: type as 'project',
         category_id: category_id || undefined,
         description: descIdx >= 0 ? cols[descIdx]?.trim() || '' : '',
         price: price && !isNaN(price) ? price : null,

@@ -161,18 +161,6 @@ export async function getFacetCounts(categorySlug?: string, searchQuery?: string
   return { brandCounts: Object.fromEntries(brandCounts), thicknessCounts };
 }
 
-export async function getQuickProducts(): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from('products')
-    .select(PRODUCT_SELECT)
-    .eq('type', 'quick')
-    .eq('in_stock', true)
-    .order('sort_order', { ascending: true });
-
-  if (error) { console.error(error); return []; }
-  return (data as Product[]) || [];
-}
-
 export async function getCategories(): Promise<Category[]> {
   const { data, error } = await supabase
     .from('categories')

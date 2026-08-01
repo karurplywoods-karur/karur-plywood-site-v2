@@ -337,11 +337,11 @@ export default async function HomePage() {
                 Getting your plywood and hardware has never been easier. Two ways to order — both take less than 2 minutes.
               </p>
               <div className="how-modes">
-                <Link href="/quick-order" className="how-mode-card">
-                  <div className="how-mode-icon">⚡</div>
+                <Link href="/products" className="how-mode-card">
+                  <div className="how-mode-icon">📦</div>
                   <div>
-                    <div className="how-mode-title">Quick Order</div>
-                    <div className="how-mode-desc">Add fast-moving items to cart and order directly on WhatsApp</div>
+                    <div className="how-mode-title">Browse Products</div>
+                    <div className="how-mode-desc">Add items to cart and order directly on WhatsApp</div>
                   </div>
                 </Link>
                 <Link href="/bom-quote" className="how-mode-card">

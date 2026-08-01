@@ -82,7 +82,7 @@ export default function BulkUpload({ onSuccess }: Props) {
         </div>
         <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--grey)', lineHeight: 1.8 }}>
           <span style={{ color: 'var(--orange)' }}>name</span> · 
-          <span style={{ color: 'var(--orange)' }}> type</span> (project/quick) · 
+          <span style={{ color: 'var(--orange)' }}> type</span> (always &quot;project&quot;) · 
           <span style={{ color: 'var(--grey-light)' }}> category_name</span> · 
           <span style={{ color: 'var(--grey-light)' }}> description</span> · 
           <span style={{ color: 'var(--grey-light)' }}> price</span> · 

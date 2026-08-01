@@ -50,7 +50,21 @@ export async function getProjectProducts(categorySlug?: string, searchQuery?: st
     if (ids.length) query = query.in('brand_id', ids);
   }
 
-  if (filters?.thickness?.length) query = query.in('thickness', filters.thickness);
+  if (filters?.thickness?.length) {
+    // Thickness can live on the product row itself, OR only on its variants
+    // (e.g. "Club Prime - Centuryply" has product.thickness = null but
+    // variants at 18mm/12mm) — match either.
+    const { data: variantRows } = await supabase
+      .from('product_variants')
+      .select('product_id')
+      .in('thickness', filters.thickness);
+    const variantProductIds = [...new Set((variantRows || []).map((r: any) => r.product_id))];
+
+    const thicknessList = filters.thickness.map(t => `"${t}"`).join(',');
+    const orParts = [`thickness.in.(${thicknessList})`];
+    if (variantProductIds.length) orParts.push(`id.in.(${variantProductIds.join(',')})`);
+    query = query.or(orParts.join(','));
+  }
   if (filters?.priceMin != null) query = query.gte('price', filters.priceMin);
   if (filters?.priceMax != null) query = query.lte('price', filters.priceMax);
 
@@ -99,9 +113,10 @@ export async function getFacetCounts(categorySlug?: string, searchQuery?: string
     return q;
   };
 
-  const [brands, thicknessRows] = await Promise.all([
+  const [brands, thicknessRows, productIdRows] = await Promise.all([
     getBrands(),
-    baseFilter(supabase.from('products').select('thickness')).not('thickness', 'is', null),
+    baseFilter(supabase.from('products').select('id, thickness')).not('thickness', 'is', null),
+    baseFilter(supabase.from('products').select('id')),
   ]);
 
   const brandCounts = await Promise.all(brands.map(async b => {
@@ -109,10 +124,39 @@ export async function getFacetCounts(categorySlug?: string, searchQuery?: string
     return [b.slug, count || 0] as const;
   }));
 
-  const thicknessCounts: Record<string, number> = {};
+  // Counted per-product-per-thickness (a Set, not a running total) so a
+  // product with both product.thickness set AND a matching variant isn't
+  // double-counted, and a product with two variants at the same thickness
+  // only counts once.
+  const productIdsPerThickness: Record<string, Set<string | number>> = {};
   (thicknessRows.data || []).forEach((r: any) => {
-    if (r.thickness) thicknessCounts[r.thickness] = (thicknessCounts[r.thickness] || 0) + 1;
+    if (!r.thickness) return;
+    productIdsPerThickness[r.thickness] ??= new Set();
+    productIdsPerThickness[r.thickness].add(r.id);
   });
+
+  // Variant-level thickness (e.g. Club Prime's 18mm/12mm variants, with
+  // product.thickness itself left null) — scoped to products already in
+  // this category/search context.
+  const contextProductIds = (productIdRows.data || []).map((r: any) => r.id);
+  if (contextProductIds.length) {
+    const { data: variantRows } = await supabase
+      .from('product_variants')
+      .select('product_id, thickness')
+      .in('product_id', contextProductIds)
+      .not('thickness', 'is', null);
+
+    (variantRows || []).forEach((r: any) => {
+      if (!r.thickness) return;
+      productIdsPerThickness[r.thickness] ??= new Set();
+      productIdsPerThickness[r.thickness].add(r.product_id);
+    });
+  }
+
+  const thicknessCounts: Record<string, number> = {};
+  for (const [thickness, ids] of Object.entries(productIdsPerThickness)) {
+    thicknessCounts[thickness] = ids.size;
+  }
 
   return { brandCounts: Object.fromEntries(brandCounts), thicknessCounts };
 }

@@ -70,7 +70,7 @@ export async function getDeliverySettings(useAdmin = false): Promise<DeliverySet
 
 export async function getUpcomingHolidays(fromDate: Date, useAdmin = false): Promise<Set<string>> {
   const client = useAdmin ? supabaseAdmin : supabase;
-  const iso = fromDate.toISOString().slice(0, 10);
+  const iso = toISTShifted(fromDate).toISOString().slice(0, 10);
   const { data, error } = await client
     .from('delivery_holidays')
     .select('holiday_date')
@@ -153,42 +153,61 @@ export function resolveZoneByAreaName(zones: DeliveryZone[], areaOrCity: string)
 
 // ── Business-hours / working-day helpers ────────────────────────────────
 
+// The server (Vercel) runs in UTC, but every cutoff/business-hour/working-day
+// rule here is defined in India time. India has no daylight saving, so a
+// constant +5:30 offset is always correct — no need for a timezone library.
+// We shift the timestamp and then read it back with the UTC getters/setters,
+// which makes the shifted value behave as IST wall-clock time regardless of
+// what timezone the server itself is running in.
+const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+
+function toISTShifted(date: Date): Date {
+  return new Date(date.getTime() + IST_OFFSET_MS);
+}
+
 function timeStringToMinutes(t: string): number {
   const [h, m] = t.split(':').map(Number);
   return h * 60 + (m || 0);
 }
 
 export function isWithinBusinessHours(now: Date, settings: DeliverySettings): boolean {
-  const dayCode = DAY_CODES[now.getDay()];
+  const ist = toISTShifted(now);
+  const dayCode = DAY_CODES[ist.getUTCDay()];
   if (!settings.working_days.includes(dayCode)) return false;
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const nowMinutes = ist.getUTCHours() * 60 + ist.getUTCMinutes();
   return (
     nowMinutes >= timeStringToMinutes(settings.business_hours_start) &&
     nowMinutes <= timeStringToMinutes(settings.business_hours_end)
   );
 }
 
-function isWorkingDay(date: Date, settings: DeliverySettings, holidays: Set<string>): boolean {
-  const dayCode = DAY_CODES[date.getDay()];
-  const iso = date.toISOString().slice(0, 10);
+/** `shiftedDate` must already be IST-shifted (via toISTShifted) — reads with UTC getters. */
+function isWorkingDayIST(shiftedDate: Date, settings: DeliverySettings, holidays: Set<string>): boolean {
+  const dayCode = DAY_CODES[shiftedDate.getUTCDay()];
+  const iso = shiftedDate.toISOString().slice(0, 10);
   return settings.working_days.includes(dayCode) && !holidays.has(iso);
 }
 
-/** Add N working days (skipping non-working days and holidays) to a date. */
-function addWorkingDays(start: Date, days: number, settings: DeliverySettings, holidays: Set<string>): Date {
-  const result = new Date(start);
+/**
+ * Add N working days (skipping non-working days and holidays), operating
+ * entirely in IST-shifted space. `startShifted` must already be IST-shifted;
+ * returns an IST-shifted Date whose UTC-getter date parts are the correct
+ * IST calendar date (use .toISOString().slice(0,10) on the result directly).
+ */
+function addWorkingDaysIST(startShifted: Date, days: number, settings: DeliverySettings, holidays: Set<string>): Date {
+  const result = new Date(startShifted);
   if (days === 0) {
     // "same day" only counts if today is itself a working day; otherwise
     // roll forward to the next working day.
-    while (!isWorkingDay(result, settings, holidays)) {
-      result.setDate(result.getDate() + 1);
+    while (!isWorkingDayIST(result, settings, holidays)) {
+      result.setUTCDate(result.getUTCDate() + 1);
     }
     return result;
   }
   let remaining = days;
   while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result, settings, holidays)) remaining--;
+    result.setUTCDate(result.getUTCDate() + 1);
+    if (isWorkingDayIST(result, settings, holidays)) remaining--;
   }
   return result;
 }
@@ -203,14 +222,15 @@ export async function calculateDeliveryPromise(
   const settings = await getDeliverySettings(useAdmin);
   const holidays = await getUpcomingHolidays(now, useAdmin);
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const istNow = toISTShifted(now);
+  const nowMinutes = istNow.getUTCHours() * 60 + istNow.getUTCMinutes();
   const cutoffMinutes = timeStringToMinutes(zone.cutoff_time);
   const isBeforeCutoff = nowMinutes < cutoffMinutes;
 
   const daysToAdd = isBeforeCutoff ? zone.before_cutoff_days : zone.after_cutoff_days;
   const promiseLabel = isBeforeCutoff ? zone.before_cutoff_label : zone.after_cutoff_label;
 
-  const estimatedDate = addWorkingDays(now, daysToAdd, settings, holidays);
+  const estimatedDateShifted = addWorkingDaysIST(istNow, daysToAdd, settings, holidays);
 
   const [ch, cm] = zone.cutoff_time.split(':').map(Number);
   const cutoffDate = new Date(2000, 0, 1, ch, cm);
@@ -221,7 +241,7 @@ export async function calculateDeliveryPromise(
     isBeforeCutoff,
     promiseLabel,
     cutoffTimeLabel,
-    estimatedDeliveryDate: estimatedDate.toISOString().slice(0, 10),
+    estimatedDeliveryDate: estimatedDateShifted.toISOString().slice(0, 10),
     isBusinessHours: isWithinBusinessHours(now, settings),
     verificationSlaMinutes: settings.verification_sla_minutes,
   };

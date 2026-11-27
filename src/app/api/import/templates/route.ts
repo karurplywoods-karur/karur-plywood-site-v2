@@ -1,62 +1,41 @@
 // src/app/api/import/templates/route.ts
-// Returns downloadable CSV template files for products, variants, images
+// Downloadable CSV template. Example rows use YOUR real category/brand names.
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/db';
+import { getAdminSession } from '@/lib/auth';
 
-const TEMPLATES: Record<string, { filename: string; content: string }> = {
+export const dynamic = 'force-dynamic';
 
-  products: {
-    filename: 'products_template.csv',
-    content: [
-      // Header
-      'name,type,category_slug,brand_slug,description,price,mrp,unit,image_url,sort_order',
-      // Example rows
-      'Century Marine Plywood 19mm,project,marine-plywood,century,ISI 710 certified marine plywood BWR grade,3200,3500,per sheet,https://example.com/img1.jpg,1',
-      'Hettich Soft Close Hinge,project,hardware,hettich,Hydraulic soft close hinge 50000 cycle tested,85,95,per piece,,2',
-      'Century Block Board 19mm,project,block-board,century,Hardwood core block board no sagging guaranteed,2450,2800,per sheet,,3',
-    ].join('\n'),
-  },
+const q = (s: string) => (/[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s);
 
-  variants: {
-    filename: 'variants_template.csv',
-    content: [
-      // Header — product_slug must match an existing product slug in DB
-      'product_slug,thickness,size,grade,finish,color,pack_size,price,mrp,stock_quantity,stock_status',
-      // Example rows
-      'century-marine-plywood-19mm-abc123,19mm,8x4 ft,BWR,,,1 sheet,3200,3500,50,in_stock',
-      'century-marine-plywood-19mm-abc123,12mm,8x4 ft,BWR,,,1 sheet,2200,2500,30,in_stock',
-      'century-marine-plywood-19mm-abc123,25mm,8x4 ft,Marine,,,1 sheet,4500,5000,15,low_stock',
-    ].join('\n'),
-  },
+export async function GET() {
+  const session = await getAdminSession();
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  images: {
-    filename: 'images_template.csv',
-    content: [
-      // Header — product_slug must match an existing product slug
-      'product_slug,image_url,sort_order,alt_text',
-      // Example rows
-      'century-marine-plywood-19mm-abc123,https://example.com/img-front.jpg,1,Front view',
-      'century-marine-plywood-19mm-abc123,https://example.com/img-edge.jpg,2,Edge profile',
-      'century-marine-plywood-19mm-abc123,https://example.com/img-back.jpg,3,Back face',
-    ].join('\n'),
-  },
+  const [{ data: cats }, { data: brands }] = await Promise.all([
+    supabaseAdmin.from('categories').select('name').order('sort_order').limit(2),
+    supabaseAdmin.from('brands').select('name').limit(1),
+  ]);
+  const cat1 = cats?.[0]?.name || 'Plywood';
+  const cat2 = cats?.[1]?.name || cat1;
+  const brand = brands?.[0]?.name || '';
 
-};
+  const header = 'product_name,category,brand,description,unit,image_url,thickness,size,grade,finish,color,pack_size,price,mrp,stock_quantity,stock_status';
+  const lines = [
+    // same product_name on several rows = ONE product with several variants
+    [ 'Marine Plywood', cat1, brand, 'ISI certified BWP grade marine plywood', 'per sheet', '', '12mm', '8x4 ft', 'BWP', '', '', '1 sheet', '2200', '2500', '30', 'in_stock' ],
+    [ 'Marine Plywood', cat1, '', '', '', '', '19mm', '8x4 ft', 'BWP', '', '', '1 sheet', '3200', '3500', '50', 'in_stock' ],
+    [ 'Marine Plywood', cat1, '', '', '', '', '25mm', '8x4 ft', 'BWP', '', '', '1 sheet', '4500', '5000', '5', 'low_stock' ],
+    [ 'Soft Close Hinge', cat2, brand, 'Hydraulic soft close hinge', 'per piece', '', '', '', '', '', '', '1 piece', '85', '95', '200', 'in_stock' ],
+  ].map(r => r.map(q).join(','));
 
-// ── GET /api/import/templates?type=products|variants|images ────
-export async function GET(req: NextRequest) {
-  const type = req.nextUrl.searchParams.get('type') || 'products';
-
-  const template = TEMPLATES[type];
-  if (!template) {
-    return NextResponse.json({ error: 'Invalid type. Use products, variants, or images.' }, { status: 400 });
-  }
-
-  return new NextResponse(template.content, {
+  // BOM so Excel opens it with the right encoding
+  return new NextResponse('\uFEFF' + [header, ...lines].join('\r\n'), {
     status: 200,
     headers: {
-      'Content-Type':        'text/csv; charset=utf-8',
-      'Content-Disposition': `attachment; filename="${template.filename}"`,
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="catalog_import_template.csv"',
     },
   });
 }

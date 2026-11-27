@@ -251,7 +251,7 @@ export default function VariantManager({ productId, onChange }: Props) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(200,136,74,0.12)' }}>
-                {['Thickness', 'Size', 'Grade', 'Finish/Color', 'MRP / Price', 'Stock', 'Default', ''].map(h => (
+                {['Thickness', 'Size', 'Grade', 'Finish / Color / Pack', 'MRP / Price', 'Stock', 'Default', ''].map(h => (
                   <th key={h} style={{
                     padding: '6px 10px', textAlign: 'left',
                     fontSize: 10, fontWeight: 700,
@@ -281,7 +281,7 @@ export default function VariantManager({ productId, onChange }: Props) {
                       {v.grade || '—'}
                     </td>
                     <td style={{ padding: '8px 10px', color: '#C8B8A0' }}>
-                      {[v.finish, v.color].filter(Boolean).join(' / ') || '—'}
+                      {[v.finish, v.color, v.pack_size].filter(Boolean).join(' / ') || '—'}
                     </td>
                     <td style={{ padding: '8px 10px' }}>
                       {v.mrp && (

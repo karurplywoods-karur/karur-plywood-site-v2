@@ -17,6 +17,26 @@ const chunk = <T,>(arr: T[], n: number): T[][] => {
   return out;
 };
 
+
+// Insert one row; if the live table lacks a column we sent ("Could not find the 'x' column")
+// drop it and retry; if a required column is missing ("null value in column x") fill it.
+// Your live DB differs from the SQL files in the repo, so this avoids guessing column by column.
+async function insertAdaptive(table: string, row: Record<string, any>, fillText: string) {
+  const payload = { ...row };
+  let lastErr = '';
+  for (let attempt = 0; attempt < 15; attempt++) {
+    const { data, error } = await supabaseAdmin.from(table).insert([payload]).select('id').single();
+    if (!error) return { data, error: null as string | null };
+    lastErr = error.message;
+    const missing = /Could not find the '([^']+)' column/i.exec(error.message);
+    if (missing && missing[1] in payload) { delete payload[missing[1]]; continue; }
+    const notNull = /null value in column "([^"]+)"/i.exec(error.message);
+    if (notNull && (payload[notNull[1]] == null)) { payload[notNull[1]] = fillText; continue; }
+    break;
+  }
+  return { data: null as any, error: lastErr };
+}
+
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -56,9 +76,9 @@ export async function POST(req: NextRequest) {
         let slug = slugify(name) || 'category';
         while (takenSlugs.has(slug)) slug += '-' + Math.random().toString(36).slice(2, 4);
         takenSlugs.add(slug);
-        // same fields as POST /api/categories so required columns (e.g. display_name) are filled
+        // same fields as POST /api/categories; unknown columns are dropped automatically
         const unit = groups.find(g => g.category_id == null && normKey(g.category_name) === normKey(name))?.unit || 'per sheet';
-        const { data, error } = await supabaseAdmin.from('categories').insert([{
+        const { data, error } = await insertAdaptive('categories', {
           name,
           slug,
           display_name: name,
@@ -72,9 +92,9 @@ export async function POST(req: NextRequest) {
           is_active: true,
           base_price: null,
           price_unit: unit,
-        }]).select('id,name').single();
+        }, name);
         if (error) {
-          errors.push({ row: '-', error: `Category "${name}" not created: ${error.message}` });
+          errors.push({ row: '-', error: `Category "${name}" not created: ${error}` });
           continue;
         }
         createdCategoryIds.push(data.id);
@@ -87,9 +107,9 @@ export async function POST(req: NextRequest) {
         let slug = slugify(name) || 'brand';
         while (takenSlugs.has(slug)) slug += '-' + Math.random().toString(36).slice(2, 4);
         takenSlugs.add(slug);
-        const { data, error } = await supabaseAdmin.from('brands').insert([{ name, slug }]).select('id,name').single();
+        const { data, error } = await insertAdaptive('brands', { name, slug, logo_url: '', description: '' }, name);
         if (error) {
-          errors.push({ row: '-', error: `Brand "${name}" not created (left blank): ${error.message}` });
+          errors.push({ row: '-', error: `Brand "${name}" not created (left blank): ${error}` });
           continue;
         }
         createdBrandIds.push(data.id);

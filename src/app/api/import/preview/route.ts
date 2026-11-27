@@ -46,7 +46,8 @@ export async function POST(req: NextRequest) {
     }
 
     const ctx = await loadCtx();
-    const { groups, reports } = buildCatalog(records, ctx);
+    const createMissing = form.get('create_missing') === '1';
+    const { groups, reports, newCategories, newBrands } = buildCatalog(records, ctx, { createMissing });
 
     return NextResponse.json({
       total: reports.length,
@@ -55,6 +56,8 @@ export async function POST(req: NextRequest) {
       errors: reports.filter(r => r.status === 'error').length,
       new_products: groups.filter(g => g.existing_id == null).length,
       existing_products: groups.filter(g => g.existing_id != null).length,
+      new_categories: newCategories,
+      new_brands: newBrands,
       rows: reports,
     });
   } catch (e: any) {

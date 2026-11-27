@@ -33,15 +33,60 @@ export async function POST(req: NextRequest) {
     }
 
     const ctx = await loadCtx();
-    const { groups, reports } = buildCatalog(records, ctx);
+    const createMissing = form.get('create_missing') === '1';
+    const { groups, reports, newCategories, newBrands } = buildCatalog(records, ctx, { createMissing });
     const skippedRows = reports.filter(r => r.status !== 'valid').length;
 
     const errors: { row: number | string; error: string }[] = [];
     const createdProductIds: any[] = [];
+    const createdCategoryIds: any[] = [];
+    const createdBrandIds: any[] = [];
     const createdVariantIds: any[] = [];
     let productsCreated = 0;
     let productsUpdated = 0;
     let variantsCreated = 0;
+
+    // ── 0. create missing categories / brands (only when ticked) ──
+    const normKey = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
+    if (newCategories.length) {
+      const { data: last } = await supabaseAdmin.from('categories').select('sort_order').order('sort_order', { ascending: false }).limit(1);
+      let order = ((last?.[0]?.sort_order as number) ?? 0) + 1;
+      const takenSlugs = new Set(ctx.categories.map(c => c.slug));
+      for (const name of newCategories) {
+        let slug = slugify(name) || 'category';
+        while (takenSlugs.has(slug)) slug += '-' + Math.random().toString(36).slice(2, 4);
+        takenSlugs.add(slug);
+        const { data, error } = await supabaseAdmin.from('categories').insert([{ name, slug, icon: '📦', sort_order: order++ }]).select('id,name').single();
+        if (error) {
+          errors.push({ row: '-', error: `Category "${name}" not created: ${error.message}` });
+          continue;
+        }
+        createdCategoryIds.push(data.id);
+        groups.forEach(g => { if (g.category_id == null && normKey(g.category_name) === normKey(name)) g.category_id = data.id; });
+      }
+    }
+    if (newBrands.length) {
+      const takenSlugs = new Set(ctx.brands.map(b => b.slug));
+      for (const name of newBrands) {
+        let slug = slugify(name) || 'brand';
+        while (takenSlugs.has(slug)) slug += '-' + Math.random().toString(36).slice(2, 4);
+        takenSlugs.add(slug);
+        const { data, error } = await supabaseAdmin.from('brands').insert([{ name, slug }]).select('id,name').single();
+        if (error) {
+          errors.push({ row: '-', error: `Brand "${name}" not created (left blank): ${error.message}` });
+          continue;
+        }
+        createdBrandIds.push(data.id);
+        groups.forEach(g => { if (g.brand_id == null && g.brand_name && normKey(g.brand_name) === normKey(name)) g.brand_id = data.id; });
+      }
+    }
+    // a product whose category could not be created cannot be inserted safely
+    for (let i = groups.length - 1; i >= 0; i--) {
+      if (groups[i].category_id == null && groups[i].existing_id == null) {
+        errors.push({ row: groups[i].variants[0].row, error: `Product "${groups[i].name}" skipped: category "${groups[i].category_name}" missing` });
+        groups.splice(i, 1);
+      }
+    }
 
     // ── 1. create new products (bulk) ────────────────────────
     const newGroups = groups.filter(g => g.existing_id == null);
@@ -144,7 +189,9 @@ export async function POST(req: NextRequest) {
       variants_created: variantsCreated,
       skipped: skippedRows,
       errors,
-      rollback: { product_ids: createdProductIds, variant_ids: createdVariantIds },
+      created_categories: createdCategoryIds.length,
+      created_brands: createdBrandIds.length,
+      rollback: { product_ids: createdProductIds, variant_ids: createdVariantIds, category_ids: createdCategoryIds, brand_ids: createdBrandIds },
     });
   } catch (e: any) {
     console.error('Import execute error:', e);
@@ -157,7 +204,7 @@ export async function DELETE(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { product_ids = [], variant_ids = [] } = await req.json();
+  const { product_ids = [], variant_ids = [], category_ids = [], brand_ids = [] } = await req.json();
   if (!product_ids.length && !variant_ids.length) return NextResponse.json({ error: 'Nothing to undo.' }, { status: 400 });
 
   if (variant_ids.length) {
@@ -167,6 +214,15 @@ export async function DELETE(req: NextRequest) {
   if (product_ids.length) {
     const { error } = await supabaseAdmin.from('products').delete().in('id', product_ids);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+  // remove categories/brands this import created — only if nothing else uses them now
+  for (const id of category_ids) {
+    const { count } = await supabaseAdmin.from('products').select('id', { count: 'exact', head: true }).eq('category_id', id);
+    if (!count) await supabaseAdmin.from('categories').delete().eq('id', id);
+  }
+  for (const id of brand_ids) {
+    const { count } = await supabaseAdmin.from('products').select('id', { count: 'exact', head: true }).eq('brand_id', id);
+    if (!count) await supabaseAdmin.from('brands').delete().eq('id', id);
   }
   return NextResponse.json({ success: true, products_deleted: product_ids.length, variants_deleted: variant_ids.length });
 }

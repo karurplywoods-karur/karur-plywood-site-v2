@@ -166,10 +166,15 @@ export interface RowReport {
   action: 'new product' | 'add to existing' | '';
 }
 
-export function buildCatalog(records: RawRecord[], ctx: Ctx) {
+export interface BuildOpts { createMissing?: boolean }
+
+export function buildCatalog(records: RawRecord[], ctx: Ctx, opts: BuildOpts = {}) {
   const groups = new Map<string, ProductGroup>();
   const reports: RowReport[] = [];
   const catNames = ctx.categories.map(c => c.name).join(', ') || '(none created yet)';
+  // names that do not exist yet and will be created when createMissing is on
+  const newCategories = new Map<string, string>(); // norm -> display name
+  const newBrands = new Map<string, string>();
 
   for (const rec of records) {
     const d = rec.data;
@@ -181,16 +186,30 @@ export function buildCatalog(records: RawRecord[], ctx: Ctx) {
 
     // category
     const catKey = norm(d.category || '');
-    const cat = catKey ? ctx.categories.find(c => norm(c.name) === catKey || norm(c.slug) === catKey) : undefined;
+    let cat: { id: any; name: string } | undefined = catKey
+      ? ctx.categories.find(c => norm(c.name) === catKey || norm(c.slug) === catKey)
+      : undefined;
+    let catIsNew = false;
     if (!d.category) errors.push('category is empty');
-    else if (!cat) errors.push(`Category "${d.category}" not found. Valid: ${catNames}`);
+    else if (!cat) {
+      if (opts.createMissing) {
+        if (!newCategories.has(catKey)) newCategories.set(catKey, d.category.trim());
+        cat = { id: null, name: newCategories.get(catKey)! };
+        catIsNew = true;
+      } else errors.push(`Category "${d.category}" not found. Valid: ${catNames}`);
+    }
 
     // brand (optional)
     let brand: { id: any; name: string } | undefined;
     if (d.brand) {
       const bKey = norm(d.brand);
       brand = ctx.brands.find(b => norm(b.name) === bKey || norm(b.slug) === bKey);
-      if (!brand) warnings.push(`Brand "${d.brand}" not found — left blank`);
+      if (!brand) {
+        if (opts.createMissing && bKey) {
+          if (!newBrands.has(bKey)) newBrands.set(bKey, d.brand.trim());
+          brand = { id: null, name: newBrands.get(bKey)! };
+        } else warnings.push(`Brand "${d.brand}" not found — left blank`);
+      }
     }
 
     // numbers
@@ -228,7 +247,7 @@ export function buildCatalog(records: RawRecord[], ctx: Ctx) {
 
     const report: RowReport = {
       row: rec.rowNumber, status: 'valid', errors, warnings,
-      product: name, category: cat?.name || d.category || '', brand: brand?.name || d.brand || '',
+      product: name, category: (cat?.name || d.category || '') + (catIsNew ? ' (new)' : ''), brand: brand?.name || d.brand || '',
       variant: variantLabel, price: priceN, mrp: mrpN, action: '',
     };
 
@@ -247,11 +266,11 @@ export function buildCatalog(records: RawRecord[], ctx: Ctx) {
       };
       groups.set(gKey, g);
     } else {
-      if (cat!.id !== g.category_id) warnings.push(`Different category than earlier row — "${g.category_name}" is used`);
+      if (norm(cat!.name) !== norm(g.category_name)) warnings.push(`Different category than earlier row — "${g.category_name}" is used`);
       if (!g.description && d.description) g.description = d.description;
       if (!g.unit && d.unit) g.unit = d.unit;
       if (!g.image_url && d.image_url) g.image_url = d.image_url;
-      if (!g.brand_id && brand) { g.brand_id = brand.id; g.brand_name = brand.name; }
+      if (!g.brand_name && brand) { g.brand_id = brand.id; g.brand_name = brand.name; }
     }
     report.action = g.existing_id != null ? 'add to existing' : 'new product';
 
@@ -268,5 +287,14 @@ export function buildCatalog(records: RawRecord[], ctx: Ctx) {
     reports.push(report);
   }
 
-  return { groups: Array.from(groups.values()).filter(g => g.variants.length > 0), reports };
+  // only report categories/brands that are actually used by a valid row
+  const usedGroups = Array.from(groups.values()).filter(g => g.variants.length > 0);
+  const usedCat = new Set(usedGroups.map(g => norm(g.category_name)));
+  const usedBrand = new Set(usedGroups.map(g => norm(g.brand_name)));
+  return {
+    groups: usedGroups,
+    reports,
+    newCategories: Array.from(newCategories.entries()).filter(([k]) => usedCat.has(k)).map(([, v]) => v),
+    newBrands: Array.from(newBrands.entries()).filter(([k]) => usedBrand.has(k)).map(([, v]) => v),
+  };
 }

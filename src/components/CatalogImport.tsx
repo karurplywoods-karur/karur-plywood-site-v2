@@ -14,13 +14,13 @@ interface PreviewRow {
 }
 interface PreviewResult {
   total: number; valid: number; duplicates: number; errors: number;
-  new_products: number; existing_products: number; rows: PreviewRow[];
+  new_products: number; existing_products: number; new_categories: string[]; new_brands: string[]; rows: PreviewRow[];
 }
 interface ImportResult {
   success: boolean; products_created: number; products_updated: number;
-  variants_created: number; skipped: number;
+  variants_created: number; skipped: number; created_categories?: number; created_brands?: number;
   errors: { row: number | string; error: string }[];
-  rollback: { product_ids: any[]; variant_ids: any[] };
+  rollback: { product_ids: any[]; variant_ids: any[]; category_ids: any[]; brand_ids: any[] };
 }
 
 const STATUS_STYLE: Record<RowStatus, { bg: string; color: string; label: string }> = {
@@ -41,6 +41,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
   const [error, setError]             = useState('');
   const [cats, setCats]               = useState<string[]>([]);
   const [brands, setBrands]           = useState<string[]>([]);
+  const [createMissing, setCreateMissing] = useState(true);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
   const post = async (url: string) => {
     const fd = new FormData();
     fd.append('file', file as File);
+    fd.append('create_missing', createMissing ? '1' : '0');
     const res = await fetch(url, { method: 'POST', body: fd });
     let data: any = null;
     try { data = await res.json(); } catch { /* non-JSON response */ }
@@ -89,6 +91,7 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
       const data: ImportResult = await post('/api/import/execute');
       setResult(data);
       if (data.variants_created > 0) onSuccess?.();
+      fetch('/api/import/preview').then(r => (r.ok ? r.json() : null)).then(d => { if (d) { setCats(d.categories || []); setBrands(d.brands || []); } }).catch(() => {});
     } catch (e: any) { setError(e.message || 'Import failed.'); }
     finally { setImporting(false); }
   };
@@ -158,6 +161,10 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
             <input ref={fileRef} type="file" accept=".csv" style={{ display: 'none' }}
               onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
           </div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, fontSize: 13, color: '#C8B8A0', cursor: 'pointer' }}>
+            <input type="checkbox" checked={createMissing} onChange={e => setCreateMissing(e.target.checked)} />
+            Create categories &amp; brands that don&apos;t exist yet (shown in the preview before anything is saved)
+          </label>
           {error && <div style={s.err}>{error}</div>}
           {file && (
             <div style={{ marginTop: 16, display: 'flex', gap: 10 }}>
@@ -180,6 +187,15 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
             {preview.errors > 0 && <div style={{ color: '#F87171' }}>❌ Errors: <b>{preview.errors}</b></div>}
             <div style={{ color: '#9A8070' }}>→ <b style={{ color: '#E0A86A' }}>{preview.new_products}</b> new product(s), <b style={{ color: '#E0A86A' }}>{preview.existing_products}</b> existing</div>
           </div>
+
+          {(preview.new_categories.length > 0 || preview.new_brands.length > 0) && (
+            <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 8, background: 'rgba(200,136,74,0.08)', border: '1px solid rgba(200,136,74,0.25)', fontSize: 12, color: '#E0A86A' }}>
+              🆕 Will be created on import —
+              {preview.new_categories.length > 0 && <> categories: {preview.new_categories.map(c => <span key={c} style={s.chip}>{c}</span>)}</>}
+              {preview.new_brands.length > 0 && <> brands: {preview.new_brands.map(b => <span key={b} style={s.chip}>{b}</span>)}</>}
+              <div style={{ color: '#9A8070', marginTop: 4 }}>Check the spelling — a typo would create a new category. Not right? Click Back and fix your sheet.</div>
+            </div>
+          )}
 
           <div style={{ overflowX: 'auto', marginBottom: 18 }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -238,6 +254,8 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
             <div style={{ color: '#25D366' }}>✅ New products: <b>{result.products_created}</b></div>
             {result.products_updated > 0 && <div style={{ color: '#25D366' }}>➕ Existing products extended: <b>{result.products_updated}</b></div>}
             <div style={{ color: '#25D366' }}>📐 Variants added: <b>{result.variants_created}</b></div>
+            {(result.created_categories || 0) > 0 && <div style={{ color: '#25D366' }}>🗂 New categories: <b>{result.created_categories}</b></div>}
+            {(result.created_brands || 0) > 0 && <div style={{ color: '#25D366' }}>🏷 New brands: <b>{result.created_brands}</b></div>}
             {result.skipped > 0 && <div style={{ color: '#E8B820' }}>⚠️ Rows skipped: <b>{result.skipped}</b></div>}
           </div>
           {result.errors.length > 0 && (

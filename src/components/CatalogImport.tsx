@@ -18,7 +18,7 @@ interface PreviewResult {
 }
 interface ImportResult {
   success: boolean; products_created: number; products_updated: number;
-  variants_created: number; skipped: number; created_categories?: number; created_brands?: number;
+  variants_created: number; skipped: number; prices_rounded?: boolean; created_categories?: number; created_brands?: number;
   errors: { row: number | string; error: string }[];
   rollback: { product_ids: any[]; variant_ids: any[]; category_ids: any[]; brand_ids: any[] };
 }
@@ -258,6 +258,11 @@ export default function CatalogImport({ onSuccess }: { onSuccess?: () => void })
             {(result.created_brands || 0) > 0 && <div style={{ color: '#25D366' }}>🏷 New brands: <b>{result.created_brands}</b></div>}
             {result.skipped > 0 && <div style={{ color: '#E8B820' }}>⚠️ Rows skipped: <b>{result.skipped}</b></div>}
           </div>
+          {result.prices_rounded && (
+            <div style={{ marginBottom: 14, fontSize: 12, color: '#E8B820' }}>
+              ℹ️ Your database stores prices as whole rupees, so paise were rounded (e.g. ₹228.74 → ₹229).
+            </div>
+          )}
           {result.errors.length > 0 && (
             <div style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)', borderRadius: 8, padding: '12px 16px', marginBottom: 16 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: '#F87171', marginBottom: 8 }}>Database errors:</div>

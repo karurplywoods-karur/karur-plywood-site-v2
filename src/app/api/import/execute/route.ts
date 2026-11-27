@@ -37,6 +37,15 @@ async function insertAdaptive(table: string, row: Record<string, any>, fillText:
   return { data: null as any, error: lastErr };
 }
 
+// Live DB stores some prices as integers → round paise to whole rupees when asked to.
+const isIntErr = (msg: string) => /invalid input syntax for type integer/i.test(msg);
+const roundMoney = <T extends Record<string, any>>(rows: T[]): T[] =>
+  rows.map(r => ({
+    ...r,
+    price: r.price == null ? null : Math.round(Number(r.price)),
+    mrp: r.mrp == null ? null : Math.round(Number(r.mrp)),
+  }));
+
 export async function POST(req: NextRequest) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -65,6 +74,7 @@ export async function POST(req: NextRequest) {
     let productsCreated = 0;
     let productsUpdated = 0;
     let variantsCreated = 0;
+    let pricesRounded = false;
 
     // ── 0. create missing categories / brands (only when ticked) ──
     const normKey = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -151,7 +161,12 @@ export async function POST(req: NextRequest) {
         return row;
       });
 
-      const { data, error } = await supabaseAdmin.from('products').insert(rows).select('id,slug');
+      let res = await supabaseAdmin.from('products').insert(rows).select('id,slug');
+      if (res.error && isIntErr(res.error.message)) {
+        pricesRounded = true;
+        res = await supabaseAdmin.from('products').insert(roundMoney(rows)).select('id,slug');
+      }
+      const { data, error } = res;
       if (error) {
         part.forEach(g => errors.push({ row: g.variants[0].row, error: `Product "${g.name}" not created: ${error.message}` }));
         continue;
@@ -191,16 +206,23 @@ export async function POST(req: NextRequest) {
     const noteOk = (g: typeof groups[number], n: number) => okByGroup.set(g, (okByGroup.get(g) || 0) + n);
 
     for (const part of chunk(vrows, 200)) {
-      const { data, error } = await supabaseAdmin.from('product_variants').insert(part.map(p => p.payload)).select('id');
-      if (!error) {
-        (data || []).forEach((r: any) => createdVariantIds.push(r.id));
+      let payloads = part.map(p => p.payload);
+      let res = await supabaseAdmin.from('product_variants').insert(payloads).select('id');
+      if (res.error && isIntErr(res.error.message)) {
+        pricesRounded = true;
+        payloads = roundMoney(payloads);
+        res = await supabaseAdmin.from('product_variants').insert(payloads).select('id');
+      }
+      if (!res.error) {
+        (res.data || []).forEach((r: any) => createdVariantIds.push(r.id));
         variantsCreated += part.length;
         part.forEach(p => noteOk(p.group, 1));
         continue;
       }
       // bulk insert failed → retry row by row to find exactly which rows are bad
-      for (const p of part) {
-        const { data: one, error: e1 } = await supabaseAdmin.from('product_variants').insert([p.payload]).select('id').single();
+      for (let i = 0; i < part.length; i++) {
+        const p = part[i];
+        const { data: one, error: e1 } = await supabaseAdmin.from('product_variants').insert([payloads[i]]).select('id').single();
         if (e1) errors.push({ row: p.v.row, error: e1.message });
         else { createdVariantIds.push(one.id); variantsCreated++; noteOk(p.group, 1); }
       }
@@ -225,6 +247,7 @@ export async function POST(req: NextRequest) {
       variants_created: variantsCreated,
       skipped: skippedRows,
       errors,
+      prices_rounded: pricesRounded,
       created_categories: createdCategoryIds.length,
       created_brands: createdBrandIds.length,
       rollback: { product_ids: createdProductIds, variant_ids: createdVariantIds, category_ids: createdCategoryIds, brand_ids: createdBrandIds },

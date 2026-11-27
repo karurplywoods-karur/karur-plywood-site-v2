@@ -1046,7 +1046,7 @@ function CheckoutStyles() {
     .de-promise { color:#16803D; font-size:.82rem; margin:0; font-family:'Inter',sans-serif; }
     .de-fallback { color:#92400E; font-size:.82rem; margin:0; font-family:'Inter',sans-serif; }
 
-    .co-summary { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:22px; position:sticky; top:80px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
+    .co-summary { background:#FFFFFF; border:1px solid #E5E1DC; border-radius:10px; padding:22px; position:sticky; top:127px; box-shadow:0 1px 4px rgba(11,36,71,0.05); }
     .co-summary-title { font-family:'Inter',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#F07316; margin-bottom:16px; }
     .co-summary-items { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
     .co-summary-item { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }

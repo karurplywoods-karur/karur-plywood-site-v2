@@ -56,7 +56,23 @@ export async function POST(req: NextRequest) {
         let slug = slugify(name) || 'category';
         while (takenSlugs.has(slug)) slug += '-' + Math.random().toString(36).slice(2, 4);
         takenSlugs.add(slug);
-        const { data, error } = await supabaseAdmin.from('categories').insert([{ name, slug, icon: '📦', sort_order: order++ }]).select('id,name').single();
+        // same fields as POST /api/categories so required columns (e.g. display_name) are filled
+        const unit = groups.find(g => g.category_id == null && normKey(g.category_name) === normKey(name))?.unit || 'per sheet';
+        const { data, error } = await supabaseAdmin.from('categories').insert([{
+          name,
+          slug,
+          display_name: name,
+          icon: '📦',
+          description: '',
+          parent_id: null,
+          image_url: '',
+          seo_title: '',
+          seo_description: '',
+          sort_order: order++,
+          is_active: true,
+          base_price: null,
+          price_unit: unit,
+        }]).select('id,name').single();
         if (error) {
           errors.push({ row: '-', error: `Category "${name}" not created: ${error.message}` });
           continue;

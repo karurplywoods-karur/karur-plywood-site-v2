@@ -33,9 +33,11 @@ export default function ShippingReturnsPage() {
 
       <h2>Delivery Charges</h2>
       <ul>
-        <li><strong>Orders above ₹5,000:</strong> Free delivery within Karur city and select nearby areas</li>
-        <li><strong>Orders below ₹5,000 or longer distances:</strong> Delivery charge calculated and confirmed before order is finalized</li>
-        <li><strong>Bulk / truck loads:</strong> Transport arranged and charged separately based on distance and load</li>
+        <li><strong>Delivery charges are extra on every order</strong>, irrespective of order value. There is no free-delivery threshold.</li>
+        <li><strong>Not part of your online payment:</strong> the checkout / Razorpay amount covers only the products. Delivery charges are never added to it.</li>
+        <li><strong>Confirmed after you order:</strong> our customer care team contacts you, confirms the actual transport cost with the transport provider and quotes it to you. Delivery is arranged after you approve the charge.</li>
+        <li><strong>Paid to the transport provider:</strong> the transport charge is paid directly to the transport provider on delivery.</li>
+        <li><strong>Store pickup:</strong> no delivery charges.</li>
       </ul>
 
       <h2>Delivery Process</h2>

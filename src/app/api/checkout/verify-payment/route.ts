@@ -8,7 +8,8 @@ import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
 import { verifyRazorpayCheckoutSignature } from '@/lib/razorpay';
 import { sendOrderConfirmation, sendOwnerOrderAlert } from '@/lib/email';
-import { buildOwnerOrderMessage, getOwnerWhatsAppURL } from '@/lib/whatsapp';
+import { buildOwnerOrderMessage, getOwnerWhatsAppURL, sendCustomerOrderPlacedWhatsApp } from '@/lib/whatsapp';
+import { orderPlacedMessage, CARE_ACTION_NOTE } from '@/lib/deliveryWorkflow';
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,6 +57,7 @@ export async function POST(req: NextRequest) {
     // Now — and only now — send the confirmation notifications that
     // /api/checkout deferred when the order was first created.
     const customer = order.customers as any;
+    const isPickup = order.shipping_method === 'pickup';
     const deliveryAddress = [
       order.delivery_name, order.delivery_line1, order.delivery_line2,
       order.delivery_city, order.delivery_state, order.delivery_pincode, order.delivery_google_map_link,
@@ -71,7 +73,10 @@ export async function POST(req: NextRequest) {
       total:           order.total,
       paymentMethod:   'razorpay',
       deliveryAddress,
+      shippingMethod:  order.shipping_method || 'standard',
     }).catch(console.error);
+
+    sendCustomerOrderPlacedWhatsApp(customer?.phone || order.delivery_phone, orderPlacedMessage(order.shipping_method)).catch(console.error);
 
     sendOwnerOrderAlert({
       orderNumber:    order.order_number,
@@ -81,6 +86,7 @@ export async function POST(req: NextRequest) {
       total:          order.total,
       paymentMethod:  'razorpay (paid)',
       deliveryAddress,
+      deliveryNote:   isPickup ? undefined : CARE_ACTION_NOTE,
     }).catch(console.error);
 
     const waMessage = buildOwnerOrderMessage({
@@ -92,6 +98,7 @@ export async function POST(req: NextRequest) {
       paymentMethod:   'razorpay (paid)',
       deliveryCity:    order.delivery_city,
       deliveryPincode: order.delivery_pincode,
+      deliveryNote:    isPickup ? 'Store pickup — no delivery charge' : CARE_ACTION_NOTE,
     });
 
     return NextResponse.json({

@@ -2,6 +2,7 @@
 // src/app/admin/orders/page.tsx — Full order management
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import OrderDeliveryPanel from '@/components/OrderDeliveryPanel';
 
 interface Order {
   id: string; order_number: string; status: string;
@@ -26,6 +27,11 @@ interface Order {
   distributor_id?: string | null;
   reservation_expires_at?: string | null;
   is_reservation?: boolean;
+  // Delivery-charges-extra workflow
+  shipping_method?: string;
+  delivery_status?: string | null;
+  customer_approval_status?: string | null;
+  delivery_charge_quoted?: number | null;
 }
 
 const STATUS_STEPS = ['pending','confirmed','processing','shipped','delivered'];
@@ -95,7 +101,8 @@ export default function AdminOrdersPage() {
       showMsg('✅ Order updated. Status email sent to customer.');
       fetchOrders();
     } else {
-      showMsg('❌ Update failed.', false);
+      const d = await res.json().catch(() => ({}));
+      showMsg(`❌ ${d.error || 'Update failed.'}`, false);
     }
   };
 
@@ -239,6 +246,13 @@ export default function AdminOrdersPage() {
                       <div style={{ fontSize:11, color:'#7A8EA8' }}>
                         {new Date(order.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}
                       </div>
+                      {order.delivery_status && order.delivery_status !== 'Not Applicable' && (
+                        <div style={{ marginTop:5, display:'inline-block', fontSize:9.5, fontFamily:"'Inter',sans-serif", fontWeight:700, letterSpacing:'.04em', padding:'2px 8px', borderRadius:10,
+                          background: order.customer_approval_status === 'Approved' ? 'rgba(74,222,128,0.14)' : 'rgba(249,115,22,0.14)',
+                          color: order.customer_approval_status === 'Approved' ? '#4ADE80' : '#F97316' }}>
+                          🚚 {order.delivery_status}
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -317,7 +331,7 @@ export default function AdminOrdersPage() {
                           <div style={{ fontFamily:"'Inter',sans-serif", fontSize:10, fontWeight:700, letterSpacing:'.16em', textTransform:'uppercase', color:'#F97316', marginBottom:10 }}>Payment</div>
                           <div style={{ fontSize:12, color:'#7A8EA8', display:'flex', flexDirection:'column', gap:5 }}>
                             <div style={{ display:'flex', justifyContent:'space-between' }}><span>Subtotal</span><span style={{ color:'#F8F9FB' }}>₹{order.subtotal.toLocaleString('en-IN')}</span></div>
-                            <div style={{ display:'flex', justifyContent:'space-between' }}><span>Delivery</span><span style={{ color:'#F8F9FB' }}>₹{order.delivery_charge.toLocaleString('en-IN')}</span></div>
+                            <div style={{ display:'flex', justifyContent:'space-between' }}><span>Delivery charges</span><span style={{ color:'#F97316', fontWeight:600 }}>{order.shipping_method === 'pickup' ? 'None (pickup)' : 'Extra — see delivery panel'}</span></div>
                             <div style={{ display:'flex', justifyContent:'space-between', borderTop:'1px solid rgba(249,115,22,0.1)', paddingTop:6, marginTop:2, fontWeight:700, fontSize:13 }}>
                               <span style={{ color:'#F8F9FB' }}>Total</span>
                               <span style={{ color:'#F97316' }}>₹{order.total.toLocaleString('en-IN')}</span>
@@ -328,6 +342,9 @@ export default function AdminOrdersPage() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Delivery charges extra — customer care workflow */}
+                      <OrderDeliveryPanel order={order} onSaved={fetchOrders} showMsg={showMsg} />
 
                       {/* Fulfillment & Delivery (Phase 1 — Reserve Order flow only) */}
                       {isReserveFlow && (

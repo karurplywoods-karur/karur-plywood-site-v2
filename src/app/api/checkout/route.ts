@@ -4,7 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
 import { sendOrderConfirmation, sendOwnerOrderAlert } from '@/lib/email';
-import { buildOwnerOrderMessage, getOwnerWhatsAppURL } from '@/lib/whatsapp';
+import { buildOwnerOrderMessage, getOwnerWhatsAppURL, sendCustomerOrderPlacedWhatsApp } from '@/lib/whatsapp';
+import {
+  payableNow, normalizeShippingMethod, initialDeliveryFields, stripDeliveryColumns,
+  isMissingDeliveryColumnError, orderPlacedMessage, CARE_ACTION_NOTE,
+} from '@/lib/deliveryWorkflow';
 import { getDeliveryPromiseForCoords, getDeliveryPromiseForArea } from '@/lib/deliveryEngine';
 import { createRazorpayOrder } from '@/lib/razorpay';
 
@@ -33,6 +37,8 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { address, items, payment_method, notes, coupon_code } = body;
+    // Only 'standard' | 'pickup' are accepted; anything else is treated as standard.
+    const shippingMethod = normalizeShippingMethod(body.shipping_method);
 
     // 2. Validate
     if (!items?.length) return NextResponse.json({ error: 'Cart is empty.' }, { status: 400 });
@@ -54,7 +60,11 @@ export async function POST(req: NextRequest) {
 
     // 4. Calculate totals
     const subtotal = items.reduce((sum: number, i: any) => sum + (i.unit_price * i.quantity), 0);
-    const delivery_charge = 0; // confirmed manually
+    // Delivery charges are EXTRA on every order and are NEVER part of the checkout
+    // amount: customer care confirms the transport cost after the order and the
+    // customer pays the transport provider directly on delivery. (Client-sent
+    // shipping_cost is ignored on purpose.)
+    const delivery_charge = 0;
 
     // 4b. Apply coupon if provided
     let discount_amount = 0;
@@ -85,7 +95,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const total = Math.max(0, subtotal + delivery_charge - discount_amount);
+    const total = payableNow(subtotal, discount_amount); // product value only
 
     // Real zone-based delivery estimate — same engine the Reserve Order flow
     // uses, so Buy Now orders get an accurate date too instead of the old
@@ -101,9 +111,7 @@ export async function POST(req: NextRequest) {
     // trust-first principle as the reserve flow.
 
     // 5. Create order
-    const { data: order, error: orderError } = await supabaseAdmin
-      .from('orders')
-      .insert([{
+    const orderRow: Record<string, any> = {
         customer_id:      session.user.id,
         address_id:       address.id || null,
         delivery_name:    address.full_name,
@@ -134,9 +142,16 @@ export async function POST(req: NextRequest) {
         delivery_zone_code: deliveryPromise?.zone.zone_code ?? null,
         estimated_delivery_date: deliveryPromise?.estimatedDeliveryDate ?? null,
         notes:            notes || '',
-      }])
-      .select()
-      .single();
+      ...initialDeliveryFields(shippingMethod), // delivery_status = Pending Confirmation (or Not Applicable for pickup)
+    };
+
+    let insertRes = await supabaseAdmin.from('orders').insert([orderRow]).select().single();
+    if (insertRes.error && isMissingDeliveryColumnError(insertRes.error.message)) {
+      // Migration 20261128_delivery_workflow.sql not run yet — never block a customer's order.
+      console.error('[checkout] delivery columns missing — run the delivery migration. Placing order without them.');
+      insertRes = await supabaseAdmin.from('orders').insert([stripDeliveryColumns(orderRow)]).select().single();
+    }
+    const { data: order, error: orderError } = insertRes;
 
     if (orderError) throw orderError;
 
@@ -196,6 +211,7 @@ export async function POST(req: NextRequest) {
         total,
         paymentMethod:   payment_method,
         deliveryAddress,
+        shippingMethod,
       }).catch(console.error);
 
       sendOwnerOrderAlert({
@@ -206,7 +222,10 @@ export async function POST(req: NextRequest) {
         total,
         paymentMethod:  payment_method,
         deliveryAddress,
+        deliveryNote:   shippingMethod === 'pickup' ? undefined : CARE_ACTION_NOTE,
       }).catch(console.error);
+
+      sendCustomerOrderPlacedWhatsApp(customer.phone || address.phone, orderPlacedMessage(shippingMethod)).catch(console.error);
 
       const waMessage = buildOwnerOrderMessage({
         orderNumber:     order.order_number,
@@ -217,6 +236,7 @@ export async function POST(req: NextRequest) {
         paymentMethod:   payment_method,
         deliveryCity:    address.city,
         deliveryPincode: address.pincode,
+        deliveryNote:    shippingMethod === 'pickup' ? 'Store pickup — no delivery charge' : CARE_ACTION_NOTE,
       });
 
       return NextResponse.json({

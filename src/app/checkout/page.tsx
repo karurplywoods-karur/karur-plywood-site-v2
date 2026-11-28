@@ -8,6 +8,7 @@ import { useCart } from '@/lib/CartContext';
 import { trackPurchase } from '@/lib/analytics';
 import { CONTACT } from '@/lib/contact';
 import ProductCard from '@/components/ProductCard';
+import DeliveryChargesNotice from '@/components/DeliveryChargesNotice';
 
 interface Address {
   id: string; label: string; full_name: string; phone: string;
@@ -29,8 +30,8 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 const SHIPPING_METHODS = [
-  { key: 'standard', label: 'Standard Delivery', sub: 'As per delivery promise', cost: 0, icon: '🚚' },
-  { key: 'pickup',   label: 'Store Pickup',      sub: 'Same Day',          cost: 0, icon: '🏬' },
+  { key: 'standard', label: 'Standard Delivery', sub: 'As per delivery promise', icon: '🚚' },
+  { key: 'pickup',   label: 'Store Pickup',      sub: 'Same Day',          icon: '🏬' },
 ] as const;
 
 const STATUS_LABEL: Record<string, { color: string; label: string }> = {
@@ -227,8 +228,9 @@ export default function CheckoutPage() {
 
   const removeCoupon = () => { setCouponResult(null); setCouponCode(''); setCouponError(''); };
 
-  const shippingCost = SHIPPING_METHODS.find(m => m.key === shippingMethod)?.cost || 0;
-  const grandTotal = (couponResult ? total - couponResult.discount_amount : total) + shippingCost;
+  // Delivery charges are EXTRA and confirmed separately — never part of the payable total.
+  const isPickup = shippingMethod === 'pickup';
+  const grandTotal = Math.max(0, couponResult ? total - couponResult.discount_amount : total);
   const orderTotalDisplay = fullOrder?.total ?? grandTotal;
 
   // Any item sourced from a distributor / special order must go through the
@@ -284,8 +286,8 @@ export default function CheckoutPage() {
 
     const endpoint = cartNeedsReserve ? '/api/orders/reserve' : '/api/checkout';
     const body = cartNeedsReserve
-      ? { address: addr, items: orderItems, notes }
-      : { address: addr, items: orderItems, payment_method: payment, shipping_method: shippingMethod, shipping_cost: shippingCost, notes, coupon_code: couponResult?.coupon_code || null };
+      ? { address: addr, items: orderItems, notes, shipping_method: shippingMethod }
+      : { address: addr, items: orderItems, payment_method: payment, shipping_method: shippingMethod, notes, coupon_code: couponResult?.coupon_code || null };
 
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -484,7 +486,7 @@ export default function CheckoutPage() {
                   </div>
                   <div style={{ borderTop: '1px solid #E5E1DC', paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Subtotal ({fullOrder.order_items?.length || 0} Items)</span><span>₹{fullOrder.subtotal?.toLocaleString('en-IN')}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Shipping</span><span style={{ color: fullOrder.delivery_charge ? '#0B2447' : '#16a34a' }}>{fullOrder.delivery_charge ? `₹${fullOrder.delivery_charge}` : 'Free'}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Delivery Charges</span><span style={{ color: fullOrder.shipping_method === 'pickup' ? '#16a34a' : '#C2410C', fontWeight: 600 }}>{fullOrder.shipping_method === 'pickup' ? 'None (store pickup)' : 'To be confirmed separately'}</span></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>GST (18%)</span><span>Included</span></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: '#0B2447', borderTop: '1px solid #E5E1DC', paddingTop: 8 }}><span>Total Amount</span><span>₹{fullOrder.total?.toLocaleString('en-IN')}</span></div>
                   </div>
@@ -707,11 +709,11 @@ export default function CheckoutPage() {
                           {m.key === 'standard' && deliveryEstimate?.available
                             ? `${deliveryEstimate.promiseLabel}${deliveryEstimate.estimatedDeliveryDate ? ` · Expected ${new Date(deliveryEstimate.estimatedDeliveryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}`
                             : m.sub}
-                          {m.key === 'standard' ? ' · Free delivery on orders above ₹10,000' : ' · Collect from our Karur store'}
+                          {m.key === 'standard' ? ' · Delivery charges extra, confirmed after your order' : ' · Collect from our Karur store'}
                         </div>
                       </div>
-                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 13, color: '#16a34a' }}>
-                        FREE
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 12, color: m.key === 'pickup' ? '#16a34a' : '#C2410C' }}>
+                        {m.key === 'pickup' ? 'NO CHARGE' : 'CHARGES EXTRA'}
                       </div>
                     </div>
                   ))}
@@ -832,6 +834,9 @@ export default function CheckoutPage() {
 
             {error && <div className="co-error">{error}</div>}
 
+            {/* Delivery charges notice — visible before the Place Order button */}
+            {step >= 1 && <DeliveryChargesNotice pickup={isPickup} />}
+
             {/* Navigation */}
             <div className="co-nav">
               {step > 0 && (
@@ -908,20 +913,23 @@ export default function CheckoutPage() {
               )}
 
               <div className="co-summary-row">
-                <span>Shipping ({SHIPPING_METHODS.find(m => m.key === shippingMethod)?.label})</span>
-                <span style={{ color: shippingCost ? '#0B2447' : '#16a34a' }}>{shippingCost ? `₹${shippingCost}` : 'Free'}</span>
+                <span>Delivery Charges</span>
+                <span style={{ color: isPickup ? '#16a34a' : '#C2410C', fontWeight: 600, textAlign: 'right' }}>
+                  {isPickup ? 'None (store pickup)' : 'To be confirmed separately'}
+                </span>
               </div>
               <div className="co-summary-row">
                 <span>GST (18%)</span>
                 <span style={{ color: '#6B7280' }}>Included</span>
               </div>
               <div className="co-summary-total">
-                <span>Total</span>
+                <span>Total Payable Now</span>
                 <span>₹{grandTotal.toLocaleString('en-IN')}</span>
               </div>
             </div>
+            <DeliveryChargesNotice pickup={isPickup} compact />
             <div className="co-summary-note">
-              🔒 Secure checkout · Delivery confirmed by our team
+              🔒 Secure checkout · Delivery charges confirmed by our team
             </div>
 
             <div className="co-help-card">

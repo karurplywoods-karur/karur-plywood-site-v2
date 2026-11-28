@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 import { createClient } from '@/lib/auth-client';
+import DeliveryStatusCard from '@/components/DeliveryStatusCard';
 
 const STATUS_STEPS = ['confirmed', 'processing', 'shipped', 'delivered'];
 const STEP_LABELS: Record<string, string> = { confirmed: 'Order Confirmed', processing: 'Packed', shipped: 'Shipped', delivered: 'Delivered' };
@@ -261,7 +262,7 @@ export default function OrderDetailPage() {
               </div>
               <div style={{ borderTop: '1px solid #E5E1DC', paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Subtotal</span><span>₹{order.subtotal?.toLocaleString('en-IN')}</span></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Shipping</span><span style={{ color: order.delivery_charge ? '#0B2447' : '#16a34a' }}>{order.delivery_charge ? `₹${order.delivery_charge.toLocaleString('en-IN')}` : 'Free'}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280' }}><span>Delivery Charges</span><span style={{ color: order.shipping_method === 'pickup' ? '#16a34a' : '#C2410C', fontWeight: 600 }}>{order.shipping_method === 'pickup' ? 'None (store pickup)' : order.delivery_charge > 0 ? `₹${order.delivery_charge.toLocaleString('en-IN')}` : 'Extra — confirmed separately'}</span></div>
                 {order.discount > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', color: '#16a34a' }}><span>Discount</span><span>−₹{order.discount.toLocaleString('en-IN')}</span></div>
                 )}
@@ -270,6 +271,7 @@ export default function OrderDetailPage() {
                 </div>
                 <div style={{ textAlign: 'right', fontSize: 11, color: order.payment_status === 'paid' ? '#16a34a' : '#F07316', fontWeight: 700 }}>{order.payment_status === 'paid' ? 'Paid' : 'Pending'}</div>
               </div>
+              <DeliveryStatusCard order={order} />
             </div>
           </aside>
         </div>

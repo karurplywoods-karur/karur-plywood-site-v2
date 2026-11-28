@@ -26,7 +26,7 @@ const introTemplates = [
     `${area.name}'s ${area.famous_for} industry relies on quality ${category.display_name}. ` +
     `We deliver from Karur to ${area.display_name} ${area.delivery_time}. ` +
     `Perfect for ${area.local_use_cases?.slice(0, 2).join(" and ")}. ` +
-    `Free delivery above ₹5,000 in ${area.name}.`,
+    `Delivery charges are extra and confirmed after you order.`,
 ];
 
 export function generateUniqueIntro(area: any, category: any): string {
@@ -41,11 +41,11 @@ export function generateFAQ(area: any, category: any): any[] {
   return [
     {
       question: `Do you deliver ${category.display_name} to ${area.display_name}?`,
-      answer: `Yes, we deliver ${category.display_name} to ${area.name} ${area.delivery_time}. We also cover nearby areas including ${area.nearby_subareas?.slice(0, 3).join(", ")}. Delivery charges are minimal for ${area.distance_km}km distance from Karur. Free delivery for orders above ₹5,000.`
+      answer: `Yes, we deliver ${category.display_name} to ${area.name} ${area.delivery_time}. We also cover nearby areas including ${area.nearby_subareas?.slice(0, 3).join(", ")}. Delivery charges are extra on every order — our team confirms the transport cost after you order, and you pay it directly to the transport provider.`
     },
     {
       question: `What is the ${category.display_name} price in ${area.name}?`,
-      answer: `${category.display_name} price in ${area.name} starts at ₹${category.base_price} ${priceUnit}. Being ${area.distance_km}km from Karur, transport cost is minimal. Bulk orders for ${area.famous_for} businesses get special rates.`
+      answer: `${category.display_name} price in ${area.name} starts at ₹${category.base_price} ${priceUnit}. Delivery charges are extra and confirmed after you order. Bulk orders for ${area.famous_for} businesses get special rates.`
     },
     {
       question: `Is ${category.display_name} suitable for ${area.famous_for}?`,
@@ -69,7 +69,7 @@ export function generateFAQ(area: any, category: any): any[] {
 export function generateMeta(area: any, category: any) {
   return {
     title: `${category.display_name} in ${area.display_name} | ${area.distance_km}km from Karur | ISI Certified`,
-    description: `${category.display_name} delivered to ${area.name} ${area.delivery_time}. ${area.distance_km}km from Karur. For ${area.famous_for}. Brands: ${category.brands?.slice(0, 3).join(", ")}. Free delivery above ₹5,000. Call now!`
+    description: `${category.display_name} delivered to ${area.name} ${area.delivery_time}. ${area.distance_km}km from Karur. For ${area.famous_for}. Brands: ${category.brands?.slice(0, 3).join(", ")}. Delivery charges extra. Call now!`
   };
 }
 

@@ -3,6 +3,7 @@ import { getAdminSession } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/db';
 import { sendStatusUpdate } from '@/lib/email';
 import { sendCustomerWhatsAppStatus, sendCustomerFulfillmentWhatsApp } from '@/lib/whatsapp';
+import { dispatchBlockReason } from '@/lib/deliveryWorkflow';
 
 export async function GET(req: NextRequest) {
   const session = await getAdminSession();
@@ -30,6 +31,19 @@ export async function PATCH(req: NextRequest) {
   const { id, status, fulfillment_status, admin_notes, tracking_number, assigned_staff_name, note } = await req.json();
   if (!id || (status === undefined && fulfillment_status === undefined && admin_notes === undefined && tracking_number === undefined && assigned_staff_name === undefined)) {
     return NextResponse.json({ error: 'id and at least one field to update are required' }, { status: 400 });
+  }
+
+  // Dispatch block: for orders in the delivery workflow, shipping / out-for-delivery /
+  // delivered cannot be set until the customer has approved the quoted transport charge.
+  // Only enforced when the status is actually CHANGING (saving notes never gets blocked).
+  if (status || fulfillment_status) {
+    const { data: cur } = await supabaseAdmin.from('orders').select('*').eq('id', id).single();
+    if (cur) {
+      const block =
+        (status && status !== cur.status ? dispatchBlockReason(cur, status) : null) ||
+        (fulfillment_status && fulfillment_status !== cur.fulfillment_status ? dispatchBlockReason(cur, fulfillment_status) : null);
+      if (block) return NextResponse.json({ error: block }, { status: 409 });
+    }
   }
 
   const updates: any = {};

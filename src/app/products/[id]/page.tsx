@@ -190,7 +190,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   </div>
                 </div>
                 {[
-                  { i: '🚚', t: 'Free Delivery', d: 'On orders above ₹10,000' },
+                  { i: '🚚', t: 'Delivery Charges Extra', d: 'Paid to the transport provider' },
                   { i: '🔒', t: 'Secure Payments', d: '100% safe & secure' },
                   { i: '↺', t: 'Easy Returns', d: '7 days easy returns' },
                   { i: '📄', t: 'GST Invoice', d: 'Billing with GST' },
@@ -306,7 +306,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                   key: 'faq', label: 'FAQ', content: (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 640 }}>
                       {[
-                        ['Do you offer delivery for this product?', 'Yes, we deliver across Karur and nearby areas. Free delivery on orders above ₹10,000.'],
+                        ['Do you offer delivery for this product?', 'Yes, we deliver across Karur and nearby areas. Delivery charges are extra on every order — our team confirms the transport cost after you order, and you pay it directly to the transport provider on delivery.'],
                         ['Can I get a bulk quote?', 'Yes — WhatsApp us or click Buy Now for a wholesale/contractor quote on bulk orders.'],
                         ['Is GST invoice available?', 'Yes, GST invoices are provided for all orders on request.'],
                       ].map(([q, a]) => (

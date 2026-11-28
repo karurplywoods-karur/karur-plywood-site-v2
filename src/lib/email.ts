@@ -17,6 +17,8 @@ interface OrderEmailData {
   paymentMethod: string;
   deliveryAddress: string;
   status?: string;
+  /** 'pickup' → no delivery charge; anything else → delivery charges extra */
+  shippingMethod?: string;
 }
 
 function orderConfirmationHTML(data: OrderEmailData): string {
@@ -79,10 +81,10 @@ function orderConfirmationHTML(data: OrderEmailData): string {
           <span>Subtotal</span><span>₹${data.subtotal.toLocaleString('en-IN')}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:12px">
-          <span>Delivery</span><span>${data.deliveryCharge === 0 ? 'To be confirmed' : '₹' + data.deliveryCharge.toLocaleString('en-IN')}</span>
+          <span>Delivery charges</span><span>${data.shippingMethod === 'pickup' ? 'None — store pickup' : data.deliveryCharge > 0 ? '₹' + data.deliveryCharge.toLocaleString('en-IN') : 'Extra — to be confirmed separately'}</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#0B2447">
-          <span>Total</span><span>₹${data.total.toLocaleString('en-IN')}</span>
+          <span>Total payable now</span><span>₹${data.total.toLocaleString('en-IN')}</span>
         </div>
       </div>
 
@@ -96,7 +98,10 @@ function orderConfirmationHTML(data: OrderEmailData): string {
       <div style="margin-top:24px;padding:16px;background:#fff8f0;border:1px solid #F97316;border-radius:6px">
         <div style="font-size:13px;font-weight:700;color:#F97316;margin-bottom:6px">What happens next?</div>
         <div style="font-size:13px;color:#666;line-height:1.7">
-          Our team will confirm your order and contact you on your registered phone number regarding delivery schedule and payment.
+          Our team will confirm your order and contact you on your registered phone number regarding delivery schedule.
+          ${data.shippingMethod === 'pickup'
+            ? '<br><br>Your order is for <strong>store pickup</strong> — there are no delivery charges.'
+            : '<br><br><strong>Delivery charges are extra</strong> and are paid directly to the transport provider. Our customer care team will confirm the transport cost with you before dispatch.'}
         </div>
       </div>
     </div>
@@ -181,6 +186,8 @@ interface OwnerAlertData {
   total: number;
   paymentMethod: string;
   deliveryAddress: string;
+  /** shown to customer care, e.g. "Confirm transport cost with customer" */
+  deliveryNote?: string;
 }
 
 function ownerAlertHTML(data: OwnerAlertData): string {
@@ -241,6 +248,8 @@ function ownerAlertHTML(data: OwnerAlertData): string {
         <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Delivery Address</div>
         <div style="font-size:13px;color:#333;line-height:1.8">${data.deliveryAddress}</div>
       </div>
+
+      ${data.deliveryNote ? `<div style="margin-top:16px;padding:12px 16px;background:#fff8f0;border:1px solid #F97316;border-radius:6px;font-size:13px;color:#7c3a06"><strong>Action for customer care:</strong> ${data.deliveryNote}</div>` : ''}
 
       <div style="margin-top:24px;text-align:center">
         <a href="https://www.karurplywood.co.in/admin/orders" style="display:inline-block;background:#0B2447;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px">View in Admin Panel →</a>

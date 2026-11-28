@@ -8,7 +8,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '@/lib/auth-server';
 import { supabaseAdmin } from '@/lib/db';
 import { sendOwnerOrderAlert } from '@/lib/email';
-import { buildOwnerOrderMessage, getOwnerWhatsAppURL, buildCustomerFulfillmentMessage, sendCustomerFulfillmentWhatsApp } from '@/lib/whatsapp';
+import { buildOwnerOrderMessage, getOwnerWhatsAppURL, buildCustomerFulfillmentMessage, sendCustomerFulfillmentWhatsApp, sendCustomerOrderPlacedWhatsApp } from '@/lib/whatsapp';
+import {
+  normalizeShippingMethod, initialDeliveryFields, stripDeliveryColumns,
+  isMissingDeliveryColumnError, CARE_ACTION_NOTE, RESERVATION_DELIVERY_MESSAGE,
+} from '@/lib/deliveryWorkflow';
 import { getDeliveryPromiseForCoords, getDeliveryPromiseForArea } from '@/lib/deliveryEngine';
 
 async function ensureCustomerExists(user: any, fallbackPhone = '') {
@@ -36,6 +40,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { address, items, notes } = body;
+    const shippingMethod = normalizeShippingMethod(body.shipping_method);
 
     // 2. Validate
     if (!items?.length) return NextResponse.json({ error: 'Cart is empty.' }, { status: 400 });
@@ -90,9 +95,7 @@ export async function POST(req: NextRequest) {
     const total = subtotal;
 
     // 7. Create order in RESERVED state
-    const { data: order, error: orderError } = await supabaseAdmin
-      .from('orders')
-      .insert([{
+    const orderRow: Record<string, any> = {
         customer_id:      session.user.id,
         address_id:       address.id || null,
         delivery_name:    address.full_name,
@@ -119,9 +122,15 @@ export async function POST(req: NextRequest) {
         delivery_zone_code: deliveryPromise?.zone.zone_code ?? null,
         estimated_delivery_date: deliveryPromise?.estimatedDeliveryDate ?? null,
         notes: notes || '',
-      }])
-      .select()
-      .single();
+      ...initialDeliveryFields(shippingMethod),
+    };
+
+    let insertRes = await supabaseAdmin.from('orders').insert([orderRow]).select().single();
+    if (insertRes.error && isMissingDeliveryColumnError(insertRes.error.message)) {
+      console.error('[reserve] delivery columns missing — run the delivery migration. Placing order without them.');
+      insertRes = await supabaseAdmin.from('orders').insert([stripDeliveryColumns(orderRow)]).select().single();
+    }
+    const { data: order, error: orderError } = insertRes;
 
     if (orderError) throw orderError;
 
@@ -154,6 +163,9 @@ export async function POST(req: NextRequest) {
       verificationSlaMinutes: deliveryPromise?.verificationSlaMinutes ?? 15,
     };
     sendCustomerFulfillmentWhatsApp('RESERVED', fulfillmentData).catch(console.error);
+    if (shippingMethod !== 'pickup') {
+      sendCustomerOrderPlacedWhatsApp(customer.phone || address.phone, RESERVATION_DELIVERY_MESSAGE).catch(console.error);
+    }
 
     // 10. Notify owner (email + WhatsApp click-to-chat URL, same as checkout)
     const deliveryAddress = [
@@ -169,6 +181,7 @@ export async function POST(req: NextRequest) {
       total,
       paymentMethod:  'Reservation — availability verification required',
       deliveryAddress,
+      deliveryNote:   shippingMethod === 'pickup' ? undefined : CARE_ACTION_NOTE,
     }).catch(console.error);
 
     const waMessage = buildOwnerOrderMessage({
@@ -180,6 +193,7 @@ export async function POST(req: NextRequest) {
       paymentMethod:   'Reservation (verify stock before payment)',
       deliveryCity:    address.city,
       deliveryPincode: address.pincode,
+      deliveryNote:    shippingMethod === 'pickup' ? 'Store pickup — no delivery charge' : CARE_ACTION_NOTE,
     });
 
     return NextResponse.json({

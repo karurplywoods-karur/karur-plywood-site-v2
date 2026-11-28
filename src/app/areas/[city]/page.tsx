@@ -28,7 +28,7 @@ const CITIES: Record<string, {
     description: 'Serving customers in Trichy (Tiruchirappalli) with quality plywood, doors, laminates and hardware. We deliver bulk and retail orders to Trichy within 24 hours. Get the same quality you expect from Karur\'s most trusted dealer — delivered to your site.',
     keywords: ['plywood supplier Trichy','plywood delivery Trichy','hardware Trichy','BWR plywood Trichy','laminates Trichy','doors Trichy'],
     landmarks: ['Srirangam', 'Ariyamangalam', 'Thillai Nagar', 'K K Nagar', 'Woraiyur'],
-    stats: [{ label:'Distance', value:'~50 km' },{ label:'Delivery', value:'Within 24 hrs' },{ label:'Min Order', value:'₹5,000' },{ label:'Brands', value:'20+' }],
+    stats: [{ label:'Distance', value:'~50 km' },{ label:'Delivery', value:'Within 24 hrs' },{ label:'Delivery Charges', value:'Extra' },{ label:'Brands', value:'20+' }],
   },
   'namakkal': {
     name: 'Namakkal', state: 'Tamil Nadu', distance: '45 km',
@@ -44,7 +44,7 @@ const CITIES: Record<string, {
     description: 'Karur Plywood supplies quality plywood, doors and hardware to Erode contractors and builders. Competitive wholesale pricing, ISI-certified products and reliable delivery. WhatsApp us your requirement and we\'ll arrange delivery.',
     keywords: ['plywood supplier Erode','hardware store Erode','BWR plywood Erode','doors Erode','laminates Erode','plywood delivery Erode'],
     landmarks: ['Erode Town', 'Bhavani', 'Gobichettipalayam', 'Perundurai'],
-    stats: [{ label:'Distance', value:'~75 km' },{ label:'Delivery', value:'1-2 Days' },{ label:'Wholesale', value:'Available' },{ label:'Min Order', value:'₹10,000' }],
+    stats: [{ label:'Distance', value:'~75 km' },{ label:'Delivery', value:'1-2 Days' },{ label:'Wholesale', value:'Available' },{ label:'Delivery Charges', value:'Extra' }],
   },
   'salem': {
     name: 'Salem', state: 'Tamil Nadu', distance: '80 km',
@@ -60,7 +60,7 @@ const CITIES: Record<string, {
     description: 'Karur Plywood serves Dindigul customers with wholesale and retail supply of plywood, doors, laminates and hardware. Contact us on WhatsApp with your requirements for a quick quote and delivery arrangement.',
     keywords: ['plywood supplier Dindigul','hardware Dindigul','BWR plywood Dindigul','doors Dindigul','laminates Dindigul'],
     landmarks: ['Dindigul Town', 'Palani', 'Natham', 'Oddanchatram'],
-    stats: [{ label:'Distance', value:'~90 km' },{ label:'Delivery', value:'1-2 Days' },{ label:'Wholesale', value:'Available' },{ label:'Min Order', value:'₹10,000' }],
+    stats: [{ label:'Distance', value:'~90 km' },{ label:'Delivery', value:'1-2 Days' },{ label:'Wholesale', value:'Available' },{ label:'Delivery Charges', value:'Extra' }],
   },
 };
 

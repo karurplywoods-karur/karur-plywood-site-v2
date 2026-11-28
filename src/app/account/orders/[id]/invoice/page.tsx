@@ -213,6 +213,7 @@ export default function InvoicePage() {
             <div className="inv-section-label">Terms &amp; Notes</div>
             <ul className="inv-terms">
               <li>Goods once sold will not be taken back without prior intimation.</li>
+              {order.shipping_method !== 'pickup' && <li>Delivery charges are not included in this invoice. They are extra and are paid directly to the transport provider.</li>}
               <li>Subject to Karur jurisdiction only.</li>
               <li>E &amp; OE — Errors and Omissions Excepted.</li>
               <li>HSN Code 4412 — Plywood, veneered panels and similar laminated wood.</li>

@@ -35,8 +35,6 @@ export default function CartPage() {
   }, []);
 
   const gstIncluded = Math.round(total - total / 1.18);
-  const freeShippingThreshold = 10000;
-  const shippingFree = total >= freeShippingThreshold;
 
   const saveForLater = (item: typeof items[number]) => {
     addToWishlist(item.product);
@@ -144,7 +142,7 @@ export default function CartPage() {
             <div className="cart-summary-card">
               <h2 className="cart-summary-title">Order Summary</h2>
               <div className="cart-summary-row"><span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} Items)</span><span>₹{total.toLocaleString('en-IN')}</span></div>
-              <div className="cart-summary-row"><span>Shipping</span><span style={{ color: shippingFree ? '#16a34a' : '#0B2447' }}>{shippingFree ? 'Free' : 'Calculated at checkout'}</span></div>
+              <div className="cart-summary-row"><span>Delivery Charges</span><span style={{ color: '#C2410C', fontWeight: 600 }}>Extra — confirmed after order</span></div>
               <div className="cart-summary-row"><span>GST (18%)</span><span style={{ color: '#6B7280' }}>Included</span></div>
               <div className="cart-summary-total-row">
                 <span>Total Amount</span>
@@ -165,7 +163,7 @@ export default function CartPage() {
 
             <div className="cart-summary-card">
               {[
-                { i: '🚚', t: 'Free Delivery', d: 'On orders above ₹10,000' },
+                { i: '🚚', t: 'Delivery Charges Extra', d: 'Confirmed by our team after you order' },
                 { i: '🔒', t: 'Secure Payments', d: '100% safe & secure' },
                 { i: '↺', t: 'Easy Returns', d: '7 days easy returns' },
                 { i: '📄', t: 'GST Invoice', d: 'Billing with GST' },

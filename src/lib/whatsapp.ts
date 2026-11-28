@@ -11,6 +11,8 @@ export function buildOwnerOrderMessage(data: {
   paymentMethod: string;
   deliveryCity: string;
   deliveryPincode: string;
+  /** e.g. "Transport cost to be confirmed with customer" — appended for customer care */
+  deliveryNote?: string;
 }) {
   const lines = data.items
     .map(i => {
@@ -29,6 +31,7 @@ export function buildOwnerOrderMessage(data: {
     `Payment: ${payment}\n\n` +
     `Items:\n${lines}\n\n` +
     `Total: Rs.${data.total.toLocaleString('en-IN')}\n\n` +
+    (data.deliveryNote ? `Delivery: ${data.deliveryNote}\n\n` : '') +
     `Open admin to manage: ${SITE_URL}/admin/orders`
   );
 }
@@ -267,5 +270,44 @@ export async function sendCustomerFulfillmentWhatsApp(
   }
 
   console.log(`[whatsapp] FULFILLMENT UPDATE for ${data.customerPhone} (${status}):\n${message}`);
+  return { ok: true, method: 'skipped' };
+}
+
+/**
+ * Order-placed confirmation to the customer (delivery charges are extra and paid
+ * directly to the transport provider). Same delivery mechanism as the other
+ * customer messages: Meta WhatsApp API if configured, otherwise logged.
+ * Note: Meta only allows free-text messages inside the 24-hour customer-service
+ * window — for a first business-initiated message an approved template is needed.
+ * If sends fail with a "template required" error, create a template with this text.
+ */
+export async function sendCustomerOrderPlacedWhatsApp(
+  customerPhone: string | null | undefined,
+  message: string,
+): Promise<{ ok: boolean; method: 'api' | 'skipped' }> {
+  const token   = process.env.WHATSAPP_API_TOKEN;
+  const phoneId = process.env.WHATSAPP_PHONE_ID;
+
+  if (token && phoneId && customerPhone) {
+    try {
+      const phone = customerPhone.replace(/\D/g, '');
+      const res = await fetch(`https://graph.facebook.com/v19.0/${phoneId}/messages`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messaging_product: 'whatsapp', to: phone, type: 'text', text: { body: message } }),
+      });
+      if (!res.ok) {
+        const err = await res.text().catch(() => '');
+        console.error(`[whatsapp] order-placed send failed (${res.status}):`, err);
+        return { ok: false, method: 'api' };
+      }
+      return { ok: true, method: 'api' };
+    } catch (err) {
+      console.error('[whatsapp] order-placed send exception:', err);
+      return { ok: false, method: 'api' };
+    }
+  }
+
+  console.log(`[whatsapp] ORDER PLACED for ${customerPhone}:\n${message}`);
   return { ok: true, method: 'skipped' };
 }
